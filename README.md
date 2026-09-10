@@ -13,6 +13,36 @@ This is the source and community repository for `pixelinfinito/provia-plugin`. T
 
 The plugin works with procedures, exports and records supplied to the assistant. It has no Provia connector, credentials or telemetry. Authorized users configure, import and publish the resulting drafts in Provia.
 
+## Install from the repository marketplace
+
+Marketplace: `provia`. Plugin: `provia-skills`. Repository URL:
+
+```text
+https://github.com/pixelinfinito/provia-plugin
+```
+
+### Claude app
+
+Open **Customize → Plugins → Personal plugins → + → Add marketplace → Add from a repository**. Enter the repository URL, then install **provia-skills** from **provia**. Start a new conversation and use `/` or `+` to select a skill. Availability depends on your plan and workspace policy. See [Claude's installation guide](https://support.claude.com/en/articles/13837440-use-plugins-in-claude).
+
+In Claude Code:
+
+```text
+/plugin marketplace add pixelinfinito/provia-plugin
+/plugin install provia-skills@provia
+/provia-skills:provia-process-discovery
+```
+
+Follow any reload instruction after installation. To refresh the catalog, run `/plugin marketplace update provia`, then update the installed plugin through `/plugin`.
+
+### ChatGPT workspace
+
+A workspace administrator opens **Admin → Plugins → Add → Import marketplace**. Set **Source** to the repository URL, leave **Path** empty, and select `main` as the branch. Import, authorize GitHub access when prompted, and review the import result. Make **provia-skills** available to the intended roles. Members can then install it from their workspace plugin catalog and start a new conversation.
+
+ChatGPT supports the repository's Claude-compatible marketplace manifest. Admins control availability and can use **Sync now** to fetch updates. If your account has no marketplace import option, use the documentation ZIP and the supported local installation route. Attaching a ZIP to a chat does not install it. See [OpenAI's workspace import guide](https://learn.chatgpt.com/docs/enterprise/plugin-management).
+
+The shared catalog is [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json). Its `./` source includes the whole plugin root, preserving all 14 skills, references and validators. Both provider plugin manifests remain in place. Add the repository URL, not the raw JSON file URL, so relative files are available. Marketplace installation follows repository changes; existing versioned documentation ZIPs remain unchanged. This repository marketplace does not imply a listing in either provider's public directory.
+
 ## Contents
 
 - [Choose a skill](#choose-a-skill)
@@ -363,7 +393,7 @@ Use one of those alternatives. Output paths cannot overlap bundled source direct
 
 For a new release, update `package.json`, both plugin manifests and [CHANGELOG.md](CHANGELOG.md). Validate the package, then promote the reviewed ZIP, checksum and release metadata together to a new versioned path in the Provia documentation project. Update the English and pt-AO documentation links and verify the served download.
 
-Keep published versioned assets intact. A README or source commit does not update an existing documentation ZIP. GitHub maintains source history, tags and community contributions; installation ZIPs are distributed only through documentation. Do not publish binary releases to GitHub, register public marketplaces, or add installation entry points to the Provia application or marketing website.
+Keep published versioned assets intact. A README or source commit does not update an existing documentation ZIP. GitHub maintains source history, tags, community contributions and the repository marketplace; installation ZIPs are distributed only through documentation. Do not publish binary releases to GitHub or add installation entry points to the Provia application or marketing website. Public directory submission is separate from adding this repository marketplace.
 
 ## Troubleshooting
 
