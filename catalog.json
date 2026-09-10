@@ -1,0 +1,284 @@
+[
+  {
+    "name": "provia-process-discovery",
+    "slug": "process-discovery",
+    "title": "Process discovery and pilot selection",
+    "titlePt": "Descoberta de processos e escolha do piloto",
+    "description": "Choose a suitable first Provia process from an organization’s repeated work and constraints.",
+    "inputs": "Process inventory, recent cases, pain points, volumes, owners, constraints and baseline measures.",
+    "output": "A ranked shortlist, an explained pilot choice, boundaries, owner, success measures and open questions.",
+    "steps": [
+      "Identify the event that starts each process and the observable condition that ends it. Distinguish repeatable organizational work from one-off tasks.",
+      "Compare impact, frequency, handoff delay, evidence gaps, ownership and implementation effort. Do not invent volumes or monetary savings.",
+      "Choose a pilot with a named owner and enough real cases to learn from. Separate observed baseline values from estimates.",
+      "Define the smallest useful scope and a review after several completed incidents. Hand an agreed design brief to the workflow designer."
+    ],
+    "promptPt": "Na nossa empresa em Luanda, compras, admissão de trabalhadores e pedidos de TI são tratados por correio electrónico. Ajude-nos a escolher um piloto.",
+    "promptEn": "Compare our processes and explain which one fits a four-week pilot.",
+    "incomplete": "When volume or ownership is missing, give a provisional comparison and the information needed to decide.",
+    "conflict": "When the fastest process has no owner but another has clear ownership, explain the trade-off instead of ranking by speed alone."
+  },
+  {
+    "name": "provia-workflow-designer",
+    "slug": "workflow-designer",
+    "title": "Procedure-to-workflow designer",
+    "titlePt": "Converter procedimentos em workflows",
+    "description": "Turn supplied procedures, SOPs and checklists into a Provia workflow design.",
+    "inputs": "Procedure, start/end conditions, roles, approval rules, required evidence and exceptions.",
+    "output": "An action table, execution sequence, decision outcomes, assignments, due-date rationale and a source-to-design mapping.",
+    "steps": [
+      "Extract explicit requirements with references to sections of the supplied procedure. Mark recommendations separately.",
+      "Choose Standard, Decision, Notification, Wait, HTTP Request, Sub-workflow or Form Fill by the required outcome. AI is an assignee on Standard actions.",
+      "Use sequential ordering for actual dependencies and parallel execution only for independent work. Model rework and rejection explicitly with supported decision outcomes.",
+      "Use a Form trigger for intake and Form Fill for an existing incident. Do not represent a human approval as an automatic threshold engine.",
+      "Use a reusable sub-workflow only when it has its own meaningful start, completion and owner. Identify mappings and cancellation behavior.",
+      "Return a reviewable design first. When the user requests YAML, use the workflow-package skill and its actual validator."
+    ],
+    "promptPt": "Transforme o nosso procedimento de compras num workflow. A chefia aprova o pedido e as Finanças confirmam a disponibilidade orçamental.",
+    "promptEn": "Turn this onboarding SOP into actions, approvals and exception paths.",
+    "incomplete": "If the procedure lacks a rejection path, identify the gap and propose one as a recommendation.",
+    "conflict": "If two procedure sections give different approvers, expose the conflict and keep it unresolved rather than silently choosing."
+  },
+  {
+    "name": "provia-information-model",
+    "slug": "information-model",
+    "title": "Business information model",
+    "titlePt": "Modelo de informação da organização",
+    "description": "Design Provia entities, incident metadata, mappings and tags for a business process.",
+    "inputs": "Business objects, sample records, reporting questions, forms and existing conventions.",
+    "output": "An entity model, field dictionary, mappings, tag taxonomy and data-minimization rationale.",
+    "steps": [
+      "Use entities for reusable records such as suppliers, assets or employees. Use incident metadata for facts about one execution.",
+      "Keep collection-only form answers on submissions unless routing, reporting or integration requires incident metadata.",
+      "Choose supported metadata types and stable ASCII snake_case field names. Localize labels and descriptions, never YAML keys or enums.",
+      "Specify field purpose, type, requirement, options, default, owner and sensitivity. Do not collect identity or financial details without a process need.",
+      "Separate controlled select values from flexible tags. Entity records/types and tags are setup dependencies, not definitions automatically created by workflow YAML."
+    ],
+    "promptPt": "Como organizar fornecedores e pedidos de compra sem repetir os dados do fornecedor em cada pedido?",
+    "promptEn": "Which fields belong to the supplier and which belong to a purchase request?",
+    "incomplete": "If reporting needs are unknown, keep optional collection small and identify the unanswered reporting questions.",
+    "conflict": "If a form collects personal information without a use, flag it and explain which fields can remain on the submission or be removed."
+  },
+  {
+    "name": "provia-form-designer",
+    "slug": "form-designer",
+    "title": "Intake and evidence forms",
+    "titlePt": "Formulários de entrada e de recolha de evidências",
+    "description": "Design intake forms and Form Fill responses with appropriate access and mappings.",
+    "inputs": "Respondents, desired answers, process stage, access constraints, uploads and response policy.",
+    "output": "A form specification with fields, validation, access, mappings, uploads, confirmation and testing steps.",
+    "steps": [
+      "Decide whether submission creates an incident or supplies evidence to an existing one. Use intake Form versus Form Fill accordingly.",
+      "Define internal/external respondents and the intended access path. Do not promise anonymous access or an external link without checking the configured form behavior.",
+      "Map only compatible fields needed by the incident. A single Form Fill response can map values and complete the action; multiple responses are a review collection and cannot map competing values.",
+      "Specify file types/sizes and the reason each document is needed. Write a confirmation that states what happens next without promising an unconfigured deadline.",
+      "Deliver form specifications separately from YAML. Forms are not packaged in the portable contract; require creation/linking and preview in Provia."
+    ],
+    "promptPt": "Precisamos de recolher três propostas de fornecedores durante um pedido de compra.",
+    "promptEn": "Design a self-service IT request form with a clear confirmation.",
+    "incomplete": "If the respondent access model is unknown, present the available design decision and mark access testing as pending.",
+    "conflict": "If multiple quotations are requested but each should overwrite incident amount, explain the conflict and propose a review step."
+  },
+  {
+    "name": "provia-workflow-package",
+    "slug": "workflow-package",
+    "title": "Workflow package builder",
+    "titlePt": "Gerar e validar ficheiros de workflow",
+    "description": "Generate, explain or repair portable Provia workflow YAML and run the bundled validator.",
+    "inputs": "An agreed design or YAML export, source contract version, known destination references and setup constraints.",
+    "output": "workflow.yaml, validation.json and a separate setup.md describing remaining configuration.",
+    "steps": [
+      "Read ../../references/workflow-yaml.md and ../../contracts/workflow-v1/contract-lock.json before emitting YAML. Start from a relevant bundled example rather than inventing property names.",
+      "Emit provia.ao/v1 and Workflow. Preserve exact enum values, native booleans, integer offsets and stable local action IDs. Use only supported top-level sections.",
+      "Never invent organization UUIDs. If an intended assignee/reference is unknown, keep it in setup.md and explain any deliberate omission in the importable draft. Never silently replace the actual owner with the creator.",
+      "Keep credentials out of files. Use supported placeholders and secret references with named dependencies. Keep forms, tags, files, page templates, memory documents and unsupported assignment strategies in the handover.",
+      "Run node ../../scripts/validate-workflow.mjs <workflow.yaml> from this skill directory, or resolve that script from the installed plugin root. Node 20+ is required; no npm installation or network is needed.",
+      "Fix errors and run again. Return the exact validator output. If execution is unavailable, say validation was not run and provide the command. Do not simulate a successful validation report.",
+      "Explain errors, warnings and pending destination checks separately. Provia import preview/server dry run and a human publish review still follow. Do not call an export a full backup."
+    ],
+    "promptPt": "Gere o YAML do pedido de compra aprovado e valide o ficheiro antes de o entregar.",
+    "promptEn": "Repair this exported YAML without changing the intended approval process.",
+    "incomplete": "If owner IDs are unavailable, deliver a draft with an explicit assignment handover instead of fabricated UUIDs.",
+    "conflict": "If the user requests embedded form definitions or translated YAML keys, explain the contract boundary and preserve the form specification separately."
+  },
+  {
+    "name": "provia-workflow-review",
+    "slug": "workflow-review",
+    "title": "Workflow design review",
+    "titlePt": "Revisão do desenho do workflow",
+    "description": "Review a Provia workflow for ownership, sequencing, evidence, exceptions and publication readiness.",
+    "inputs": "Workflow design or export, intended business outcome, procedure and known dependencies.",
+    "output": "A prioritized findings list with evidence, proposed corrections and representative test scenarios.",
+    "steps": [
+      "Trace each required outcome to an action and its completion evidence. Check that decisions include rejection/rework where the procedure requires them.",
+      "Check predecessor dependencies, parallel actions, missing owners, unavailable groups, due bases and cancellation behavior.",
+      "Review data collection, form mappings and secret dependencies. Use workflow-package for executable YAML checks; do not replace those checks with visual inspection.",
+      "Distinguish a product contract error, a business-policy gap and an optional improvement. Do not claim organizational or legal compliance from a structurally valid file.",
+      "Return normal, rejected, incomplete and failed-integration scenarios with expected visible results. Leave destination validation and publication clearly pending."
+    ],
+    "promptPt": "Reveja este workflow antes de publicarmos. Procure etapas sem responsável e caminhos de rejeição em falta.",
+    "promptEn": "Can these parallel actions start before budget approval?",
+    "incomplete": "If the SOP is absent, review structural issues and identify which policy questions cannot be adjudicated.",
+    "conflict": "If the YAML validates but the process bypasses approval, report the business defect separately from file validity."
+  },
+  {
+    "name": "provia-organization-rollout",
+    "slug": "organization-rollout",
+    "title": "Organization setup and adoption",
+    "titlePt": "Organização e adopção",
+    "description": "Plan Provia ownership, groups, training and adoption for a team or organization.",
+    "inputs": "Teams, administrators, process owners, pilot results, existing permissions and rollout constraints.",
+    "output": "A role/group proposal, training exercises, rollout milestones and measurable adoption reviews.",
+    "steps": [
+      "Separate organization administration, group administration, process ownership and action responsibility. Explain proposed permissions without claiming to grant them.",
+      "Prefer durable team ownership when continuity matters. Explain available assignment approaches, but mark strategies absent from YAML as configuration outside the package.",
+      "Use a small pilot, gather evidence from completed incidents and expand after reviewing confusion, late work and missing evidence.",
+      "Create role-specific exercises: start an incident, complete an action, make a decision and review a report. Define who provides support.",
+      "Measure completed useful work and ownership coverage, not only account creation or logins. Respect plan/role availability of reports and AI."
+    ],
+    "promptPt": "Vamos começar com Compras e depois alargar à equipa de Recursos Humanos. Prepare um plano de adopção.",
+    "promptEn": "Design group ownership and training for a cross-department rollout.",
+    "incomplete": "If no process owner is named, identify that dependency before treating the rollout as ready.",
+    "conflict": "If everyone is proposed as administrator, explain the authority actually needed by each role."
+  },
+  {
+    "name": "provia-automation-designer",
+    "slug": "automation-designer",
+    "title": "Automation and integrations",
+    "titlePt": "Automação e integrações",
+    "description": "Specify Provia notifications, waits, triggers, HTTP calls and reusable sub-workflows.",
+    "inputs": "Target event, system API contract, payload examples, timing, access restrictions and failure handling.",
+    "output": "An integration specification with mappings, dependencies, retries, timeouts and exception paths.",
+    "steps": [
+      "Choose manual, email, webhook or schedule for an event; choose Form for structured human intake. Choose Notification for informing people and Wait for elapsed time or a supported condition.",
+      "For HTTP calls use the actual external API documentation or user-supplied contract. Never invent endpoints. Use organization secret references and identify destination allowlist requirements.",
+      "Specify idempotency where the external API supports it, expected responses, response mappings and what happens after retries fail.",
+      "For schedules use a numeric five-field cron and an explicit timezone. Workdays skip weekends; they do not implement statutory holiday calendars.",
+      "Keep AI judgment separate from deterministic calls and human decisions. Provide setup instructions instead of implying that the plugin has connected systems."
+    ],
+    "promptPt": "Quando o pedido for aprovado, precisamos de o enviar para o ERP. Temos esta documentação da API.",
+    "promptEn": "Design a monthly review trigger in Africa/Luanda with a clear missed-run policy.",
+    "incomplete": "If the external API is unknown, produce an integration requirements list, not a guessed endpoint.",
+    "conflict": "If retries can create duplicate purchases, identify the duplicate risk and require a supported idempotency or reconciliation design."
+  },
+  {
+    "name": "provia-ai-action-designer",
+    "slug": "ai-action-designer",
+    "title": "AI actions and profiles",
+    "titlePt": "Acções e perfis de IA",
+    "description": "Design reviewable AI-assigned Standard actions and narrowly scoped Provia agent profiles.",
+    "inputs": "Task, supplied evidence, expected artifact, available fields, review policy and plan availability.",
+    "output": "Profile instructions, required skills, output contract, review behavior and evaluation cases.",
+    "steps": [
+      "Assign AI to a Standard action. Confirm the task has a reviewable result such as a summary, classification or proposed document.",
+      "Define objective, inputs, rules and output. Restrict readable/writable fields and skills to the work; avoid granting broad access for convenience.",
+      "Use human review for new or judgment-heavy tasks and keep final approvals with authorized people. State behavior for missing and contradictory evidence.",
+      "Distinguish profile instructions from approved workflow Agent Memory. Memory documents are not carried by YAML.",
+      "Test normal, incomplete and contradictory examples. Explain plan/settings prerequisites and never imply this external plugin installs profiles in Provia."
+    ],
+    "promptPt": "Queremos que a IA resuma propostas, mas que a escolha do fornecedor continue a ser feita pela equipa.",
+    "promptEn": "Write a profile for classifying IT requests with human review.",
+    "incomplete": "If expected artifacts are not defined, propose a reviewable output and identify the missing acceptance criteria.",
+    "conflict": "If the user asks AI to approve its own analysis, separate preparation from the authorized decision."
+  },
+  {
+    "name": "provia-operations-triage",
+    "slug": "operations-triage",
+    "title": "Operational triage",
+    "titlePt": "Triagem operacional",
+    "description": "Analyze supplied incident/action records for overdue, blocked, unassigned or stalled work.",
+    "inputs": "Authorized record export, observation time, timezone, statuses, ownership and due dates.",
+    "output": "An evidence-backed attention list with reasons, record references, suggested owners and next steps.",
+    "steps": [
+      "State the export period and observation time. Treat snapshots as snapshots; do not claim to be monitoring live Provia.",
+      "Check missing/duplicate records and interpret states with the current product reference. Prioritize time-sensitive impact, overdue dependencies and unclear ownership.",
+      "Use action and incident references to substantiate each finding. Distinguish overdue, blocked and merely waiting.",
+      "Propose actions and handoffs without completing records or sending messages. Identify the authorized person who can act.",
+      "If history is insufficient to infer a cause, describe the symptom and the next record to inspect."
+    ],
+    "promptPt": "Com base nesta exportação, quais são os pedidos que precisam de atenção hoje em Luanda?",
+    "promptEn": "Explain which blocked actions are delaying these incidents.",
+    "incomplete": "If due dates or the export time are missing, avoid claiming which work is overdue.",
+    "conflict": "If two rows disagree about status, flag the conflict and avoid choosing the more convenient record."
+  },
+  {
+    "name": "provia-process-improvement",
+    "slug": "process-improvement",
+    "title": "Process performance improvement",
+    "titlePt": "Melhoria do desempenho dos processos",
+    "description": "Analyze supplied Provia reports and exports to propose measurable process improvements.",
+    "inputs": "Comparable reporting periods, workflow/version scope, raw records, metric definitions and business question.",
+    "output": "Findings, reproducible calculations, limitations and a proposed change with a measurement plan.",
+    "steps": [
+      "Check time coverage, timezone, duplicates, missing completion dates and comparable workflow versions before comparing periods.",
+      "Distinguish cycle time, active work and waiting. State formulas, denominators and exclusions. Do not infer individual performance from raw case duration.",
+      "Connect bottlenecks to underlying cases, decisions and comments. Present possible causes as hypotheses until supported.",
+      "Choose one change with a process owner, expected mechanism and follow-up measure. Identify confounders such as volume or complexity changes.",
+      "Provia report availability is role/plan dependent. Scheduled report delivery is not implemented in the pinned baseline; do not promise it."
+    ],
+    "promptPt": "Este relatório mostra que as compras demoram mais. Identifique onde se perde tempo e como testar uma melhoria.",
+    "promptEn": "Compare these two periods without mixing waiting time and active work.",
+    "incomplete": "If the denominator or sample period is absent, request it or label the calculation as incomplete.",
+    "conflict": "If workload rose alongside cycle time, discuss the confounder before attributing the change to an employee."
+  },
+  {
+    "name": "provia-controls-evidence",
+    "slug": "controls-evidence",
+    "title": "Controls and evidence review",
+    "titlePt": "Revisão de controlos e evidências",
+    "description": "Map supplied organizational requirements to Provia actions and execution evidence.",
+    "inputs": "Applicable policy or verified legal sources, workflow design, incident records and evidence.",
+    "output": "A requirement/action/evidence matrix, gaps, source references and follow-up ownership.",
+    "steps": [
+      "Establish jurisdiction, effective dates and the exact requirement sources. Separate legislation, company policy and recommendations.",
+      "Map each requirement to the responsible action, decision, required data/document and evidence of execution.",
+      "Distinguish a designed control from proof it operated in a specific incident. Missing evidence does not by itself prove the activity never happened.",
+      "Quote or cite the relevant supplied provision. Verify current legal claims against authoritative sources; if verification is unavailable, record the limitation.",
+      "Return findings and remediation proposals. Do not certify compliance, invent legal retention periods or claim that an audit trail alone meets every requirement."
+    ],
+    "promptPt": "Compare o nosso procedimento de compras com estes registos e indique as evidências em falta.",
+    "promptEn": "Map this approved policy to workflow actions and the evidence from three incidents.",
+    "incomplete": "If legal sources or dates are missing, limit the review to the supplied organizational policy.",
+    "conflict": "If a template cites Brazilian legislation for Angola, identify the jurisdiction mismatch rather than adopting it."
+  },
+  {
+    "name": "provia-process-knowledge",
+    "slug": "process-knowledge",
+    "title": "Procedure and knowledge maintenance",
+    "titlePt": "Manutenção de procedimentos e conhecimento",
+    "description": "Create or reconcile SOPs, action instructions, runbooks and proposed Agent Memory from supplied Provia designs.",
+    "inputs": "Current workflow version, approved policies, existing guidance and incident lessons.",
+    "output": "A sourced procedure or knowledge artifact with owner, scope, version, conflicts and review needs.",
+    "steps": [
+      "Identify the source workflow version and distinguish published procedure from proposed changes.",
+      "Write each action instruction around inputs, task, completion evidence, owner and exceptions. Preserve real approval authority.",
+      "Reconcile conflicts between workflow and policy explicitly. Do not silently promote incident workarounds to organization-wide policy.",
+      "Keep stable approved guidance in proposed Agent Memory; keep temporary case facts in the incident. Memory proposals need administrator review.",
+      "Provide concise standalone artifacts with source references and an update owner. Pages and memory documents require separate setup after YAML import."
+    ],
+    "promptPt": "Actualize as instruções deste procedimento com base no workflow aprovado e nestas lições do piloto.",
+    "promptEn": "Turn this approved procedure into a concise runbook and a proposed memory glossary.",
+    "incomplete": "If the current approved version is unknown, label the document as a draft.",
+    "conflict": "If a case workaround contradicts policy, record it as an exception to review rather than rewriting the policy."
+  },
+  {
+    "name": "provia-workflow-change",
+    "slug": "workflow-change",
+    "title": "Workflow change planning",
+    "titlePt": "Planeamento de alterações ao workflow",
+    "description": "Plan changes to a Provia workflow with attention to active incidents, data and dependencies.",
+    "inputs": "Current and proposed designs, active-incident evidence, affected fields/integrations and change reason.",
+    "output": "A semantic comparison, impact assessment, draft-version plan, test cases and recovery instructions.",
+    "steps": [
+      "Compare intended behavior, owners, decisions, fields, forms and integrations. Explain business effects instead of only listing YAML line changes.",
+      "Identify active incidents that depend on changed fields. Runtime actions are instantiated, but some validation still consults workflow-level metadata.",
+      "Plan a new draft and publication. Trigger forms publish independently; Form Fill definitions are frozen with workflow publication.",
+      "There is no general one-click rollback control. Describe how to create a new draft that reapplies a previous design and separately address active cases.",
+      "Test the changed and unchanged paths, re-link excluded dependencies and communicate effective dates. Do not claim a YAML re-import preserves version lineage."
+    ],
+    "promptPt": "Queremos alterar os campos obrigatórios deste workflow, mas ainda existem pedidos em curso.",
+    "promptEn": "Plan a new version with an extra approval without losing evidence from open cases.",
+    "incomplete": "If active incidents cannot be inspected, identify that impact check as pending.",
+    "conflict": "If the user expects re-import to restore history, explain that it creates a new draft lineage and propose a versioned recovery plan."
+  }
+]

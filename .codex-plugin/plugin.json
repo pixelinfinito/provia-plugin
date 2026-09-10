@@ -1,0 +1,25 @@
+{
+  "name": "provia-skills",
+  "version": "1.0.0",
+  "description": "Design, structure, validate and improve Provia workflows with country-aware business guidance.",
+  "author": {
+    "name": "Pixel Infinito",
+    "url": "https://github.com/pixelinfinito"
+  },
+  "homepage": "https://docs.provia.ao/guides/provia-skills",
+  "repository": "https://github.com/pixelinfinito/provia-plugin",
+  "license": "MIT",
+  "skills": "./skills/",
+  "interface": {
+    "displayName": "Provia Skills",
+    "shortDescription": "Design and review Provia workflows.",
+    "longDescription": "Turn procedures into Provia workflow drafts, validate portable YAML, and plan organizational adoption. Includes Angola-aware guidance. Works with supplied documents and exports.",
+    "developerName": "Pixel Infinito",
+    "category": "Productivity",
+    "capabilities": [],
+    "defaultPrompt": [
+      "Transforme este procedimento de compras num workflow Provia para Angola.",
+      "Review this Provia workflow and list its setup dependencies."
+    ]
+  }
+}

@@ -1,0 +1,48 @@
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: Pedido de compra
+  prefix: COMP
+  description: "Rascunho para Angola. Configurar chefia, Finanças e formulário antes de publicar."
+triggers:
+  - type: manual
+    label: Registar pedido de compra
+    enabled: true
+    config: {}
+fields:
+  - name: purchase_amount
+    label: Montante solicitado (AOA)
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+actions:
+  - id: registar_pedido
+    name: Registar e conferir o pedido de compra
+    description: "Conferir a necessidade, o montante em AOA e as três propostas anexadas ao pedido."
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: decidir_chefia
+    name: Chefia decide sobre o pedido
+    description: "Atribuição à chefia pendente de configuração. Registar a decisão após rever o pedido e as propostas."
+    type: decision
+    executionMode: sequential
+    required: true
+    config:
+      branches:
+        - label: Aprovar
+          outcome: continue
+          requiresComment: false
+        - label: Rejeitar
+          outcome: cancel_incident
+          requiresComment: true
+  - id: confirmar_orcamento
+    name: Finanças confirma disponibilidade orçamental
+    description: "Atribuição a Finanças pendente de configuração. Concluir apenas com confirmação orçamental documentada, incluindo montante e referência do orçamento."
+    type: standard
+    executionMode: sequential
+    required: true

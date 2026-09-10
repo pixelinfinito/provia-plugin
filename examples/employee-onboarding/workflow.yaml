@@ -1,0 +1,46 @@
+# Training draft for Angola; see setup.md before importing.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Admissão de trabalhador — exemplo"
+  prefix: ADM
+  description: "Exemplo de formação. Configurar responsáveis e regras antes da publicação."
+triggers:
+  - type: manual
+    label: Iniciar pedido
+    enabled: true
+    config: {}
+fields:
+  - name: start_date
+    label: Data de início
+    type: date
+    required: true
+actions:
+  - id: step_1
+    name: Confirmar os dados aprovados
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_2
+    name: Preparar acessos e equipamento
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_3
+    name: Realizar o acolhimento
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_4
+    name: Confirmar a conclusão
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator

@@ -1,0 +1,46 @@
+# Training draft for Angola; see setup.md before importing.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Acção correctiva — exemplo"
+  prefix: AC
+  description: "Exemplo de formação. Configurar responsáveis e regras antes da publicação."
+triggers:
+  - type: manual
+    label: Iniciar pedido
+    enabled: true
+    config: {}
+fields:
+  - name: finding_reference
+    label: Referência da constatação
+    type: text
+    required: true
+actions:
+  - id: step_1
+    name: Registar a constatação
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_2
+    name: Analisar a causa
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_3
+    name: Executar a correcção
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_4
+    name: Verificar a eficácia
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator

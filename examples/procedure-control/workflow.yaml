@@ -1,0 +1,53 @@
+# Training draft for Angola; see setup.md before importing.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Revisão de procedimento — exemplo"
+  prefix: PROC
+  description: "Exemplo de formação. Configurar responsáveis e regras antes da publicação."
+triggers:
+  - type: manual
+    label: Iniciar pedido
+    enabled: true
+    config: {}
+fields:
+  - name: document_reference
+    label: Referência do documento
+    type: text
+    required: true
+actions:
+  - id: step_1
+    name: Identificar a alteração
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_2
+    name: Preparar a revisão
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_3
+    name: Rever e aprovar
+    type: decision
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+    config:
+      branches:
+        - label: Aprovar
+          outcome: continue
+        - label: Rejeitar
+          outcome: cancel_incident
+          requiresComment: true
+  - id: step_4
+    name: Registar a versão aprovada
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator

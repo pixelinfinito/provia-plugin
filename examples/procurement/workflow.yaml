@@ -1,0 +1,56 @@
+# Training draft for Angola; see setup.md before importing.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Pedido de compra — exemplo"
+  prefix: COMP
+  description: "Exemplo de formação. Configurar responsáveis e regras antes da publicação."
+triggers:
+  - type: manual
+    label: Iniciar pedido
+    enabled: true
+    config: {}
+fields:
+  - name: purchase_amount
+    label: Montante solicitado
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+actions:
+  - id: step_1
+    name: Registar a necessidade
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_2
+    name: Rever o pedido
+    type: decision
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+    config:
+      branches:
+        - label: Aprovar
+          outcome: continue
+        - label: Rejeitar
+          outcome: cancel_incident
+          requiresComment: true
+  - id: step_3
+    name: Confirmar disponibilidade orçamental
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_4
+    name: Registar a encomenda
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator

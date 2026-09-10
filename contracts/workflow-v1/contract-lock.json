@@ -1,0 +1,68 @@
+{
+  "apiVersion": "provia.ao/v1",
+  "sourceRevision": "e2875535d29dc976127ee01ebea028cd717a46a5",
+  "generatedBy": "scripts/build-contract.mjs",
+  "engineSha256": "47ea11f7478c0fe789018d30dbd25c613c6dabe728745e0cd624cdd9bda73083",
+  "sourceFiles": {
+    "backend/src/lib/cron.ts": "4fb64e136b66a74eef3f03048f72243b050a7b7cafed30adc9141240da6ad399",
+    "backend/src/lib/errors.ts": "ea6848230bd7565bc4877c1010ee74042cd5ffa79a643cef0f0c26e8eb756038",
+    "backend/src/lib/file-constants.ts": "cefff7df52783978fd752c7fe4c2df9d8693020b7469c2e5aae973383711dc7a",
+    "backend/src/lib/metadata-validation.ts": "29afdcc4051fe0b0bd3cb8003dd845051278d59b145a2dae21f7c7e13ec25619",
+    "backend/src/lib/metadata.ts": "c9a155fc06e8797ed1ecfe7a79a9aad9f26f1f905ea7e20986d85844d82b2a74",
+    "backend/src/lib/neutral-refusal.ts": "663998b09220f0aefaba1967c1ad94c187d51a1b9146bcdf1f52513427ec5bac",
+    "backend/src/lib/schemas/action-type.schemas.ts": "327481895961283c854b7ac1df58fec9133b3f3837bdf710668bc66002e1054a",
+    "backend/src/lib/schemas/entity-association.schemas.ts": "44abdbc951aa65ea80f06c101ba290dc6383c34e6cc7bebb24ba021b7743f5e7",
+    "backend/src/lib/schemas/http-request.schemas.ts": "e30d732e09650be7e516fc8004c094f9ecbeb7d1e4f0c2bac63ab00c0c50e7f5",
+    "backend/src/lib/schemas/organization.schemas.ts": "69e29b5c0ab9e7798309f972b00da2347482205aae6e6aa41f186010fcf42358",
+    "backend/src/lib/schemas/workflow-import.schemas.ts": "5c45ea1d8b89bbcecb80cc10291326df38e91bc6d8fe23981f5ba64edbc5e1e7",
+    "backend/src/lib/trigger-config-validation.ts": "f60e02e51f62492482e578af23c320d1025237594813bce40624f03959930a16",
+    "backend/src/lib/validation.ts": "e7b4cb2591205f388ce1b4646b1e3a95f1a909c9db119636bd7bb8b98f292330",
+    "frontend/src/components/action/AIAgentConfig.tsx": "7907e8fdcbe6c4f09aca758d28732e819fc2542b116402f8d9f4f2adfcb0e1be",
+    "frontend/src/lib/field-default-validation.ts": "cc0bd9d4ee8c7e4093f5e814a0271b658ef5f36f257b929cd032b68339de786b",
+    "frontend/src/lib/field-utils.ts": "07fceb74fc95be1d4bbecdd820b553d9f52ada02378da1884e837283500c4fcd",
+    "frontend/src/lib/field-validators.ts": "6c517ff6fe40316bad1f719c947f4ab5799bdbd4810d647bd779d67bb06f79b2",
+    "frontend/src/lib/validation-messages.ts": "598abf5640372a7b9ea47c23c6ea5c01fbe29713b4c5b4f7d0775194fb5f7fc3",
+    "frontend/src/lib/workflow-io/convert.ts": "6612dd1197168313f12c4c8c203210dfe4db0a8a0db3f231ec84dc4c3d42244d",
+    "frontend/src/lib/workflow-io/create.ts": "05c126bb301866acc35050f30e621d214e93550c026cb2253d30b754372d61b9",
+    "frontend/src/lib/workflow-io/normalize.ts": "a6a4a2bf7e298693a32c715c12bea8126ade1bf92d0b657b87c1c02a849b3256",
+    "frontend/src/lib/workflow-io/parse.ts": "f3f69b33d61855f878007527805d567f699a4728190ccce85afa8d03c722db50",
+    "frontend/src/lib/workflow-io/secrets.ts": "47514609d6c0e5453462ef952cfdc12b96cdaa51a7bb736722cb59373e3af9a8",
+    "frontend/src/lib/workflow-io/validate.ts": "68027dc9f1678d48ed58aa4bc6e3c8f9fe59f213ad4b36c11b5367b10a2f5a7a",
+    "frontend/src/lib/workflow-io/yaml-schema.ts": "668465c1014b5bc6118f5fe793e5e91626a8e58fe2b2610fd2acb02b1ffa34bf",
+    "frontend/src/lib/workflow-io/zip.ts": "a7493f3ab236f19962abe3548d77fcbe41f83a7cedb302f76ab7593dfab4a4ae",
+    "frontend/src/lib/workflow-validation.ts": "2d423cb686a8c07b89b31f9045ab49292c4fb32edf93043963a16acd091fc2bc",
+    "frontend/src/lib/workflow-wizard-types.ts": "4f0dded29ab496ff6ebcabeaa4f3d339fa19ad4159454aa7b8a16081094d107e"
+  },
+  "libraries": [
+    {
+      "name": "@internationalized/date",
+      "version": "3.12.0",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "@swc/helpers",
+      "version": "0.5.17",
+      "license": "Apache-2.0"
+    },
+    {
+      "name": "fflate",
+      "version": "0.8.3",
+      "license": "MIT"
+    },
+    {
+      "name": "luxon",
+      "version": "3.7.2",
+      "license": "MIT"
+    },
+    {
+      "name": "yaml",
+      "version": "2.9.0",
+      "license": "ISC"
+    },
+    {
+      "name": "zod",
+      "version": "3.25.76",
+      "license": "MIT"
+    }
+  ]
+}

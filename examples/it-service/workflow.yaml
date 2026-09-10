@@ -1,0 +1,46 @@
+# Training draft for Angola; see setup.md before importing.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Pedido de assistência de TI — exemplo"
+  prefix: TI
+  description: "Exemplo de formação. Configurar responsáveis e regras antes da publicação."
+triggers:
+  - type: manual
+    label: Iniciar pedido
+    enabled: true
+    config: {}
+fields:
+  - name: request_summary
+    label: Descrição do pedido
+    type: text
+    required: true
+actions:
+  - id: step_1
+    name: Classificar o pedido
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_2
+    name: Diagnosticar o problema
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_3
+    name: Registar a resolução
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: step_4
+    name: Confirmar com o requerente
+    type: standard
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator

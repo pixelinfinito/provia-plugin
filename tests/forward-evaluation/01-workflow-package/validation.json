@@ -1,0 +1,11 @@
+{
+  "valid": true,
+  "apiVersion": "provia.ao/v1",
+  "contractRevision": "e2875535d29dc976127ee01ebea028cd717a46a5",
+  "destinationValidation": "not_run",
+  "backendSchemaValidation": "passed",
+  "readyToPublish": false,
+  "errors": [],
+  "warnings": [],
+  "setupRequired": []
+}

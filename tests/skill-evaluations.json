@@ -1,0 +1,338 @@
+[
+  {
+    "id": "process-discovery-normal",
+    "skill": "provia-process-discovery",
+    "mode": "normal",
+    "prompt": "Na nossa empresa em Luanda, compras, admissão de trabalhadores e pedidos de TI são tratados por correio electrónico. Ajude-nos a escolher um piloto.",
+    "expected": "A ranked shortlist, an explained pilot choice, boundaries, owner, success measures and open questions.",
+    "status": "not_run"
+  },
+  {
+    "id": "process-discovery-incomplete",
+    "skill": "provia-process-discovery",
+    "mode": "incomplete",
+    "prompt": "Compare our processes and explain which one fits a four-week pilot. Some required context is unavailable.",
+    "expected": "When volume or ownership is missing, give a provisional comparison and the information needed to decide.",
+    "status": "not_run"
+  },
+  {
+    "id": "process-discovery-conflicting",
+    "skill": "provia-process-discovery",
+    "mode": "conflicting",
+    "prompt": "Purchasing takes 2 days but nobody will own it. IT support takes 5 days and Ana owns it. Choose the fastest process for our pilot.",
+    "expected": "When the fastest process has no owner but another has clear ownership, explain the trade-off instead of ranking by speed alone.",
+    "status": "not_run"
+  },
+  {
+    "id": "workflow-designer-normal",
+    "skill": "provia-workflow-designer",
+    "mode": "normal",
+    "prompt": "Transforme o nosso procedimento de compras num workflow. A chefia aprova o pedido e as Finanças confirmam a disponibilidade orçamental.",
+    "expected": "An action table, execution sequence, decision outcomes, assignments, due-date rationale and a source-to-design mapping.",
+    "status": "not_run"
+  },
+  {
+    "id": "workflow-designer-incomplete",
+    "skill": "provia-workflow-designer",
+    "mode": "incomplete",
+    "prompt": "Turn this onboarding SOP into actions, approvals and exception paths. Some required context is unavailable.",
+    "expected": "If the procedure lacks a rejection path, identify the gap and propose one as a recommendation.",
+    "status": "not_run"
+  },
+  {
+    "id": "workflow-designer-conflicting",
+    "skill": "provia-workflow-designer",
+    "mode": "conflicting",
+    "prompt": "SOP section 2: department manager approves. Section 7: only the finance director approves. Convert it into a workflow; no further context is available.",
+    "expected": "If two procedure sections give different approvers, expose the conflict and keep it unresolved rather than silently choosing.",
+    "status": "not_run"
+  },
+  {
+    "id": "information-model-normal",
+    "skill": "provia-information-model",
+    "mode": "normal",
+    "prompt": "Como organizar fornecedores e pedidos de compra sem repetir os dados do fornecedor em cada pedido?",
+    "expected": "An entity model, field dictionary, mappings, tag taxonomy and data-minimization rationale.",
+    "status": "not_run"
+  },
+  {
+    "id": "information-model-incomplete",
+    "skill": "provia-information-model",
+    "mode": "incomplete",
+    "prompt": "Which fields belong to the supplier and which belong to a purchase request? Some required context is unavailable.",
+    "expected": "If reporting needs are unknown, keep optional collection small and identify the unanswered reporting questions.",
+    "status": "not_run"
+  },
+  {
+    "id": "information-model-conflicting",
+    "skill": "provia-information-model",
+    "mode": "conflicting",
+    "prompt": "We need supplier contact details for orders. Add passport numbers and family details of every supplier employee, although we have no stated use for those fields.",
+    "expected": "If a form collects personal information without a use, flag it and explain which fields can remain on the submission or be removed.",
+    "status": "not_run"
+  },
+  {
+    "id": "form-designer-normal",
+    "skill": "provia-form-designer",
+    "mode": "normal",
+    "prompt": "Precisamos de recolher três propostas de fornecedores durante um pedido de compra.",
+    "expected": "A form specification with fields, validation, access, mappings, uploads, confirmation and testing steps.",
+    "status": "not_run"
+  },
+  {
+    "id": "form-designer-incomplete",
+    "skill": "provia-form-designer",
+    "mode": "incomplete",
+    "prompt": "Design a self-service IT request form with a clear confirmation. Some required context is unavailable.",
+    "expected": "If the respondent access model is unknown, present the available design decision and mark access testing as pending.",
+    "status": "not_run"
+  },
+  {
+    "id": "form-designer-conflicting",
+    "skill": "provia-form-designer",
+    "mode": "conflicting",
+    "prompt": "Collect three supplier quotations as multiple Form Fill responses and map each response amount to the same incident amount field.",
+    "expected": "If multiple quotations are requested but each should overwrite incident amount, explain the conflict and propose a review step.",
+    "status": "not_run"
+  },
+  {
+    "id": "workflow-package-normal",
+    "skill": "provia-workflow-package",
+    "mode": "normal",
+    "prompt": "Gere o YAML do pedido de compra aprovado e valide o ficheiro antes de o entregar.",
+    "expected": "workflow.yaml, validation.json and a separate setup.md describing remaining configuration.",
+    "status": "not_run"
+  },
+  {
+    "id": "workflow-package-incomplete",
+    "skill": "provia-workflow-package",
+    "mode": "incomplete",
+    "prompt": "Repair this exported YAML without changing the intended approval process. Some required context is unavailable.",
+    "expected": "If owner IDs are unavailable, deliver a draft with an explicit assignment handover instead of fabricated UUIDs.",
+    "status": "not_run"
+  },
+  {
+    "id": "workflow-package-conflicting",
+    "skill": "provia-workflow-package",
+    "mode": "conflicting",
+    "prompt": "Generate a provia.ao/v1 workflow YAML with Portuguese property names and an embedded intake form definition. Request, manager approval and finance confirmation are the three steps.",
+    "expected": "If the user requests embedded form definitions or translated YAML keys, explain the contract boundary and preserve the form specification separately.",
+    "status": "not_run"
+  },
+  {
+    "id": "workflow-review-normal",
+    "skill": "provia-workflow-review",
+    "mode": "normal",
+    "prompt": "Reveja este workflow antes de publicarmos. Procure etapas sem responsável e caminhos de rejeição em falta.",
+    "expected": "A prioritized findings list with evidence, proposed corrections and representative test scenarios.",
+    "status": "not_run"
+  },
+  {
+    "id": "workflow-review-incomplete",
+    "skill": "provia-workflow-review",
+    "mode": "incomplete",
+    "prompt": "Can these parallel actions start before budget approval? Some required context is unavailable.",
+    "expected": "If the SOP is absent, review structural issues and identify which policy questions cannot be adjudicated.",
+    "status": "not_run"
+  },
+  {
+    "id": "workflow-review-conflicting",
+    "skill": "provia-workflow-review",
+    "mode": "conflicting",
+    "prompt": "This workflow passes file checks: request and ordering run in parallel. The supplied policy says the manager must approve before ordering. Review publication readiness.",
+    "expected": "If the YAML validates but the process bypasses approval, report the business defect separately from file validity.",
+    "status": "not_run"
+  },
+  {
+    "id": "organization-rollout-normal",
+    "skill": "provia-organization-rollout",
+    "mode": "normal",
+    "prompt": "Vamos começar com Compras e depois alargar à equipa de Recursos Humanos. Prepare um plano de adopção.",
+    "expected": "A role/group proposal, training exercises, rollout milestones and measurable adoption reviews.",
+    "status": "not_run"
+  },
+  {
+    "id": "organization-rollout-incomplete",
+    "skill": "provia-organization-rollout",
+    "mode": "incomplete",
+    "prompt": "Design group ownership and training for a cross-department rollout. Some required context is unavailable.",
+    "expected": "If no process owner is named, identify that dependency before treating the rollout as ready.",
+    "status": "not_run"
+  },
+  {
+    "id": "organization-rollout-conflicting",
+    "skill": "provia-organization-rollout",
+    "mode": "conflicting",
+    "prompt": "We want a company-wide rollout next week. The pilot has 2 completed cases and 8 blocked cases; there is no named process owner. Prepare the rollout.",
+    "expected": "If everyone is proposed as administrator, explain the authority actually needed by each role.",
+    "status": "not_run"
+  },
+  {
+    "id": "automation-designer-normal",
+    "skill": "provia-automation-designer",
+    "mode": "normal",
+    "prompt": "Quando o pedido for aprovado, precisamos de o enviar para o ERP. Temos esta documentação da API.",
+    "expected": "An integration specification with mappings, dependencies, retries, timeouts and exception paths.",
+    "status": "not_run"
+  },
+  {
+    "id": "automation-designer-incomplete",
+    "skill": "provia-automation-designer",
+    "mode": "incomplete",
+    "prompt": "Design a monthly review trigger in Africa/Luanda with a clear missed-run policy. Some required context is unavailable.",
+    "expected": "If the external API is unknown, produce an integration requirements list, not a guessed endpoint.",
+    "status": "not_run"
+  },
+  {
+    "id": "automation-designer-conflicting",
+    "skill": "provia-automation-designer",
+    "mode": "conflicting",
+    "prompt": "The payment API offers POST /payments with no idempotency key. A timeout does not tell us whether payment happened. Retry automatically five times.",
+    "expected": "If retries can create duplicate purchases, identify the duplicate risk and require a supported idempotency or reconciliation design.",
+    "status": "not_run"
+  },
+  {
+    "id": "ai-action-designer-normal",
+    "skill": "provia-ai-action-designer",
+    "mode": "normal",
+    "prompt": "Queremos que a IA resuma propostas, mas que a escolha do fornecedor continue a ser feita pela equipa.",
+    "expected": "Profile instructions, required skills, output contract, review behavior and evaluation cases.",
+    "status": "not_run"
+  },
+  {
+    "id": "ai-action-designer-incomplete",
+    "skill": "provia-ai-action-designer",
+    "mode": "incomplete",
+    "prompt": "Write a profile for classifying IT requests with human review. Some required context is unavailable.",
+    "expected": "If expected artifacts are not defined, propose a reviewable output and identify the missing acceptance criteria.",
+    "status": "not_run"
+  },
+  {
+    "id": "ai-action-designer-conflicting",
+    "skill": "provia-ai-action-designer",
+    "mode": "conflicting",
+    "prompt": "Create an AI profile that compares supplier quotations, selects the winner and approves its own recommendation without a human decision.",
+    "expected": "If the user asks AI to approve its own analysis, separate preparation from the authorized decision.",
+    "status": "not_run"
+  },
+  {
+    "id": "operations-triage-normal",
+    "skill": "provia-operations-triage",
+    "mode": "normal",
+    "prompt": "Com base nesta exportação, quais são os pedidos que precisam de atenção hoje em Luanda?",
+    "expected": "An evidence-backed attention list with reasons, record references, suggested owners and next steps.",
+    "status": "not_run"
+  },
+  {
+    "id": "operations-triage-incomplete",
+    "skill": "provia-operations-triage",
+    "mode": "incomplete",
+    "prompt": "Explain which blocked actions are delaying these incidents. Some required context is unavailable.",
+    "expected": "If due dates or the export time are missing, avoid claiming which work is overdue.",
+    "status": "not_run"
+  },
+  {
+    "id": "operations-triage-conflicting",
+    "skill": "provia-operations-triage",
+    "mode": "conflicting",
+    "prompt": "Two rows in this export describe P1 at the same observation time: one says completed, the other blocked. P2 is open but has no due date. Which is overdue?",
+    "expected": "If two rows disagree about status, flag the conflict and avoid choosing the more convenient record.",
+    "status": "not_run"
+  },
+  {
+    "id": "process-improvement-normal",
+    "skill": "provia-process-improvement",
+    "mode": "normal",
+    "prompt": "Este relatório mostra que as compras demoram mais. Identifique onde se perde tempo e como testar uma melhoria.",
+    "expected": "Findings, reproducible calculations, limitations and a proposed change with a measurement plan.",
+    "status": "not_run"
+  },
+  {
+    "id": "process-improvement-incomplete",
+    "skill": "provia-process-improvement",
+    "mode": "incomplete",
+    "prompt": "Compare these two periods without mixing waiting time and active work. Some required context is unavailable.",
+    "expected": "If the denominator or sample period is absent, request it or label the calculation as incomplete.",
+    "status": "not_run"
+  },
+  {
+    "id": "process-improvement-conflicting",
+    "skill": "provia-process-improvement",
+    "mode": "conflicting",
+    "prompt": "August: 10 completed requests, mean 2 days. September: 30, mean 4 days; cases are more complex. Prove that the new manager worsened performance.",
+    "expected": "If workload rose alongside cycle time, discuss the confounder before attributing the change to an employee.",
+    "status": "not_run"
+  },
+  {
+    "id": "controls-evidence-normal",
+    "skill": "provia-controls-evidence",
+    "mode": "normal",
+    "prompt": "Compare o nosso procedimento de compras com estes registos e indique as evidências em falta.",
+    "expected": "A requirement/action/evidence matrix, gaps, source references and follow-up ownership.",
+    "status": "not_run"
+  },
+  {
+    "id": "controls-evidence-incomplete",
+    "skill": "provia-controls-evidence",
+    "mode": "incomplete",
+    "prompt": "Map this approved policy to workflow actions and the evidence from three incidents. Some required context is unavailable.",
+    "expected": "If legal sources or dates are missing, limit the review to the supplied organizational policy.",
+    "status": "not_run"
+  },
+  {
+    "id": "controls-evidence-conflicting",
+    "skill": "provia-controls-evidence",
+    "mode": "conflicting",
+    "prompt": "Our Angolan internal policy requires two quotations above 500000 AOA. P1 is 600000 with one quotation. The consultant template cites Brazilian LGPD. Review the evidence.",
+    "expected": "If a template cites Brazilian legislation for Angola, identify the jurisdiction mismatch rather than adopting it.",
+    "status": "not_run"
+  },
+  {
+    "id": "process-knowledge-normal",
+    "skill": "provia-process-knowledge",
+    "mode": "normal",
+    "prompt": "Actualize as instruções deste procedimento com base no workflow aprovado e nestas lições do piloto.",
+    "expected": "A sourced procedure or knowledge artifact with owner, scope, version, conflicts and review needs.",
+    "status": "not_run"
+  },
+  {
+    "id": "process-knowledge-incomplete",
+    "skill": "provia-process-knowledge",
+    "mode": "incomplete",
+    "prompt": "Turn this approved procedure into a concise runbook and a proposed memory glossary. Some required context is unavailable.",
+    "expected": "If the current approved version is unknown, label the document as a draft.",
+    "status": "not_run"
+  },
+  {
+    "id": "process-knowledge-conflicting",
+    "skill": "provia-process-knowledge",
+    "mode": "conflicting",
+    "prompt": "The approved procedure requires two approvals. One urgent case skipped both. Rewrite the official procedure to make that workaround the normal process.",
+    "expected": "If a case workaround contradicts policy, record it as an exception to review rather than rewriting the policy.",
+    "status": "not_run"
+  },
+  {
+    "id": "workflow-change-normal",
+    "skill": "provia-workflow-change",
+    "mode": "normal",
+    "prompt": "Queremos alterar os campos obrigatórios deste workflow, mas ainda existem pedidos em curso.",
+    "expected": "A semantic comparison, impact assessment, draft-version plan, test cases and recovery instructions.",
+    "status": "not_run"
+  },
+  {
+    "id": "workflow-change-incomplete",
+    "skill": "provia-workflow-change",
+    "mode": "incomplete",
+    "prompt": "Plan a new version with an extra approval without losing evidence from open cases. Some required context is unavailable.",
+    "expected": "If active incidents cannot be inspected, identify that impact check as pending.",
+    "status": "not_run"
+  },
+  {
+    "id": "workflow-change-conflicting",
+    "skill": "provia-workflow-change",
+    "mode": "conflicting",
+    "prompt": "Import the previous YAML to restore version history and revert required fields. Six incidents remain open and their records are unavailable.",
+    "expected": "If the user expects re-import to restore history, explain that it creates a new draft lineage and propose a versioned recovery plan.",
+    "status": "not_run"
+  }
+]
