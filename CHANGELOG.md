@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.0.1
+
+Reject release output locations that overlap bundled source directories or their ancestors, preventing previous build artifacts from entering subsequent archives. Added a regression test. Skills and the pinned Provia contract are unchanged.
+
+
 ## 1.0.0
 
 - Fourteen skills for workflow creation, organizational use and process improvement.

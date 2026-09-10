@@ -19,6 +19,9 @@ lock = json.loads((root / 'contracts/workflow-v1/contract-lock.json').read_text(
 if hashlib.sha256((root / 'contracts/workflow-v1/engine.mjs').read_bytes()).hexdigest() != lock['engineSha256']:
     raise SystemExit('Contract checksum mismatch')
 folders = ['.claude-plugin', '.codex-plugin', 'skills', 'references', 'contracts', 'examples', 'scripts', 'tests']
+output = args.output.resolve()
+if output == root or output in root.parents or any(output == root / folder or root / folder in output.parents for folder in folders):
+    raise SystemExit('Invalid release output: choose a directory outside bundled source folders and their ancestors')
 files = [root / name for name in ['package.json', 'catalog.json', 'README.md', 'CONTRIBUTING.md', 'CHANGELOG.md', 'LICENSE', 'THIRD_PARTY_NOTICES.md']]
 for folder in folders:
     files.extend(p for p in (root / folder).rglob('*') if p.is_file() and '__pycache__' not in p.parts and p.name != '.DS_Store')

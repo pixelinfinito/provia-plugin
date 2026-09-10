@@ -6,6 +6,7 @@ import os from 'node:os';
 import { execFileSync } from 'node:child_process';
 import { validateWorkflow } from '../scripts/validate-workflow.mjs';
 const root = path.resolve(import.meta.dirname, '..');
+const version = JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version;
 test('all five business examples validate and include a separate setup handover', () => {
   const entries = fs.readdirSync(path.join(root, 'examples'), { withFileTypes: true }).filter(x => x.isDirectory());
   assert.equal(entries.length, 5);
@@ -26,7 +27,7 @@ test('release is reproducible, has one root, both manifests, examples and offlin
     const a = path.join(dir, 'a'), b = path.join(dir, 'b');
     execFileSync('python3', ['scripts/build-release.py', '--output', a], { cwd: root });
     execFileSync('python3', ['scripts/build-release.py', '--output', b], { cwd: root });
-    const zip = 'provia-skills-1.0.0.zip';
+    const zip = `provia-skills-${version}.zip`;
     assert.deepEqual(fs.readFileSync(path.join(a, zip)), fs.readFileSync(path.join(b, zip)));
     const entries = execFileSync('unzip', ['-Z1', path.join(a, zip)], { encoding: 'utf8' }).trim().split('\n');
     assert.ok(entries.every(x => x.startsWith('provia-skills/') && !x.includes('/../')));
@@ -34,10 +35,15 @@ test('release is reproducible, has one root, both manifests, examples and offlin
     assert.equal(entries.filter(x => x.endsWith('/SKILL.md')).length, 14);
     assert.ok(!entries.some(x => /node_modules|\.git\/|dist\//.test(x)));
     const release = JSON.parse(fs.readFileSync(path.join(a, 'release.json'), 'utf8'));
-    assert.equal(release.version, '1.0.0');
+    assert.equal(release.version, version);
     assert.equal(release.skillCount, 14);
     execFileSync('unzip', ['-q', path.join(a, zip), '-d', path.join(dir, 'extract')]);
     const result = JSON.parse(execFileSync(process.execPath, ['scripts/validate-workflow.mjs', 'examples/procurement/workflow.yaml'], { cwd: path.join(dir, 'extract/provia-skills'), encoding: 'utf8' }));
     assert.equal(result.valid, true);
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+});
+test('release output cannot overlap source inputs or their ancestors', () => {
+  for (const output of [root, path.dirname(root), path.join(root, 'scripts'), path.join(root, 'examples', 'nested-release')]) {
+    assert.throws(() => execFileSync('python3', ['scripts/build-release.py', '--output', output], { cwd: root, stdio: 'pipe' }), /Invalid release output/);
+  }
 });

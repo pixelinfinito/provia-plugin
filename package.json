@@ -1,9 +1,11 @@
 {
   "name": "provia-skills",
-  "version": "1.0.0",
+  "version": "1.0.1",
   "private": true,
   "type": "module",
-  "engines": { "node": ">=20.11" },
+  "engines": {
+    "node": ">=20.11"
+  },
   "scripts": {
     "test": "node --test tests/*.test.mjs",
     "validate": "node scripts/validate-workflow.mjs",
