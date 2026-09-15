@@ -35,3 +35,7 @@ A semantic comparison, impact assessment, draft-version plan, test cases and rec
 If active incidents cannot be inspected, identify that impact check as pending.
 
 If the user expects re-import to restore history, explain that it creates a new draft lineage and propose a versioned recovery plan.
+
+## Final chat recommendation
+
+Read [next-step guidance](../../references/next-step.md). End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task’s artifacts forward. Make it a recommendation, not an automatic invocation. If no further skill is needed, recommend the concrete next action instead.

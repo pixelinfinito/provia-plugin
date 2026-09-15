@@ -37,3 +37,7 @@ workflow.yaml, the exact structural validation.json, editorial-review.md and a s
 If owner IDs are unavailable, deliver a draft with an explicit assignment handover instead of fabricated UUIDs.
 
 If the user requests embedded form definitions or translated YAML keys, explain the contract boundary and preserve the form specification separately.
+
+## Final chat recommendation
+
+Read [next-step guidance](../../references/next-step.md). End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task’s artifacts forward. Make it a recommendation, not an automatic invocation. If no further skill is needed, recommend the concrete next action instead.

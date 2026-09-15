@@ -33,3 +33,7 @@ An evidence-backed attention list with reasons, record references, suggested own
 If due dates or the export time are missing, avoid claiming which work is overdue.
 
 If two rows disagree about status, flag the conflict and avoid choosing the more convenient record.
+
+## Final chat recommendation
+
+Read [next-step guidance](../../references/next-step.md). End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task’s artifacts forward. Make it a recommendation, not an automatic invocation. If no further skill is needed, recommend the concrete next action instead.

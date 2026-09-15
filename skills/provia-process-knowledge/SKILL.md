@@ -35,3 +35,7 @@ A sourced procedure or knowledge artifact with owner, scope, version, conflicts 
 If the current approved version is unknown, label the document as a draft.
 
 If a case workaround contradicts policy, record it as an exception to review rather than rewriting the policy.
+
+## Final chat recommendation
+
+Read [next-step guidance](../../references/next-step.md). End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task’s artifacts forward. Make it a recommendation, not an automatic invocation. If no further skill is needed, recommend the concrete next action instead.

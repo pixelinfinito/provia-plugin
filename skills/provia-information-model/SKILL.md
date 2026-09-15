@@ -33,3 +33,7 @@ An entity model, field dictionary, mappings, tag taxonomy and data-minimization 
 If reporting needs are unknown, keep optional collection small and identify the unanswered reporting questions.
 
 If a form collects personal information without a use, flag it and explain which fields can remain on the submission or be removed.
+
+## Final chat recommendation
+
+Read [next-step guidance](../../references/next-step.md). End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task’s artifacts forward. Make it a recommendation, not an automatic invocation. If no further skill is needed, recommend the concrete next action instead.

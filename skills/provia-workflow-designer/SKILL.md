@@ -34,3 +34,7 @@ An action table, execution sequence, decision outcomes, assignments, due-date ra
 If the procedure lacks a rejection path, identify the gap and propose one as a recommendation.
 
 If two procedure sections give different approvers, expose the conflict and keep it unresolved rather than silently choosing.
+
+## Final chat recommendation
+
+Read [next-step guidance](../../references/next-step.md). End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task’s artifacts forward. Make it a recommendation, not an automatic invocation. If no further skill is needed, recommend the concrete next action instead.

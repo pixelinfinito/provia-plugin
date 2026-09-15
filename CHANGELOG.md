@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.3
+
+All 14 skills now end the final chat response with a contextual next-step recommendation, explaining the next skill and providing a copyable request. Shared guidance covers conditional routing, artifact handover, host-specific invocation and cases where no further skill is needed. Recommendations do not automatically invoke skills or interrupt already authorized end-to-end work. The YAML contract and validators are unchanged.
+
 ## 1.0.2
 
 - Shared action-writing guidance for all action types, with Portuguese and English examples and explicit preservation of business meaning, assignments and routing.

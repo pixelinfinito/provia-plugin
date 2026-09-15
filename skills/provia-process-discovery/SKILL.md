@@ -32,3 +32,7 @@ A ranked shortlist, an explained pilot choice, boundaries, owner, success measur
 When volume or ownership is missing, give a provisional comparison and the information needed to decide.
 
 When the fastest process has no owner but another has clear ownership, explain the trade-off instead of ranking by speed alone.
+
+## Final chat recommendation
+
+Read [next-step guidance](../../references/next-step.md). End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task’s artifacts forward. Make it a recommendation, not an automatic invocation. If no further skill is needed, recommend the concrete next action instead.

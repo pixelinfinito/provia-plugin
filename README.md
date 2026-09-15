@@ -93,6 +93,8 @@ The structured catalogue is available in [catalog.json](catalog.json). Each entr
 
 ## Use the skills together
 
+Every skill ends its final chat response with a recommended next skill, a reason and a request you can copy. The recommendation follows what the workflow still needs and carries the current artifacts forward. If no additional skill is useful, it identifies the next action in Provia or the evidence to collect. See [next-step guidance](references/next-step.md). It is a recommendation; it does not automatically run another skill.
+
 Choose the sequence that matches the result you need. Carry approved artifacts from one step to the next.
 
 | Goal | Suggested sequence |
