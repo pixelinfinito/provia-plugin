@@ -1,0 +1,31 @@
+{
+  "comparison": "Parsed YAML equality excluding only actions[].name and actions[].description",
+  "behaviorPreserved": true,
+  "actionCount": 4,
+  "changes": [
+    {
+      "id": "confirmar_gratificacao",
+      "field": "name",
+      "before": "GC confirma o pagamento da gratificação",
+      "after": "Confirmar o pagamento da gratificação"
+    },
+    {
+      "id": "propor_alteracao",
+      "field": "name",
+      "before": "A chefia propõe uma alteração ao orçamento",
+      "after": "Propor uma alteração ao orçamento"
+    },
+    {
+      "id": "confirmar_recepcao",
+      "field": "name",
+      "before": "Confirmação de recepção",
+      "after": "Confirmar a recepção"
+    },
+    {
+      "id": "decidir_investimento",
+      "field": "name",
+      "before": "DG decide o investimento por marco até 15 milhões AOA",
+      "after": "Decidir o investimento por marco"
+    }
+  ]
+}

@@ -13,6 +13,8 @@ Workflow design or export, intended business outcome, procedure and known depend
 
 ## Procedure
 
+Read [action writing](../../references/action-writing.md) and review every action name for its initial verb, clarity, concision and agreement with the action type, source and description. Include Form Fill and AI-assigned actions. Record editorial findings separately from contract errors; preserve behavior during wording-only corrections.
+
 1. Trace each required outcome to an action and its completion evidence. Check that decisions include rejection/rework where the procedure requires them.
 2. Check predecessor dependencies, parallel actions, missing owners, unavailable groups, due bases and cancellation behavior.
 3. Review data collection, form mappings and secret dependencies. Use workflow-package for executable YAML checks; do not replace those checks with visual inspection.

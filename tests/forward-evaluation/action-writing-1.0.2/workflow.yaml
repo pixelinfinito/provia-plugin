@@ -1,0 +1,60 @@
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: Gratificação e investimento por marco — proposta
+  prefix: GIM
+  description: Proposta pendente de atribuições, formulário e confirmação das regras em setup.md.
+triggers:
+  - type: manual
+    label: Iniciar caso
+    enabled: true
+    config: {}
+fields:
+  - name: marco
+    label: Marco do investimento
+    type: text
+    required: true
+  - name: montante_investimento
+    label: Montante do investimento por marco
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+actions:
+  - id: confirmar_gratificacao
+    name: Confirmar o pagamento da gratificação
+    type: standard
+    executionMode: sequential
+    required: true
+    description: Conferir o comprovativo do pagamento já executado pelos signatários e registar a confirmação no caso. Esta acção confirma o pagamento; não executa uma nova transferência. Manter o comprovativo associado como evidência.
+  - id: propor_alteracao
+    name: Propor uma alteração ao orçamento
+    type: standard
+    executionMode: sequential
+    required: true
+    description: Registar a alteração proposta ao orçamento, identificando o marco e o montante do investimento a submeter à decisão. A conclusão consiste na proposta registada para análise.
+  - id: confirmar_recepcao
+    name: Confirmar a recepção
+    type: form_fill
+    executionMode: sequential
+    required: true
+    description: Preencher o formulário «Confirmação de recepção» durante o caso. A ligação ao formulário, o objecto da recepção e a política de respostas estão pendentes em setup.md. A conclusão deverá ficar comprovada pela resposta submetida.
+  - id: decidir_investimento
+    name: Decidir o investimento por marco
+    type: decision
+    executionMode: sequential
+    required: true
+    description: Analisar a proposta e decidir o investimento por marco no âmbito da autoridade indicada de até 15 milhões AOA. Registar Aprovar, Recusar ou Devolver. A autoridade acima desse limite e os critérios não foram fornecidos; resolver essa configuração antes da publicação. O montante não executa encaminhamento automático. As consequências dos resultados são propostas pendentes em setup.md.
+    config:
+      branches:
+        - label: Aprovar
+          outcome: continue
+          requiresComment: false
+        - label: Recusar
+          outcome: cancel_incident
+          requiresComment: false
+        - label: Devolver
+          outcome: return_to_action
+          target: propor_alteracao
+          requiresComment: false

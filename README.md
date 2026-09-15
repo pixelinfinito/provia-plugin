@@ -61,6 +61,8 @@ The shared catalog is [`.claude-plugin/marketplace.json`](.claude-plugin/marketp
 
 ## Choose a skill
 
+Action names follow the shared [action-writing guide](references/action-writing.md): a Portuguese infinitive or English base-form verb names the work, while assignment and instructions carry roles and completion criteria. For example, "GC confirma o pagamento" becomes "Confirmar o pagamento"; a form title remains separate from its Form Fill task name. Package generation includes `editorial-review.md` alongside the untouched structural `validation.json`. Structural validity does not certify wording. See the [semantic acceptance cases](tests/action-writing-evaluations.md).
+
 Each skill lives at `skills/<skill-name>/SKILL.md`. Select it in your assistant's installed skill interface, or ask for it by its exact name. Skills produce recommendations and artifacts; the shell commands later in this README run the deterministic checks.
 
 ### Discover, design and prepare a process
@@ -71,7 +73,7 @@ Each skill lives at `skills/<skill-name>/SKILL.md`. Select it in your assistant'
 | [provia-workflow-designer](skills/provia-workflow-designer/SKILL.md) | Turn a procedure or checklist into a workflow design. | Procedure, approval authority, start/end conditions and exceptions. | Action table, sequence, decision outcomes, assignments and source mapping. |
 | [provia-information-model](skills/provia-information-model/SKILL.md) | Decide what belongs in entities, incident metadata, form answers and tags. | Business objects, sample records and reporting needs. | Entity model, field dictionary, mappings and a reason for each collected field. |
 | [provia-form-designer](skills/provia-form-designer/SKILL.md) | Design intake forms or collect evidence within an existing incident. | Respondents, access requirements, required answers and uploads. | Form specification with validation, mappings, confirmation and test steps. |
-| [provia-workflow-package](skills/provia-workflow-package/SKILL.md) | Generate, explain or repair portable workflow YAML. | Agreed design or export, known destination references and setup constraints. | `workflow.yaml`, the actual `validation.json` when executed, and `setup.md`. |
+| [provia-workflow-package](skills/provia-workflow-package/SKILL.md) | Generate, explain or repair portable workflow YAML. | Agreed design or export, known destination references and setup constraints. | `workflow.yaml`, the actual `validation.json` when executed, `editorial-review.md`, and `setup.md`. |
 | [provia-workflow-review](skills/provia-workflow-review/SKILL.md) | Review a draft before publication. | Workflow design or YAML, procedure, intended outcome and dependencies. | Prioritized findings, proposed corrections and representative test scenarios. |
 | [provia-organization-rollout](skills/provia-organization-rollout/SKILL.md) | Plan ownership, training and adoption across teams. | Teams, administrators, process owners, pilot results and permissions. | Role/group proposal, training exercises, rollout milestones and adoption measures. |
 

@@ -13,6 +13,8 @@ Target event, system API contract, payload examples, timing, access restrictions
 
 ## Procedure
 
+When creating or rewriting action names, read [action writing](../../references/action-writing.md). Name the actual operation, including notifications, waits, HTTP calls and sub-workflows. A status lookup must not be described as payment execution; wording changes must preserve external operations and configuration.
+
 1. Choose manual, email, webhook or schedule for an event; choose Form for structured human intake. Choose Notification for informing people and Wait for elapsed time or a supported condition.
 2. For HTTP calls use the actual external API documentation or user-supplied contract. Never invent endpoints. Use organization secret references and identify destination allowlist requirements.
 3. Specify idempotency where the external API supports it, expected responses, response mappings and what happens after retries fail.

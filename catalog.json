@@ -27,6 +27,7 @@
     "inputs": "Procedure, start/end conditions, roles, approval rules, required evidence and exceptions.",
     "output": "An action table, execution sequence, decision outcomes, assignments, due-date rationale and a source-to-design mapping.",
     "steps": [
+      "Read references/action-writing.md when creating or reviewing action names. Review meaning separately from structural validation and preserve configuration during wording-only edits.",
       "Extract explicit requirements with references to sections of the supplied procedure. Mark recommendations separately.",
       "Choose Standard, Decision, Notification, Wait, HTTP Request, Sub-workflow or Form Fill by the required outcome. AI is an assignee on Standard actions.",
       "Use sequential ordering for actual dependencies and parallel execution only for independent work. Model rework and rejection explicitly with supported decision outcomes.",
@@ -68,6 +69,7 @@
     "inputs": "Respondents, desired answers, process stage, access constraints, uploads and response policy.",
     "output": "A form specification with fields, validation, access, mappings, uploads, confirmation and testing steps.",
     "steps": [
+      "Read references/action-writing.md when creating or reviewing action names. Review meaning separately from structural validation and preserve configuration during wording-only edits.",
       "Decide whether submission creates an incident or supplies evidence to an existing one. Use intake Form versus Form Fill accordingly.",
       "Define internal/external respondents and the intended access path. Do not promise anonymous access or an external link without checking the configured form behavior.",
       "Map only compatible fields needed by the incident. A single Form Fill response can map values and complete the action; multiple responses are a review collection and cannot map competing values.",
@@ -86,8 +88,9 @@
     "titlePt": "Gerar e validar ficheiros de workflow",
     "description": "Generate, explain or repair portable Provia workflow YAML and run the bundled validator.",
     "inputs": "An agreed design or YAML export, source contract version, known destination references and setup constraints.",
-    "output": "workflow.yaml, validation.json and a separate setup.md describing remaining configuration.",
+    "output": "workflow.yaml, the actual structural validation.json, a separate editorial-review.md and setup.md describing remaining configuration.",
     "steps": [
+      "Read references/action-writing.md when creating or reviewing action names. Review meaning separately from structural validation and preserve configuration during wording-only edits.",
       "Read ../../references/workflow-yaml.md and ../../contracts/workflow-v1/contract-lock.json before emitting YAML. Start from a relevant bundled example rather than inventing property names.",
       "Emit provia.ao/v1 and Workflow. Preserve exact enum values, native booleans, integer offsets and stable local action IDs. Use only supported top-level sections.",
       "Never invent organization UUIDs. If an intended assignee/reference is unknown, keep it in setup.md and explain any deliberate omission in the importable draft. Never silently replace the actual owner with the creator.",
@@ -110,6 +113,7 @@
     "inputs": "Workflow design or export, intended business outcome, procedure and known dependencies.",
     "output": "A prioritized findings list with evidence, proposed corrections and representative test scenarios.",
     "steps": [
+      "Read references/action-writing.md when creating or reviewing action names. Review meaning separately from structural validation and preserve configuration during wording-only edits.",
       "Trace each required outcome to an action and its completion evidence. Check that decisions include rejection/rework where the procedure requires them.",
       "Check predecessor dependencies, parallel actions, missing owners, unavailable groups, due bases and cancellation behavior.",
       "Review data collection, form mappings and secret dependencies. Use workflow-package for executable YAML checks; do not replace those checks with visual inspection.",
@@ -150,6 +154,7 @@
     "inputs": "Target event, system API contract, payload examples, timing, access restrictions and failure handling.",
     "output": "An integration specification with mappings, dependencies, retries, timeouts and exception paths.",
     "steps": [
+      "Read references/action-writing.md when creating or reviewing action names. Review meaning separately from structural validation and preserve configuration during wording-only edits.",
       "Choose manual, email, webhook or schedule for an event; choose Form for structured human intake. Choose Notification for informing people and Wait for elapsed time or a supported condition.",
       "For HTTP calls use the actual external API documentation or user-supplied contract. Never invent endpoints. Use organization secret references and identify destination allowlist requirements.",
       "Specify idempotency where the external API supports it, expected responses, response mappings and what happens after retries fail.",
@@ -170,6 +175,7 @@
     "inputs": "Task, supplied evidence, expected artifact, available fields, review policy and plan availability.",
     "output": "Profile instructions, required skills, output contract, review behavior and evaluation cases.",
     "steps": [
+      "Read references/action-writing.md when creating or reviewing action names. Review meaning separately from structural validation and preserve configuration during wording-only edits.",
       "Assign AI to a Standard action. Confirm the task has a reviewable result such as a summary, classification or proposed document.",
       "Define objective, inputs, rules and output. Restrict readable/writable fields and skills to the work; avoid granting broad access for convenience.",
       "Use human review for new or judgment-heavy tasks and keep final approvals with authorized people. State behavior for missing and contradictory evidence.",
@@ -250,6 +256,7 @@
     "inputs": "Current workflow version, approved policies, existing guidance and incident lessons.",
     "output": "A sourced procedure or knowledge artifact with owner, scope, version, conflicts and review needs.",
     "steps": [
+      "Read references/action-writing.md when creating or reviewing action names. Review meaning separately from structural validation and preserve configuration during wording-only edits.",
       "Identify the source workflow version and distinguish published procedure from proposed changes.",
       "Write each action instruction around inputs, task, completion evidence, owner and exceptions. Preserve real approval authority.",
       "Reconcile conflicts between workflow and policy explicitly. Do not silently promote incident workarounds to organization-wide policy.",
@@ -270,6 +277,7 @@
     "inputs": "Current and proposed designs, active-incident evidence, affected fields/integrations and change reason.",
     "output": "A semantic comparison, impact assessment, draft-version plan, test cases and recovery instructions.",
     "steps": [
+      "Read references/action-writing.md when creating or reviewing action names. Review meaning separately from structural validation and preserve configuration during wording-only edits.",
       "Compare intended behavior, owners, decisions, fields, forms and integrations. Explain business effects instead of only listing YAML line changes.",
       "Identify active incidents that depend on changed fields. Runtime actions are instantiated, but some validation still consults workflow-level metadata.",
       "Plan a new draft and publication. Trigger forms publish independently; Form Fill definitions are frozen with workflow publication.",

@@ -13,6 +13,8 @@ Task, supplied evidence, expected artifact, available fields, review policy and 
 
 ## Procedure
 
+When creating or rewriting action names, read [action writing](../../references/action-writing.md). Name the expected work, such as summarizing proposals, without making AI the subject or implying approval authority. Preserve the output contract and human review behavior.
+
 1. Assign AI to a Standard action. Confirm the task has a reviewable result such as a summary, classification or proposed document.
 2. Define objective, inputs, rules and output. Restrict readable/writable fields and skills to the work; avoid granting broad access for convenience.
 3. Use human review for new or judgment-heavy tasks and keep final approvals with authorized people. State behavior for missing and contradictory evidence.

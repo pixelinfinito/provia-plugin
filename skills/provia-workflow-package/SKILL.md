@@ -13,6 +13,8 @@ An agreed design or YAML export, source contract version, known destination refe
 
 ## Procedure
 
+Before emitting YAML, read [action writing](../../references/action-writing.md) and review every action name against its purpose, type and description, including Form Fill and AI actions. Preserve export behavior during wording edits. Record the actual editorial review in editorial-review.md, separately from structural validity.
+
 1. Read ../../references/workflow-yaml.md and ../../contracts/workflow-v1/contract-lock.json before emitting YAML. Start from a relevant bundled example rather than inventing property names.
 2. Emit provia.ao/v1 and Workflow. Preserve exact enum values, native booleans, integer offsets and stable local action IDs. Use only supported top-level sections.
 3. Never invent organization UUIDs. If an intended assignee/reference is unknown, keep it in setup.md and explain any deliberate omission in the importable draft. Never silently replace the actual owner with the creator.
@@ -23,7 +25,7 @@ An agreed design or YAML export, source contract version, known destination refe
 
 ## Deliverable
 
-workflow.yaml, validation.json and a separate setup.md describing remaining configuration. Cite supplied evidence and product references. Separate confirmed facts, recommendations and unresolved decisions. Do not invent completed checks or platform actions.
+workflow.yaml, the exact structural validation.json, editorial-review.md and a separate setup.md describing remaining configuration. Cite supplied evidence and product references. Separate confirmed facts, recommendations and unresolved decisions. Do not invent completed checks or platform actions.
 
 ## Examples
 

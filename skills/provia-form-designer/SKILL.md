@@ -13,6 +13,8 @@ Respondents, desired answers, process stage, access constraints, uploads and res
 
 ## Procedure
 
+When there is a Form Fill task, specify both the form title and the action name. Read [action writing](../../references/action-writing.md): the form may have a noun title, but the action names what the respondent must do. Preserve bindings, mappings and response policy when improving wording.
+
 1. Decide whether submission creates an incident or supplies evidence to an existing one. Use intake Form versus Form Fill accordingly.
 2. Define internal/external respondents and the intended access path. Do not promise anonymous access or an external link without checking the configured form behavior.
 3. Map only compatible fields needed by the incident. A single Form Fill response can map values and complete the action; multiple responses are a review collection and cannot map competing values.

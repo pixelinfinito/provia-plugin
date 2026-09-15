@@ -13,7 +13,7 @@ Procedure, start/end conditions, roles, approval rules, required evidence and ex
 
 ## Procedure
 
-1. Extract explicit requirements with references to sections of the supplied procedure. Mark recommendations separately.
+1. Extract explicit requirements with references to sections of the supplied procedure. Separate executor, expected work, deadline and evidence. Read and apply [action writing](../../references/action-writing.md); name the expected work instead of copying the actor-led sentence or first phrase. Mark recommendations separately.
 2. Choose Standard, Decision, Notification, Wait, HTTP Request, Sub-workflow or Form Fill by the required outcome. AI is an assignee on Standard actions.
 3. Use sequential ordering for actual dependencies and parallel execution only for independent work. Model rework and rejection explicitly with supported decision outcomes.
 4. Use a Form trigger for intake and Form Fill for an existing incident. Do not represent a human approval as an automatic threshold engine.

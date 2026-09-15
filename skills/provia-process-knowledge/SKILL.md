@@ -13,6 +13,8 @@ Current workflow version, approved policies, existing guidance and incident less
 
 ## Procedure
 
+When creating or rewriting action names, read [action writing](../../references/action-writing.md). Keep the brief task name separate from instructions and assignments. Preserve coordination, authority, segregation and completion evidence; this convention does not require renaming documents or procedures.
+
 1. Identify the source workflow version and distinguish published procedure from proposed changes.
 2. Write each action instruction around inputs, task, completion evidence, owner and exceptions. Preserve real approval authority.
 3. Reconcile conflicts between workflow and policy explicitly. Do not silently promote incident workarounds to organization-wide policy.

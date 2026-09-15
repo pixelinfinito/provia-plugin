@@ -13,6 +13,8 @@ Current and proposed designs, active-incident evidence, affected fields/integrat
 
 ## Procedure
 
+For action wording changes, read [action writing](../../references/action-writing.md). Review names semantically and compare the export before and after. Keep editorial corrections separate from proposed changes to routing, assignments, forms, external operations or permissions.
+
 1. Compare intended behavior, owners, decisions, fields, forms and integrations. Explain business effects instead of only listing YAML line changes.
 2. Identify active incidents that depend on changed fields. Runtime actions are instantiated, but some validation still consults workflow-level metadata.
 3. Plan a new draft and publication. Trigger forms publish independently; Form Fill definitions are frozen with workflow publication.
