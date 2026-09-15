@@ -141,6 +141,8 @@ The external skills do not install AI profiles inside Provia. Use `provia-ai-act
 
 ## Country and organization context
 
+The information-model skill uses [practical entity design](references/entity-design.md) to justify each reusable object and custom field. Its catalogue includes paste-ready descriptions, native record Name conventions and exact icons from the [verified icon snapshot](references/entity-icons.json). It distinguishes creation requirements from later process checks and avoids implying that metadata implements synchronization, composite uniqueness or access controls. [Acceptance cases](tests/information-model-evaluations.md) cover these decisions.
+
 Supply the country, output language, sector, process owner and applicable policy version. For an Angolan process, a useful starting brief is:
 
 ```text
