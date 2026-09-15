@@ -1,0 +1,21 @@
+{
+  "editorial_validator": "PASS (bundled script --check, 2 types)",
+  "generated_html": "PASS (bundled script --output)",
+  "embedded_json_equal": "PASS",
+  "copy_target_references": "PASS (static only)",
+  "copy_controls": 342,
+  "dates_urls_emails_examples": "PASS (supplemental syntax checks)",
+  "types": {
+    "Cliente": 24,
+    "Função profissional": 23
+  },
+  "rendered_browser_inspection": "NOT RUN: browser URL policy blocked file:// navigation; no workaround attempted",
+  "description_copy": "NOT RUN",
+  "option_value_label_copy": "NOT RUN",
+  "search_navigation_download": "NOT RUN",
+  "live_provia": "NOT ACCESSED",
+  "sha256": {
+    "catalogue.json": "bd0713978804a162430ff79556b17bd36953cbbd8c0c5e33c836db78614778c5",
+    "catalogue.html": "4f275652bead018f091e0431a8d5608c14b5ebb809fe23c3529a79f41d5a085b"
+  }
+}

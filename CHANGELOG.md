@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.0.5
+
+The information-model skill now requires functional completeness across the requested lifecycle, with core, conditional and optional fields separate from creation-time requirements. Existing systems remain authoritative without reducing Provia types to source links. Catalogue deliveries include matching JSON and standalone HTML with search, navigation, copy controls and JSON download. Adds the offline `build-entity-catalogue.mjs` renderer and editorial checks, a synthetic complete-catalogue example and regression tests. The workflow YAML contract and its validators are unchanged.
+
 ## 1.0.4
 
 The information-model skill now designs entities around actual process use and manual entry. It distinguishes native fields from custom metadata, requires usable type descriptions and verified icons, and separates minimum, optional, deferred and externally held data. Includes a 220-icon snapshot with source provenance and semantic acceptance cases. Descriptions must not promise unsupported synchronization, uniqueness or controls. The YAML contract and validators are unchanged.

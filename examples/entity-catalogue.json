@@ -1,0 +1,539 @@
+{
+  "schemaVersion": "provia-entity-catalogue/v1",
+  "title": "Catálogo de demonstração · entidades completas",
+  "language": "pt-AO",
+  "country": "Angola",
+  "notes": [
+    "Exemplo inteiramente sintético; cada campo tem uma utilização proposta. Não estabelece requisitos fiscais ou laborais.",
+    "Ícones do snapshot 36772f7ce0831f0ea6f85a0e3e7849d32e576655. Confirmar disponibilidade no destino.",
+    "O catálogo e as prioridades não substituem a confirmação dos processos reais."
+  ],
+  "types": [
+    {
+      "key": "customer",
+      "name": "Cliente",
+      "description": "Clientes associados a contratação, facturação e entrega. Reúne os dados operacionais usados na relação e a referência ao CRM.",
+      "icon": "Building02",
+      "namePattern": "Designação reconhecível; código existente apenas se necessário para distinguir.",
+      "purpose": "Contratação, facturação, entrega e renovação.",
+      "owner": "Responsável a designar pela organização",
+      "fields": [
+        {
+          "key": "customer_code",
+          "label": "Código do cliente",
+          "type": "text",
+          "group": "Identificação",
+          "helpText": "Conciliar a conta com o CRM usando o código existente.",
+          "purpose": "Conciliar a conta com o CRM usando o código existente.",
+          "example": "CLI-DEMO-001",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "legal_name",
+          "label": "Razão social",
+          "type": "text",
+          "group": "Identificação",
+          "helpText": "Identificar a contraparte no contrato quando difere do Nome comercial.",
+          "purpose": "Identificar a contraparte no contrato quando difere do Nome comercial.",
+          "example": "Cliente Demonstração, Lda.",
+          "priority": "conditional",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "tax_number",
+          "label": "NIF",
+          "type": "text",
+          "group": "Identificação",
+          "helpText": "Conferir a contraparte para facturação; confirmar na fonte financeira.",
+          "purpose": "Conferir a contraparte para facturação; confirmar na fonte financeira.",
+          "example": "NIF-DEMO",
+          "priority": "conditional",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "segment",
+          "label": "Segmento",
+          "type": "select",
+          "group": "Classificação",
+          "helpText": "Identificar o grupo comercial para acompanhamento.",
+          "purpose": "Identificar o grupo comercial para acompanhamento.",
+          "example": "business",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais.",
+          "options": [
+            {
+              "value": "business",
+              "label": "Empresa"
+            },
+            {
+              "value": "public",
+              "label": "Sector público"
+            },
+            {
+              "value": "nonprofit",
+              "label": "Organização sem fins lucrativos"
+            }
+          ]
+        },
+        {
+          "key": "account_owner",
+          "label": "Responsável comercial",
+          "type": "user",
+          "group": "Responsabilidade",
+          "helpText": "Identificar quem acompanha a relação e a passagem para entrega.",
+          "purpose": "Identificar quem acompanha a relação e a passagem para entrega.",
+          "example": {
+            "lookupName": "Responsável de demonstração"
+          },
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "contact_name",
+          "label": "Contacto operacional",
+          "type": "text",
+          "group": "Contactos",
+          "helpText": "Identificar a pessoa que coordena o serviço.",
+          "purpose": "Identificar a pessoa que coordena o serviço.",
+          "example": "Pessoa de demonstração",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "contact_email",
+          "label": "Email operacional",
+          "type": "email",
+          "group": "Contactos",
+          "helpText": "Contactar a equipa do cliente para a entrega.",
+          "purpose": "Contactar a equipa do cliente para a entrega.",
+          "example": "operacoes@example.com",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "contact_phone",
+          "label": "Telefone operacional",
+          "type": "phone",
+          "group": "Contactos",
+          "helpText": "Contacto alternativo para coordenação urgente.",
+          "purpose": "Contacto alternativo para coordenação urgente.",
+          "example": "+244 900 000 000",
+          "priority": "optional",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "billing_email",
+          "label": "Email de facturação",
+          "type": "email",
+          "group": "Facturação",
+          "helpText": "Enviar documentos ao contacto confirmado para facturação.",
+          "purpose": "Enviar documentos ao contacto confirmado para facturação.",
+          "example": "facturacao@example.com",
+          "priority": "conditional",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "service_location",
+          "label": "Local de prestação",
+          "type": "text",
+          "group": "Operação",
+          "helpText": "Preparar deslocações quando existe um local principal de prestação.",
+          "purpose": "Preparar deslocações quando existe um local principal de prestação.",
+          "example": "Luanda · instalação de demonstração",
+          "priority": "conditional",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "relationship_status",
+          "label": "Situação da relação",
+          "type": "select",
+          "group": "Relação",
+          "helpText": "Consultar a situação actual antes de contratar ou renovar.",
+          "purpose": "Consultar a situação actual antes de contratar ou renovar.",
+          "example": "active",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais.",
+          "options": [
+            {
+              "value": "onboarding",
+              "label": "Em integração"
+            },
+            {
+              "value": "active",
+              "label": "Activa"
+            },
+            {
+              "value": "suspended",
+              "label": "Suspensa"
+            },
+            {
+              "value": "closed",
+              "label": "Encerrada"
+            }
+          ]
+        },
+        {
+          "key": "relationship_start",
+          "label": "Início da relação",
+          "type": "date",
+          "group": "Relação",
+          "helpText": "Situar o início da relação para revisões comerciais.",
+          "purpose": "Situar o início da relação para revisões comerciais.",
+          "example": "2026-09-01",
+          "priority": "optional",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "crm_url",
+          "label": "Conta no CRM",
+          "type": "url",
+          "group": "Referência",
+          "helpText": "Consultar a fonte comercial; alterações dos dados aqui copiados são mantidas pelo responsável.",
+          "purpose": "Consultar a fonte comercial; alterações dos dados aqui copiados são mantidas pelo responsável.",
+          "example": "https://example.com/crm/demo",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        }
+      ],
+      "coverage": [
+        {
+          "dimension": "Identificação",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        },
+        {
+          "dimension": "Classificação",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        },
+        {
+          "dimension": "Responsabilidade",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        },
+        {
+          "dimension": "Contactos",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        },
+        {
+          "dimension": "Facturação",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        },
+        {
+          "dimension": "Operação",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        },
+        {
+          "dimension": "Relação",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        },
+        {
+          "dimension": "Referência",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        }
+      ],
+      "setup": [
+        "Exemplo sintético de cobertura, não um modelo obrigatório nem política confirmada.",
+        "Confirmar responsáveis, vocabulários, fontes e acesso. Não existe sincronização configurada.",
+        "Name é nativo. Estes campos não duplicam UUID, criador ou datas técnicas.",
+        "Percurso manual: criar Cliente Demonstração; completar contactos, responsável comercial e situação antes da contratação ou entrega. Conferir NIF e email de facturação quando houver facturação. Os dados desconhecidos não são obrigatórios na criação."
+      ],
+      "readiness": [
+        "Antes de contratar ou recrutar, confirmar identidade, responsável, situação e dados específicos da decisão. O campo de estado não bloqueia selecção automaticamente."
+      ]
+    },
+    {
+      "key": "job_function",
+      "name": "Função profissional",
+      "description": "Funções utilizadas no recrutamento, integração e desenvolvimento profissional. Descreve responsabilidades, requisitos e enquadramento organizacional.",
+      "icon": "Briefcase01",
+      "namePattern": "Designação reconhecível; código existente apenas se necessário para distinguir.",
+      "purpose": "Recrutamento, integração, avaliação e desenvolvimento.",
+      "owner": "Responsável a designar pela organização",
+      "fields": [
+        {
+          "key": "function_code",
+          "label": "Código da função",
+          "type": "text",
+          "group": "Identificação",
+          "helpText": "Usar o código profissional existente para conciliação.",
+          "purpose": "Usar o código profissional existente para conciliação.",
+          "example": "FUN-DEMO-001",
+          "priority": "conditional",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "professional_family",
+          "label": "Família profissional",
+          "type": "select",
+          "group": "Estrutura",
+          "helpText": "Agrupar funções para recrutamento e carreiras.",
+          "purpose": "Agrupar funções para recrutamento e carreiras.",
+          "example": "engineering",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais.",
+          "options": [
+            {
+              "value": "engineering",
+              "label": "Engenharia"
+            },
+            {
+              "value": "operations",
+              "label": "Operações"
+            },
+            {
+              "value": "commercial",
+              "label": "Comercial"
+            }
+          ]
+        },
+        {
+          "key": "organizational_area",
+          "label": "Área de referência",
+          "type": "text",
+          "group": "Estrutura",
+          "helpText": "Identificar a área responsável; usar uma entidade de área se houver catálogo reutilizável.",
+          "purpose": "Identificar a área responsável; usar uma entidade de área se houver catálogo reutilizável.",
+          "example": "Tecnologia",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "level",
+          "label": "Nível profissional",
+          "type": "text",
+          "group": "Estrutura",
+          "helpText": "Usar a nomenclatura aprovada de senioridade, sem inventar uma grelha salarial.",
+          "purpose": "Usar a nomenclatura aprovada de senioridade, sem inventar uma grelha salarial.",
+          "example": "Nível demonstrativo a confirmar",
+          "priority": "conditional",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "mission",
+          "label": "Missão",
+          "type": "rich_text",
+          "group": "Conteúdo da função",
+          "helpText": "Explicar o resultado que a função deve produzir.",
+          "purpose": "Explicar o resultado que a função deve produzir.",
+          "example": "Desenvolver e manter serviços que suportam a operação.",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "responsibilities",
+          "label": "Responsabilidades",
+          "type": "rich_text",
+          "group": "Conteúdo da função",
+          "helpText": "Orientar recrutamento, integração e avaliação.",
+          "purpose": "Orientar recrutamento, integração e avaliação.",
+          "example": "Implementar funcionalidades; rever alterações; resolver incidentes.",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "competencies",
+          "label": "Competências",
+          "type": "rich_text",
+          "group": "Requisitos",
+          "helpText": "Identificar competências a avaliar na selecção e desenvolvimento.",
+          "purpose": "Identificar competências a avaliar na selecção e desenvolvimento.",
+          "example": "Desenvolvimento de software, análise e comunicação.",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "qualifications",
+          "label": "Qualificações",
+          "type": "rich_text",
+          "group": "Requisitos",
+          "helpText": "Registar requisitos de formação ou experiência aprovados para a função.",
+          "purpose": "Registar requisitos de formação ou experiência aprovados para a função.",
+          "example": "Experiência relevante comprovada; requisitos a confirmar.",
+          "priority": "conditional",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "reports_to",
+          "label": "Reporte funcional",
+          "type": "text",
+          "group": "Estrutura",
+          "helpText": "Descrever a função de chefia, independentemente do ocupante actual.",
+          "purpose": "Descrever a função de chefia, independentemente do ocupante actual.",
+          "example": "Responsável de Engenharia",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "status",
+          "label": "Situação da função",
+          "type": "select",
+          "group": "Ciclo de vida",
+          "helpText": "Distinguir funções disponíveis para recrutamento e funções retiradas.",
+          "purpose": "Distinguir funções disponíveis para recrutamento e funções retiradas.",
+          "example": "active",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais.",
+          "options": [
+            {
+              "value": "draft",
+              "label": "Em definição"
+            },
+            {
+              "value": "active",
+              "label": "Activa"
+            },
+            {
+              "value": "retired",
+              "label": "Retirada"
+            }
+          ]
+        },
+        {
+          "key": "review_date",
+          "label": "Data de revisão",
+          "type": "date",
+          "group": "Ciclo de vida",
+          "helpText": "Registar a revisão efectiva no processo de manutenção de funções.",
+          "purpose": "Registar a revisão efectiva no processo de manutenção de funções.",
+          "example": "2026-09-01",
+          "priority": "conditional",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        },
+        {
+          "key": "role_description_url",
+          "label": "Descrição aprovada",
+          "type": "url",
+          "group": "Referência",
+          "helpText": "Consultar o documento completo e a evidência de aprovação.",
+          "purpose": "Consultar o documento completo e a evidência de aprovação.",
+          "example": "https://example.com/funcoes/demo",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+        }
+      ],
+      "coverage": [
+        {
+          "dimension": "Identificação",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        },
+        {
+          "dimension": "Estrutura",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        },
+        {
+          "dimension": "Conteúdo da função",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        },
+        {
+          "dimension": "Requisitos",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        },
+        {
+          "dimension": "Ciclo de vida",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        },
+        {
+          "dimension": "Referência",
+          "decision": "included",
+          "reason": "Os campos deste grupo suportam os usos descritos individualmente."
+        }
+      ],
+      "setup": [
+        "Exemplo sintético de cobertura, não um modelo obrigatório nem política confirmada.",
+        "Confirmar responsáveis, vocabulários, fontes e acesso. Não existe sincronização configurada.",
+        "Name é nativo. Estes campos não duplicam UUID, criador ou datas técnicas.",
+        "Percurso manual: criar Engenheiro de demonstração; completar área, missão, responsabilidades e requisitos antes de recrutar. Confirmar reporte e situação da função antes da integração ou avaliação. Os dados desconhecidos não são obrigatórios na criação."
+      ],
+      "readiness": [
+        "Antes de contratar ou recrutar, confirmar identidade, responsável, situação e dados específicos da decisão. O campo de estado não bloqueia selecção automaticamente."
+      ]
+    }
+  ]
+}

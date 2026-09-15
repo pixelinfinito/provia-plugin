@@ -1,6 +1,6 @@
 # Practical entity design
 
-Design for people creating, finding and maintaining records in Provia. A business information model is not a request to reproduce a relational database or an ERP. This guidance concerns entities; it does not change the portable workflow YAML contract.
+Design complete entity types for people creating, finding and maintaining records in Provia. Completeness is coverage of the requested business uses, not a field-count target. A business information model is not a request to reproduce a relational database or an ERP. This guidance concerns entities; it does not change the portable workflow YAML contract.
 
 ## Decide where the information belongs
 
@@ -11,7 +11,7 @@ Design for people creating, finding and maintaining records in Provia. A busines
 | Answers collected only for that submission | Form response; map only values that the case needs |
 | Instructions, detailed narrative, evidence or document content | Page, file or authoritative document location |
 | Flexible classification | Tag; use a controlled select for a governed vocabulary |
-| Existing CRM, payroll, accounting or identity data | Minimal reference to the source; copy values only for a demonstrated use and explain maintenance |
+| Existing CRM, payroll, accounting or identity data | Keep the authoritative source and also model attributes used in Provia selection, routing, reporting or execution; identify update ownership |
 
 Do not categorically ban financial items, access grants or bookings as entities. They can be useful when the same object genuinely supports several processes. Demonstrate that reuse and the update mechanism before recommending them. A single request is usually a case, not both a case and a duplicate entity.
 
@@ -28,7 +28,29 @@ The checked Provia implementation gives each entity a required native `name`, a 
 - `updatedAt` proves an edit, not an independent verification. Keep a verification date only with a defined verification process; evidence may belong to its case.
 - Distinguish the Provia tenant from a legal entity. A legal-entity reference may be essential across several companies, but should not be added everywhere merely because the storage model is tenant-scoped.
 
-Do not impose an arbitrary maximum field count. Start with the minimum that supports the pilot. A large catalogue is acceptable only when its additional fields have demonstrated uses and workable maintenance.
+Do not impose a maximum or minimum field count. A complete organizational catalogue covers the requested processes beyond the first pilot. Reduce duplicate entry, not functional scope. An external system may remain authoritative while Provia holds useful operational attributes with explicit maintenance. A generic URL is a navigation aid, not a replacement for searchable classifications, contacts, owners, statuses or dates needed by the process.
+
+## Check functional coverage before pruning fields
+
+For each type, examine these dimensions and record included fields or a reason for placing the information elsewhere, marking it pending or not applicable:
+
+- Identity and classification: business code when meaningful, legal/trading distinction, category, service or professional family.
+- Contacts and location: operational contact, email/phone, site or address needed to perform the work.
+- Ownership and structure: accountable person, organizational unit, hierarchy, professional function or custodianship.
+- Status and lifecycle: actual relationship/availability state, start/end/review dates, activation and retirement needs.
+- Operational or commercial attributes: service scope, agreed terms, contract dates, currency, criticality, support arrangements or equipment specifications relevant to decisions.
+- Relationships: useful connections to people, organizations, contracts, assets, services and processes; make direction and maintenance explicit.
+- Evidence and source: authoritative documents and references, verification or review dates when a defined process maintains them.
+
+Apply dimensions by meaning, not by adding the same columns to every type. For a customer used in contracting, billing and delivery, consider business identity, classification, commercial owner, billing/operational contacts, location, relationship state and terms before concluding that a CRM URL suffices. For a job function used in recruitment and career management, consider area, professional family/level, mission, responsibilities, competency and qualification requirements, reporting relationships and status. Document source-backed requirements separately from proposed additions. Do not infer that every listed item is universally mandatory.
+
+For employees, equipment, contracts and other types, use the same coverage reasoning rather than copying these examples verbatim. Preserve useful fields in an existing catalogue unless there is an explained redundancy, unsupported use or better placement. Replacing every domain-specific attribute with `official_record` is the same structural mistake as adding provenance columns everywhere.
+
+## Separate model completeness from collection timing
+
+Deliver all recommended fields, grouped by business purpose. `core` means the model needs the field during its lifecycle; `conditional` applies to a stated situation; `optional` adds justified convenience. Independently set `required` to true only when it is necessary and reasonably available at record creation. Explain later readiness checks and who completes the data. A complete type can have few creation-time requirements and many well-defined optional or later-populated attributes.
+
+Do not postpone an essential lifecycle field merely to simplify initial entry. Conversely, do not collect sensitive data merely to appear comprehensive. Where a use requires sensitive data, explain the suitable access and source arrangement instead of imposing a blanket ban on that whole field category.
 
 ## Make the type usable in the interface
 
@@ -38,7 +60,7 @@ For each proposed type, return:
 2. One or two sentences ready to paste into the type Description: what the records represent and why users select them. Keep source policy, setup instructions and unresolved assumptions outside this text. Do not put invented organization-specific rules or claims of automatic enforcement in it.
 3. An exact icon identifier from `entity-icons.json`, with a brief semantic reason. The snapshot records the checked product revision and source hashes. If the destination differs, request its available choices or mark destination confirmation pending. Do not choose an icon from another library because its picture looks right.
 4. A pattern for the native record Name and a clearly synthetic example. This is a convention, not an automatic name-generation feature.
-5. Minimum and optional metadata, followed by deferred fields and values held elsewhere, with reasons.
+5. Complete grouped metadata, classified as core, conditional or optional, followed by deferred fields and values held elsewhere, with reasons. Include the coverage review.
 
 Examples in pt-AO:
 
@@ -74,6 +96,6 @@ For balances, renewal values or identity-system state, specify the source of tru
 
 Walk through one synthetic record per type. Report the values known at creation, later dependencies and any avoidable repeated entry. This is a design walkthrough, not a claim that you tested the UI or created records.
 
-For an existing model, classify every proposed field as retained, merged with a native field, optional, deferred or held elsewhere. Account for values, dependent forms, mappings, integrations and open cases before deleting or renaming a deployed field. Deliver a recommendation and migration questions; this plugin does not mutate the destination.
+For an existing model, classify every proposed field as retained, merged with a native field, conditional, optional, deferred or held elsewhere. Account for values, dependent forms, mappings, integrations and open cases before deleting or renaming a deployed field. Deliver a recommendation and migration questions; this plugin does not mutate the destination.
 
 Evidence baseline: product source revision and hashes in `entity-icons.json`; `backend/src/lib/validation.ts`, `backend/src/db/schema.ts`, `backend/src/services/entity.service.ts`, `frontend/src/components/entity/EntityForm.tsx` and `docs/docs/core-concepts/entities.md`. This baseline describes the inspected source, not a certified deployment or the separately pinned YAML engine revision.

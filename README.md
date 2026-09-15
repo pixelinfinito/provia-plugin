@@ -141,7 +141,7 @@ The external skills do not install AI profiles inside Provia. Use `provia-ai-act
 
 ## Country and organization context
 
-The information-model skill uses [practical entity design](references/entity-design.md) to justify each reusable object and custom field. Its catalogue includes paste-ready descriptions, native record Name conventions and exact icons from the [verified icon snapshot](references/entity-icons.json). It distinguishes creation requirements from later process checks and avoids implying that metadata implements synchronization, composite uniqueness or access controls. [Acceptance cases](tests/information-model-evaluations.md) cover these decisions.
+The information-model skill uses [practical entity design](references/entity-design.md) to justify each reusable object and custom field. It checks functional coverage across the requested lifecycle and delivers the full recommended field set, with collection timing separate from completeness. Its matching JSON and offline HTML catalogue includes copy controls, paste-ready descriptions, native record Name conventions and exact icons from the [verified icon snapshot](references/entity-icons.json). It distinguishes creation requirements from later process checks and avoids implying that metadata implements synchronization, composite uniqueness or access controls. [Acceptance cases](tests/information-model-evaluations.md) cover these decisions.
 
 Supply the country, output language, sector, process owner and applicable policy version. For an Angolan process, a useful starting brief is:
 
@@ -166,8 +166,9 @@ Read [country context](references/country-context.md) and [Angola guidance](refe
 | --- | --- |
 | [skills/](skills/) | The 14 `SKILL.md` entry points loaded by the assistant. |
 | [references/](references/) | Product capabilities, country guidance, YAML shapes and action configuration details. |
-| [examples/](examples/) | Five complete workflow examples, each with a setup handover. |
+| [examples/](examples/) | Five complete workflow examples, each with a setup handover, plus a synthetic entity catalogue. |
 | [scripts/validate-workflow.mjs](scripts/validate-workflow.mjs) | Read-only YAML/workflow ZIP validation command. |
+| [scripts/build-entity-catalogue.mjs](scripts/build-entity-catalogue.mjs) | Editorial entity-catalogue checks and offline HTML generation. |
 | [scripts/check-contract.mjs](scripts/check-contract.mjs) | Bundled-engine checksum and optional source-fingerprint verification. |
 | [scripts/build-contract.mjs](scripts/build-contract.mjs) | Maintainer tool to regenerate the engine from an authorized Provia checkout. |
 | [scripts/build-release.py](scripts/build-release.py) | Package checks and reproducible documentation ZIP generation. |
@@ -186,6 +187,8 @@ Run the commands below from the repository root or the root of the extracted `pr
 | Tool | When to run it | What it checks | What it writes |
 | --- | --- | --- | --- |
 | `node scripts/validate-workflow.mjs FILE` | After generating/editing YAML and before importing it. | YAML parsing, product preview rules, conversion and backend schemas where inputs allow, schedule configuration, size limits and detectable setup dependencies. Accepts YAML or a compatible workflow `.zip`. | JSON to standard output. Does not modify the input or contact Provia. |
+| `node scripts/build-entity-catalogue.mjs FILE --check` | After editing an entity catalogue JSON. | Editorial shape, supported icons/types, references and select examples/defaults. Does not certify business completeness or Provia import validity. | Check summary; no output file. |
+| `node scripts/build-entity-catalogue.mjs FILE --output catalogue.html` | Before manual entity-type configuration. | Same editorial checks before rendering. | Standalone HTML with copy controls and the matching JSON download. |
 | `node scripts/check-contract.mjs` | Before relying on the bundled engine or preparing a release. | Engine SHA-256 against the recorded lock file. | A verification message, or a failing process with an error. |
 | `node scripts/check-contract.mjs /path/to/processonrails` | When maintainers need to detect source drift. | Engine checksum plus the recorded source-file hashes against the supplied checkout. | A verification message, or an error identifying a mismatch. |
 | `npm test` | After changing validator behavior, examples or packaging. | Workflow regressions, all five examples, integrity checks, archive reproducibility, archive contents and execution after extraction. | Test results and temporary test artifacts that the tests clean up. |
@@ -198,7 +201,7 @@ Workflow validation and contract integrity are separate commands. A checksum mat
 | Task | Requirements |
 | --- | --- |
 | Read or use skill instructions | A compatible assistant environment with access to the complete package. Follow the documentation installation guide. |
-| Validate YAML or check contract integrity | Node.js 20.11 or later. No npm dependency installation or network access is required. |
+| Validate YAML, check contract integrity or generate catalogue HTML | Node.js 20.11 or later. No npm dependency installation or network access is required. |
 | Build a release archive | Python 3 with its standard library. |
 | Run `npm test` | Node.js 20.11 or later, npm, Python 3 available as `python3`, and the `unzip` command. |
 | Rebuild the contract engine | Node.js, Git, and an authorized Provia checkout with its pnpm dependencies installed, including esbuild and TypeScript. |
@@ -210,6 +213,20 @@ claude plugin validate .
 ```
 
 That command belongs to Claude Code, not to this repository. It validates the plugin manifest; it does not establish workflow validity or quality of skill outputs.
+
+## Entity catalogue JSON and manual setup HTML
+
+For catalogue creation or revision, `provia-information-model` delivers both `catalogue.json` and `catalogue.html`. Core fields can remain optional at creation when collected later. External sources do not replace operational attributes needed inside Provia.
+
+```bash
+node scripts/build-entity-catalogue.mjs catalogue.json --check
+node scripts/build-entity-catalogue.mjs catalogue.json --output catalogue.html
+# Try the synthetic example:
+node scripts/build-entity-catalogue.mjs examples/entity-catalogue.json --output example.html
+```
+
+Open the HTML locally. Search types/fields, copy configuration values and option labels/values, and download the matching JSON. Clipboard fallback selects the text for keyboard copying when needed. The script runs offline with Node.js 20.11+. Its checks cover the editorial format, identifiers, field types, relationships and select values; they do not certify business completeness or destination configuration. This JSON is not a Provia import contract. See [catalogue format and checks](references/entity-catalogue-format.md).
+
 
 ## Validate a workflow
 

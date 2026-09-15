@@ -1,0 +1,941 @@
+{
+  "schemaVersion": "provia-entity-catalogue/v1",
+  "title": "Catálogo de entidades · Organização de serviços (demonstração)",
+  "language": "pt-AO",
+  "country": "Angola",
+  "notes": [
+    "Factos fornecidos: clientes reutilizados em contratação, facturação, entrega e renovação; funções profissionais em recrutamento, integração, avaliação e desenvolvimento. CRM é a fonte da conta comercial; documento de funções é a fonte da descrição aprovada. Não há integração configurada nem registos criados.",
+    "Esta é a especificação completa de referência para os dois objectos e todos os processos indicados, não um piloto reduzido. O inventário de outros processos da organização não foi fornecido: não se presume que clientes e funções sejam os únicos objectos de toda a organização. Novos tipos exigem uso e manutenção demonstrados.",
+    "Todos os exemplos são sintéticos. Responsabilidades, vocabulários e verificações seguintes são recomendações a confirmar; não são políticas já aprovadas. País Angola; linguagem pt-AO; moeda de referência AOA; fuso Africa/Luanda. Não se formulam requisitos legais, fiscais ou laborais.",
+    "Formato editorial para criação manual: não é ficheiro de importação, API nem extensão de workflow YAML. Criar tipos e campos no destino após confirmar a configuração disponível; configurar formulários, etiquetas e mapeamentos separadamente.",
+    "Ícones verificados no snapshot 36772f7ce0831f0ea6f85a0e3e7849d32e576655, references/entity-icons.json. Hash validation.ts: 830213d7be998d7fc1468d3972d216969c09ec3decc579c646a94e2d3e381d27; hash entity-icons.ts: bdd293956e54080ca235c15087e56948ee0fd31aa1e9dd09ad2ec9fd7b508869. Disponibilidade na instalação de destino ainda não verificada.",
+    "Fontes de desenho: pedido sintético; references/entity-design.md, entity-catalogue-format.md, provia-capabilities.md, country-context.md e countries/angola.md do plugin. A referência do produto descreve código inspeccionado, não certifica a versão instalada.",
+    "Name é o Nome nativo obrigatório e pesquisável, não um campo personalizado. UUID, criador e datas técnicas são nativos. Não acrescentar identificador universal, data de verificação, versão nem proveniência genérica. updatedAt não prova revisão dos dados.",
+    "Core significa essencial durante o ciclo de vida, independentemente de required. Todos os campos personalizados ficam required=false: só o Nome é necessário para abrir o registo; uma ficha incompleta não está pronta para executar os processos dependentes. Não definir valores predefinidos: os exemplos não são valores reais.",
+    "Não há sincronização: Comercial mantém cópias dos dados da conta após alterações no CRM e confere-as antes do uso; RH actualiza resumos após aprovação do documento de funções e confere-os antes do uso. A cadência entre usos e a disponibilidade das equipas ficam por aprovar.",
+    "As etiquetas de sensibilidade são instruções de tratamento, não permissões por campo. Confirmar acessos ao tipo e aos documentos antes de recolher contactos ou informação restrita. Os selectores user exigem utilizadores reais do destino; lookupName é apenas exemplo simbólico.",
+    "Um estado personalizado não bloqueia selecção, um responsável não atribui acções automaticamente, uma data não agenda notificações e uma relação não impõe unicidade. As verificações de prontidão são humanas até existir workflow configurado e validado.",
+    "Proposta anterior: Name em ambos os tipos mantém-se como recurso nativo; registo_oficial deixa de existir como chave genérica e é especificado como conta_crm em Cliente e descricao_aprovada em Função profissional. Não manter dois URLs para a mesma fonte. Sem registos ou integração, não há valores a migrar nem sincronização a alterar; confirmar se existem definições de formulários, mapeamentos ou workflows ainda sem registos antes de renomear uma chave no destino.",
+    "Adiados: CRM ID técnico sem integração, códigos internos sem código empresarial existente, catálogo autónomo de departamentos/competências/contactos e entidades de Contrato, Colaborador ou Serviço até existir inventário e necessidade de reutilização demonstrada. Contratos e pessoas não são eliminados do negócio: neste escopo os seus factos ficam nos casos/documentos/sistemas indicados.",
+    "Questões abertas: organização atende apenas pessoas colectivas ou também particulares; vocabulários de sectores, áreas e níveis; fontes financeiras; múltiplos locais e contratos por cliente; responsáveis e substitutos; política de revisão; quem pode consultar dados; versão do destino. O modelo usa base B2B de serviços e prevê particulares apenas como opção condicional a confirmar."
+  ],
+  "types": [
+    {
+      "key": "cliente",
+      "name": "Cliente",
+      "description": "Clientes seleccionados nos processos de contratação, facturação, entrega e renovação. Reúne a identidade da conta e os dados necessários ao acompanhamento da relação.",
+      "icon": "Building02",
+      "namePattern": "Nome comercial reconhecível; acrescentar código empresarial existente apenas para desambiguar. Exemplo sintético: Kwanza Serviços de Demonstração.",
+      "purpose": "Uma conta de cliente por contraparte comercial reutilizada em contratação, facturação, entrega e renovação; não representa cada contrato, instalação ou factura.",
+      "owner": "Comercial mantém a conta; Finanças confirma facturação; Operações confirma entrega (responsáveis propostos).",
+      "fields": [
+        {
+          "key": "razao_social",
+          "label": "Razão social",
+          "type": "text",
+          "group": "Identidade",
+          "helpText": "Preencher quando o Nome é comercial e a identificação contratual é diferente; se coincidir, usar o Nome nativo.",
+          "purpose": "Identificar a contraparte na contratação e facturação quando difere do Nome.",
+          "example": "Kwanza Serviços de Demonstração, Lda.",
+          "priority": "conditional",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Responsável comercial",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "tipo_cliente",
+          "label": "Tipo de cliente",
+          "type": "select",
+          "group": "Identidade",
+          "helpText": "Seleccionar a categoria confirmada. A opção Particular só deve ser configurada se estiver no âmbito aprovado.",
+          "purpose": "Distinguir o tratamento da contraparte na contratação e facturação.",
+          "example": "empresa",
+          "priority": "core",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Responsável comercial",
+          "sensitivity": "Interna operacional",
+          "options": [
+            {
+              "value": "empresa",
+              "label": "Empresa"
+            },
+            {
+              "value": "sector_publico",
+              "label": "Sector público"
+            },
+            {
+              "value": "sem_fins_lucrativos",
+              "label": "Organização sem fins lucrativos"
+            },
+            {
+              "value": "particular",
+              "label": "Particular"
+            }
+          ]
+        },
+        {
+          "key": "nif",
+          "label": "NIF",
+          "type": "text",
+          "group": "Identidade",
+          "helpText": "Recolher apenas quando necessário à operação financeira. Exemplo é marcador sintético, não um NIF válido nem regra legal.",
+          "purpose": "Conciliar a identidade para facturação quando o processo financeiro o exigir.",
+          "example": "NIF-DEMONSTRACAO",
+          "priority": "conditional",
+          "required": false,
+          "source": "Documento fornecido pelo cliente e conferido por Finanças",
+          "maintainer": "Finanças",
+          "sensitivity": "Identificação fiscal; acesso limitado às equipas que a utilizam"
+        },
+        {
+          "key": "sector_actividade",
+          "label": "Sector de actividade",
+          "type": "select",
+          "group": "Classificação",
+          "helpText": "Vocabulário inicial proposto; Comercial aprova categorias antes da criação.",
+          "purpose": "Segmentar acompanhamento comercial e preparar contratação ou renovação.",
+          "example": "servicos",
+          "priority": "core",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Responsável comercial",
+          "sensitivity": "Interna operacional",
+          "options": [
+            {
+              "value": "servicos",
+              "label": "Serviços"
+            },
+            {
+              "value": "comercio",
+              "label": "Comércio"
+            },
+            {
+              "value": "industria",
+              "label": "Indústria"
+            },
+            {
+              "value": "administracao_publica",
+              "label": "Administração pública"
+            },
+            {
+              "value": "outro",
+              "label": "Outro"
+            }
+          ]
+        },
+        {
+          "key": "responsavel_comercial",
+          "label": "Responsável comercial",
+          "type": "user",
+          "group": "Responsabilidade",
+          "helpText": "Resolver o utilizador real no destino; esta referência não atribui acções automaticamente.",
+          "purpose": "Identificar quem prepara contratação e renovação e mantém a conta.",
+          "example": {
+            "lookupName": "Gestor comercial de demonstração"
+          },
+          "priority": "core",
+          "required": false,
+          "source": "Distribuição interna de contas aprovada",
+          "maintainer": "Responsável comercial",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "responsavel_entrega",
+          "label": "Responsável pela entrega",
+          "type": "user",
+          "group": "Responsabilidade",
+          "helpText": "Responsável pela conta em Operações; equipa específica de cada serviço fica no respectivo caso.",
+          "purpose": "Identificar o interlocutor interno para passagem à operação e continuidade da entrega.",
+          "example": {
+            "lookupName": "Coordenador operacional de demonstração"
+          },
+          "priority": "core",
+          "required": false,
+          "source": "Designação pela direcção de Operações",
+          "maintainer": "Operações",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "contacto_comercial",
+          "label": "Contacto comercial",
+          "type": "text",
+          "group": "Contactos comerciais",
+          "helpText": "Identificar o interlocutor para negociação e renovação.",
+          "purpose": "Identificar o interlocutor para negociação e renovação.",
+          "example": "Interlocutor comercial de demonstração",
+          "priority": "core",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Responsável comercial",
+          "sensitivity": "Dados de contacto profissional"
+        },
+        {
+          "key": "email_comercial",
+          "label": "Email comercial",
+          "type": "email",
+          "group": "Contactos comerciais",
+          "helpText": "Contactar o interlocutor para contratação e renovação.",
+          "purpose": "Contactar o interlocutor para contratação e renovação.",
+          "example": "comercial@example.com",
+          "priority": "core",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Responsável comercial",
+          "sensitivity": "Dados de contacto profissional"
+        },
+        {
+          "key": "contacto_operacional",
+          "label": "Contacto operacional",
+          "type": "text",
+          "group": "Entrega",
+          "helpText": "Identificar quem coordena a prestação no cliente.",
+          "purpose": "Identificar quem coordena a prestação no cliente.",
+          "example": "Interlocutor operacional de demonstração",
+          "priority": "core",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Operações com Comercial",
+          "sensitivity": "Dados de contacto profissional"
+        },
+        {
+          "key": "email_operacional",
+          "label": "Email operacional",
+          "type": "email",
+          "group": "Entrega",
+          "helpText": "Coordenar entrega e obter esclarecimentos operacionais.",
+          "purpose": "Coordenar entrega e obter esclarecimentos operacionais.",
+          "example": "operacao@example.com",
+          "priority": "core",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Operações com Comercial",
+          "sensitivity": "Dados de contacto profissional"
+        },
+        {
+          "key": "telefone_operacional",
+          "label": "Telefone operacional",
+          "type": "phone",
+          "group": "Entrega",
+          "helpText": "Exemplo sintético; só recolher se o canal for usado pela equipa.",
+          "purpose": "Dispor de canal alternativo para coordenação urgente da entrega.",
+          "example": "+244 900 000 000",
+          "priority": "optional",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Operações com Comercial",
+          "sensitivity": "Dados de contacto profissional"
+        },
+        {
+          "key": "local_principal",
+          "label": "Local principal de prestação",
+          "type": "text",
+          "group": "Entrega",
+          "helpText": "Apenas quando há prestação presencial e local principal estável; instalações alternativas, acessos e instruções específicas ficam no caso.",
+          "purpose": "Preparar a prestação presencial no local habitualmente utilizado.",
+          "example": "Luanda, instalação de demonstração",
+          "priority": "conditional",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Operações",
+          "sensitivity": "Localização operacional; limitar detalhes de acesso"
+        },
+        {
+          "key": "servicos_habituais",
+          "label": "Serviços habitualmente prestados",
+          "type": "rich_text",
+          "group": "Entrega",
+          "helpText": "Resumo corrente da relação; âmbito vinculativo, entregáveis e níveis de serviço ficam no contrato e no caso.",
+          "purpose": "Preparar a passagem de contratação para entrega e orientar revisão da relação.",
+          "example": "Apoio à operação e formação de equipas.",
+          "priority": "core",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Comercial com Operações",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "contacto_facturacao",
+          "label": "Contacto de facturação",
+          "type": "text",
+          "group": "Facturação",
+          "helpText": "Identificar a pessoa ou equipa que recebe e esclarece a facturação.",
+          "purpose": "Identificar a pessoa ou equipa que recebe e esclarece a facturação.",
+          "example": "Equipa financeira de demonstração",
+          "priority": "core",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Finanças com Comercial",
+          "sensitivity": "Dados de contacto profissional"
+        },
+        {
+          "key": "email_facturacao",
+          "label": "Email de facturação",
+          "type": "email",
+          "group": "Facturação",
+          "helpText": "Preencher se o envio é por email; se for portal ou outro canal, registar instruções de facturação.",
+          "purpose": "Encaminhar documentos ao canal financeiro confirmado.",
+          "example": "facturacao@example.com",
+          "priority": "conditional",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Finanças",
+          "sensitivity": "Dados de contacto profissional"
+        },
+        {
+          "key": "morada_facturacao",
+          "label": "Morada de facturação",
+          "type": "text",
+          "group": "Facturação",
+          "helpText": "Só quando necessária aos documentos ou ao encaminhamento; não copiar a morada de prestação sem confirmação.",
+          "purpose": "Disponibilizar a morada da contraparte usada nos documentos financeiros.",
+          "example": "Edifício de Demonstração, Luanda, Angola",
+          "priority": "conditional",
+          "required": false,
+          "source": "Cadastro financeiro confirmado pelo cliente",
+          "maintainer": "Finanças",
+          "sensitivity": "Dados administrativos da contraparte"
+        },
+        {
+          "key": "instrucoes_facturacao",
+          "label": "Instruções de facturação",
+          "type": "rich_text",
+          "group": "Facturação",
+          "helpText": "Indicar canal e requisitos recorrentes. Não guardar credenciais; número de encomenda e comprovativos específicos ficam no caso.",
+          "purpose": "Orientar envio, referências de compra e conferência de documentos.",
+          "example": "Enviar ao email financeiro; confirmar a referência de compra no caso.",
+          "priority": "core",
+          "required": false,
+          "source": "Procedimento do cliente validado por Finanças",
+          "maintainer": "Finanças",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "prazo_pagamento_dias",
+          "label": "Prazo habitual de pagamento (dias)",
+          "type": "number",
+          "group": "Condições comerciais",
+          "helpText": "Número inteiro não negativo, em dias corridos, quando existe acordo transversal à conta. Exemplo de acordo sintético, não prazo legal. Prevalece o contrato; vencimento concreto fica no caso.",
+          "purpose": "Preparar proposta e facturação com o prazo habitual da conta.",
+          "example": 30,
+          "priority": "conditional",
+          "required": false,
+          "source": "Condições comerciais aprovadas e fonte financeira",
+          "maintainer": "Finanças com Comercial",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "moeda_habitual",
+          "label": "Moeda habitual",
+          "type": "select",
+          "group": "Condições comerciais",
+          "helpText": "Sem valor predefinido. Confirmar moedas realmente usadas; moeda e valor de cada contrato são dados do caso.",
+          "purpose": "Preparar contratação e facturação na moeda normalmente acordada.",
+          "example": "aoa",
+          "priority": "conditional",
+          "required": false,
+          "source": "Condições comerciais aprovadas",
+          "maintainer": "Finanças com Comercial",
+          "sensitivity": "Interna operacional",
+          "options": [
+            {
+              "value": "aoa",
+              "label": "AOA — Kwanza"
+            },
+            {
+              "value": "usd",
+              "label": "USD — Dólar dos EUA"
+            },
+            {
+              "value": "eur",
+              "label": "EUR — Euro"
+            }
+          ]
+        },
+        {
+          "key": "situacao_relacao",
+          "label": "Situação da relação",
+          "type": "select",
+          "group": "Ciclo de vida",
+          "helpText": "Actualizar por decisão documentada; o valor não bloqueia selecção nem cancela casos.",
+          "purpose": "Conferir disponibilidade da relação antes de contratar, entregar ou renovar.",
+          "example": "em_preparacao",
+          "priority": "core",
+          "required": false,
+          "source": "CRM e confirmação do cliente",
+          "maintainer": "Responsável comercial",
+          "sensitivity": "Interna operacional",
+          "options": [
+            {
+              "value": "em_preparacao",
+              "label": "Em preparação"
+            },
+            {
+              "value": "activa",
+              "label": "Activa"
+            },
+            {
+              "value": "suspensa",
+              "label": "Suspensa"
+            },
+            {
+              "value": "encerrada",
+              "label": "Encerrada"
+            }
+          ]
+        },
+        {
+          "key": "inicio_relacao",
+          "label": "Início da relação",
+          "type": "date",
+          "group": "Ciclo de vida",
+          "helpText": "Data de início comercial, não data técnica de criação do registo.",
+          "purpose": "Situar a antiguidade da relação na avaliação para renovação.",
+          "example": "2026-09-16",
+          "priority": "core",
+          "required": false,
+          "source": "Primeira contratação confirmada no CRM",
+          "maintainer": "Responsável comercial",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "fim_relacao",
+          "label": "Fim da relação",
+          "type": "date",
+          "group": "Ciclo de vida",
+          "helpText": "Preencher apenas quando a relação termina; não inferir do fim de um contrato isolado.",
+          "purpose": "Distinguir encerramento da conta de fim de um contrato na renovação.",
+          "example": "2027-09-16",
+          "priority": "conditional",
+          "required": false,
+          "source": "Decisão de encerramento da relação no CRM",
+          "maintainer": "Responsável comercial",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "proxima_revisao_comercial",
+          "label": "Próxima revisão comercial",
+          "type": "date",
+          "group": "Ciclo de vida",
+          "helpText": "Comercial define e actualiza após a revisão. Datas contratuais e prazos de denúncia ficam por contrato no caso; este campo não cria lembretes.",
+          "purpose": "Preparar a revisão da conta e identificar oportunidades de renovação.",
+          "example": "2027-06-16",
+          "priority": "core",
+          "required": false,
+          "source": "Plano de acompanhamento acordado pelo Comercial",
+          "maintainer": "Responsável comercial",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "conta_crm",
+          "label": "Conta no CRM",
+          "type": "url",
+          "group": "Fonte",
+          "helpText": "Substitui a proposta registo_oficial. Guardar só a ligação útil, sem ID técnico adicional e sem credenciais na URL.",
+          "purpose": "Consultar a conta comercial durante contratação, entrega e renovação.",
+          "example": "https://example.com/crm/contas/demonstracao",
+          "priority": "core",
+          "required": false,
+          "source": "URL de navegação da conta no CRM",
+          "maintainer": "Responsável comercial",
+          "sensitivity": "Interna operacional"
+        }
+      ],
+      "coverage": [
+        {
+          "dimension": "Identidade e classificação",
+          "decision": "included",
+          "reason": "Nome nativo, razão social condicional, tipo, NIF condicionado ao uso financeiro e sector suportam identificação e selecção. Código CRM adiado: não existe necessidade de conciliação por código fornecida; a ligação permite navegação humana."
+        },
+        {
+          "dimension": "Contactos e localização",
+          "decision": "included",
+          "reason": "Interlocutores comercial, operacional e financeiro, respectivos canais, local principal e morada de facturação cobrem os diferentes consumidores. Contactos múltiplos ficam no CRM; o caso regista a pessoa efectivamente utilizada."
+        },
+        {
+          "dimension": "Responsabilidade e estrutura",
+          "decision": "included",
+          "reason": "Responsáveis comercial e de entrega identificam quem mantém e utiliza a conta. Uma empresa prestadora é a hipótese; referência multiempresa fica pendente de necessidade real."
+        },
+        {
+          "dimension": "Estado e datas",
+          "decision": "included",
+          "reason": "Situação, início, fim e próxima revisão representam a relação. Revisão comercial tem dono e actualização após cada revisão; não equivale a renovação automática."
+        },
+        {
+          "dimension": "Condições operacionais e comerciais",
+          "decision": "included",
+          "reason": "Serviços habituais, instruções financeiras, moeda e prazo habituais orientam a execução. As condições definitivas são confirmadas no contrato."
+        },
+        {
+          "dimension": "Contratos, renovação e facturas",
+          "decision": "case",
+          "reason": "Cada caso guarda cliente seleccionado, referência do contrato, vigência, termo, prazo de denúncia, data de decisão de renovação, âmbito, montante e moeda aplicáveis. Facturas, pagamentos, saldos e comprovativos ficam no sistema financeiro e nos casos; não criar um saldo paralelo sem actualização credível."
+        },
+        {
+          "dimension": "Relacionamentos",
+          "decision": "included",
+          "reason": "Os quatro workflows referenciam Cliente no sentido caso → entidade. Não guardar listas inversas de casos na conta. Clientes com contratos/locais reutilizados independentemente podem justificar tipos próprios após levantamento; não reduzir vários contratos a uma única data na conta."
+        },
+        {
+          "dimension": "Evidência e fonte",
+          "decision": "external",
+          "reason": "conta_crm permite acesso humano; contratos e evidência assinada permanecem nos documentos/casos. CRM mantém a conta comercial; Finanças deve confirmar qual é a fonte financeira definitiva."
+        }
+      ],
+      "setup": [
+        "Building02 representa uma organização cliente; identifier verificado no snapshot citado. Confirmar escolha no destino.",
+        "Antes: Nome + registo_oficial URL. Depois: Nome nativo mantido, URL especializada conta_crm e 23 atributos operacionais adicionais. A escolha de poucos requisitos na criação não remove os atributos necessários durante a relação.",
+        "Criar os campos por grupo e os vocabulários propostos após revisão dos responsáveis. Não acrescentar código próprio sem um código empresarial existente e consumidor definido. Não criar uma entidade só para cada contacto ou factura.",
+        "Na criação manual, Comercial abre Nome = Kwanza Serviços de Demonstração e, se conhecido, tipo_cliente = empresa, situacao_relacao = em_preparacao e conta_crm = https://example.com/crm/contas/demonstracao. Resolver responsável real se disponível. Os restantes dados podem ficar vazios; este é um percurso de desenho, sem registo criado.",
+        "Antes da contratação, Comercial e Finanças completam identidade e condições; na passagem à entrega, Operações completa contacto e local; no acompanhamento, Comercial define revisão. Na renovação consulta-se cada contrato e a versão das condições usada no respectivo caso.",
+        "Esforço por resolver: manter contactos, responsabilidades e condições em CRM/Provia manualmente. Se contacto comercial e operacional forem a mesma pessoa, admitir o mesmo valor, mas conferir ambos quando mudarem; usar caixas de equipa quando apropriado. Evitar transportar todos os campos para cada caso.",
+        "Mapeamento proposto: os casos contratação, facturação, entrega e renovação guardam referência Cliente. Na contratação copiar apenas identidade/condições usadas no documento, de entidade → metadados do caso, com data da conferência e ligação à fonte quando a decisão exige. O caso guarda a decisão contratual; não escreve automaticamente de volta na conta.",
+        "Formulários: respostas de levantamento específicas da prestação ficam na submissão; mapear para o caso somente local, contacto escolhido, datas e requisitos consumidos pelas acções. Correcções propostas ao cadastro são revistas por Comercial/Finanças e aplicadas manualmente à entidade e à fonte.",
+        "Etiquetas opcionais de campanha, como campanha_demo, podem agrupar contas temporariamente; sector e situação usam select controlado. Criar etiquetas fora do workflow YAML, apenas quando houver campanha e responsável."
+      ],
+      "readiness": [
+        "Contratação: Comercial confirma Nome/razão social aplicável, tipo, responsável, situação, contacto e fonte CRM; Finanças confirma NIF se necessário e condições do contrato. Não exigir morada/local que não se aplica.",
+        "Facturação: Finanças confere contraparte, contacto e canal financeiro, morada e NIF quando aplicáveis, contrato, moeda, prazo e referência de compra do caso. Conta incompleta exige esclarecimento antes de emitir; não há bloqueio automático proposto.",
+        "Entrega: Operações confirma responsável interno, interlocutor e canal operacional, âmbito contratual, datas, critérios de aceitação e local quando presencial. Estes últimos pertencem ao caso.",
+        "Renovação: Comercial verifica estado, conta CRM actual, condições, serviço entregue e datas/aviso de cada contrato no caso; actualiza próxima revisão da relação após a decisão."
+      ]
+    },
+    {
+      "key": "funcao_profissional",
+      "name": "Função profissional",
+      "description": "Funções profissionais seleccionadas no recrutamento, integração, avaliação e desenvolvimento. Reúne o enquadramento, as responsabilidades e os requisitos usados nesses processos.",
+      "icon": "Briefcase01",
+      "namePattern": "Designação aprovada da função; área ou nível apenas quando distingue funções aprovadas. Exemplo sintético: Técnico de Operações — Serviços.",
+      "purpose": "Uma função profissional aprovada ou em definição, independente da pessoa que a ocupa e de cada vaga. Reutilizada em recrutamento, integração, avaliação e desenvolvimento.",
+      "owner": "Recursos Humanos mantém o catálogo; chefia da área confirma conteúdo e aprovação (responsáveis propostos).",
+      "fields": [
+        {
+          "key": "codigo_funcao",
+          "label": "Código da função",
+          "type": "text",
+          "group": "Identidade",
+          "helpText": "Só preencher se existir código aprovado no documento de funções; não gerar código adicional ao UUID por conveniência técnica.",
+          "purpose": "Conciliar recrutamento e avaliação com um código empresarial já utilizado.",
+          "example": "FUN-DEMO-001",
+          "priority": "conditional",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "area_organizacional",
+          "label": "Área organizacional",
+          "type": "text",
+          "group": "Estrutura",
+          "helpText": "Usar a designação interna aprovada. Não criar catálogo autónomo de áreas sem necessidade demonstrada.",
+          "purpose": "Identificar a área de referência na abertura de vaga e integração.",
+          "example": "Operações de Serviços",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "familia_profissional",
+          "label": "Família profissional",
+          "type": "select",
+          "group": "Estrutura",
+          "helpText": "Vocabulário proposto para serviços; RH deve confirmar correspondência com as famílias aprovadas.",
+          "purpose": "Agrupar recrutamento e percursos de desenvolvimento.",
+          "example": "operacoes",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional",
+          "options": [
+            {
+              "value": "operacoes",
+              "label": "Operações"
+            },
+            {
+              "value": "comercial",
+              "label": "Comercial"
+            },
+            {
+              "value": "administracao_financas",
+              "label": "Administração e Finanças"
+            },
+            {
+              "value": "pessoas",
+              "label": "Recursos Humanos"
+            },
+            {
+              "value": "tecnologia",
+              "label": "Tecnologia"
+            },
+            {
+              "value": "gestao",
+              "label": "Gestão"
+            }
+          ]
+        },
+        {
+          "key": "nivel_profissional",
+          "label": "Nível profissional",
+          "type": "text",
+          "group": "Estrutura",
+          "helpText": "Usar nomenclatura de níveis aprovada; não é uma grelha salarial nem um enquadramento laboral presumido.",
+          "purpose": "Distinguir exigência e âmbito de autonomia no recrutamento, avaliação e desenvolvimento.",
+          "example": "Técnico",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "responsavel_conteudo",
+          "label": "Responsável pelo conteúdo",
+          "type": "user",
+          "group": "Responsabilidade",
+          "helpText": "Seleccionar utilizador real do destino; a referência não atribui tarefas nem aprova a função.",
+          "purpose": "Identificar quem esclarece e mantém requisitos usados nos quatro processos.",
+          "example": {
+            "lookupName": "Responsável RH de demonstração"
+          },
+          "priority": "core",
+          "required": false,
+          "source": "Designação interna por RH",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "reporte_funcional",
+          "label": "Reporte funcional",
+          "type": "text",
+          "group": "Estrutura",
+          "helpText": "Nome da função de chefia, não da pessoa ocupante. Usar Sem reporte funcional apenas quando confirmado. Relação entity adiada até existir hierarquia completa mantida.",
+          "purpose": "Explicar a função de chefia a quem se reporta na integração e avaliação.",
+          "example": "Coordenador de Operações",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "missao",
+          "label": "Missão",
+          "type": "rich_text",
+          "group": "Conteúdo da função",
+          "helpText": "Resumo fiel da descrição aprovada; detalhes extensos permanecem no documento.",
+          "purpose": "Explicar o resultado central da função no recrutamento e integração.",
+          "example": "Assegurar a prestação dos serviços acordados com qualidade e continuidade.",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "responsabilidades",
+          "label": "Responsabilidades",
+          "type": "rich_text",
+          "group": "Conteúdo da função",
+          "helpText": "Síntese utilizável no processo; actualizar após aprovação de alterações à descrição.",
+          "purpose": "Orientar selecção, integração e avaliação das entregas esperadas.",
+          "example": "Preparar a execução; acompanhar tarefas; registar evidências; comunicar desvios.",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "autonomia",
+          "label": "Autonomia e limites",
+          "type": "rich_text",
+          "group": "Conteúdo da função",
+          "helpText": "Limites aprovados da função. Não cria permissões ou níveis automáticos de aprovação no Provia.",
+          "purpose": "Esclarecer decisões e escalamentos na integração e avaliação.",
+          "example": "Organiza as tarefas atribuídas; alterações de âmbito são submetidas à chefia.",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "competencias_tecnicas",
+          "label": "Competências técnicas",
+          "type": "rich_text",
+          "group": "Requisitos",
+          "helpText": "Definir critérios de selecção e lacunas a trabalhar no desenvolvimento.",
+          "purpose": "Definir critérios de selecção e lacunas a trabalhar no desenvolvimento.",
+          "example": "Planeamento de serviço, leitura de procedimentos e controlo de execução.",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "competencias_comportamentais",
+          "label": "Competências comportamentais",
+          "type": "rich_text",
+          "group": "Requisitos",
+          "helpText": "Orientar entrevista, avaliação e desenvolvimento com comportamentos observáveis.",
+          "purpose": "Orientar entrevista, avaliação e desenvolvimento com comportamentos observáveis.",
+          "example": "Comunica desvios com clareza; coordena tarefas; cumpre compromissos.",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "formacao_exigida",
+          "label": "Formação exigida",
+          "type": "rich_text",
+          "group": "Requisitos",
+          "helpText": "Preencher apenas se a função tiver requisito aprovado; distinguir exigido de preferencial, sem inventar obrigação legal.",
+          "purpose": "Definir formação necessária à selecção e eventual desenvolvimento.",
+          "example": "Formação técnica relevante ou percurso equivalente aprovado.",
+          "priority": "conditional",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "experiencia_exigida",
+          "label": "Experiência exigida",
+          "type": "rich_text",
+          "group": "Requisitos",
+          "helpText": "Utilizar critério aprovado e pertinente à função; não inventar anos mínimos.",
+          "purpose": "Definir experiência comprovável necessária no recrutamento.",
+          "example": "Experiência em coordenação de actividades de prestação de serviços.",
+          "priority": "conditional",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "certificacoes_exigidas",
+          "label": "Certificações exigidas",
+          "type": "rich_text",
+          "group": "Requisitos",
+          "helpText": "Só se existir requisito real aprovado. Certificados e validades individuais pertencem ao processo da pessoa; não são atributos da função.",
+          "purpose": "Orientar verificação na selecção e plano de formação quando a actividade o exige.",
+          "example": "Certificação técnica definida no documento da função.",
+          "priority": "conditional",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "criterios_avaliacao",
+          "label": "Critérios de avaliação",
+          "type": "rich_text",
+          "group": "Avaliação e desenvolvimento",
+          "helpText": "Critérios da função; metas numéricas por período e resultados individuais pertencem aos casos de avaliação.",
+          "purpose": "Definir resultados observáveis para avaliação consistente.",
+          "example": "Qualidade das evidências, cumprimento do plano acordado e comunicação atempada.",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "integracao_essencial",
+          "label": "Conteúdos essenciais de integração",
+          "type": "rich_text",
+          "group": "Avaliação e desenvolvimento",
+          "helpText": "Síntese de conteúdos aplicáveis; tarefas, acessos e confirmação de conclusão são definidos no caso de integração.",
+          "purpose": "Orientar o plano de integração de ocupantes da função.",
+          "example": "Procedimentos de serviço, critérios de qualidade e canais de escalamento.",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "desenvolvimento_recomendado",
+          "label": "Desenvolvimento recomendado",
+          "type": "rich_text",
+          "group": "Avaliação e desenvolvimento",
+          "helpText": "Percursos e formação de referência; plano individual, compromisso e evidências ficam no caso da pessoa.",
+          "purpose": "Orientar planos de desenvolvimento e evolução profissional.",
+          "example": "Aprofundar planeamento e análise de qualidade; preparar coordenação mediante avaliação.",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "condicoes_exercicio",
+          "label": "Condições de exercício",
+          "type": "rich_text",
+          "group": "Condições operacionais",
+          "helpText": "Apenas condições inerentes à função aprovadas; local e horário de cada vaga/colaborador ficam no respectivo caso. Não incluir dados de saúde ou atributos pessoais.",
+          "purpose": "Antecipar local, deslocações ou disponibilidade relevantes no recrutamento e integração.",
+          "example": "Actividade em instalações de clientes na província de Luanda.",
+          "priority": "conditional",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "situacao_funcao",
+          "label": "Situação da função",
+          "type": "select",
+          "group": "Ciclo de vida",
+          "helpText": "Estado informativo mantido por RH; selecção e abertura de vagas não são bloqueadas automaticamente.",
+          "purpose": "Distinguir conteúdos em definição, aprovados ou retirados antes de seleccionar a função.",
+          "example": "em_definicao",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional",
+          "options": [
+            {
+              "value": "em_definicao",
+              "label": "Em definição"
+            },
+            {
+              "value": "activa",
+              "label": "Activa"
+            },
+            {
+              "value": "retirada",
+              "label": "Retirada"
+            }
+          ]
+        },
+        {
+          "key": "inicio_vigencia",
+          "label": "Início de vigência",
+          "type": "date",
+          "group": "Ciclo de vida",
+          "helpText": "Data de aplicação indicada na aprovação; não confundir com criação do registo.",
+          "purpose": "Identificar quando o conteúdo aprovado pode orientar recrutamento e avaliação.",
+          "example": "2026-10-01",
+          "priority": "core",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "fim_vigencia",
+          "label": "Fim de vigência",
+          "type": "date",
+          "group": "Ciclo de vida",
+          "helpText": "Preencher quando existe retirada ou termo aprovado. RH revê casos em curso; o campo não os altera.",
+          "purpose": "Orientar cessação do uso para novos recrutamentos e revisão de processos em curso.",
+          "example": "2027-09-30",
+          "priority": "conditional",
+          "required": false,
+          "source": "Documento de funções aprovado",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "proxima_revisao",
+          "label": "Próxima revisão da função",
+          "type": "date",
+          "group": "Ciclo de vida",
+          "helpText": "RH agenda e actualiza após cada revisão aprovada; a periodicidade fica por confirmar. Não é lembrete automático nem data genérica de verificação.",
+          "purpose": "Planear revisão do conteúdo para manter recrutamento e avaliação coerentes.",
+          "example": "2027-03-01",
+          "priority": "core",
+          "required": false,
+          "source": "Plano de manutenção de funções aprovado por RH",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        },
+        {
+          "key": "descricao_aprovada",
+          "label": "Descrição aprovada da função",
+          "type": "url",
+          "group": "Fonte",
+          "helpText": "Substitui registo_oficial. RH mantém a ligação à descrição aprovada; preservar a versão usada no caso por evidência, pois a ligação corrente pode mudar.",
+          "purpose": "Consultar descrição completa e aprovação em todos os processos consumidores.",
+          "example": "https://example.com/funcoes/tecnico-operacoes/aprovada",
+          "priority": "core",
+          "required": false,
+          "source": "Repositório do documento de funções",
+          "maintainer": "RH, em articulação com a chefia da área",
+          "sensitivity": "Interna operacional"
+        }
+      ],
+      "coverage": [
+        {
+          "dimension": "Identidade e classificação",
+          "decision": "included",
+          "reason": "Nome nativo identifica a função; código apenas se existente, área, família e nível permitem selecção e agrupamento nos quatro processos."
+        },
+        {
+          "dimension": "Contactos e localização",
+          "decision": "not_applicable",
+          "reason": "A função não é uma pessoa nem possui email/telefone. Responsável pelo conteúdo é user; condições de exercício descrevem deslocações quando inerentes, e local/horário de cada vaga fica no caso."
+        },
+        {
+          "dimension": "Responsabilidade, estrutura e relações",
+          "decision": "included",
+          "reason": "Área, nível, dono do conteúdo e reporte funcional identificam enquadramento. A hierarquia é textual nesta base; sem catálogo completo não se cria uma referência obrigatória a funções de chefia inexistentes."
+        },
+        {
+          "dimension": "Estado e datas",
+          "decision": "included",
+          "reason": "Situação, início e fim de vigência e próxima revisão cobrem definição, activação, manutenção e retirada. A aprovação é evidência documental, não inferida de um estado."
+        },
+        {
+          "dimension": "Conteúdo e requisitos",
+          "decision": "included",
+          "reason": "Missão, responsabilidades, autonomia, competências técnicas/comportamentais e requisitos condicionais de formação, experiência e certificações apoiam recrutamento e integração."
+        },
+        {
+          "dimension": "Avaliação e desenvolvimento",
+          "decision": "included",
+          "reason": "Critérios de avaliação, integração essencial e desenvolvimento recomendado traduzem a função em usos operacionais; objectivos e resultados individuais por período ficam nos casos."
+        },
+        {
+          "dimension": "Condições comerciais e dados da pessoa",
+          "decision": "external",
+          "reason": "Salários, contratos de trabalho, dados bancários, documentos pessoais, saúde e remuneração individual não definem esta função; permanecem nos sistemas/documentos autorizados de RH. Não há pedido que justifique duplicá-los no catálogo."
+        },
+        {
+          "dimension": "Evidência e fonte",
+          "decision": "external",
+          "reason": "Descrição aprovada é fonte autoritativa. Provia mantém resumos úteis com manutenção manual por RH. Documento integral e aprovação permanecem no repositório; caso guarda o conteúdo/versão usado na decisão quando necessário."
+        }
+      ],
+      "setup": [
+        "Briefcase01 representa a função profissional; identifier verificado no snapshot citado. Confirmar disponibilidade no destino.",
+        "Antes: Nome + registo_oficial URL. Depois: Nome nativo mantido, URL especializada descricao_aprovada e 22 atributos adicionais. codigo_funcao é condicional à existência de código empresarial real; não criar um sistema de codificação por causa desta proposta.",
+        "Criar manualmente os campos por grupo. RH confirma vocabulários, aprovação dos conteúdos, acesso e responsável substituto. Reutilizar o documento completo; os resumos devem conter apenas o que os processos consultam.",
+        "Percurso sintético de criação: Nome = Técnico de Operações — Serviços; se conhecido, area_organizacional = Operações de Serviços e situacao_funcao = em_definicao. O documento ainda pode estar em preparação; descricao_aprovada, requisitos, responsável e vigência podem ser completados depois. Não foi criada uma função real.",
+        "Antes de activar para recrutamento, RH e chefia completam estrutura, responsabilidades, competências, critérios e ligação ao conteúdo aprovado, resolvem responsável real e confirmam início de vigência. Na integração e avaliação ajustam só dados do caso da pessoa, sem alterar a definição para acomodar um indivíduo.",
+        "Esforço por resolver: RH copia resumos do documento aprovado e revê-os sempre que há alteração aprovada; conferir antes de cada processo consumidor. Não existe sincronização. Se o custo for excessivo, reduzir extensão dos resumos após demonstrar que o documento fornece a informação a tempo; não eliminar a cobertura.",
+        "Mapeamento: casos recrutamento, integração, avaliação e desenvolvimento → referência Função profissional. Copiar para o caso apenas requisitos/critério usados na decisão e ligação/identificação da edição documental consultada; uma alteração futura da entidade não deve ser tomada como a regra histórica do caso. Definir e verificar a preservação documental no desenho do workflow.",
+        "Respostas de entrevista e auto-avaliação ficam em submissões e evidências. Mapear para metadados do caso apenas resultados necessários à decisão e reporting; classificações individuais não voltam automaticamente à função.",
+        "Etiquetas como programa_formacao_demo podem classificar iniciativas temporárias. Família, nível aprovado e situação não devem ser substituídos por etiquetas livres. Não há relação inversa com todos os ocupantes nem lista de colaboradores nesta entidade."
+      ],
+      "readiness": [
+        "Recrutamento: RH confirma situação e vigência, área, nível, reporte, responsável, missão, responsabilidades, competências e requisitos condicionais; confere descrição aprovada. Necessidade de vaga, headcount e condições específicas ficam no caso.",
+        "Integração: chefia confirma reporte, autonomia, responsabilidades, conteúdos essenciais e condições de exercício; define tarefas e acessos do ocupante no caso. A referência à função não concede acesso.",
+        "Avaliação: RH e avaliador confirmam critérios, responsabilidades e competências da edição aplicável; acordam metas e período no caso e preservam evidência da base usada. Resultados de pessoas não são campos da função.",
+        "Desenvolvimento: chefia compara competências da função com evidência individual no caso e prepara plano usando desenvolvimento recomendado; datas e compromissos individuais ficam no caso.",
+        "Revisão ou retirada: RH confere aprovação documental, actualiza resumos e vigência e analisa casos abertos antes de utilizar novos critérios. Definir próxima revisão; nenhum campo cria histórico de versões."
+      ]
+    }
+  ]
+}

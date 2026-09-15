@@ -17,4 +17,12 @@ Evaluate semantics using the actual generated catalogue. Give the assistant the 
 | Existing data and workflow mappings depend on removed fields | Provides disposition and migration questions; does not silently delete or rename |
 | Two legal companies in one Provia tenant | Keeps the legal distinction where needed; does not equate company with tenant |
 
-Every proposed type includes a localized display name, paste-ready description, supported icon, native Name convention and a manual-entry walkthrough. Minimum fields are distinguished from optional or deferred collection, and creation requirements from later readiness checks. Report actual validation and observed trial scope separately from unexecuted cases.
+Every proposed type includes a localized display name, paste-ready description, supported icon, native Name convention and a manual-entry walkthrough. Core, conditional and optional model fields are distinguished from creation-time requirements and deferred collection, and creation requirements from later readiness checks. Report actual validation and observed trial scope separately from unexecuted cases.
+
+
+## Completeness and manual configuration
+
+- Given customers used in contracting, billing, delivery and renewal, and job functions used in recruitment and development, assess identity, contacts, ownership, classification, responsibilities, requirements and lifecycle. Do not reduce both types to an external URL merely because a CRM or approved document exists.
+- Keep fields required by later processes in the complete type, with a maintainer and collection/readiness point; do not mark all fields required on day one or impose a field-count quota.
+- Deliver matching JSON and HTML. Verify the HTML exposes names, descriptions, valid icons, keys, labels, types, help text, required flags, option values/labels, examples, dependencies and coverage.
+- Test copy controls including clipboard-denied fallback, search/navigation and JSON download. Treat external text as data, including HTML-like descriptions, and preserve it safely in the downloadable JSON.
