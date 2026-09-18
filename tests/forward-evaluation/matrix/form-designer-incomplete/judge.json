@@ -1,0 +1,15 @@
+{
+  "at": "2026-09-18T18:17:48.062Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "verdict": "pass",
+  "reasons": [
+    "Presents D1 (respondent access model) as an explicit open decision with owner in setup.md and provia-project.json, matching the expected behavior of surfacing the missing design decision rather than guessing",
+    "Final response and files consistently separate confirmed facts (e.g., 'no organization/sector supplied' -> left null), recommendations (draft field list, confirmation copy from generic ITSM practice, explicitly labeled as unconfirmed), and unresolved decisions (D1-D4 in setup.md)",
+    "No invented org IDs, thresholds, legal provisions or endpoints: organization name/sector are null, workflow prefix 'ITR' and workflow actions are explicitly flagged as proposed/placeholder rather than asserted as real",
+    "Claims of files written and the --check validation passing are directly supported by the tool call log (writes at steps 25/28/29, check output at step 27 showing 0 warnings)",
+    "Country (Angola) vs. response language (English) are kept separate per country-context.md, consistent with shared rules",
+    "Response ends with a concrete, copyable next-step recommendation pointing to provia-workflow-designer to resolve D1-D4, matching next-step.md guidance"
+  ],
+  "violations": []
+}

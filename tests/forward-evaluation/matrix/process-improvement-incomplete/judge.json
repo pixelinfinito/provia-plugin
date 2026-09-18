@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-18T18:37:43.544Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "verdict": "pass",
+  "reasons": [
+    "The run correctly identified missing denominator (case records) and sample period (start/end timestamps) and labeled the calculation as incomplete rather than estimating or inventing numbers",
+    "Explicitly separated confirmed facts (empty directory, no data supplied) from unresolved decisions (D1-D3 recorded as open questions) and recommendations (instrument waiting-vs-active split)",
+    "No organization IDs, thresholds, or validation results were invented — organization fields explicitly marked 'Not supplied' and tenantId/productRevision null",
+    "Claims about tool execution match the transcript: build-project-map.mjs --check was actually run and its real output (0 workflows, 3 pending items) is accurately summarized as 'Manifest validates cleanly'",
+    "Report explicitly states waiting time and active work time will be kept separate, addressing the core requirement not to mix them",
+    "Response ends with a concrete, actionable next-step recommendation with a copyable invocation, consistent with next-step.md convention",
+    "Angola disclosed as provisional context per country-context.md convention, appropriately caveated as not implying any legal/workflow claim"
+  ],
+  "violations": []
+}

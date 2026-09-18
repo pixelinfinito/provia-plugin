@@ -1,0 +1,20 @@
+{
+  "id": "workflow-review-incomplete",
+  "skill": "provia-workflow-review",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:22:45.149Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 83308,
+  "costUsd": 0.3638744,
+  "numTurns": 13,
+  "sessionId": "dd82d420-cfa3-48b6-800c-08442590c863",
+  "stopReason": "end_turn",
+  "toolCalls": 11,
+  "files": [
+    "provia-project.json",
+    "workflow-review-findings.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/workflow-review-incomplete/",
+  "skillLoaded": true
+}

@@ -1,0 +1,20 @@
+{
+  "id": "process-improvement-incomplete",
+  "skill": "provia-process-improvement",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:37:31.273Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 88107,
+  "costUsd": 0.3847814,
+  "numTurns": 15,
+  "sessionId": "e168693f-bebb-4ab7-ae86-d512b1ace1e1",
+  "stopReason": "end_turn",
+  "toolCalls": 13,
+  "files": [
+    "provia-project.json",
+    "report.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/process-improvement-incomplete/",
+  "skillLoaded": true
+}

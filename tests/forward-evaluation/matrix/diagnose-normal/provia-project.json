@@ -1,0 +1,74 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "compras",
+    "title": "Diagnóstico do processo de compras",
+    "language": "pt-AO",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "export-junho-2026",
+      "title": "Exportação agregada de Junho de 2026 (12 casos concluídos)",
+      "kind": "export"
+    },
+    {
+      "id": "export-agosto-2026",
+      "title": "Exportação agregada de Agosto de 2026 (19 casos concluídos)",
+      "kind": "export"
+    },
+    {
+      "id": "casos-abertos-20260918",
+      "title": "Casos abertos em 2026-09-18 09:00 (Africa/Luanda): COMP-201, COMP-204, COMP-207",
+      "kind": "export"
+    }
+  ],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Quem assume agora a decisão do caso COMP-201 («Decidir sobre o pedido»)? Está sem responsável atribuído e já leva 8 dias úteis na acção, 6 dias úteis além do prazo de 2 dias.",
+      "owner": "Chefia de Compras (a confirmar)",
+      "status": "open",
+      "raisedBy": "provia-operations-triage",
+      "sourceRefs": [ { "source": "casos-abertos-20260918" } ]
+    },
+    {
+      "id": "D2",
+      "question": "Confirmar a causa do aumento do tempo em «Decidir sobre o pedido» (3,1 → 6,4 dias úteis) e da taxa de devolução (16,7% → 36,8%) entre Junho e Agosto de 2026: falta de responsável atribuído nesta acção, aumento de volume (12 → 19 casos, +58%), ou informação insuficiente nas propostas que leva à devolução.",
+      "owner": "Dono do processo de Compras",
+      "status": "open",
+      "raisedBy": "provia-process-improvement",
+      "sourceRefs": [ { "source": "export-junho-2026" }, { "source": "export-agosto-2026" } ]
+    },
+    {
+      "id": "D3",
+      "question": "Definir o prazo (due) e o responsável da acção «Confirmar disponibilidade orçamental»: o caso COMP-204 está há 1 dia útil nesta acção sem prazo registado, o que impede classificar se está atrasado.",
+      "owner": "Dono do processo de Compras",
+      "status": "open",
+      "raisedBy": "provia-operations-triage",
+      "sourceRefs": [ { "source": "casos-abertos-20260918" } ]
+    },
+    {
+      "id": "D4",
+      "question": "Aprovar a atribuição de um responsável fixo (grupo, não pessoa) à acção «Decidir sobre o pedido» e um alerta de escalonamento ao fim de 1 dia útil do prazo de 2 dias, como medida para reduzir o tempo médio nesta acção e o número de casos sem dono.",
+      "owner": "Dono do processo de Compras / Direcção Financeira (a confirmar)",
+      "status": "open",
+      "raisedBy": "provia-process-improvement",
+      "sourceRefs": [ { "source": "export-agosto-2026" }, { "source": "casos-abertos-20260918" } ]
+    }
+  ],
+  "receipts": []
+}

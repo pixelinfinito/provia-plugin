@@ -1,0 +1,22 @@
+{
+  "id": "workflow-designer-conflicting",
+  "skill": "provia-workflow-designer",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:08:52.306Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 212883,
+  "costUsd": 0.7652385999999998,
+  "numTurns": 33,
+  "sessionId": "d24dc5c6-e19e-400f-a606-4eb891b53a2c",
+  "stopReason": "end_turn",
+  "toolCalls": 31,
+  "files": [
+    "project.html",
+    "provia-project.json",
+    "setup.md",
+    "workflow.yaml"
+  ],
+  "output": "tests/forward-evaluation/matrix/workflow-designer-conflicting/",
+  "skillLoaded": true
+}

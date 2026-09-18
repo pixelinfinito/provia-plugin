@@ -1,0 +1,61 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "workflow-review-conflicting",
+    "title": "Unnamed process (request / manager approval / ordering)",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": null,
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "policy-manager-approval",
+      "title": "Supplied policy: manager must approve before ordering",
+      "kind": "policy",
+      "version": null,
+      "effectiveDate": null,
+      "sections": []
+    }
+  ],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [
+    {
+      "key": "unnamed-process",
+      "name": "Unnamed process (request / manager approval / ordering)",
+      "prefix": null,
+      "file": null,
+      "status": "review",
+      "sourceRefs": [{ "source": "policy-manager-approval" }],
+      "actions": [],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "No workflow.yaml was supplied to this review; the design was described only in prose (request and ordering run in parallel)."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Ordering runs in parallel with request, so it is not gated on the manager-approval decision. The supplied policy requires manager approval before ordering. How should the design be corrected: move ordering out of the parallel group and add a predecessor on the approval decision's 'approve' outcome, or restructure differently? Also: does the current parallel branch have a reject/return path, and what should happen to an order already placed in parallel if approval is later rejected?",
+      "owner": null,
+      "status": "open",
+      "raisedBy": "provia-workflow-review",
+      "sourceRefs": [{ "source": "policy-manager-approval" }]
+    }
+  ],
+  "receipts": []
+}

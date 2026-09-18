@@ -1,0 +1,106 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "it-request-classification",
+    "title": "IT request classification (AI proposal, human review)",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "pinned in contracts/workflow-v1/contract-lock.json",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": "Not supplied",
+    "sector": "Not supplied — assumed generic internal IT service desk",
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "assumed-it-taxonomy",
+      "title": "No SOP or field list was supplied. Category/urgency taxonomy and field shape are drafted from this plugin's own examples/it-service/workflow.yaml training example, not a customer document.",
+      "kind": "other"
+    }
+  ],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [
+    {
+      "key": "it-request-classification",
+      "name": "IT request classification",
+      "prefix": "ITREQ",
+      "file": "workflow.yaml",
+      "status": "design",
+      "sourceRefs": [ { "source": "assumed-it-taxonomy" } ],
+      "actions": [
+        {
+          "localId": "classify_request",
+          "name": "Classify the IT request",
+          "type": "standard",
+          "sourceRefs": [ { "source": "assumed-it-taxonomy" } ],
+          "assigneeRef": "ai:classify_it_requests",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "category, urgency, classification_confidence and classification_rationale filled",
+            "a human reviewer has confirmed or corrected the proposal (aiWorker.reviewRequired: true)"
+          ]
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "Create the AI profile in Provia and replace the $AI_PROFILE_ID placeholder in workflow.yaml with its real id.",
+        "Configure who reviews this AI action in Provia (reviewRequired: true gates completion, but the reviewing person/group/role is a product-side setting, not portable in this YAML contract) — see decision D1.",
+        "Confirm the intake trigger: a manual trigger is drafted; email or webform intake likely needs provia-automation-designer / provia-form-designer.",
+        "No SLA/due was supplied for the classification step; due is left unset in workflow.yaml — see decision D3."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [
+    {
+      "key": "classify_it_requests",
+      "name": "IT request classification (with human review)",
+      "workflowRef": "it-request-classification",
+      "actionRef": "classify_request"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Which person, group or role should be configured in Provia as the human reviewer for the IT request classification AI action, and does reviewRequired route to a designated reviewer role or to the action's own assignee?",
+      "owner": "IT service owner / Provia administrator",
+      "status": "open",
+      "raisedBy": "provia-ai-action-designer",
+      "sourceRefs": [ { "source": "assumed-it-taxonomy" } ]
+    },
+    {
+      "id": "D2",
+      "question": "Confirm the category (Access, Equipment, Software, Network, Security, Other) and urgency (Normal, High, Blocking) taxonomy against the organization's real IT ticket categories; these values were drafted from the plugin's own IT-service training example, not a supplied SOP.",
+      "owner": "IT service owner",
+      "status": "open",
+      "raisedBy": "provia-ai-action-designer",
+      "sourceRefs": [ { "source": "assumed-it-taxonomy" } ]
+    },
+    {
+      "id": "D3",
+      "question": "Confirm the real intake channel (manual trigger assumed) and the SLA/due target for the classification step; none was supplied.",
+      "owner": "IT service owner",
+      "status": "open",
+      "raisedBy": "provia-ai-action-designer",
+      "sourceRefs": [ { "source": "assumed-it-taxonomy" } ]
+    },
+    {
+      "id": "D4",
+      "question": "Confirm the confidenceThreshold starting value (0.6 proposed, untuned — no historical classification data was supplied) after real cases are available, and set the real AI profile id in place of $AI_PROFILE_ID.",
+      "owner": "IT service owner / Provia administrator",
+      "status": "open",
+      "raisedBy": "provia-ai-action-designer",
+      "sourceRefs": [ { "source": "assumed-it-taxonomy" } ]
+    }
+  ],
+  "receipts": []
+}

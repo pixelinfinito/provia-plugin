@@ -1,0 +1,103 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "pedido-erp",
+    "title": "Pedido — integração com o ERP",
+    "language": "pt-AO",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "erp-api-docs",
+      "title": "Documentação da API do ERP",
+      "kind": "other",
+      "sections": []
+    }
+  ],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [
+    {
+      "key": "pedido",
+      "name": "Pedido",
+      "prefix": "PED",
+      "file": "workflow.yaml",
+      "status": "design",
+      "sourceRefs": [
+        { "source": "erp-api-docs" }
+      ],
+      "actions": [
+        {
+          "localId": "enviar_erp",
+          "name": "Enviar o pedido aprovado ao ERP",
+          "type": "http_request",
+          "sourceRefs": [
+            { "source": "erp-api-docs" }
+          ],
+          "assigneeRef": null,
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Referência do ERP registada em «erp_reference» quando a resposta a inclui" ],
+          "due": null
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "Criar o segredo da organização ERP_API_TOKEN com o token/credencial de acesso ao ERP antes de importar.",
+        "Adicionar o anfitrião real da API do ERP (substituir example.com) à lista de destinos HTTP permitidos.",
+        "Ligar a acção «Enviar o pedido aprovado ao ERP» à saída «Aprovar»/«Aprovado» da decisão de aprovação do workflow real do pedido; este excerto não inclui essa decisão.",
+        "Confirmar no Provia como o corpo do pedido HTTP recebe valores dos campos do caso (mapeamento dinâmico ou conteúdo estático); o corpo em workflow.yaml está vazio até essa confirmação.",
+        "Confirmar o endpoint real, os campos exigidos pelo ERP e o caminho JSON da resposta com a equipa responsável pelo ERP; ver integration-requirements.md."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Qual é o endpoint, método e esquema de autenticação reais da API do ERP para criar um pedido/pedido de compra?",
+      "owner": "Equipa responsável pelo ERP",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": [ { "source": "erp-api-docs" } ]
+    },
+    {
+      "id": "D2",
+      "question": "A API do ERP suporta uma chave de idempotência (ou permite consultar se um pedido já foi criado) para evitar duplicar o registo em caso de nova tentativa após falha?",
+      "owner": "Equipa responsável pelo ERP",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": [ { "source": "erp-api-docs" } ]
+    },
+    {
+      "id": "D3",
+      "question": "Quais os campos do pedido (montante, fornecedor, centro de custo, linhas, etc.) que o ERP exige, e qual o mapeamento para os campos do workflow do pedido?",
+      "owner": "Equipa responsável pelo ERP / dono do processo de compras",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": [ { "source": "erp-api-docs" } ]
+    },
+    {
+      "id": "D4",
+      "question": "Este excerto assume que existe (ou vai existir) uma acção de Decisão com uma saída de aprovação no workflow real do pedido, à qual esta chamada HTTP se liga a seguir. Essa decisão ainda não está desenhada neste projecto — confirmar com provia-workflow-designer.",
+      "owner": "Dono do processo de compras",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": []
+    }
+  ],
+  "receipts": []
+}

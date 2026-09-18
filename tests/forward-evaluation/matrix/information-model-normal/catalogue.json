@@ -1,0 +1,358 @@
+{
+  "schemaVersion": "provia-entity-catalogue/v1",
+  "title": "Catálogo · Fornecedores e pedidos de compra",
+  "language": "pt-AO",
+  "country": "Angola",
+  "notes": [
+    "Baseline proposto sem SOP ou exportação fornecida; assunções assinaladas abaixo devem ser confirmadas com a equipa de compras.",
+    "Decisão de desenho: o Pedido de compra não é um segundo tipo de entidade. É o caso (incidente) do workflow de compras; os seus dados variáveis (artigos, montante, aprovação) ficam nos metadados do caso e na evidência das acções. O Fornecedor é a entidade reutilizável — cada pedido referencia-o através de um campo tipo `entity`, em vez de repetir NIF, contactos ou condições comerciais em cada pedido.",
+    "Ícones do snapshot 36772f7ce0831f0ea6f85a0e3e7849d32e576655; confirmar disponibilidade na versão de destino.",
+    "Tipos e configurações de metadados verificados na revisão Provia 2641364d9c1aa0aa2b76aa788ef521bcb6218118; confirmar a versão de destino.",
+    "Este catálogo é uma especificação editorial para configuração manual, não um payload de importação."
+  ],
+  "types": [
+    {
+      "key": "fornecedor",
+      "name": "Fornecedor",
+      "description": "Fornecedores utilizados nos processos de compra, contratação e avaliação. Permite seleccionar a contraparte num pedido de compra e consultar os dados necessários à relação sem os repetir em cada pedido.",
+      "icon": "Truck01",
+      "namePattern": "Nome comercial ou designação reconhecível; acrescentar um código de fornecedor existente apenas se necessário para distinguir registos homónimos.",
+      "purpose": "Selecção em pedidos de compra e contratos, consulta de condições comerciais, avaliação e requalificação periódica.",
+      "owner": "Responsável a designar pela equipa de compras",
+      "fields": [
+        {
+          "key": "tax_number",
+          "label": "NIF",
+          "type": "text",
+          "group": "Identificação",
+          "helpText": "Número de identificação fiscal do fornecedor, conforme documento de registo comercial.",
+          "purpose": "Confirmar a identidade fiscal da contraparte e evitar registos duplicados do mesmo fornecedor antes de emitir um pedido de compra.",
+          "example": "5417123456",
+          "priority": "core",
+          "required": true,
+          "source": "Documento de registo comercial apresentado pelo fornecedor; confirmar formato com a equipa fiscal.",
+          "maintainer": "Responsável pelo cadastro de fornecedores",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "legal_name",
+          "label": "Razão social",
+          "type": "text",
+          "group": "Identificação",
+          "helpText": "Preencher apenas quando a razão social difere do nome comercial usado como Nome do registo.",
+          "purpose": "Identificar a contraparte em contratos e facturas quando difere do nome comercial.",
+          "example": "Fornecedor Demonstração, Lda.",
+          "priority": "conditional",
+          "required": false,
+          "source": "Documento de registo comercial.",
+          "maintainer": "Responsável pelo cadastro de fornecedores",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "supplier_category",
+          "label": "Categoria de fornecimento",
+          "type": "select",
+          "group": "Classificação",
+          "helpText": "Escolher o que este fornecedor tipicamente fornece, para orientar a selecção no pedido de compra.",
+          "purpose": "Filtrar fornecedores elegíveis ao criar um pedido de compra e orientar o circuito de aprovação por tipo de fornecimento.",
+          "example": "goods_and_services",
+          "priority": "core",
+          "required": true,
+          "source": "Assunção baseline; confirmar vocabulário com a equipa de compras.",
+          "maintainer": "Responsável pelo cadastro de fornecedores",
+          "sensitivity": "Interna.",
+          "options": [
+            { "value": "goods", "label": "Bens" },
+            { "value": "services", "label": "Serviços" },
+            { "value": "goods_and_services", "label": "Bens e serviços" }
+          ]
+        },
+        {
+          "key": "procurement_segment",
+          "label": "Segmento de compra",
+          "type": "multi_select",
+          "group": "Classificação",
+          "helpText": "Classificação flexível do tipo de artigos ou serviços fornecidos, para pesquisa e relatórios.",
+          "purpose": "Pesquisar fornecedores por segmento ao preparar um pedido de compra e agrupar o gasto por segmento em relatórios.",
+          "example": ["it", "maintenance"],
+          "priority": "optional",
+          "required": false,
+          "source": "Assunção baseline; confirmar lista com a equipa de compras ou substituir por tags se a lista mudar com frequência.",
+          "maintainer": "Responsável pelo cadastro de fornecedores",
+          "sensitivity": "Interna.",
+          "options": [
+            { "value": "office_supplies", "label": "Material de escritório" },
+            { "value": "it", "label": "Tecnologia" },
+            { "value": "maintenance", "label": "Manutenção" },
+            { "value": "consulting", "label": "Consultoria" },
+            { "value": "logistics", "label": "Logística e transporte" },
+            { "value": "other", "label": "Outro" }
+          ]
+        },
+        {
+          "key": "contact_name",
+          "label": "Contacto comercial",
+          "type": "text",
+          "group": "Contactos",
+          "helpText": "Pessoa a contactar para negociar e coordenar entregas.",
+          "purpose": "Contactar o fornecedor durante a preparação e o acompanhamento de um pedido de compra.",
+          "example": "Pessoa de demonstração",
+          "priority": "core",
+          "required": true,
+          "source": "Fornecido pelo fornecedor no registo.",
+          "maintainer": "Responsável pelo cadastro de fornecedores",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "contact_email",
+          "label": "Email comercial",
+          "type": "email",
+          "group": "Contactos",
+          "helpText": "Email usado para enviar pedidos de compra e receber propostas.",
+          "purpose": "Enviar o pedido de compra aprovado e receber confirmações do fornecedor.",
+          "example": "comercial@fornecedor-demo.co.ao",
+          "priority": "core",
+          "required": true,
+          "source": "Fornecido pelo fornecedor no registo.",
+          "maintainer": "Responsável pelo cadastro de fornecedores",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "contact_phone",
+          "label": "Telefone comercial",
+          "type": "phone",
+          "group": "Contactos",
+          "helpText": "Contacto alternativo para coordenação urgente de entregas.",
+          "purpose": "Contacto alternativo quando o email não é suficiente para uma entrega urgente.",
+          "example": "+244 900 000 000",
+          "priority": "optional",
+          "required": false,
+          "source": "Fornecido pelo fornecedor no registo.",
+          "maintainer": "Responsável pelo cadastro de fornecedores",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "address",
+          "label": "Morada / local de entrega de origem",
+          "type": "text",
+          "group": "Contactos",
+          "helpText": "Endereço principal do fornecedor, quando relevante para logística de entrega.",
+          "purpose": "Preparar a logística de entrega associada a um pedido de compra.",
+          "example": "Luanda, Talatona · morada de demonstração",
+          "priority": "conditional",
+          "required": false,
+          "source": "Fornecido pelo fornecedor no registo.",
+          "maintainer": "Responsável pelo cadastro de fornecedores",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "account_owner",
+          "label": "Gestor da relação",
+          "type": "user",
+          "group": "Responsabilidade",
+          "helpText": "Comprador ou category manager responsável por manter a relação e os dados actualizados.",
+          "purpose": "Identificar quem mantém a relação e é consultado antes de bloquear ou requalificar o fornecedor.",
+          "example": { "lookupName": "Comprador de demonstração" },
+          "priority": "core",
+          "required": false,
+          "source": "Atribuído pela equipa de compras após o primeiro contacto; não necessariamente conhecido no registo inicial.",
+          "maintainer": "Responsável de compras",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "relationship_status",
+          "label": "Situação do fornecedor",
+          "type": "select",
+          "group": "Situação e ciclo de vida",
+          "helpText": "Situação actual da relação; consultar antes de seleccionar o fornecedor num novo pedido de compra.",
+          "purpose": "Impedir a selecção informada de fornecedores suspensos ou bloqueados num novo pedido de compra. O campo não bloqueia a selecção automaticamente; quem prepara o pedido deve verificar o valor.",
+          "example": "active",
+          "priority": "core",
+          "required": true,
+          "source": "Definido pela equipa de compras no registo e nas revisões periódicas.",
+          "maintainer": "Responsável de compras",
+          "sensitivity": "Interna.",
+          "options": [
+            { "value": "under_review", "label": "Em avaliação" },
+            { "value": "active", "label": "Activo" },
+            { "value": "suspended", "label": "Suspenso" },
+            { "value": "blocked", "label": "Bloqueado" },
+            { "value": "inactive", "label": "Inactivo" }
+          ]
+        },
+        {
+          "key": "onboarding_date",
+          "label": "Data de registo",
+          "type": "date",
+          "group": "Situação e ciclo de vida",
+          "helpText": "Data em que o fornecedor foi qualificado para compras.",
+          "purpose": "Situar a antiguidade da relação para revisões periódicas.",
+          "example": "2026-01-15",
+          "priority": "core",
+          "required": false,
+          "source": "Registada pela equipa de compras.",
+          "maintainer": "Responsável de compras",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "last_review_date",
+          "label": "Data da última revisão",
+          "type": "date",
+          "group": "Situação e ciclo de vida",
+          "helpText": "Preencher quando existir um processo definido de revisão periódica de fornecedores.",
+          "purpose": "Acompanhar a periodicidade da requalificação do fornecedor.",
+          "example": "2026-07-01",
+          "priority": "conditional",
+          "required": false,
+          "source": "Registada pelo responsável de compras no processo de revisão periódica, quando esse processo existir.",
+          "maintainer": "Responsável de compras",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "payment_terms",
+          "label": "Condições de pagamento",
+          "type": "select",
+          "group": "Condições comerciais",
+          "helpText": "Prazo de pagamento acordado; consultar antes de preparar o pedido de compra para evitar renegociar em cada pedido.",
+          "purpose": "Reutilizar a condição de pagamento acordada em cada pedido de compra deste fornecedor.",
+          "example": "net_30",
+          "priority": "conditional",
+          "required": false,
+          "source": "Acordado na negociação comercial; pode não estar definido no primeiro registo.",
+          "maintainer": "Responsável de compras",
+          "sensitivity": "Interna.",
+          "options": [
+            { "value": "advance", "label": "Adiantado" },
+            { "value": "net_30", "label": "30 dias" },
+            { "value": "net_60", "label": "60 dias" },
+            { "value": "net_90", "label": "90 dias" }
+          ]
+        },
+        {
+          "key": "currency",
+          "label": "Moeda de facturação",
+          "type": "select",
+          "group": "Condições comerciais",
+          "helpText": "Moeda em que o fornecedor factura habitualmente.",
+          "purpose": "Pré-preencher a moeda esperada ao preparar um pedido de compra para este fornecedor.",
+          "example": "aoa",
+          "priority": "conditional",
+          "required": false,
+          "source": "Acordado na negociação comercial.",
+          "maintainer": "Responsável de compras",
+          "sensitivity": "Interna.",
+          "options": [
+            { "value": "aoa", "label": "Kwanza (AOA)" },
+            { "value": "usd", "label": "Dólar americano (USD)" },
+            { "value": "eur", "label": "Euro (EUR)" }
+          ]
+        },
+        {
+          "key": "bank_account",
+          "label": "Conta bancária (IBAN)",
+          "type": "text",
+          "group": "Condições comerciais",
+          "helpText": "Conta usada para pagamento ao fornecedor; confirmar junto da fonte financeira antes do primeiro pagamento.",
+          "purpose": "Evitar reintroduzir dados bancários em cada pedido de compra ou factura a pagar.",
+          "example": "AO06 0000 0000 0000 0000 0000 0",
+          "priority": "conditional",
+          "required": false,
+          "source": "Fornecido pelo fornecedor; confirmar com a área financeira antes do primeiro pagamento.",
+          "maintainer": "Responsável financeiro",
+          "sensitivity": "Confidencial; dado financeiro. Restringir acesso de leitura à equipa de compras e financeira."
+        },
+        {
+          "key": "preferred_supplier",
+          "label": "Fornecedor preferencial",
+          "type": "boolean",
+          "group": "Condições comerciais",
+          "helpText": "Assinalar manualmente após avaliação; não é calculado automaticamente.",
+          "purpose": "Destacar fornecedores já avaliados como preferenciais ao seleccionar a contraparte num novo pedido de compra.",
+          "example": false,
+          "priority": "optional",
+          "required": false,
+          "source": "Decisão da equipa de compras após avaliação.",
+          "maintainer": "Responsável de compras",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "registration_certificate",
+          "label": "Alvará / certidão comercial",
+          "type": "file",
+          "group": "Evidência e conformidade",
+          "helpText": "Documento de registo comercial válido, quando exigido antes de activar o fornecedor.",
+          "purpose": "Evidenciar a legalidade do fornecedor antes de o activar para compras.",
+          "example": null,
+          "priority": "conditional",
+          "required": false,
+          "source": "Documento apresentado pelo fornecedor no registo ou na requalificação.",
+          "maintainer": "Responsável pelo cadastro de fornecedores",
+          "sensitivity": "Interna; documento de identificação empresarial."
+        },
+        {
+          "key": "tax_clearance_certificate",
+          "label": "Certidão de não dívida fiscal",
+          "type": "file",
+          "group": "Evidência e conformidade",
+          "helpText": "Preencher apenas quando a organização exigir esta certidão para qualificação ou pagamento; não presumir uma obrigação legal não confirmada.",
+          "purpose": "Suportar a qualificação do fornecedor para pagamentos, quando a organização definir esse requisito.",
+          "example": null,
+          "priority": "conditional",
+          "required": false,
+          "source": "Documento apresentado pelo fornecedor; requisito e periodicidade a confirmar com a área fiscal, não assumidos por este catálogo.",
+          "maintainer": "Responsável financeiro",
+          "sensitivity": "Confidencial; dado fiscal."
+        }
+      ],
+      "coverage": [
+        {
+          "dimension": "Identificação e classificação",
+          "decision": "included",
+          "reason": "NIF, razão social e categoria de fornecimento suportam a distinção de registos e a filtragem no pedido de compra."
+        },
+        {
+          "dimension": "Contactos e localização",
+          "decision": "included",
+          "reason": "Contacto comercial, email, telefone e morada são necessários para negociar e coordenar a entrega de cada pedido de compra sem os repetir no pedido."
+        },
+        {
+          "dimension": "Responsabilidade e estrutura",
+          "decision": "included",
+          "reason": "O gestor da relação é consultado antes de alterar a situação do fornecedor ou de o requalificar."
+        },
+        {
+          "dimension": "Situação e ciclo de vida",
+          "decision": "included",
+          "reason": "A situação, data de registo e data de revisão suportam a verificação do fornecedor antes de o seleccionar num novo pedido de compra."
+        },
+        {
+          "dimension": "Condições comerciais",
+          "decision": "included",
+          "reason": "Condições de pagamento, moeda e dados bancários evitam renegociar ou reintroduzir estes dados em cada pedido de compra."
+        },
+        {
+          "dimension": "Relações",
+          "decision": "external",
+          "reason": "O pedido de compra referencia este tipo através de um campo `entity` no caso do workflow de compras (por exemplo `fornecedor_selecionado`); esta entidade não mantém uma lista inversa dos pedidos, que continuam a ser consultados no próprio workflow."
+        },
+        {
+          "dimension": "Evidência e fonte",
+          "decision": "included",
+          "reason": "Alvará e certidão fiscal suportam a qualificação do fornecedor quando a organização exigir essa evidência; não presumem uma obrigação legal específica."
+        }
+      ],
+      "setup": [
+        "Baseline proposto sem SOP fornecida; confirmar vocabulário de Categoria de fornecimento e Segmento de compra, responsáveis e exigência real de certidões com a equipa de compras e financeira antes de configurar.",
+        "Nome é nativo (Nome comercial). Estes campos não duplicam UUID, criador ou datas técnicas do registo.",
+        "Desenho central: o pedido de compra é um caso do workflow, não uma segunda entidade. No workflow de compras, adicionar um campo de caso do tipo `entity` (por exemplo `fornecedor_selecionado`, alvo = fornecedor) na acção onde o requerente escolhe a contraparte. Isso substitui a repetição de NIF, contactos e condições comerciais em cada pedido: quem prepara o pedido selecciona o registo de Fornecedor e consulta os dados aí, em vez de os reintroduzir.",
+        "Percurso manual de criação: registar 'Fornecedor Demonstração, Lda.' com NIF, categoria de fornecimento, contacto comercial e email; situação inicial 'Em avaliação'. Gestor da relação, condições de pagamento, moeda, dados bancários e certidões ficam por preencher até à qualificação comercial e financeira — não são obrigatórios no registo.",
+        "Se compras vier a precisar de comparar propostas de vários fornecedores dentro do mesmo pedido, isso é normalmente recolhido como resposta de formulário ou anexo do caso (ver provia-form-designer), não como novo campo neste tipo.",
+        "Restringir a leitura de 'Conta bancária' e da certidão de não dívida fiscal à equipa de compras e financeira; os restantes campos podem ser visíveis a quem prepara pedidos de compra."
+      ],
+      "readiness": [
+        "Antes de seleccionar o fornecedor num pedido de compra, confirmar manualmente que a situação é 'Activo' e que a categoria de fornecimento corresponde ao pedido. O campo de situação não bloqueia a selecção automaticamente no baseline aqui descrito.",
+        "Antes do primeiro pagamento, confirmar dados bancários e, se exigida pela organização, a certidão de não dívida fiscal junto da área financeira."
+      ]
+    }
+  ]
+}

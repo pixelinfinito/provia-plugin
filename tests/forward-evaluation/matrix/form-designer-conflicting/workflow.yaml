@@ -1,0 +1,224 @@
+# provia-skills 1.1.0 — training draft. Country/currency (Angola/AOA) are a provisional assumption; no country was supplied. Configure real owners before publication. See setup.md and provia-project.json.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Purchase request"
+  prefix: PUR
+  description: "Training draft. Configure real owners and the three quotation forms in Provia before publication."
+triggers:
+  - type: manual
+    label: Start request
+    enabled: true
+    config: {}
+fields:
+  - name: estimated_amount
+    label: Estimated amount
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: cost_centre
+    label: Cost centre
+    type: text
+    required: true
+  - name: quote_1_supplier
+    label: Supplier 1 name
+    type: text
+    required: true
+  - name: quote_1_amount
+    label: Supplier 1 quoted amount
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: quote_2_supplier
+    label: Supplier 2 name
+    type: text
+    required: true
+  - name: quote_2_amount
+    label: Supplier 2 quoted amount
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: quote_3_supplier
+    label: Supplier 3 name
+    type: text
+    required: true
+  - name: quote_3_amount
+    label: Supplier 3 quoted amount
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: selected_supplier
+    label: Selected supplier
+    type: text
+    required: false
+  - name: purchase_amount
+    label: Purchase amount
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: budget_reference
+    label: Budget reference
+    type: text
+    required: false
+  - name: order_reference
+    label: Order reference
+    type: text
+    required: false
+actions:
+  - id: registar
+    name: Register the purchase need
+    type: standard
+    description: |
+      Task: Describe the purchase need and its estimated cost so the manager can decide without asking.
+      How: 1. Fill in "Estimated amount" with the total estimated value in Kz, excluding VAT. 2. Fill in "Cost centre" for the department that will bear the expense. 3. Write the item or service and quantity in the case title.
+      Evidence: The title, "Estimated amount" and "Cost centre" completed.
+      Done when: The case has a title, an estimated amount and a cost centre, and moves to the manager's decision.
+      Exceptions: If no estimate is available yet, do not conclude: ask the requesting service for a rough figure and record it before proceeding.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 1
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+  - id: decidir
+    name: Decide on the request
+    type: decision
+    description: |
+      Task: Decide whether the purchase request proceeds to sourcing, based on the need described and the department's budget.
+      How: 1. Read the justification in the title. 2. Confirm the purchase is planned in the department's budget and that "Cost centre" is correct. 3. Choose "Approve" to proceed to sourcing, "Return" to ask the requester for corrections, or "Reject" to close the request.
+      Evidence: A comment with the reason is mandatory on "Return" and "Reject".
+      Done when: The decision is recorded with the required comment.
+      Exceptions: If "Estimated amount" exceeds your approval authority, do not decide: comment the limit and return the request so it can be routed to the competent authority.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 2
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+    config:
+      branches:
+        - label: Approve
+          outcome: continue
+        - label: Return
+          outcome: return_to_action
+          target: registar
+          requiresComment: true
+        - label: Reject
+          outcome: cancel_incident
+          requiresComment: true
+  - id: cotacao_1
+    name: Record supplier quotation 1
+    type: form_fill
+    description: |
+      Task: Obtain a written quotation from the first supplier for the item or service described in this case.
+      How: 1. Request a quotation from supplier 1 for the item or service and quantity in the case title. 2. Fill in "Supplier 1 name" and "Supplier 1 quoted amount" from the quotation received. 3. Attach the supplier's quotation document to this response.
+      Evidence: "Supplier 1 name" and "Supplier 1 quoted amount" completed, and the quotation document attached to the response.
+      Done when: The response is submitted with the supplier's name, the quoted amount and the document attached.
+      Exceptions: If this supplier does not respond within 3 workdays, do not conclude: comment the delay and ask the requester whether to keep waiting or propose a replacement supplier.
+    executionMode: parallel
+    required: true
+    due:
+      offsetDays: 3
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+  - id: cotacao_2
+    name: Record supplier quotation 2
+    type: form_fill
+    description: |
+      Task: Obtain a written quotation from the second supplier for the item or service described in this case.
+      How: 1. Request a quotation from supplier 2 for the item or service and quantity in the case title. 2. Fill in "Supplier 2 name" and "Supplier 2 quoted amount" from the quotation received. 3. Attach the supplier's quotation document to this response.
+      Evidence: "Supplier 2 name" and "Supplier 2 quoted amount" completed, and the quotation document attached to the response.
+      Done when: The response is submitted with the supplier's name, the quoted amount and the document attached.
+      Exceptions: If this supplier does not respond within 3 workdays, do not conclude: comment the delay and ask the requester whether to keep waiting or propose a replacement supplier.
+    executionMode: parallel
+    required: true
+    due:
+      offsetDays: 3
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+  - id: cotacao_3
+    name: Record supplier quotation 3
+    type: form_fill
+    description: |
+      Task: Obtain a written quotation from the third supplier for the item or service described in this case.
+      How: 1. Request a quotation from supplier 3 for the item or service and quantity in the case title. 2. Fill in "Supplier 3 name" and "Supplier 3 quoted amount" from the quotation received. 3. Attach the supplier's quotation document to this response.
+      Evidence: "Supplier 3 name" and "Supplier 3 quoted amount" completed, and the quotation document attached to the response.
+      Done when: The response is submitted with the supplier's name, the quoted amount and the document attached.
+      Exceptions: If this supplier does not respond within 3 workdays, do not conclude: comment the delay and ask the requester whether to keep waiting or propose a replacement supplier.
+    executionMode: parallel
+    required: true
+    due:
+      offsetDays: 3
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+  - id: selecionar_proposta
+    name: Select the winning quotation
+    type: standard
+    description: |
+      Task: Compare the three supplier quotations and record which one this purchase will use.
+      How: 1. Open the three responses: "Supplier 1/2/3 name" and "Supplier 1/2/3 quoted amount", and their attached documents. 2. Compare price, delivery terms and, where known, prior supplier performance. 3. Set "Purchase amount" to the quoted amount of the chosen supplier and "Selected supplier" to its name.
+      Evidence: "Purchase amount" and "Selected supplier" set to match exactly one of the three recorded quotations; a comment naming the reason for the choice (for example, lowest price or shorter delivery time).
+      Done when: "Purchase amount" and "Selected supplier" reflect the chosen quotation and the comment is recorded.
+      Exceptions: If all three quotations exceed "Estimated amount", do not conclude: comment the variance and ask the manager who decided in "Decide on the request" to re-approve the higher amount before continuing.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 1
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+  - id: confirmar_cabimento
+    name: Confirm budget availability
+    type: standard
+    description: |
+      Task: Confirm that budget is available for "Purchase amount" in the indicated cost centre.
+      How: 1. Open the budget map for "Cost centre" in the accounting system. 2. Compare the available balance with "Purchase amount". 3. Record the commitment reference in "Budget reference".
+      Evidence: A dated screenshot of the balance attached, and "Budget reference" completed.
+      Done when: The balance covers "Purchase amount" and the budget reference is recorded.
+      Exceptions: If there is no budget available, do not conclude: comment the shortfall and ask "Select the winning quotation" to be revisited for a lower quotation or a different cost centre.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 2
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+  - id: encomendar
+    name: Register the purchase order
+    type: standard
+    description: |
+      Task: Issue the purchase order to the selected supplier and record its reference on the request.
+      How: 1. Confirm "Selected supplier" is registered as a supplier and its details are current. 2. Issue the purchase order for "Purchase amount" with the budget reference. 3. Send the order to the supplier through the agreed channel. 4. Fill in "Order reference".
+      Evidence: The purchase order attached and "Order reference" completed.
+      Done when: The selected supplier has received the order and the reference is recorded on the request.
+      Exceptions: If the supplier is not registered or its details are outdated, do not conclude: ask for the record to be created or updated and comment the request.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 3
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator

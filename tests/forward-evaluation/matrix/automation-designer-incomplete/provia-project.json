@@ -1,0 +1,78 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "revisao-mensal",
+    "title": "Revisão mensal — trigger",
+    "language": "pt-AO",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [
+    {
+      "key": "revisao-mensal",
+      "name": "Revisão mensal — arranque",
+      "prefix": "REVM",
+      "file": "workflow.yaml",
+      "status": "design",
+      "sourceRefs": [],
+      "actions": [],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "Trigger de agendamento (schedule) configurado: cronExpression \"0 9 1 * *\", timezone Africa/Luanda, missedBehavior catch-up-one. Confirmar em Provia, após importação, que o fuso Africa/Luanda é aceite e que o disparo em falta gera exactamente um incidente de recuperação, conforme documentado no comentário do YAML.",
+        "Nenhuma acção foi definida — este ficheiro só especifica o disparo (trigger). As acções da revisão mensal em si (quem revê, o quê, com que evidência) ainda não foram desenhadas; ver decisão D2.",
+        "Nenhum grupo responsável foi identificado para receber ou executar a revisão; ver decisão D3."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Qual é o dia e a hora exactos pretendidos para a revisão mensal? Assumimos dia 1 de cada mês às 09:00 (Africa/Luanda) por não ter sido indicado (ex.: podia ser o último dia útil do mês, ou outro horário).",
+      "owner": "Dono do processo de revisão mensal",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D2",
+      "question": "Quais são as acções da revisão mensal em si (o que é revisto, por quem, com que evidência de conclusão)? O pedido definiu apenas o disparo (trigger); o corpo do workflow está por desenhar.",
+      "owner": "Dono do processo de revisão mensal",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D3",
+      "question": "A política de execução perdida (missedBehavior) foi assumida como catch-up-one (um único incidente de recuperação, sem acumular revisões atrasadas). Confirmar se \"skip\" (não recuperar) ou \"catch-up-all\" (um incidente por cada mês perdido) serve melhor a política da organização.",
+      "owner": "Dono do processo de revisão mensal",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D4",
+      "question": "Qual o grupo ou pessoa responsável por executar/receber a revisão mensal, para que o workflow tenha um assignee e, se aplicável, uma notificação associada ao disparo?",
+      "owner": "Dono do processo de revisão mensal",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": []
+    }
+  ],
+  "receipts": []
+}

@@ -1,0 +1,214 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "compras",
+    "title": "Pedido de compra",
+    "language": "pt-AO",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "pedido-utilizador",
+      "title": "Pedido do utilizador sobre o procedimento de compras",
+      "kind": "interview",
+      "effectiveDate": "2026-09-18",
+      "sections": [
+        { "anchor": "1", "title": "Fluxo de compras descrito pelo utilizador" }
+      ]
+    }
+  ],
+  "entityTypes": [],
+  "groups": [
+    {
+      "key": "chefias",
+      "name": "Chefias de departamento",
+      "parentKey": null,
+      "purpose": "Aprovar os pedidos de compra do respectivo departamento.",
+      "members": [
+        { "role": "Chefe de departamento", "email": null }
+      ],
+      "sourceRefs": [
+        { "source": "pedido-utilizador", "section": "1" }
+      ],
+      "flags": []
+    },
+    {
+      "key": "financas",
+      "name": "Finanças",
+      "parentKey": null,
+      "purpose": "Confirmar a disponibilidade orçamental dos pedidos de compra aprovados e registar a referência orçamental.",
+      "members": [
+        { "role": "Colaborador de Finanças", "email": null }
+      ],
+      "sourceRefs": [
+        { "source": "pedido-utilizador", "section": "1" }
+      ],
+      "flags": [
+        { "code": "alias", "detail": "Pode ser designado «Direcção Financeira», «Contabilidade» ou «DAF» na organização; confirmar o nome usado antes da publicação." }
+      ]
+    },
+    {
+      "key": "compras",
+      "name": "Compras",
+      "parentKey": null,
+      "purpose": "Executar as compras aprovadas junto dos fornecedores. Suposição típica de PME, não mencionada pelo utilizador — confirmar se existe uma equipa dedicada ou se a tarefa cabe a Finanças ou ao requerente.",
+      "members": [],
+      "sourceRefs": [],
+      "flags": [
+        { "code": "unnamed", "detail": "Grupo proposto apenas como suposição de um procedimento de compras típico de PME; não há menção deste actor no pedido original." }
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "key": "compras",
+      "name": "Pedido de compra",
+      "prefix": "COMP",
+      "file": "workflow.yaml",
+      "status": "design",
+      "sourceRefs": [
+        { "source": "pedido-utilizador", "section": "1" }
+      ],
+      "actions": [
+        {
+          "localId": "registar_pedido",
+          "name": "Registar o pedido de compra",
+          "type": "standard",
+          "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Descrição, montante e centro de custo preenchidos" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "decidir_chefia",
+          "name": "Decidir sobre o pedido de compra",
+          "type": "decision",
+          "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ],
+          "assigneeRef": "chefias",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Comentário obrigatório em Devolver e Rejeitar" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "confirmar_orcamento",
+          "name": "Confirmar a disponibilidade orçamental",
+          "type": "decision",
+          "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ],
+          "assigneeRef": "financas",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Referência orçamental preenchida em Confirmar disponibilidade; comentário obrigatório em Sem disponibilidade" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "executar_compra",
+          "name": "Executar a compra junto do fornecedor",
+          "type": "standard",
+          "sourceRefs": [],
+          "assigneeRef": "compras",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Nota de encomenda anexada; referência da encomenda preenchida" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "confirmar_recepcao",
+          "name": "Confirmar a recepção dos bens ou serviços",
+          "type": "standard",
+          "sourceRefs": [],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Documento de recepção anexado" ],
+          "due": null,
+          "folded": []
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "País não indicado pelo utilizador; assumido Angola/pt-AO/AOA/Africa-Luanda a título provisório — confirmar antes de publicar.",
+        "As acções «executar_compra» e «confirmar_recepcao», e o grupo «compras», são suposições típicas de PME não mencionadas no pedido original; confirmar se pertencem a este workflow."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Quem integra o grupo «Chefias de departamento»: a chefia directa de cada requerente, uma chefia única, ou depende do departamento?",
+      "owner": "Dono do processo de compras",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ]
+    },
+    {
+      "id": "D2",
+      "question": "Existe um limiar de valor a partir do qual a aprovação sobe a uma autoridade superior à chefia (por exemplo direcção-geral)? Nenhum foi indicado; não foi codificado nenhum limiar no desenho.",
+      "owner": "Direcção",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ]
+    },
+    {
+      "id": "D3",
+      "question": "Quando as Finanças não confirmam disponibilidade orçamental, o pedido deve voltar ao requerente (comportamento assumido nesta versão) ou deve ser decidido pela chefia, por exemplo para aguardar orçamento ou cancelar?",
+      "owner": "Dono do processo de compras",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ]
+    },
+    {
+      "id": "D4",
+      "question": "Quais são os prazos esperados (SLA) para cada etapa — registo do pedido, decisão da chefia, confirmação orçamental, execução da compra e confirmação de recepção? Nenhum foi indicado, pelo que «due» ficou por definir em todas as acções.",
+      "owner": "Dono do processo de compras",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ]
+    },
+    {
+      "id": "D5",
+      "question": "As acções «Executar a compra» e «Confirmar a recepção», e o grupo «Compras», são uma suposição típica de PME, não mencionada no pedido original. Pertencem a este workflow, a um workflow separado, ou devem ser removidas nesta fase?",
+      "owner": "Dono do processo de compras",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D6",
+      "question": "Qual é a designação oficial usada pela organização para o grupo «Finanças» (Finanças, Direcção Financeira, Contabilidade, DAF)?",
+      "owner": "Direcção Financeira",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ]
+    },
+    {
+      "id": "D7",
+      "question": "Qual é o país/jurisdição real da organização? Foi assumido Angola (pt-AO, AOA, Africa/Luanda) a título provisório, na ausência de indicação do utilizador.",
+      "owner": "Dono do projecto",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": []
+    }
+  ],
+  "receipts": []
+}

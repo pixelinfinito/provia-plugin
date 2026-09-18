@@ -1,0 +1,22 @@
+{
+  "id": "automation-designer-conflicting",
+  "skill": "provia-automation-designer",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:30:54.377Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 261163,
+  "costUsd": 0.9551794000000001,
+  "numTurns": 39,
+  "sessionId": "d39024f2-07e6-49d3-915b-a188a7150841",
+  "stopReason": "end_turn",
+  "toolCalls": 37,
+  "files": [
+    "project.html",
+    "provia-project.json",
+    "setup.md",
+    "workflow.yaml"
+  ],
+  "output": "tests/forward-evaluation/matrix/automation-designer-conflicting/",
+  "skillLoaded": true
+}

@@ -1,0 +1,120 @@
+# provia-skills — esqueleto de desenho para provia-workflow-package. Ver setup.md e provia-project.json antes de importar.
+# Contexto assumido: Angola (país não indicado pelo utilizador), pt-AO, AOA, Africa/Luanda — confirmar antes de publicar.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Pedido de compra"
+  prefix: COMP
+  description: "Pedido de compra com aprovação da chefia e confirmação de disponibilidade orçamental pelas Finanças. Inclui execução da compra e confirmação de recepção como suposição típica de PME — confirmar antes de publicar (ver decisões em aberto)."
+triggers:
+  - type: manual
+    label: Iniciar pedido de compra
+    enabled: true
+    config: {}
+fields:
+  - name: purchase_description
+    label: Descrição da necessidade
+    type: rich_text
+    required: true
+  - name: purchase_amount
+    label: Montante solicitado
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: cost_centre
+    label: Centro de custo
+    type: text
+    required: true
+  - name: supplier_suggestion
+    label: Proposta de fornecedor
+    type: text
+    required: false
+  - name: budget_reference
+    label: Referência orçamental
+    type: text
+    required: false
+  - name: order_reference
+    label: Referência da encomenda
+    type: text
+    required: false
+actions:
+  - id: registar_pedido
+    name: Registar o pedido de compra
+    type: standard
+    description: |
+      Tarefa: Descrever a necessidade de compra e submeter o pedido com os dados que permitem à chefia decidir sem pedir mais informação.
+      Como: 1. Preencher «Descrição da necessidade» com o bem ou serviço, a quantidade e o motivo da compra. 2. Preencher «Montante solicitado» com o valor total estimado em Kz, sem IVA. 3. Indicar o «Centro de custo» que suportará a despesa. 4. Se existir uma proposta de fornecedor, preencher «Proposta de fornecedor» ou anexá-la ao pedido.
+      Evidência: Os campos «Descrição da necessidade», «Montante solicitado» e «Centro de custo» preenchidos; a proposta anexada quando existir.
+      Concluído quando: O pedido tem descrição, montante e centro de custo preenchidos e passa à decisão da chefia.
+      Excepções: Se o montante ainda não for conhecido com precisão, não concluir: pedir uma estimativa ao fornecedor ou ao serviço requisitante antes de submeter o pedido. Se o pedido for devolvido pela chefia ou pelas Finanças, corrigir os campos indicados no comentário antes de submeter novamente.
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: decidir_chefia
+    name: Decidir sobre o pedido de compra
+    type: decision
+    description: |
+      Tarefa: Decidir se o pedido de compra avança, com base na necessidade descrita e no orçamento do departamento.
+      Como: 1. Ler a «Descrição da necessidade» e a proposta de fornecedor, quando exista. 2. Confirmar que a compra está prevista no plano do departamento e que o «Centro de custo» indicado é o correcto. 3. Escolher «Aprovar» para avançar às Finanças, «Devolver» para pedir correcções ao requerente ou «Rejeitar» para encerrar o pedido.
+      Evidência: Um comentário com o motivo é obrigatório em «Devolver» e «Rejeitar».
+      Concluído quando: A decisão está registada, com o comentário exigido quando aplicável.
+      Excepções: Se o montante exceder a sua autoridade de aprovação, não decidir: comentar o motivo e devolver ao requerente para que o pedido seja encaminhado à autoridade competente.
+    executionMode: sequential
+    required: true
+    config:
+      branches:
+        - label: Aprovar
+          outcome: continue
+        - label: Devolver
+          outcome: return_to_action
+          target: registar_pedido
+          requiresComment: true
+        - label: Rejeitar
+          outcome: cancel_incident
+          requiresComment: true
+  - id: confirmar_orcamento
+    name: Confirmar a disponibilidade orçamental
+    type: decision
+    description: |
+      Tarefa: Confirmar se existe disponibilidade orçamental para o montante pedido no centro de custo indicado.
+      Como: 1. Abrir o mapa orçamental do centro de custo indicado no sistema de contabilidade. 2. Comparar o saldo disponível com o valor em «Montante solicitado». 3. Escolher «Confirmar disponibilidade» quando o saldo cobre o montante, preenchendo «Referência orçamental», ou «Sem disponibilidade» quando não cobre.
+      Evidência: Preencher «Referência orçamental» em «Confirmar disponibilidade»; um comentário com o motivo é obrigatório em «Sem disponibilidade».
+      Concluído quando: A decisão está registada com a referência orçamental ou com o comentário exigido.
+      Excepções: Se não houver disponibilidade orçamental, não concluir: comentar o défice e devolver ao requerente para ajustar o pedido ou aguardar orçamento.
+    executionMode: sequential
+    required: true
+    config:
+      branches:
+        - label: Confirmar disponibilidade
+          outcome: continue
+        - label: Sem disponibilidade
+          outcome: return_to_action
+          target: registar_pedido
+          requiresComment: true
+  - id: executar_compra
+    name: Executar a compra junto do fornecedor
+    type: standard
+    description: |
+      Tarefa: Executar a compra junto do fornecedor escolhido, com base no pedido aprovado e no orçamento confirmado.
+      Como: 1. Confirmar que o fornecedor está registado e com os dados actualizados. 2. Emitir a nota de encomenda ou o contrato com o montante aprovado e a referência orçamental. 3. Enviar a encomenda ao fornecedor pelo canal acordado. 4. Preencher «Referência da encomenda».
+      Evidência: A nota de encomenda anexada e o campo «Referência da encomenda» preenchido.
+      Concluído quando: O fornecedor recebeu a encomenda e a referência está registada no pedido.
+      Excepções: Se o fornecedor não estiver registado ou os dados estiverem desactualizados, não concluir: pedir a criação ou actualização do registo antes de encomendar.
+    executionMode: sequential
+    required: true
+  - id: confirmar_recepcao
+    name: Confirmar a recepção dos bens ou serviços
+    type: standard
+    description: |
+      Tarefa: Confirmar que os bens ou serviços foram recebidos em conformidade com a encomenda.
+      Como: 1. Verificar a quantidade, a qualidade e a conformidade com a encomenda. 2. Anexar a guia de remessa, a factura ou outro documento de recepção. 3. Registar qualquer não conformidade em comentário.
+      Evidência: O documento de recepção anexado.
+      Concluído quando: A recepção está confirmada e documentada, ou a não conformidade está registada.
+      Excepções: Se os bens ou serviços não estiverem conformes, não concluir: comentar a não conformidade e contactar Compras para resolução com o fornecedor.
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator

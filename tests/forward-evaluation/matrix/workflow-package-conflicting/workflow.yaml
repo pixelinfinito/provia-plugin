@@ -1,0 +1,71 @@
+# provia-skills 1.0.0
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: Pedido de Compra
+  prefix: PEDCOM
+  description: "Rascunho para Angola. Configurar responsáveis, o vínculo do formulário de admissão e as Finanças antes de publicar."
+triggers:
+  - type: manual
+    label: Iniciar pedido de compra
+    enabled: true
+    config: {}
+fields:
+  - name: montante
+    label: Montante solicitado (AOA)
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: departamento
+    label: Departamento
+    type: text
+    required: true
+  - name: justificacao
+    label: Justificação do pedido
+    type: rich_text
+    required: true
+actions:
+  - id: submeter_pedido
+    name: Submeter o pedido de compra
+    description: |-
+      Tarefa: Registar o pedido de compra com a justificação, o departamento e o montante solicitado.
+      Como: 1. Preencher o formulário de admissão com a justificação em `justificacao`, o departamento em `departamento` e o montante em `montante`. 2. Anexar os documentos de suporte disponíveis.
+      Evidência: Formulário preenchido e documentos de suporte anexados ao pedido.
+      Concluído quando: Todos os campos obrigatórios do formulário estão preenchidos e o pedido está submetido.
+      Excepções: Se faltar informação obrigatória, não submeter: guardar como rascunho e completar antes de submeter.
+    type: form_fill
+    executionMode: sequential
+    required: true
+    config: {}
+  - id: aprovar_gestor
+    name: Decidir sobre o pedido de compra
+    description: |-
+      Tarefa: Decidir se o pedido de compra avança, com base na justificação e no montante solicitado.
+      Como: 1. Ler a justificação em `justificacao` e o montante em `montante`. 2. Confirmar que a compra está prevista no orçamento do departamento em `departamento`. 3. Escolher «Aprovar» ou «Rejeitar».
+      Evidência: Um comentário com o motivo é obrigatório em «Rejeitar».
+      Concluído quando: A decisão fica registada, com o comentário exigido quando aplicável.
+      Excepções: Se o montante exceder a sua autoridade, não decidir: comentar o facto e devolver ao requerente para encaminhar à autoridade competente.
+    type: decision
+    executionMode: sequential
+    required: true
+    config:
+      branches:
+        - label: Aprovar
+          outcome: continue
+          requiresComment: false
+        - label: Rejeitar
+          outcome: cancel_incident
+          requiresComment: true
+  - id: confirmar_financas
+    name: Confirmar a disponibilidade orçamental
+    description: |-
+      Tarefa: Confirmar que existe disponibilidade orçamental para o montante aprovado.
+      Como: 1. Consultar o mapa orçamental do departamento em `departamento` no sistema financeiro. 2. Comparar o saldo disponível com o montante em `montante`. 3. Registar a referência orçamental utilizada.
+      Evidência: Anexar a captura do saldo orçamental com data; registar a referência orçamental em comentário.
+      Concluído quando: O saldo cobre o montante aprovado e a referência orçamental está registada.
+      Excepções: Se não houver cabimento orçamental, não concluir: comentar o défice e devolver ao gestor para reavaliação.
+    type: standard
+    executionMode: sequential
+    required: true

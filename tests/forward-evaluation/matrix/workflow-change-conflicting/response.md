@@ -1,0 +1,9 @@
+**No usable inputs existed in the working directory** — no previous YAML, no current workflow export, and no incident records — so I treated this as the skill's "conflicting/incomplete input" case rather than fabricating a comparison. What I produced:
+
+- **`workflow-change-plan.md`** — explains why "import the previous YAML to restore version history" can't happen literally (re-import creates a new draft lineage, not a rewind; forms/tags/counters aren't carried by YAML), marks the impact check on the six open incidents as **pending** (their records are unavailable, so it's unknown which cases touch the reverted fields or where they sit in the workflow), and lays out the draft/publish plan, per-case recovery options, and test cases to run once real data is supplied.
+- **`provia-project.json`** — a `workflow-em-alteracao` entry with `status: change_planned` and four open decisions (D1–D4): workflow/version identity + actual previous YAML, the six case IDs and field values, the exact fields/target values to revert, and owner sign-off that a new-draft recovery replaces a literal history restore.
+- **`setup.md`** and **`project.html`** — generated from the manifest via the plugin's own scripts (`build-project-map.mjs --check/--setup/--output`), confirming the manifest is structurally valid.
+
+Nothing about the workflow's actual fields, actions, or the six incidents was invented.
+
+Next step recommended: once the previous YAML, the current published export (or connected-mode access), and the six incidents' case records are available, feed them to `provia-workflow-change` again with `provia-project.json` in this directory — that will let it produce the real semantic diff, the packaged draft, and the per-case recovery list instead of this scaffold.

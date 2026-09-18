@@ -1,0 +1,41 @@
+{
+  "schemaVersion": "provia-entity-catalogue/v1",
+  "title": "Catálogo de entidades — Pedido de viatura",
+  "language": "pt-AO",
+  "country": "Angola",
+  "notes": [
+    "Extraído de provia-project.json (workflow «viaturas»); mesma definição de tipo, não duplicada.",
+    "Fonte: Procedimento de pedidos de viatura (v2, em vigor desde 2026-03-01) e organigrama fornecido.",
+    "O nome do ícone (Truck01) não foi verificado contra o catálogo de ícones actual do Provia; confirmar disponibilidade antes da configuração."
+  ],
+  "types": [
+    {
+      "key": "viatura",
+      "name": "Viatura",
+      "description": "Viaturas da frota da empresa disponíveis para requisição pelos colaboradores. Reúne os dados necessários para confirmar disponibilidade, entregar e receber a viatura.",
+      "icon": "Truck01",
+      "namePattern": "Matrícula da viatura.",
+      "purpose": "Suportar o mapa de viaturas: disponibilidade, entrega e devolução em cada pedido.",
+      "owner": "Secretariado",
+      "coverage": [
+        { "dimension": "Identificação", "decision": "included", "reason": "A matrícula e o modelo identificam a viatura no pedido e na entrega." },
+        { "dimension": "Disponibilidade", "decision": "included", "reason": "O secretariado precisa de saber quais as viaturas disponíveis para atribuir ao pedido." },
+        { "dimension": "Utilização", "decision": "included", "reason": "A quilometragem actual é a base de comparação na próxima saída." },
+        { "dimension": "Manutenção", "decision": "external", "reason": "O procedimento fornecido não descreve o processo de manutenção da frota; fica fora deste âmbito." }
+      ],
+      "setup": [
+        "Confirmar com o Secretariado a lista real de viaturas e o formato de matrícula usado (matrícula angolana) antes da configuração.",
+        "O actual mapa de viaturas (papel ou folha de cálculo) deve ser migrado manualmente para este tipo de entidade."
+      ],
+      "readiness": [
+        "Antes do primeiro pedido: todas as viaturas activas têm matrícula, marca/modelo e situação preenchidas."
+      ],
+      "fields": [
+        { "key": "matricula", "label": "Matrícula", "type": "text", "required": true, "group": "Identificação", "helpText": "Matrícula de registo da viatura.", "purpose": "Identificar univocamente a viatura no pedido e na entrega.", "priority": "core", "source": "Registo da frota", "maintainer": "Secretariado", "sensitivity": "Interna", "example": "LD-12-34-AO" },
+        { "key": "marca_modelo", "label": "Marca e modelo", "type": "text", "required": true, "group": "Identificação", "helpText": "Marca e modelo da viatura.", "purpose": "Identificar o tipo de viatura disponível para o pedido.", "priority": "core", "source": "Registo da frota", "maintainer": "Secretariado", "sensitivity": "Interna", "example": "Toyota Hilux" },
+        { "key": "situacao", "label": "Situação", "type": "select", "required": true, "group": "Disponibilidade", "helpText": "Situação actual da viatura no mapa de viaturas.", "purpose": "Verificar a disponibilidade antes de atribuir a viatura a um pedido.", "priority": "core", "source": "Secretariado", "maintainer": "Secretariado", "sensitivity": "Interna", "options": [ { "value": "disponivel", "label": "Disponível" }, { "value": "em_uso", "label": "Em uso" }, { "value": "manutencao", "label": "Em manutenção" } ], "example": "disponivel", "defaultValue": "disponivel" },
+        { "key": "quilometragem_actual", "label": "Quilometragem actual", "type": "number", "required": false, "group": "Utilização", "helpText": "Última quilometragem registada da viatura.", "purpose": "Base para confirmar a quilometragem de saída no próximo pedido.", "priority": "conditional", "source": "Registo de entrega/devolução", "maintainer": "Secretariado", "sensitivity": "Interna", "example": 45000 }
+      ]
+    }
+  ]
+}

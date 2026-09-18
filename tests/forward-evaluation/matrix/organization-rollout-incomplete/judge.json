@@ -1,0 +1,15 @@
+{
+  "at": "2026-09-18T18:25:40.645Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "verdict": "pass",
+  "reasons": [
+    "The run explicitly identified the missing process owner as a dependency, creating a placeholder group 'process_owner_unassigned' flagged as unable to be assigned real work until a named owner and workflow exist, rather than treating the rollout as ready",
+    "Confirmed facts, recommendations, and unresolved decisions are clearly separated (rollout-plan.md has a 'Confirmed facts: None' section and enumerates D1-D7 open decisions)",
+    "No organization IDs, approval thresholds, legal provisions, endpoints, or validation results were invented; org name is explicitly 'Not named in the sources supplied', tenantId/sector null",
+    "The run accurately reports what tool calls actually happened (--check ran and produced warnings, files were written) matching the tool call log, without claiming unrun checks or fabricated results",
+    "Country/language defaults (Angola/en/AOA) are disclosed as provisional per country-context.md convention rather than silently assumed",
+    "Response ends with a concrete next-step recommendation naming the next skill, rationale, and a copyable invocation, consistent with next-step.md convention"
+  ],
+  "violations": []
+}

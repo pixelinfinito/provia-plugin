@@ -1,0 +1,22 @@
+{
+  "id": "workflow-change-incomplete",
+  "skill": "provia-workflow-change",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:45:19.915Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 167240,
+  "costUsd": 0.6324408,
+  "numTurns": 22,
+  "sessionId": "a8724b74-0c85-409d-b562-c47e01e70953",
+  "stopReason": "end_turn",
+  "toolCalls": 20,
+  "files": [
+    "project.html",
+    "provia-project.json",
+    "setup.md",
+    "workflow-change-plan.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/workflow-change-incomplete/",
+  "skillLoaded": true
+}

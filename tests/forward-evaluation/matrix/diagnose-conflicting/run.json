@@ -1,0 +1,22 @@
+{
+  "id": "diagnose-conflicting",
+  "skill": "provia-diagnose",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:56:23.032Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 205698,
+  "costUsd": 0.6548902,
+  "numTurns": 29,
+  "sessionId": "3680febb-c773-44b3-bae0-0fac1cbae2dc",
+  "stopReason": "end_turn",
+  "toolCalls": 27,
+  "files": [
+    "diagnostico-compras.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/diagnose-conflicting/",
+  "skillLoaded": true
+}

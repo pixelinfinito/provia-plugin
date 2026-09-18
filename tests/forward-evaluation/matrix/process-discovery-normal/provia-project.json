@@ -1,0 +1,95 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "piloto-provia",
+    "title": "Pedidos de TI (piloto recomendado)",
+    "language": "pt-AO",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": "Empresa em Luanda (nome não fornecido)",
+    "sector": "Não especificado",
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "conv-compras",
+      "title": "Descrição do processo de compras (correio electrónico) — fornecida em conversa, sem documento anexado",
+      "kind": "interview",
+      "version": "1",
+      "effectiveDate": "2026-09-18",
+      "sections": []
+    },
+    {
+      "id": "conv-admissao",
+      "title": "Descrição do processo de admissão de trabalhadores (correio electrónico) — fornecida em conversa, sem documento anexado",
+      "kind": "interview",
+      "version": "1",
+      "effectiveDate": "2026-09-18",
+      "sections": []
+    },
+    {
+      "id": "conv-pedidos-ti",
+      "title": "Descrição do processo de pedidos de TI (correio electrónico) — fornecida em conversa, sem documento anexado",
+      "kind": "interview",
+      "version": "1",
+      "effectiveDate": "2026-09-18",
+      "sections": []
+    }
+  ],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Quantos pedidos de TI (equipamento, acessos, suporte) chegam por semana/mês, e qual é o tempo médio actual até resolução?",
+      "owner": "Responsável de TI",
+      "status": "open",
+      "raisedBy": "provia-process-discovery",
+      "sourceRefs": [ { "source": "conv-pedidos-ti" } ]
+    },
+    {
+      "id": "D2",
+      "question": "Quem é o responsável nomeado (nome, não apenas função) que vai assumir a gestão do piloto de pedidos de TI no Provia?",
+      "owner": "Direcção de TI",
+      "status": "open",
+      "raisedBy": "provia-process-discovery",
+      "sourceRefs": [ { "source": "conv-pedidos-ti" } ]
+    },
+    {
+      "id": "D3",
+      "question": "Quantos pedidos de compra internos ocorrem por mês, qual o valor médio, e existe um limiar de aprovação da Direcção Financeira já em uso (mesmo que informal)?",
+      "owner": "Responsável de Compras",
+      "status": "open",
+      "raisedBy": "provia-process-discovery",
+      "sourceRefs": [ { "source": "conv-compras" } ]
+    },
+    {
+      "id": "D4",
+      "question": "Quantas admissões de trabalhadores ocorrem por mês/trimestre? Este volume é suficiente para gerar casos reais durante um piloto de 4 semanas?",
+      "owner": "Recursos Humanos",
+      "status": "open",
+      "raisedBy": "provia-process-discovery",
+      "sourceRefs": [ { "source": "conv-admissao" } ]
+    },
+    {
+      "id": "D5",
+      "question": "Depois de concluídos os primeiros casos reais de pedidos de TI no Provia, o desenho deve alargar-se a Compras (maior impacto financeiro, maior complexidade) como segundo piloto?",
+      "owner": "Direcção Geral",
+      "status": "open",
+      "raisedBy": "provia-process-discovery",
+      "sourceRefs": []
+    }
+  ],
+  "receipts": []
+}

@@ -1,29 +1,37 @@
 ---
 name: provia-process-knowledge
-description: Create or reconcile SOPs, action instructions, runbooks and proposed Agent Memory from supplied Provia designs.
+description: "Create or reconcile SOPs, action instructions, runbooks and proposed Agent Memory from supplied Provia designs. Use when the user asks for \"update the procedure from the approved workflow\", \"write a runbook\", \"turn lessons from the pilot into instructions\", \"propose memory for the agent\", or says «actualiza o procedimento com o workflow aprovado», «escreve um guia operacional», «incorpora as lições do piloto», «glossário para a memória do agente»."
 ---
+
+<!-- Generated from catalog.json by scripts/build-skills.mjs. Edit the catalogue, not this file. -->
 
 # Procedure and knowledge maintenance
 
-Read [country context](../../references/country-context.md) and [Provia capabilities](../../references/provia-capabilities.md) before making recommendations. Read the [Angola reference](../../references/countries/angola.md) when Angola applies. Country and response language are separate; respect an explicit user choice.
+Read [shared conventions](../../references/skill-conventions.md) first. Country and language, disconnected or connected mode, the project manifest, the honesty rules, action wording and the final recommendation apply to this skill without being repeated here.
 
 ## Inputs
 
-Current workflow version, approved policies, existing guidance and incident lessons. Use supplied documents and exports. This plugin has no Provia connection. Ask only for information that materially affects the task; identify assumptions and continue independent work.
+Current workflow version or manifest, approved policies, existing guidance and incident lessons.
+
+## References
+
+- [action writing](../../references/action-writing.md): for action instructions in the five-part form.
 
 ## Procedure
 
-When creating or rewriting action names, read [action writing](../../references/action-writing.md). Keep the brief task name separate from instructions and assignments. Preserve coordination, authority, segregation and completion evidence; this convention does not require renaming documents or procedures.
-
 1. Identify the source workflow version and distinguish published procedure from proposed changes.
-2. Write each action instruction around inputs, task, completion evidence, owner and exceptions. Preserve real approval authority.
+2. Write each action instruction in the five-part form (task, method, evidence, done-when, exceptions) so it can be pasted into the action description. Preserve real approval authority and keep the brief name separate.
 3. Reconcile conflicts between workflow and policy explicitly. Do not silently promote incident workarounds to organization-wide policy.
 4. Keep stable approved guidance in proposed Agent Memory; keep temporary case facts in the incident. Memory proposals need administrator review.
-5. Provide concise standalone artifacts with source references and an update owner. Pages and memory documents require separate setup after YAML import.
+5. Provide concise standalone artefacts with source references and an update owner. Pages and memory documents require separate setup after YAML import.
 
 ## Deliverable
 
-A sourced procedure or knowledge artifact with owner, scope, version, conflicts and review needs. Cite supplied evidence and product references. Separate confirmed facts, recommendations and unresolved decisions. Do not invent completed checks or platform actions.
+A sourced procedure or knowledge artefact with owner, scope, version, conflicts and review needs. Cite supplied evidence and product references. Separate confirmed facts, recommendations and unresolved decisions. Do not invent completed checks or platform actions.
+
+## Project manifest
+
+Reads: workflows, sources, decisions. Appends: updated action descriptions; `decisions[]` for policy conflicts. See [project manifest](../../references/project-manifest.md).
 
 ## Examples
 
@@ -38,4 +46,4 @@ If a case workaround contradicts policy, record it as an exception to review rat
 
 ## Final chat recommendation
 
-Read [next-step guidance](../../references/next-step.md). End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task’s artifacts forward. Make it a recommendation, not an automatic invocation. If no further skill is needed, recommend the concrete next action instead.
+End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task's artefacts and the manifest forward, following [next-step guidance](../../references/next-step.md). It is a recommendation, not an automatic invocation.

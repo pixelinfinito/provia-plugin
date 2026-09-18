@@ -1,0 +1,19 @@
+{
+  "id": "operations-triage-incomplete",
+  "skill": "provia-operations-triage",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:35:10.216Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 38721,
+  "costUsd": 0.2350196,
+  "numTurns": 8,
+  "sessionId": "95ece817-d0c9-4778-8ded-a2d46fc4a761",
+  "stopReason": "end_turn",
+  "toolCalls": 6,
+  "files": [
+    "triage-report.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/operations-triage-incomplete/",
+  "skillLoaded": true
+}

@@ -1,0 +1,22 @@
+{
+  "id": "organization-rollout-conflicting",
+  "skill": "provia-organization-rollout",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:26:02.503Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 136646,
+  "costUsd": 0.5602910000000001,
+  "numTurns": 19,
+  "sessionId": "27908dbb-1faa-4da6-bae6-cfc338e36d68",
+  "stopReason": "end_turn",
+  "toolCalls": 17,
+  "files": [
+    "project.html",
+    "provia-project.json",
+    "rollout-plan.md",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/organization-rollout-conflicting/",
+  "skillLoaded": true
+}

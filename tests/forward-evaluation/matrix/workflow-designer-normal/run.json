@@ -1,0 +1,22 @@
+{
+  "id": "workflow-designer-normal",
+  "skill": "provia-workflow-designer",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:09:04.253Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 253123,
+  "costUsd": 0.8751162000000001,
+  "numTurns": 25,
+  "sessionId": "e92ec5f0-d8bc-4dce-bdc3-454b0b3d90a5",
+  "stopReason": "end_turn",
+  "toolCalls": 23,
+  "files": [
+    "project.html",
+    "provia-project.json",
+    "setup.md",
+    "workflow.yaml"
+  ],
+  "output": "tests/forward-evaluation/matrix/workflow-designer-normal/",
+  "skillLoaded": true
+}

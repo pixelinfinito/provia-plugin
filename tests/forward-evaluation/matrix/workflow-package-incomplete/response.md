@@ -1,0 +1,13 @@
+I checked the working directory and it is empty — no exported YAML file, no `provia-project.json` manifest, and no other supplied document. There is nothing in the directory or the request itself that contains the workflow to repair.
+
+**Why I'm not proceeding to "repair" something:**
+- The skill's job here is to fix a *supplied* export while preserving its *intended* approval process. Preserving intent requires reading that intent from the file (action sequence, decision branches, assignees, outcomes). With no file present, there is no approval process to preserve — anything I wrote would be an invented workflow, not a repair, and would risk silently fabricating approval steps, thresholds, or owners. The shared honesty rules explicitly forbid inventing approval thresholds, IDs, or validation results, and the workflow-YAML reference's guidance on missing pieces (e.g., missing `assigneeRef`) only covers *partial* gaps inside a real export — it doesn't extend to reconstructing the whole document from nothing.
+- Running `scripts/validate-workflow.mjs` or `scripts/review-actions.mjs` with no input would produce a fabricated or misleading report, which the instructions also forbid ("never simulate a report").
+
+**What I need to actually do this:**
+- The exported YAML content (or its file path) that needs repairing, and/or
+- `provia-project.json` (the project manifest) if this workflow was already tracked, so I can resolve `assigneeRef`s and update `workflows[].file`/`status`.
+
+**Assumption stated, not asked as a blocking question:** if you intended the file to already be in this directory, it didn't transfer — please paste the YAML content or place the file at `workflow.yaml` in `/private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-OmogKQ/workflow-package-incomplete`, and I will proceed with the repair, validation, `review-actions.mjs`, `editorial-review.md`, and `setup.md` generation immediately.
+
+**Recommended next step:** once you provide the export, re-run this same request (`provia-skills:provia-workflow-package` — "repair this exported YAML without changing the intended approval process") with the file in place. If the original export is truly lost and only the source procedure/SOP remains, use `provia-skills:provia-workflow-designer` instead to rebuild the workflow design from that procedure, then hand the result back to this skill for packaging.

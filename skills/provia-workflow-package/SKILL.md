@@ -1,31 +1,43 @@
 ---
 name: provia-workflow-package
-description: Generate, explain or repair portable Provia workflow YAML and run the bundled validator.
+description: "Generate, explain or repair portable Provia workflow YAML, run the bundled validator and the action review gate, and generate the setup handover from the project manifest. Use when the user asks for \"generate the workflow YAML\", \"validate this workflow file\", \"repair this exported YAML\", \"package the approved design\", or says «gera o YAML do workflow», «valida este ficheiro», «corrige este YAML exportado», «prepara o pacote para importar»."
 ---
+
+<!-- Generated from catalog.json by scripts/build-skills.mjs. Edit the catalogue, not this file. -->
 
 # Workflow package builder
 
-Read [country context](../../references/country-context.md) and [Provia capabilities](../../references/provia-capabilities.md) before making recommendations. Read the [Angola reference](../../references/countries/angola.md) when Angola applies. Country and response language are separate; respect an explicit user choice.
+Read [shared conventions](../../references/skill-conventions.md) first. Country and language, disconnected or connected mode, the project manifest, the honesty rules, action wording and the final recommendation apply to this skill without being repeated here.
 
 ## Inputs
 
-An agreed design or YAML export, source contract version, known destination references and setup constraints. Use supplied documents and exports. This plugin has no Provia connection. Ask only for information that materially affects the task; identify assumptions and continue independent work.
+An agreed design or YAML export, the project manifest, source contract version, known destination references or receipts, and setup constraints.
+
+## References
+
+- [portable workflow YAML](../../references/workflow-yaml.md): before emitting YAML, with `contracts/workflow-v1/contract-lock.json`.
+- [action configuration details](../../references/action-configs.md): for HTTP, wait, notification, sub-workflow and AI settings.
+- [action writing](../../references/action-writing.md): before the editorial review.
+- [project manifest](../../references/project-manifest.md): for `assigneeRef` resolution and the generated `setup.md`.
 
 ## Procedure
 
-Before emitting YAML, read [action writing](../../references/action-writing.md) and review every action name against its purpose, type and description, including Form Fill and AI actions. Preserve export behavior during wording edits. Record the actual editorial review in editorial-review.md, separately from structural validity.
-
-1. Read ../../references/workflow-yaml.md and ../../contracts/workflow-v1/contract-lock.json before emitting YAML. Start from a relevant bundled example rather than inventing property names.
-2. Emit provia.ao/v1 and Workflow. Preserve exact enum values, native booleans, integer offsets and stable local action IDs. Use only supported top-level sections.
-3. Never invent organization UUIDs. If an intended assignee/reference is unknown, keep it in setup.md and explain any deliberate omission in the importable draft. Never silently replace the actual owner with the creator.
-4. Keep credentials out of files. Use supported placeholders and secret references with named dependencies. Keep forms, tags, files, page templates, memory documents and unsupported assignment strategies in the handover.
-5. Run node ../../scripts/validate-workflow.mjs <workflow.yaml> from this skill directory, or resolve that script from the installed plugin root. Node 20.11+ is required; no npm installation or network is needed.
-6. Fix errors and run again. Return the exact validator output. If execution is unavailable, say validation was not run and provide the command. Do not simulate a successful validation report.
-7. Explain errors, warnings and pending destination checks separately. Provia import preview/server dry run and a human publish review still follow. Do not call an export a full backup.
+1. Read the YAML reference and the contract lock, then the manifest `workflows[]` entry or the agreed design. Start from a relevant bundled example rather than inventing property names.
+2. Emit `provia.ao/v1` and `Workflow` with the first line `# provia-skills <version>` for attribution. Preserve exact enum values, native booleans, integer offsets and stable local action IDs equal to the manifest `localId`s. Use only supported top-level sections; never add manifest keys such as `assigneeRef` to YAML.
+3. Resolve owners from the manifest: where a receipt resolves the `assigneeRef` group key, run `node scripts/resolve-workflow-refs.mjs` to substitute the real id; otherwise omit `assignee` and let the generated handover list it. Never invent organization UUIDs and never silently replace the intended owner with the creator.
+4. Carry every action's five-part description into the YAML and run `node scripts/review-actions.mjs workflow.yaml`. Fix missing parts and any implementer note that leaked into a description before handover.
+5. Keep credentials out of files. Use supported placeholders and secret references with named dependencies. Keep forms, tags, files, page templates, memory documents and unsupported assignment strategies in the handover.
+6. Run `node scripts/validate-workflow.mjs workflow.yaml` from the plugin root (Node 20.11+, no npm install or network). Fix errors and run again. Return the exact validator output as `validation.json`. If execution is unavailable, say validation was not run and provide the command; never simulate a report.
+7. Update the manifest (`workflows[].file`, `status: validated` or `packaged`, `setupNotes`) and generate `setup.md` with `node scripts/build-project-map.mjs provia-project.json --setup setup.md`; regenerate `project.html`. Without a manifest, write `setup.md` by hand with the same sections.
+8. Explain errors, warnings and pending destination checks separately and record the editorial review in `editorial-review.md`. Provia import preview/server dry run and a human publish review still follow. Do not call an export a full backup.
 
 ## Deliverable
 
-workflow.yaml, the exact structural validation.json, editorial-review.md and a separate setup.md describing remaining configuration. Cite supplied evidence and product references. Separate confirmed facts, recommendations and unresolved decisions. Do not invent completed checks or platform actions.
+`workflow.yaml`, the exact structural `validation.json`, the `review-actions` report, `editorial-review.md`, the generated `setup.md` and the updated manifest and map. Cite supplied evidence and product references. Separate confirmed facts, recommendations and unresolved decisions. Do not invent completed checks or platform actions.
+
+## Project manifest
+
+Reads: everything. Appends: `workflows[].file`, `status`, `setupNotes`; `setup.md` generated from unresolved items. See [project manifest](../../references/project-manifest.md).
 
 ## Examples
 
@@ -40,4 +52,4 @@ If the user requests embedded form definitions or translated YAML keys, explain 
 
 ## Final chat recommendation
 
-Read [next-step guidance](../../references/next-step.md). End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task’s artifacts forward. Make it a recommendation, not an automatic invocation. If no further skill is needed, recommend the concrete next action instead.
+End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task's artefacts and the manifest forward, following [next-step guidance](../../references/next-step.md). It is a recommendation, not an automatic invocation.

@@ -1,0 +1,81 @@
+# provia-skills 1.1.0 — rewrite of the 1.0.2 trial fixture to the five-part description standard. The original workflow.yaml is preserved as evidence.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: Gratificação e investimento por marco — proposta
+  prefix: GIM
+  description: Proposta sintética. Responsáveis, formulário e regras de decisão confirmam-se na entrega de configuração.
+triggers:
+  - type: manual
+    label: Iniciar caso
+    enabled: true
+    config: {}
+fields:
+  - name: marco
+    label: Marco do investimento
+    type: text
+    required: true
+  - name: montante_investimento
+    label: Montante do investimento por marco
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+actions:
+  - id: confirmar_gratificacao
+    name: Confirmar o pagamento da gratificação
+    type: standard
+    description: |
+      Tarefa: Confirmar que a gratificação foi paga pelos signatários e registar essa confirmação no caso.
+      Como: 1. Abrir o comprovativo de transferência emitido pelo banco. 2. Conferir o beneficiário, o montante e a data com a ordem de pagamento assinada. 3. Anexar o comprovativo ao caso.
+      Evidência: O comprovativo de transferência anexado e um comentário com a data da conferência.
+      Concluído quando: O comprovativo está anexado e confere com a ordem de pagamento.
+      Excepções: Se o comprovativo não conferir ou não existir, não concluir: comentar a divergência e informar os signatários. Esta acção não executa nenhuma transferência.
+    executionMode: sequential
+    required: true
+  - id: propor_alteracao
+    name: Propor uma alteração ao orçamento
+    type: standard
+    description: |
+      Tarefa: Registar a alteração proposta ao orçamento para o marco em causa.
+      Como: 1. Preencher «Marco do investimento» com o marco a que a proposta se refere. 2. Preencher «Montante do investimento por marco» com o valor proposto em Kz. 3. Anexar a memória justificativa da alteração.
+      Evidência: Os dois campos preenchidos e a memória justificativa anexada.
+      Concluído quando: A proposta está registada com marco, montante e justificação.
+      Excepções: Se a alteração afectar mais de um marco, registar um caso por marco e indicar nos comentários a relação entre eles.
+    executionMode: sequential
+    required: true
+  - id: confirmar_recepcao
+    name: Confirmar a recepção
+    type: form_fill
+    description: |
+      Tarefa: Preencher o formulário «Confirmação de recepção» para registar o que foi recebido.
+      Como: 1. Abrir o formulário a partir desta acção. 2. Responder a todas as perguntas obrigatórias com os dados do bem ou serviço recebido. 3. Submeter o formulário.
+      Evidência: A resposta submetida ao formulário «Confirmação de recepção».
+      Concluído quando: O formulário foi submetido e a resposta aparece no caso.
+      Excepções: Se nada tiver sido recebido ainda, não submeter: comentar a data prevista de recepção.
+    executionMode: sequential
+    required: true
+  - id: decidir_investimento
+    name: Decidir o investimento por marco
+    type: decision
+    description: |
+      Tarefa: Decidir se o investimento proposto para o marco avança.
+      Como: 1. Ler a proposta e a memória justificativa. 2. Confirmar que o montante está dentro da sua autoridade de decisão. 3. Escolher «Aprovar», «Recusar» ou «Devolver» para correcções.
+      Evidência: Um comentário com o motivo em «Recusar» e «Devolver».
+      Concluído quando: A decisão está registada com o comentário exigido.
+      Excepções: Se o montante exceder a sua autoridade, não decidir: comentar o limite e devolver para que a proposta seja encaminhada à autoridade competente.
+    executionMode: sequential
+    required: true
+    config:
+      branches:
+        - label: Aprovar
+          outcome: continue
+          requiresComment: false
+        - label: Recusar
+          outcome: cancel_incident
+          requiresComment: true
+        - label: Devolver
+          outcome: return_to_action
+          target: propor_alteracao
+          requiresComment: true

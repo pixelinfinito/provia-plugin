@@ -1,0 +1,20 @@
+{
+  "id": "workflow-review-conflicting",
+  "skill": "provia-workflow-review",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:23:07.651Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 95021,
+  "costUsd": 0.33886180000000005,
+  "numTurns": 12,
+  "sessionId": "5c1b73fa-8f0a-494f-a649-ecfbd7814696",
+  "stopReason": "end_turn",
+  "toolCalls": 10,
+  "files": [
+    "provia-project.json",
+    "review-findings.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/workflow-review-conflicting/",
+  "skillLoaded": true
+}

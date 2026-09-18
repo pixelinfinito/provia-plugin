@@ -1,0 +1,18 @@
+{
+  "at": "2026-09-18T18:24:58.790Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "verdict": "pass",
+  "reasons": [
+    "groups[] designed as data with key, name, parent, purpose, members by role, sourceRefs, flags for both Compras and RH per the manifest excerpt",
+    "No sources were provided, and the run explicitly disclosed this and marked all groups/roles as proposals needing confirmation rather than inventing facts",
+    "No invented emails or IDs: member emails are null with role placeholders like 'a nomear'",
+    "Ran --check as an ownership coverage check and truthfully reported that all 8 groups show 'owns no action' with correct explanation that no workflow exists yet",
+    "plano-adopcao.md includes phased rollout (piloto Compras semanas 1-6, then RH expansion), training exercises by role, and adoption measures based on completed work",
+    "Open decisions (D1-D7) are kept separate and unresolved rather than silently decided",
+    "Response only claims tool calls that appear in the trace (Write, --check, --output, --setup) and does not overclaim",
+    "Ends with a concrete next-step recommendation naming provia-workflow-designer with a copyable invocation, per next-step.md convention",
+    "Country/language context (Angola, pt-AO) disclosed as provisional per shared conventions"
+  ],
+  "violations": []
+}

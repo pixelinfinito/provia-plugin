@@ -1,23 +1,41 @@
-# Pedido de assistência de TI: setup and review
+# Pedido de assistência de TI — exemplo: Entrega de configuração
 
-Country: Angola. Language: Portuguese (pt-AO). Timezone: Africa/Luanda. This is a synthetic training draft, not an approved company policy.
+Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.1.0, 2026-09-18).
 
-## Before publication
+## Estado
 
-- All sample actions are deliberately assigned to the incident creator so a learner can exercise the draft without invented organization IDs. **Replace these assignments with the actual people/groups before production.** This does not implement segregation of duties.
-- Configure support groups, access restrictions and any ticket integration. Define urgency from business impact, not a promise of automatic SLA escalation.
-- Create any intake or evidence forms, entity records, tags, files, Pages and memory documents separately. These are not transported by this YAML.
-- Confirm required fields, due dates and exception paths with the process owner. This example does not encode legislation, holidays, tax rates or retention periods.
-- Run `node scripts/validate-workflow.mjs examples/it-service/workflow.yaml` from the plugin root. Passing local checks leaves destination validation and publication pending.
-- Import the YAML as a draft in Provia, review preview warnings, resolve references and run the server validation offered by the import flow.
+Modo: sem ligação ao Provia (configuração manual).
 
-## Pilot cases
+## Configuração pendente
 
-1. Complete a normal synthetic incident and inspect its evidence.
-2. Omit a required field and confirm the visible validation.
-3. Exercise rejection/cancellation if configured; do not assume a label changes execution.
-4. Confirm that the correct people can act and unauthorized users cannot.
+| Onde | Item | O que fazer |
+| --- | --- | --- |
+| ti | Pedido de assistência de TI — exemplo | Importar o YAML como rascunho e rever a pré-visualização (`workflow.yaml`) |
+| ti / classificar | Classificar o pedido | Atribuir o grupo à acção depois de o grupo existir (`suporte_ti`) |
+| ti / diagnosticar | Diagnosticar o problema | Atribuir o grupo à acção depois de o grupo existir (`suporte_ti`) |
+| ti / resolver | Registar a resolução | Atribuir o grupo à acção depois de o grupo existir (`suporte_ti`) |
+| ti / confirmar | Confirmar com o requerente | Atribuir o grupo à acção depois de o grupo existir (`suporte_ti`) |
 
-## Configuração em português
+## Grupos a criar
 
-Este exemplo destina-se a formação em Angola. Todas as acções estão atribuídas ao criador do pedido para permitir um ensaio sem identificadores fictícios. Antes de publicar, configure os responsáveis reais, as permissões, os formulários e as regras aprovadas pela organização. Valide o ficheiro e reveja a importação no Provia. O exemplo não define obrigações legais nem substitui a revisão do dono do processo.
+- `suporte_ti` Suporte de TI: Classificam, diagnosticam e resolvem os pedidos de assistência.. Membros propostos: Técnico de suporte
+
+## Decisões em aberto
+
+- **D1** Quem reatribui um caso quando a solução prevista falha e a chefia de TI está ausente? (Dono: Responsável de TI)
+
+## Notas de configuração
+
+- `ti`: O YAML de formação atribui todas as acções ao criador para permitir um ensaio sem identificadores fictícios; o responsável pretendido é o grupo Suporte de TI.
+- `ti`: Um formulário de entrada em auto-serviço substituiria o gatilho manual; desenhá-lo com provia-form-designer antes da produção.
+- `ti`: Os prazos são ilustrativos, não níveis de serviço aprovados.
+
+## Validação
+
+Execute o validador a partir da raiz do plugin, com o caminho de cada ficheiro relativo à pasta do manifesto, e guarde a saída exacta. Um resultado sem erros deixa a validação de destino e a publicação pendentes.
+
+```sh
+node scripts/validate-workflow.mjs workflow.yaml
+```
+
+Este ficheiro é gerado pelo mapa do projecto; volte a gerá-lo depois de cada alteração ao manifesto. Não substitui a revisão do dono do processo nem a pré-visualização de importação no Provia.

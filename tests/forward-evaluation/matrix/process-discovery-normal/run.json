@@ -1,0 +1,22 @@
+{
+  "id": "process-discovery-normal",
+  "skill": "provia-process-discovery",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:05:08.351Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 128999,
+  "costUsd": 0.4750338,
+  "numTurns": 21,
+  "sessionId": "b41b7364-9291-41d9-ab0e-d5ad039a2e74",
+  "stopReason": "end_turn",
+  "toolCalls": 19,
+  "files": [
+    "piloto-recomendacao.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/process-discovery-normal/",
+  "skillLoaded": true
+}

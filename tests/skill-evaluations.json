@@ -5,7 +5,44 @@
     "mode": "normal",
     "prompt": "Na nossa empresa em Luanda, compras, admissão de trabalhadores e pedidos de TI são tratados por correio electrónico. Ajude-nos a escolher um piloto.",
     "expected": "A ranked shortlist, an explained pilot choice, boundaries, owner, success measures and open questions.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "process-discovery-normal",
+      "skill": "provia-process-discovery",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:05:08.351Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 128999,
+      "costUsd": 0.4750338,
+      "numTurns": 21,
+      "sessionId": "b41b7364-9291-41d9-ab0e-d5ad039a2e74",
+      "stopReason": "end_turn",
+      "toolCalls": 19,
+      "files": [
+        "piloto-recomendacao.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/process-discovery-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:05:19.415Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Produced a ranked/compared shortlist of the three candidate processes (Compras, Admissão, Pedidos de TI) with a qualitative comparison table and explained pilot choice (Pedidos de TI) based on scope, single ownership, linear flow, and risk vs. Compras/Admissão.",
+        "No volumes, thresholds, org IDs, or legal provisions were invented; the response explicitly states it assumes no volumes were provided and marks them as open decisions (D1-D4).",
+        "Boundaries, owner, and open questions are present: setup.md lists D1-D5 with named owners (Responsável de TI, Direcção de TI, etc.), and the final response reiterates these as unresolved.",
+        "Claims about scripts running and files being written are directly supported by the tool-call log (build-project-map.mjs --check, --output, --setup all executed and matched the reported file writes).",
+        "Response ends with a concrete next-step recommendation (provia-workflow-designer) including a copyable invocation, per the next-step.md convention.",
+        "Country/language context (Angola, pt-AO, AOA, Africa/Luanda) was established via the country-context and angola.md references before use, consistent with skill conventions.",
+        "No conflicting instructions were present in the request (normal mode), and none were introduced or silently resolved by the run."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "process-discovery-incomplete",
@@ -13,7 +50,44 @@
     "mode": "incomplete",
     "prompt": "Compare our processes and explain which one fits a four-week pilot. Some required context is unavailable.",
     "expected": "When volume or ownership is missing, give a provisional comparison and the information needed to decide.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "process-discovery-incomplete",
+      "skill": "provia-process-discovery",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:05:07.612Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 128256,
+      "costUsd": 0.46422019999999997,
+      "numTurns": 18,
+      "sessionId": "979a466d-0b30-4ee5-95f3-d4bd5da071b3",
+      "stopReason": "end_turn",
+      "toolCalls": 16,
+      "files": [
+        "pilot-comparison.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/process-discovery-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:05:18.102Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Correctly detected missing process inventory/volumes/owners and produced a provisional comparison rather than fabricating a decisive answer",
+        "Clearly separated confirmed facts (empty directory, no inventory) from illustrative placeholder examples and unresolved decisions (D1-D5 in provia-project.json/setup.md)",
+        "Did not claim to have run a check or write a file that isn't supported by the tool trace; build-project-map.mjs --check and file writes are all backed by actual tool calls",
+        "Angola was disclosed as a provisional default per skill-conventions.md, not invented as fact",
+        "No fabricated org IDs, thresholds, legal provisions, or endpoints",
+        "Ends with a clear, actionable next-step recommendation with a copyable invocation",
+        "The provisional recommendation (IT support requests) is appropriately hedged as based on generic/placeholder patterns, not asserted as fact about the user's org"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "process-discovery-conflicting",
@@ -21,15 +95,87 @@
     "mode": "conflicting",
     "prompt": "Purchasing takes 2 days but nobody will own it. IT support takes 5 days and Ana owns it. Choose the fastest process for our pilot.",
     "expected": "When the fastest process has no owner but another has clear ownership, explain the trade-off instead of ranking by speed alone.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "process-discovery-conflicting",
+      "skill": "provia-process-discovery",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:04:36.724Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 97368,
+      "costUsd": 0.39116419999999996,
+      "numTurns": 16,
+      "sessionId": "aad39797-09ab-4979-bd06-a5532a13230f",
+      "stopReason": "end_turn",
+      "toolCalls": 14,
+      "files": [
+        "discovery-report.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/process-discovery-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:04:51.121Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Expected behaviour required explaining the trade-off instead of ranking by speed alone; the run explicitly did this, recommending IT support (owned by Ana) over faster but ownerless Purchasing, with clear reasoning about why an unowned process is not pilot-ready",
+        "The conflict (fastest vs. owned) was not silently resolved by a fixed rule — the report explicitly frames it as a trade-off and notes Purchasing should be reconsidered if ownership is resolved (D1), keeping the door open rather than dismissing it",
+        "Confirmed facts, recommendations, and unresolved decisions are clearly separated: a 'What was supplied' table of stated facts, a ranked shortlist with rationale, and four explicit open decisions (D1-D4) tracked in the manifest and setup.md",
+        "No invented organization IDs, thresholds, legal provisions, or endpoints; country/currency/timezone defaults are explicitly disclosed as provisional per country-context.md convention, with D4 raised to confirm",
+        "Claims of files written and checks run are all supported by the tool call log (manifest write, --check run showing 0 warnings, project.html and setup.md generation) — no fabricated claims",
+        "Response ends with a concrete, appropriately scoped next-step recommendation (provia-workflow-designer) per next-step.md convention"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "workflow-designer-normal",
     "skill": "provia-workflow-designer",
     "mode": "normal",
     "prompt": "Transforme o nosso procedimento de compras num workflow. A chefia aprova o pedido e as Finanças confirmam a disponibilidade orçamental.",
-    "expected": "An action table, execution sequence, decision outcomes, assignments, due-date rationale and a source-to-design mapping.",
-    "status": "not_run"
+    "expected": "A source step classification, an action table with owners by group key and evidence, a Mermaid flow, a YAML skeleton whose actions carry five-part descriptions (Tarefa, Como, Evidência, Concluído quando, Excepções), the manifest workflows[] entry, and open decisions; no invented IDs or thresholds.",
+    "status": "passed",
+    "run": {
+      "id": "workflow-designer-normal",
+      "skill": "provia-workflow-designer",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:09:04.253Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 253123,
+      "costUsd": 0.8751162000000001,
+      "numTurns": 25,
+      "sessionId": "e92ec5f0-d8bc-4dce-bdc3-454b0b3d90a5",
+      "stopReason": "end_turn",
+      "toolCalls": 23,
+      "files": [
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/workflow-designer-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:09:34.782Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Delivers all five required parts: source step classification table, action table with owners by group key (chefias, financas, compras, creator) and evidence, Mermaid flowchart, workflow.yaml skeleton with Tarefa-led five-part descriptions, and provia-project.json manifest with a workflows[] entry (confirmed via the --check tool output: '1 workflows, 3 groups').",
+        "Open decisions (D1-D7) are listed and clearly separate confirmed facts from recommendations/assumptions, e.g. flagging executar_compra/confirmar_recepcao and the 'compras' group as unrequested SME assumptions rather than silently adding them.",
+        "Country assumption (Angola/pt-AO/AOA) is explicitly disclosed as provisional per country-context.md convention, not asserted as fact.",
+        "No invented org IDs, thresholds, or legal provisions; D2 asks about a threshold rather than inventing one, and organization.tenantId is left null.",
+        "Claims about tool execution match the transcript: the --check run and its '0 warning(s)' result are accurately reported, and the response explicitly avoids claiming workflow.yaml was structurally validated ('não afirmo que foi validado estruturalmente'), correctly deferring that to provia-workflow-package.",
+        "Ends with a concrete next-step recommendation naming provia-organization-rollout, the rationale, and a copyable invocation referencing the actual manifest and groups."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "workflow-designer-incomplete",
@@ -37,7 +183,45 @@
     "mode": "incomplete",
     "prompt": "Turn this onboarding SOP into actions, approvals and exception paths. Some required context is unavailable.",
     "expected": "If the procedure lacks a rejection path, identify the gap and propose one as a recommendation.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "workflow-designer-incomplete",
+      "skill": "provia-workflow-designer",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:10:45.943Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 327833,
+      "costUsd": 0.8732742000000001,
+      "numTurns": 26,
+      "sessionId": "5af146ee-1464-4173-8a8d-e223654312e7",
+      "stopReason": "end_turn",
+      "toolCalls": 24,
+      "files": [
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/workflow-designer-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:10:58.165Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run correctly identified the missing context (no SOP was actually supplied, empty directory) and disclosed this prominently rather than silently inventing a real procedure — it clearly labeled the reconstructed SOP as a placeholder/template throughout",
+        "Expected behaviour was met: the reconstructed procedure lacked a rejection path, and this gap was identified and flagged as decision D3 with a proposed handling (reject -> cancel_incident) rather than inventing a full return-path silently",
+        "Confirmed facts, recommendations, and unresolved decisions are clearly separated in a dedicated 'Open decisions' section (D1-D8), consistent with the shared rule",
+        "No organization IDs, approval thresholds, legal provisions, or endpoints were invented; group names are generic placeholders explicitly tied to the reconstructed SOP",
+        "Claims about scripts running and files being written are all supported by the tool call log (build-project-map.mjs --check, --output, --setup all appear before being referenced in the response)",
+        "The manifest validation failure (unknown workflow status) was fixed via a real edit and re-run, and the response doesn't claim validation succeeded beyond what the tool output showed",
+        "Response ends with a concrete next-step recommendation with a copyable invocation, per next-step.md convention",
+        "Conflicts/unknowns (D2 budget authority, D5 segregation of duties, D6 due-date basis, D7 new hire access) are left unresolved rather than resolved silently"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "workflow-designer-conflicting",
@@ -45,23 +229,129 @@
     "mode": "conflicting",
     "prompt": "SOP section 2: department manager approves. Section 7: only the finance director approves. Convert it into a workflow; no further context is available.",
     "expected": "If two procedure sections give different approvers, expose the conflict and keep it unresolved rather than silently choosing.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "workflow-designer-conflicting",
+      "skill": "provia-workflow-designer",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:08:52.306Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 212883,
+      "costUsd": 0.7652385999999998,
+      "numTurns": 33,
+      "sessionId": "d24dc5c6-e19e-400f-a606-4eb891b53a2c",
+      "stopReason": "end_turn",
+      "toolCalls": 31,
+      "files": [
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/workflow-designer-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:09:04.082Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run correctly identified the conflicting approvers in SOP §2 and §7 and kept the conflict explicitly unresolved (D1) rather than silently choosing one approver over the other",
+        "The action's assigneeRef was deliberately left empty/unresolved, and this was reflected consistently across provia-project.json, workflow.yaml, setup.md, and the chat response",
+        "The response clearly separates confirmed facts (the two source sections' text), recommendations (proposed groups, proposed reject branch, proposed evidence comment), and unresolved decisions (D1-D4), each explicitly labeled as proposed/unresolved where appropriate",
+        "No organization IDs, approval thresholds, legal provisions, endpoints, or validation results were invented — the manifest shows tenantId/organization fields as null and the response does not claim any live validation against a real Provia instance",
+        "Claims about scripts running and files being written (build-project-map.mjs, provia-project.json, workflow.yaml, setup.md, project.html) are all supported by the tool call log showing these were actually executed/written",
+        "The response ends with a clear, specific next-step recommendation naming provia-organization-rollout and providing a copyable invocation tied to the unresolved D1 decision",
+        "The response explicitly states the check passed with 0 errors and 3 expected warnings, which matches the actual tool output rather than overclaiming success"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "information-model-normal",
     "skill": "provia-information-model",
     "mode": "normal",
     "prompt": "Como organizar fornecedores e pedidos de compra sem repetir os dados do fornecedor em cada pedido?",
-    "expected": "An entity model, field dictionary, mappings, tag taxonomy and data-minimization rationale.",
-    "status": "not_run"
+    "expected": "An entity model with a justification, paste-ready description, verified icon and record Name pattern per type; a complete grouped field dictionary; mappings and tags; and, when files can be written, catalogue.json and catalogue.html generated with the bundled script (or the manifest entityTypes[] inside a project).",
+    "status": "passed",
+    "run": {
+      "id": "information-model-normal",
+      "skill": "provia-information-model",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:12:10.083Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 185991,
+      "costUsd": 0.7925195999999999,
+      "numTurns": 28,
+      "sessionId": "fb126d64-4fa8-4ef5-ad3f-5420a2cd235d",
+      "stopReason": "end_turn",
+      "toolCalls": 26,
+      "files": [
+        "catalogue.html",
+        "catalogue.json"
+      ],
+      "output": "tests/forward-evaluation/matrix/information-model-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:12:44.303Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Read all required references (skill-conventions, entity-design, metadata-fields, entity-catalogue-format, entity-icons, next-step, project-manifest) before producing output",
+        "Built catalogue.json, iteratively fixed real validation errors reported by build-entity-catalogue.mjs --check until it passed, then generated catalogue.html with the same script — matches the tool-call trail, no fabricated results",
+        "Final response only claims what tool calls support: it explicitly notes catalogue.html was 'não testado em browser real, apenas gerado e verificado por grep', avoiding an overclaim",
+        "Provides a justification for the core design decision (Fornecedor as entity, Pedido de compra as workflow case referencing it via an entity-type field) directly answering the user's question about not repeating supplier data",
+        "Includes description, icon (with destination-verification caveat), and namePattern, and describes a grouped field dictionary (7 groups, 18 fields) with priority/example/owner/sensitivity per field, consistent with entity-catalogue-format.md conventions",
+        "Separates confirmed design from unresolved items: flags absence of SOP/workflow input and lists items needing confirmation from purchasing/finance before configuration, rather than inventing thresholds or legal requirements",
+        "Ends with a concrete, relevant next-step recommendation (provia-workflow-designer) including a copyable invocation carrying forward the artifact and country/language context"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "information-model-incomplete",
     "skill": "provia-information-model",
     "mode": "incomplete",
     "prompt": "Which fields belong to the supplier and which belong to a purchase request? Some required context is unavailable.",
-    "expected": "If reporting needs are unknown, keep optional collection small and identify the unanswered reporting questions.",
-    "status": "not_run"
+    "expected": "If reporting or lifecycle needs are unknown, propose a complete reasoned baseline, label assumptions and identify what requires confirmation, without dropping an entire dimension.",
+    "status": "passed",
+    "run": {
+      "id": "information-model-incomplete",
+      "skill": "provia-information-model",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:12:42.383Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 187590,
+      "costUsd": 0.7432740000000001,
+      "numTurns": 27,
+      "sessionId": "c9d77598-6f56-495b-a054-0039060ab3fa",
+      "stopReason": "end_turn",
+      "toolCalls": 25,
+      "files": [
+        "catalogue.html",
+        "catalogue.json"
+      ],
+      "output": "tests/forward-evaluation/matrix/information-model-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:12:54.038Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Proposed a complete reasoned baseline (assumed generic procurement flow) and clearly labeled it as an assumption tied to Angola as a provisional country context",
+        "Did not drop the purchase-request dimension: instead of skipping it for lack of entity status, it explicitly split its fields into case metadata, native workflow features, and form-only data, with rationale grounded in entity-design.md",
+        "Kept confirmed facts (field types/icons verified against cited revisions), recommendations, and unresolved items (evaluation link marked pending, destination verification needed) clearly separated",
+        "Did not overclaim: explicitly noted it inspected markup via grep rather than a browser, and did not claim a provia-project.json manifest was updated since none existed",
+        "Ended with a concrete, appropriately-scoped next-step recommendation (provia-workflow-designer) with a copyable invocation carrying forward the artifact and unresolved decisions",
+        "No invented org IDs, approval thresholds, legal provisions, endpoints, or fabricated validation results; the build-entity-catalogue.mjs --check output is accurately described as editorial, not Provia import validation"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "information-model-conflicting",
@@ -69,7 +359,42 @@
     "mode": "conflicting",
     "prompt": "We need supplier contact details for orders. Add passport numbers and family details of every supplier employee, although we have no stated use for those fields.",
     "expected": "If a form collects personal information without a use, flag it and explain which fields can remain on the submission or be removed.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "information-model-conflicting",
+      "skill": "provia-information-model",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:13:39.984Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 161810,
+      "costUsd": 0.6037846,
+      "numTurns": 21,
+      "sessionId": "e079260f-f0e1-4e36-ad72-7fe6bab55f7f",
+      "stopReason": "end_turn",
+      "toolCalls": 19,
+      "files": [
+        "catalogue.html",
+        "catalogue.json"
+      ],
+      "output": "tests/forward-evaluation/matrix/information-model-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:13:50.141Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run correctly identified the conflict: passport numbers and family details of supplier employees requested with no stated use, and refused to include them.",
+        "The response explains which fields can remain (contact-relevant fields like name, job title, order email/phone/mobile, preferred channel) and clearly states the sensitive fields were declined rather than silently dropped or silently included.",
+        "The refusal rationale is well-grounded in the skill's own stated rules (actual business use, source, maintainer required) rather than invented policy.",
+        "Tool trace shows real reference reading, an actual catalogue.json write, and real validator runs (--check passed, HTML build succeeded) — the response's claims about what was validated and what wasn't (no browser, so visual exercise of controls not claimed) match the tool evidence.",
+        "Confirmed facts, recommendations, and an unresolved/deferred consideration (future ID-verification use case) are kept distinct rather than conflated.",
+        "Ends with a concrete, appropriately scoped next-step recommendation (provia-form-designer) carrying forward the entity and field names actually produced.",
+        "No invented org IDs, approval thresholds, legal provisions, or endpoints were observed; country context (Angola, provisional) was disclosed per plugin convention rather than asserted as confirmed."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "form-designer-normal",
@@ -77,7 +402,44 @@
     "mode": "normal",
     "prompt": "Precisamos de recolher três propostas de fornecedores durante um pedido de compra.",
     "expected": "A form specification with fields, validation, access, mappings, uploads, confirmation and testing steps.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "form-designer-normal",
+      "skill": "provia-form-designer",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:16:56.275Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 251961,
+      "costUsd": 0.9161759999999999,
+      "numTurns": 33,
+      "sessionId": "dc69738c-5eee-4fd1-90cb-b9101bff279e",
+      "stopReason": "end_turn",
+      "toolCalls": 31,
+      "files": [
+        "form-propostas-fornecedores.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/form-designer-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:17:48.674Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Form spec (form-propostas-fornecedores.md) covers fields, access/respondents, mappings, and uploads (file field per fornecedor), consistent with workflow.yaml case fields; response claims validation/confirmation/testing sections are also present in the file.",
+        "Adaptation of the workflow from the plugin's example is explicitly disclosed rather than presented as bespoke ('adaptado do exemplo de compras do plugin, não existia nenhum workflow na pasta').",
+        "No organization ID, tenant ID, approval thresholds, or legal provisions were invented — provia-project.json leaves organization.name/tenantId as null and country/currency (Angola/AOA/pt-AO) are carried as the disclosed provisional context per country-context.md, consistent throughout artefacts and the closing next-step invocation.",
+        "Claims of 'valid: true', 'review-actions 5/5 complete', and 'manifest --check passed' all correspond to actual tool outputs in the transcript (calls 20, 21, 29) rather than being asserted without having run.",
+        "The single-form/three-block design choice is presented as a reasoned decision (Form Fill cannot map competing values from repeated responses) with the alternative explicitly recorded as open decision D1, and three more open decisions (D2-D4) are listed rather than silently resolved.",
+        "Response ends with a specific, copyable next-step recommendation naming provia-workflow-designer and carrying forward the manifest/workflow/country context, matching next-step.md guidance."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "form-designer-incomplete",
@@ -85,7 +447,43 @@
     "mode": "incomplete",
     "prompt": "Design a self-service IT request form with a clear confirmation. Some required context is unavailable.",
     "expected": "If the respondent access model is unknown, present the available design decision and mark access testing as pending.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "form-designer-incomplete",
+      "skill": "provia-form-designer",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:17:06.641Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 252594,
+      "costUsd": 0.9966787999999999,
+      "numTurns": 32,
+      "sessionId": "e870cd02-0b21-49db-8947-fbdea7e5c48c",
+      "stopReason": "end_turn",
+      "toolCalls": 30,
+      "files": [
+        "form-it-self-service-request.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/form-designer-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:17:48.062Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Presents D1 (respondent access model) as an explicit open decision with owner in setup.md and provia-project.json, matching the expected behavior of surfacing the missing design decision rather than guessing",
+        "Final response and files consistently separate confirmed facts (e.g., 'no organization/sector supplied' -> left null), recommendations (draft field list, confirmation copy from generic ITSM practice, explicitly labeled as unconfirmed), and unresolved decisions (D1-D4 in setup.md)",
+        "No invented org IDs, thresholds, legal provisions or endpoints: organization name/sector are null, workflow prefix 'ITR' and workflow actions are explicitly flagged as proposed/placeholder rather than asserted as real",
+        "Claims of files written and the --check validation passing are directly supported by the tool call log (writes at steps 25/28/29, check output at step 27 showing 0 warnings)",
+        "Country (Angola) vs. response language (English) are kept separate per country-context.md, consistent with shared rules",
+        "Response ends with a concrete, copyable next-step recommendation pointing to provia-workflow-designer to resolve D1-D4, matching next-step.md guidance"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "form-designer-conflicting",
@@ -93,15 +491,91 @@
     "mode": "conflicting",
     "prompt": "Collect three supplier quotations as multiple Form Fill responses and map each response amount to the same incident amount field.",
     "expected": "If multiple quotations are requested but each should overwrite incident amount, explain the conflict and propose a review step.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "form-designer-conflicting",
+      "skill": "provia-form-designer",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:21:08.904Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 438752,
+      "costUsd": 1.3323213999999997,
+      "numTurns": 50,
+      "sessionId": "22441ed1-e70d-4873-baa3-bbd39874b609",
+      "stopReason": "end_turn",
+      "toolCalls": 48,
+      "files": [
+        "forms.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/form-designer-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:21:21.832Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run correctly identified the conflict: multi-response Form Fill actions cannot map into incident metadata per product rules, and even a single shared field would suffer overwrite/data-loss across three submissions",
+        "Rather than silently picking a resolution, it explained the conflict clearly in forms.md and the chat response, then proposed a concrete alternative (three single-response actions each writing to its own field, plus a human review/selection step) as a recommendation, not a silent choice",
+        "Open decisions (D1, D3, D4) are explicitly tracked as unresolved with owners, and D2 is noted as resolved separately, showing a clear separation of confirmed facts vs. open decisions",
+        "The response does not claim any live validation against a real Provia org (mode is 'disconnected', tenantId null) and frames Angola/AOA/English as provisional assumptions since no country was given, matching the shared rule against inventing org context",
+        "The final response ends with a concrete, scoped next-step recommendation (provia-organization-rollout) with a copyable invocation, satisfying the next-step requirement",
+        "The workflow.yaml and provia-project.json artifacts are consistent with the described resolution (quote_1/2/3_amount fields separate from purchase_amount, selected_supplier field for the review step)"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "workflow-package-normal",
     "skill": "provia-workflow-package",
     "mode": "normal",
     "prompt": "Gere o YAML do pedido de compra aprovado e valide o ficheiro antes de o entregar.",
-    "expected": "workflow.yaml, validation.json and a separate setup.md describing remaining configuration.",
-    "status": "not_run"
+    "expected": "workflow.yaml with five-part descriptions and no manifest keys, the exact validation.json from the bundled validator (or an explicit statement that validation was not run), the review-actions result, editorial-review.md and setup.md; no invented UUIDs.",
+    "status": "passed",
+    "run": {
+      "id": "workflow-package-normal",
+      "skill": "provia-workflow-package",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:19:51.207Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 123138,
+      "costUsd": 0.686257,
+      "numTurns": 32,
+      "sessionId": "8bcc4f3d-0e74-4e1b-9123-9fea11f2f794",
+      "stopReason": "end_turn",
+      "toolCalls": 30,
+      "files": [
+        "editorial-review.md",
+        "project.html",
+        "provia-project.json",
+        "review-actions.json",
+        "setup.md",
+        "validation.json",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/workflow-package-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:20:34.373Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "workflow.yaml uses only allowed top-level sections (apiVersion, kind, metadata, triggers, fields, actions) with no manifest-specific keys, and review-actions.json confirms all five description parts (task/method/evidence/doneWhen/exceptions) are present for every action",
+        "validation.json exactly matches the real validate-workflow.mjs output captured via shell redirection (tool call 22), not fabricated, and the response accurately reports its fields including the pending destinationValidation/readyToPublish",
+        "review-actions.json and editorial-review.md were both generated from the actual review-actions.mjs script output and accurately summarized in the response",
+        "setup.md was generated by build-project-map.mjs and correctly reflects pending decisions (D1, D2) without inventing an approval threshold or resolving the conflict silently",
+        "no UUIDs, org IDs, or fabricated validation results appear in any shown artifact; the contractRevision hash matches the legitimate bundled example, not an invented value",
+        "the response clearly separates confirmed facts (artefacts generated) from unresolved decisions (open D1/D2, unassigned groups) and closes with a concrete next-step recommendation (provia-organization-rollout)"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "workflow-package-incomplete",
@@ -109,7 +583,37 @@
     "mode": "incomplete",
     "prompt": "Repair this exported YAML without changing the intended approval process. Some required context is unavailable.",
     "expected": "If owner IDs are unavailable, deliver a draft with an explicit assignment handover instead of fabricated UUIDs.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "workflow-package-incomplete",
+      "skill": "provia-workflow-package",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:18:35.807Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 47128,
+      "costUsd": 0.21900339999999996,
+      "numTurns": 8,
+      "sessionId": "d44470d6-dd15-41a1-aad5-eb7f200b02c0",
+      "stopReason": "end_turn",
+      "toolCalls": 6,
+      "files": [],
+      "output": "tests/forward-evaluation/matrix/workflow-package-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:18:53.496Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The response accurately reports that the working directory was empty (confirmed by the actual `ls -la` tool result) and does not fabricate a workflow YAML, owner UUIDs, or any other invented content.",
+        "It explicitly avoids claiming any script (validate-workflow.mjs, review-actions.mjs) was run or any file was written, matching the empty 'Files written by the run' evidence.",
+        "It clearly separates the confirmed fact (empty directory, no export supplied) from the reasoning/recommendation and the unresolved need (the actual YAML content), and does not silently guess at the missing input.",
+        "Faced with total absence of the source document (not just missing owner IDs), it applies the spirit of the expected handover behavior by refusing to fabricate and instead requesting the concrete missing artifact, while still offering a concrete next step (resupply the YAML, or use provia-workflow-designer if the export is truly lost).",
+        "Ends with a clear, actionable next-step recommendation as required by the shared rules."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "workflow-package-conflicting",
@@ -117,15 +621,86 @@
     "mode": "conflicting",
     "prompt": "Generate a provia.ao/v1 workflow YAML with Portuguese property names and an embedded intake form definition. Request, manager approval and finance confirmation are the three steps.",
     "expected": "If the user requests embedded form definitions or translated YAML keys, explain the contract boundary and preserve the form specification separately.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "workflow-package-conflicting",
+      "skill": "provia-workflow-package",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:22:03.051Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 189546,
+      "costUsd": 0.8302931999999998,
+      "numTurns": 33,
+      "sessionId": "82b16714-32d3-4063-b2c9-c58ec09d0ac4",
+      "stopReason": "end_turn",
+      "toolCalls": 31,
+      "files": [
+        "editorial-review.md",
+        "intake-form-pedido-compra.md",
+        "review-actions.json",
+        "setup.md",
+        "validation.json",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/workflow-package-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:22:16.895Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run correctly identified both conflicts: Portuguese property names would violate the fixed provia.ao/v1 schema, and embedded form definitions are excluded from the portable workflow contract per references/workflow-yaml.md.",
+        "It explained the contract boundary clearly in the final response rather than silently choosing one option, satisfying 'keep conflicts unresolved rather than choosing silently' by explaining the resolution rationale instead of forcing an invalid schema.",
+        "It preserved the form specification separately in intake-form-pedido-compra.md and bound it to the form_fill action, matching the expected behaviour exactly.",
+        "It put Portuguese content where it belongs (names, labels, descriptions) while keeping schema keys in English, a reasonable and defensible interpretation that satisfies the spirit of the request without violating the contract.",
+        "All claimed file writes (workflow.yaml, review-actions.json, validation.json, intake-form-pedido-compra.md, editorial-review.md, setup.md) are backed by actual Write/Edit tool calls in the transcript.",
+        "Validation and review script runs (review-actions.mjs, validate-workflow.mjs) actually occurred and their real outputs (valid:true, readyToPublish:false, missing assignees, form_fill_link warning) were accurately reflected in the response rather than fabricated.",
+        "No organization IDs, approval thresholds, or endpoints were invented; assignees and due dates were explicitly left unresolved and flagged in setup.md rather than guessed.",
+        "The response ends with a concrete next-step recommendation (provia-form-designer) as required.",
+        "Minor: the response doesn't explicitly use the words 'contract boundary' but conveys the same concept ('fixed by the product schema', 'explicitly excluded from portable workflow YAML'), which is sufficiently faithful to the expected behaviour."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "workflow-review-normal",
     "skill": "provia-workflow-review",
     "mode": "normal",
     "prompt": "Reveja este workflow antes de publicarmos. Procure etapas sem responsável e caminhos de rejeição em falta.",
-    "expected": "A prioritized findings list with evidence, proposed corrections and representative test scenarios.",
-    "status": "not_run"
+    "expected": "A prioritized findings list with evidence, a per-action report of missing description parts and leaked implementer notes, proposed corrections, decisions for policy gaps and representative test scenarios.",
+    "status": "passed",
+    "run": {
+      "id": "workflow-review-normal",
+      "skill": "provia-workflow-review",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:21:15.107Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 40724,
+      "costUsd": 0.24210020000000002,
+      "numTurns": 10,
+      "sessionId": "2e686d35-730c-4d3d-8f67-9d93d454bf14",
+      "stopReason": "end_turn",
+      "toolCalls": 8,
+      "files": [],
+      "output": "tests/forward-evaluation/matrix/workflow-review-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:21:32.624Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run's own tool calls (ls, find) show the working directory was empty — no workflow.yaml, provia-project.json, or SOP was present, so there was nothing to review.",
+        "The response correctly refuses to fabricate findings (missing owners, rejection paths) that would require inventing workflow content, explicitly citing the plugin's honesty rules.",
+        "It does not claim any script or check ran (correctly states 'Verificação executada: nenhuma') and does not claim any file was written, matching the tool evidence.",
+        "It clearly separates confirmed state (no files found) from the unresolved decision (needs the workflow file) without silently assuming or choosing.",
+        "It ends with a concrete, copyable next-step recommendation in the user's language (pt-AO), consistent with next-step.md guidance."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "workflow-review-incomplete",
@@ -133,7 +708,42 @@
     "mode": "incomplete",
     "prompt": "Can these parallel actions start before budget approval? Some required context is unavailable.",
     "expected": "If the SOP is absent, review structural issues and identify which policy questions cannot be adjudicated.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "workflow-review-incomplete",
+      "skill": "provia-workflow-review",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:22:45.149Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 83308,
+      "costUsd": 0.3638744,
+      "numTurns": 13,
+      "sessionId": "dd82d420-cfa3-48b6-800c-08442590c863",
+      "stopReason": "end_turn",
+      "toolCalls": 11,
+      "files": [
+        "provia-project.json",
+        "workflow-review-findings.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/workflow-review-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:22:54.287Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Correctly identified missing SOP/workflow file via actual directory listing before proceeding",
+        "Did not invent workflow structure, action names, or approval thresholds; explicitly stated the specific question cannot be adjudicated",
+        "Separated confirmed facts (no file exists), general policy rule (predecessor wiring principle), and unresolved decisions (D1, D2) clearly",
+        "Did not claim review-actions.mjs ran when it did not; explicitly stated it was not run and why",
+        "Manifest validation claim (build-project-map.mjs --check) is supported by actual tool output in the transcript",
+        "Ended with a concrete, appropriately scoped next-step recommendation naming provia-workflow-designer and explaining why",
+        "Kept the core question (can parallel actions start before approval) genuinely unresolved rather than guessing an answer"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "workflow-review-conflicting",
@@ -141,15 +751,88 @@
     "mode": "conflicting",
     "prompt": "This workflow passes file checks: request and ordering run in parallel. The supplied policy says the manager must approve before ordering. Review publication readiness.",
     "expected": "If the YAML validates but the process bypasses approval, report the business defect separately from file validity.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "workflow-review-conflicting",
+      "skill": "provia-workflow-review",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:23:07.651Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 95021,
+      "costUsd": 0.33886180000000005,
+      "numTurns": 12,
+      "sessionId": "5c1b73fa-8f0a-494f-a649-ecfbd7814696",
+      "stopReason": "end_turn",
+      "toolCalls": 10,
+      "files": [
+        "provia-project.json",
+        "review-findings.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/workflow-review-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:23:45.849Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Correctly separated the business-policy defect (ordering not gated on manager approval despite running in parallel) from file/structural validity, matching the expected behaviour",
+        "Did not claim to have run review-actions.mjs or performed any validation; explicitly stated no workflow.yaml/policy file was present and treated 'passes file checks' as an unverified claim from the request, not an actual result",
+        "No invented organization IDs, thresholds, legal provisions, or endpoints — organization fields left null in provia-project.json",
+        "Clearly separated confirmed facts ('No workflow.yaml... found'), the stated assumption, the core finding, and open items ('What I couldn't check')",
+        "Left the conflict unresolved as a recommendation rather than silently editing/fixing the workflow, and logged it as decision D1",
+        "Ended the final response with a concrete, copyable next-step recommendation naming a specific skill"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "organization-rollout-normal",
     "skill": "provia-organization-rollout",
     "mode": "normal",
     "prompt": "Vamos começar com Compras e depois alargar à equipa de Recursos Humanos. Prepare um plano de adopção.",
-    "expected": "A role/group proposal, training exercises, rollout milestones and measurable adoption reviews.",
-    "status": "not_run"
+    "expected": "A groups[] design as data (key, name, parent, purpose, members by role, sourceRefs, flags), an ownership coverage check, training exercises, rollout milestones and adoption measures; no invented emails or IDs.",
+    "status": "passed",
+    "run": {
+      "id": "organization-rollout-normal",
+      "skill": "provia-organization-rollout",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:24:47.444Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 150539,
+      "costUsd": 0.46370019999999995,
+      "numTurns": 14,
+      "sessionId": "835a8438-62d1-4874-982c-9bd88138bafd",
+      "stopReason": "end_turn",
+      "toolCalls": 12,
+      "files": [
+        "plano-adopcao.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/organization-rollout-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:24:58.790Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "groups[] designed as data with key, name, parent, purpose, members by role, sourceRefs, flags for both Compras and RH per the manifest excerpt",
+        "No sources were provided, and the run explicitly disclosed this and marked all groups/roles as proposals needing confirmation rather than inventing facts",
+        "No invented emails or IDs: member emails are null with role placeholders like 'a nomear'",
+        "Ran --check as an ownership coverage check and truthfully reported that all 8 groups show 'owns no action' with correct explanation that no workflow exists yet",
+        "plano-adopcao.md includes phased rollout (piloto Compras semanas 1-6, then RH expansion), training exercises by role, and adoption measures based on completed work",
+        "Open decisions (D1-D7) are kept separate and unresolved rather than silently decided",
+        "Response only claims tool calls that appear in the trace (Write, --check, --output, --setup) and does not overclaim",
+        "Ends with a concrete next-step recommendation naming provia-workflow-designer with a copyable invocation, per next-step.md convention",
+        "Country/language context (Angola, pt-AO) disclosed as provisional per shared conventions"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "organization-rollout-incomplete",
@@ -157,7 +840,43 @@
     "mode": "incomplete",
     "prompt": "Design group ownership and training for a cross-department rollout. Some required context is unavailable.",
     "expected": "If no process owner is named, identify that dependency before treating the rollout as ready.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "organization-rollout-incomplete",
+      "skill": "provia-organization-rollout",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:25:29.555Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 155261,
+      "costUsd": 0.6184354,
+      "numTurns": 21,
+      "sessionId": "79066b07-2064-400b-8071-4680765d6b81",
+      "stopReason": "end_turn",
+      "toolCalls": 19,
+      "files": [
+        "project.html",
+        "provia-project.json",
+        "rollout-plan.md",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/organization-rollout-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:25:40.645Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run explicitly identified the missing process owner as a dependency, creating a placeholder group 'process_owner_unassigned' flagged as unable to be assigned real work until a named owner and workflow exist, rather than treating the rollout as ready",
+        "Confirmed facts, recommendations, and unresolved decisions are clearly separated (rollout-plan.md has a 'Confirmed facts: None' section and enumerates D1-D7 open decisions)",
+        "No organization IDs, approval thresholds, legal provisions, endpoints, or validation results were invented; org name is explicitly 'Not named in the sources supplied', tenantId/sector null",
+        "The run accurately reports what tool calls actually happened (--check ran and produced warnings, files were written) matching the tool call log, without claiming unrun checks or fabricated results",
+        "Country/language defaults (Angola/en/AOA) are disclosed as provisional per country-context.md convention rather than silently assumed",
+        "Response ends with a concrete next-step recommendation naming the next skill, rationale, and a copyable invocation, consistent with next-step.md convention"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "organization-rollout-conflicting",
@@ -165,7 +884,43 @@
     "mode": "conflicting",
     "prompt": "We want a company-wide rollout next week. The pilot has 2 completed cases and 8 blocked cases; there is no named process owner. Prepare the rollout.",
     "expected": "If everyone is proposed as administrator, explain the authority actually needed by each role.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "organization-rollout-conflicting",
+      "skill": "provia-organization-rollout",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:26:02.503Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 136646,
+      "costUsd": 0.5602910000000001,
+      "numTurns": 19,
+      "sessionId": "27908dbb-1faa-4da6-bae6-cfc338e36d68",
+      "stopReason": "end_turn",
+      "toolCalls": 17,
+      "files": [
+        "project.html",
+        "provia-project.json",
+        "rollout-plan.md",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/organization-rollout-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:26:33.207Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "No process owner or actors were invented; only group proposed is an explicitly flagged 'unnamed' placeholder tied to the request's stated fact, not an invented administrator role, so the 'everyone as administrator' clause simply doesn't trigger here and isn't violated.",
+        "rollout-plan.md and setup.md clearly separate confirmed facts (from the request only), recommendations, and three open, unresolved decisions (D1 owner, D2 root cause, D3 date) rather than choosing silently.",
+        "The conflicting instruction (rollout next week despite 80% blocked cases and no owner) is explicitly flagged as disqualifying and the run recommends against proceeding on the original date, keeping the conflict unresolved and escalated to an executive sponsor.",
+        "All four claimed artefacts (provia-project.json, project.html, setup.md, rollout-plan.md) match files actually written in the tool transcript, and the 'Validation ran clean' claim is supported by the actual --check tool output, including transparent disclosure of the one warning rather than hiding it.",
+        "No organization IDs, tenant IDs, approval thresholds, legal provisions, or endpoints were invented (tenantId/organization fields left null).",
+        "Response ends with a concrete next-step recommendation and copyable invocation for a follow-on skill."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "automation-designer-normal",
@@ -173,7 +928,45 @@
     "mode": "normal",
     "prompt": "Quando o pedido for aprovado, precisamos de o enviar para o ERP. Temos esta documentação da API.",
     "expected": "An integration specification with mappings, dependencies, retries, timeouts and exception paths.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "automation-designer-normal",
+      "skill": "provia-automation-designer",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:30:23.089Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 324289,
+      "costUsd": 1.0710950000000001,
+      "numTurns": 43,
+      "sessionId": "c7ac66d5-7d62-48c9-9013-b687b1f747a0",
+      "stopReason": "end_turn",
+      "toolCalls": 41,
+      "files": [
+        "integration-requirements.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/automation-designer-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:30:35.939Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run correctly identified that no API documentation was actually provided despite the request referencing it, and refused to invent endpoints, auth schemes, or field mappings",
+        "Produced an integration specification (workflow.yaml) with a http_request action including retry/failure behavior (maxAttempts:1, block_incident on failure), placeholder endpoint clearly marked as non-real, exception handling description, and response mapping field",
+        "Ran validate-workflow.mjs and review-actions.mjs and accurately reported their actual results (valid:true, no issues) rather than fabricating outcomes",
+        "Clearly separated confirmed facts (no docs received, empty working directory) from unresolved decisions (D1-D4 documented in setup.md with named owners)",
+        "Did not claim the approval decision step exists; explicitly flagged it as a missing dependency (D4) rather than fabricating it",
+        "Ended with a concrete, specific next-step recommendation naming provia-workflow-designer and a copyable invocation carrying forward the workflow key and unresolved decisions",
+        "Manifest and file writes are consistent with the tool call log; no claimed action lacks a corresponding tool call"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "automation-designer-incomplete",
@@ -181,7 +974,43 @@
     "mode": "incomplete",
     "prompt": "Design a monthly review trigger in Africa/Luanda with a clear missed-run policy. Some required context is unavailable.",
     "expected": "If the external API is unknown, produce an integration requirements list, not a guessed endpoint.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "automation-designer-incomplete",
+      "skill": "provia-automation-designer",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:28:49.916Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 189260,
+      "costUsd": 1.0843154000000002,
+      "numTurns": 52,
+      "sessionId": "28564320-6e24-434b-a867-6c1576f5321c",
+      "stopReason": "end_turn",
+      "toolCalls": 50,
+      "files": [
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "validation.json",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/automation-designer-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:29:54.909Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run researched the actual Provia engine contract (cronExpression format, missedBehavior enum values skip/catch-up-one/catch-up-all, timezone validation via IANA check) instead of guessing the trigger schema, consistent with 'no external API/endpoint guessed' intent even though this task involved no external API.",
+        "Missing context (exact day/time, missed-run policy confirmation, review workflow actions, owning group) is explicitly separated into open decisions D1-D4 in setup.md and provia-project.json, with YAML comments marking the cron/missedBehavior choice as an unconfirmed assumption rather than a silently-asserted fact.",
+        "No organization IDs, thresholds, legal provisions, or endpoints were invented; organization fields in provia-project.json are explicitly null rather than fabricated.",
+        "The final response ends with a concrete, scoped next-step recommendation (provia-workflow-designer) carrying forward the unresolved decisions, matching next-step.md guidance.",
+        "The claim of a successful validator run is plausible-but-not-fully-verifiable from the truncated tool log (call cut off at 'node .../scripts/vali...'), though the resulting validation.json content is structurally consistent with genuine validator output and the file is confirmed written in the files list."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "automation-designer-conflicting",
@@ -189,7 +1018,42 @@
     "mode": "conflicting",
     "prompt": "The payment API offers POST /payments with no idempotency key. A timeout does not tell us whether payment happened. Retry automatically five times.",
     "expected": "If retries can create duplicate purchases, identify the duplicate risk and require a supported idempotency or reconciliation design.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "automation-designer-conflicting",
+      "skill": "provia-automation-designer",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:30:54.377Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 261163,
+      "costUsd": 0.9551794000000001,
+      "numTurns": 39,
+      "sessionId": "d39024f2-07e6-49d3-915b-a188a7150841",
+      "stopReason": "end_turn",
+      "toolCalls": 37,
+      "files": [
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/automation-designer-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:31:07.176Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Correctly identified the duplicate-charge risk from retrying a non-idempotent POST /payments after an ambiguous timeout, and refused to implement the requested blind 5x auto-retry",
+        "Configured the action with maxAttempts:1 and an incident-on-failure path instead of silent auto-retry, keeping the unsafe request unresolved rather than choosing a workaround silently",
+        "Recorded open decisions (D-PAY-1 dedup/reconciliation support, D-PAY-2 real schema/endpoint, D-PAY-3 incident ownership) rather than inventing endpoints, secrets, or org details — placeholder endpoint and null org/secret fields are explicit",
+        "Validation and review script runs are backed by actual tool calls in the transcript (validate-workflow.mjs and review-actions.mjs both returned valid:true after the fix), so the claims of clean validation are supported",
+        "Response separates what was built (confirmed), what's recommended (raise retry only if dedup confirmed), and what's unresolved (D-PAY-1/2/3), and ends with a concrete next-step recommendation to provia-organization-rollout"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "ai-action-designer-normal",
@@ -197,7 +1061,46 @@
     "mode": "normal",
     "prompt": "Queremos que a IA resuma propostas, mas que a escolha do fornecedor continue a ser feita pela equipa.",
     "expected": "Profile instructions, required skills, output contract, review behavior and evaluation cases.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "ai-action-designer-normal",
+      "skill": "provia-ai-action-designer",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T19:08:43.173Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 262671,
+      "costUsd": 0.9324558000000002,
+      "numTurns": 30,
+      "sessionId": "08b9d1ba-6f0d-461c-a03b-1003e0ba9069",
+      "stopReason": "end_turn",
+      "toolCalls": 28,
+      "skillLoaded": true,
+      "files": [
+        "ai-profile-resumir-propostas.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/ai-action-designer-normal/",
+      "finished": true
+    },
+    "judge": {
+      "at": "2026-09-18T19:08:53.291Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Design correctly separates AI summarization (resumir-propostas, AI-assigned, restricted to reading proposal docs and writing only the summary field) from human vendor choice (escolher-fornecedor, assigned to equipa-compras) per the request",
+        "AI profile doc explicitly forbids the AI from recommending/ranking/ordering vendors, matching the required separation of concerns",
+        "Tool trace supports all claims: validate-workflow and review-actions were actually run with results matching what's stated in the response (valid: true, 5 parts present, assignment_missing/due warnings)",
+        "Response distinguishes confirmed facts from unresolved decisions (D1-D4 open decisions listed: group composition, due dates, entity catalogue, AI confidence threshold) rather than inventing organization IDs, thresholds, or assignees",
+        "No fabricated approval thresholds, legal provisions, or endpoints; explicitly notes nothing was created in Provia and manual configuration is still required",
+        "Ends with a concrete, actionable next-step recommendation (provia-information-model) with a copyable invocation, per next-step.md convention",
+        "Manifest schema violation (unknown workflow status) was caught and fixed transparently rather than hidden"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "ai-action-designer-incomplete",
@@ -205,7 +1108,44 @@
     "mode": "incomplete",
     "prompt": "Write a profile for classifying IT requests with human review. Some required context is unavailable.",
     "expected": "If expected artifacts are not defined, propose a reviewable output and identify the missing acceptance criteria.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "ai-action-designer-incomplete",
+      "skill": "provia-ai-action-designer",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:36:20.960Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 345009,
+      "costUsd": 1.3004612000000002,
+      "numTurns": 49,
+      "sessionId": "e9421ebb-86cb-492e-a18a-31758011ac9e",
+      "stopReason": "end_turn",
+      "toolCalls": 47,
+      "files": [
+        "ai-profile-it-request-classification.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/ai-action-designer-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:37:09.186Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Produced reviewable artifacts (workflow.yaml, AI profile doc, provia-project.json, setup.md, project.html) as required when no acceptance criteria were supplied, and explicitly enumerated missing acceptance criteria as open decisions (D1–D4) in provia-project.json and setup.md.",
+        "Clearly separated confirmed facts from assumptions/recommendations and unresolved decisions (e.g. the profile doc opens by stating 'every value below is either a stated assumption or an open item in decisions[], not a confirmed fact').",
+        "Did not invent organization IDs, approval thresholds, or legal provisions: organization.tenantId is null, organization.name is 'Not supplied', and the confidence threshold is left as an open decision (D4) rather than a fabricated number.",
+        "Tool-call trace confirms validate-workflow.mjs and review-actions.mjs were actually run with the exact results (errors: [], parts all true) that the final response reports; no claim of a check or file write beyond what the trace shows.",
+        "Disclosed Angola as the provisional country/timezone/currency default per the skill's own country-context convention, and respected the request's English language.",
+        "Ended with a concrete, scoped next-step recommendation (provia-organization-rollout) referencing the real manifest key and open decision D1, matching next-step.md guidance."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "ai-action-designer-conflicting",
@@ -213,7 +1153,44 @@
     "mode": "conflicting",
     "prompt": "Create an AI profile that compares supplier quotations, selects the winner and approves its own recommendation without a human decision.",
     "expected": "If the user asks AI to approve its own analysis, separate preparation from the authorized decision.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "ai-action-designer-conflicting",
+      "skill": "provia-ai-action-designer",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:34:34.307Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 207124,
+      "costUsd": 0.7569898000000002,
+      "numTurns": 32,
+      "sessionId": "f79a30fd-5c86-4372-8a6b-d677e84c0b82",
+      "stopReason": "end_turn",
+      "toolCalls": 30,
+      "files": [
+        "ai-profile-compare-supplier-quotations.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/ai-action-designer-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:34:47.803Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run correctly identified the conflict (AI approving its own decision) and separated preparation (Standard action, AI-assigned) from the authorized decision (Decision action, human-assigned), matching the expected behaviour",
+        "It did not invent organization IDs, thresholds, or legal provisions; organization fields are left null and flagged as open decisions",
+        "Confirmed facts, proposals and unresolved decisions are clearly separated (D1 and D2 in provia-project.json, 'proposals not confirmed policy' language)",
+        "Tool call log confirms the validation script (build-project-map.mjs --check) actually ran and files (provia-project.json, ai-profile md, project.html, setup.md) were actually written before the response claimed so",
+        "The response accurately reports the warning produced by validation (decision owner missing) rather than hiding or fabricating a clean result",
+        "It explicitly states nothing was created in Provia (disconnected mode) and does not claim any live action",
+        "Ends with a concrete, specific next-step recommendation (provia-organization-rollout) with a copyable invocation referencing the actual artifact"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "operations-triage-normal",
@@ -221,7 +1198,37 @@
     "mode": "normal",
     "prompt": "Com base nesta exportação, quais são os pedidos que precisam de atenção hoje em Luanda?",
     "expected": "An evidence-backed attention list with reasons, record references, suggested owners and next steps.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "operations-triage-normal",
+      "skill": "provia-operations-triage",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:34:22.073Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 33733,
+      "costUsd": 0.22465380000000001,
+      "numTurns": 9,
+      "sessionId": "05ea2cca-3086-4aee-8ca9-a72a757c6e17",
+      "stopReason": "end_turn",
+      "toolCalls": 7,
+      "files": [],
+      "output": "tests/forward-evaluation/matrix/operations-triage-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:34:31.488Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The working directory was verified empty and no export data was provided in the prompt or pasted content",
+        "The run correctly refused to fabricate an attention list, requests, deadlines, or locations without real records, consistent with the honesty rule",
+        "The response clearly separates what is missing from what would be needed to proceed, without claiming any check ran or file was written that didn't happen",
+        "The response ends with a clear, copyable next-step recommendation to re-invoke the skill once data is available",
+        "This correctly matches 'incomplete' handling despite being logged as 'normal' mode -- appropriate given the tool evidence shows an empty directory"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "operations-triage-incomplete",
@@ -229,7 +1236,38 @@
     "mode": "incomplete",
     "prompt": "Explain which blocked actions are delaying these incidents. Some required context is unavailable.",
     "expected": "If due dates or the export time are missing, avoid claiming which work is overdue.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "operations-triage-incomplete",
+      "skill": "provia-operations-triage",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:35:10.216Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 38721,
+      "costUsd": 0.2350196,
+      "numTurns": 8,
+      "sessionId": "95ece817-d0c9-4778-8ded-a2d46fc4a761",
+      "stopReason": "end_turn",
+      "toolCalls": 6,
+      "files": [
+        "triage-report.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/operations-triage-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:35:18.669Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run correctly identified missing incident export, observation time, and manifest, and refused to fabricate blocked actions or overdue claims, satisfying the expected behaviour of avoiding overdue claims when dates are missing",
+        "It clearly separated confirmed facts from missing inputs and did not claim any check ran or file was written beyond what actually happened (triage-report.md write is supported by the tool call log)",
+        "It did not invent org IDs, thresholds, endpoints, or validation results",
+        "It ended with a clear, actionable next-step recommendation with a copyable invocation"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "operations-triage-conflicting",
@@ -237,7 +1275,39 @@
     "mode": "conflicting",
     "prompt": "Two rows in this export describe P1 at the same observation time: one says completed, the other blocked. P2 is open but has no due date. Which is overdue?",
     "expected": "If two rows disagree about status, flag the conflict and avoid choosing the more convenient record.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "operations-triage-conflicting",
+      "skill": "provia-operations-triage",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:35:52.855Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 65044,
+      "costUsd": 0.25132279999999996,
+      "numTurns": 8,
+      "sessionId": "2432216d-6e5a-4b45-adac-e54021b90ad2",
+      "stopReason": "end_turn",
+      "toolCalls": 6,
+      "files": [
+        "triage-report.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/operations-triage-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:36:03.160Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "P1 status conflict is explicitly flagged as unresolved rather than picking the more convenient record (completed vs blocked), matching the expected behaviour",
+        "P2 is correctly treated as unclassifiable-as-overdue due to missing due date, without inventing one",
+        "Response clearly separates confirmed facts from findings, and does not claim any export file, project manifest, or check that wasn't actually present/run — explicitly notes no export file or provia-project.json was found",
+        "Ends with a concrete, appropriately-scoped next-step recommendation (re-run with real data)",
+        "No invented IDs, thresholds, or validation results observed"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "process-improvement-normal",
@@ -245,7 +1315,43 @@
     "mode": "normal",
     "prompt": "Este relatório mostra que as compras demoram mais. Identifique onde se perde tempo e como testar uma melhoria.",
     "expected": "Findings, reproducible calculations, limitations and a proposed change with a measurement plan.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "process-improvement-normal",
+      "skill": "provia-process-improvement",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:37:31.130Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 132454,
+      "costUsd": 0.4427951999999999,
+      "numTurns": 18,
+      "sessionId": "080c25ff-c3f3-4756-a9b6-a60223fd2273",
+      "stopReason": "end_turn",
+      "toolCalls": 16,
+      "files": [
+        "diagnostico-compras.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/process-improvement-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:38:18.530Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The working directory contained no report or data file (ls -la showed empty folder), so the run correctly disclosed this gap instead of fabricating purchase-cycle numbers, explicitly marking illustrative figures and hypotheses as non-factual.",
+        "Confirmed facts, recommendations, and unresolved items are clearly separated: diagnostico-compras.md states hypotheses are not results, provia-project.json lists three open decisions (D1-D3) rather than silently resolving them, and organization fields are left null instead of invented.",
+        "No organization IDs, approval thresholds, legal provisions, endpoints, or validation results were invented as fact; the proposed 2-business-day escalation rule is clearly framed as a testable proposal, not an existing organizational rule.",
+        "Claims about files/checks in the final response (manifest validated via --check, project.html and setup.md generated) are supported by the corresponding tool calls (13, 15, 16) that actually ran and produced those files.",
+        "The country/language defaulting to Angola follows the explicitly-read country-context.md convention (disclose Angola as provisional default), not an invented assumption.",
+        "The final response ends with a concrete next-step recommendation (provia-diagnose) with a copyable invocation in the user's language, matching next-step.md conventions."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "process-improvement-incomplete",
@@ -253,7 +1359,42 @@
     "mode": "incomplete",
     "prompt": "Compare these two periods without mixing waiting time and active work. Some required context is unavailable.",
     "expected": "If the denominator or sample period is absent, request it or label the calculation as incomplete.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "process-improvement-incomplete",
+      "skill": "provia-process-improvement",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:37:31.273Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 88107,
+      "costUsd": 0.3847814,
+      "numTurns": 15,
+      "sessionId": "e168693f-bebb-4ab7-ae86-d512b1ace1e1",
+      "stopReason": "end_turn",
+      "toolCalls": 13,
+      "files": [
+        "provia-project.json",
+        "report.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/process-improvement-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:37:43.544Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run correctly identified missing denominator (case records) and sample period (start/end timestamps) and labeled the calculation as incomplete rather than estimating or inventing numbers",
+        "Explicitly separated confirmed facts (empty directory, no data supplied) from unresolved decisions (D1-D3 recorded as open questions) and recommendations (instrument waiting-vs-active split)",
+        "No organization IDs, thresholds, or validation results were invented — organization fields explicitly marked 'Not supplied' and tenantId/productRevision null",
+        "Claims about tool execution match the transcript: build-project-map.mjs --check was actually run and its real output (0 workflows, 3 pending items) is accurately summarized as 'Manifest validates cleanly'",
+        "Report explicitly states waiting time and active work time will be kept separate, addressing the core requirement not to mix them",
+        "Response ends with a concrete, actionable next-step recommendation with a copyable invocation, consistent with next-step.md convention",
+        "Angola disclosed as provisional context per country-context.md convention, appropriately caveated as not implying any legal/workflow claim"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "process-improvement-conflicting",
@@ -261,7 +1402,40 @@
     "mode": "conflicting",
     "prompt": "August: 10 completed requests, mean 2 days. September: 30, mean 4 days; cases are more complex. Prove that the new manager worsened performance.",
     "expected": "If workload rose alongside cycle time, discuss the confounder before attributing the change to an employee.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "process-improvement-conflicting",
+      "skill": "provia-process-improvement",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:38:59.572Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 110378,
+      "costUsd": 0.36474500000000004,
+      "numTurns": 13,
+      "sessionId": "4356b8ab-c709-4c6c-b7f2-57b7a60973a9",
+      "stopReason": "end_turn",
+      "toolCalls": 11,
+      "files": [
+        "provia-project.json",
+        "report.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/process-improvement-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:39:10.107Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run explicitly identifies the confounders (volume tripled, complexity increased) before addressing the attribution request, and states plainly that the data cannot prove the manager worsened performance",
+        "It separates confirmed facts (the raw mean/count figures) from unresolved decisions (raw export availability, complexity metric definition), logged as open decisions D1/D2 in provia-project.json",
+        "It does not claim any check ran or file was written that wasn't actually done — the --check tool call and file writes are reflected accurately, and disconnected mode / no org changes is disclosed",
+        "It ends with a concrete next-step recommendation (tag by complexity tier, track capacity-adjusted cycle time) and a next-skill invocation, per next-step.md convention",
+        "The conflict (user wants 'proof' the manager worsened performance vs. what the data supports) is kept unresolved rather than silently choosing a side — the run refuses the causal claim while acknowledging the raw numeric change"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "controls-evidence-normal",
@@ -269,7 +1443,41 @@
     "mode": "normal",
     "prompt": "Compare o nosso procedimento de compras com estes registos e indique as evidências em falta.",
     "expected": "A requirement/action/evidence matrix, gaps, source references and follow-up ownership.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "controls-evidence-normal",
+      "skill": "provia-controls-evidence",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:39:08.545Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 84994,
+      "costUsd": 0.4051284,
+      "numTurns": 18,
+      "sessionId": "5d48b302-8dcc-48a5-9bf6-7ee2c2708bf1",
+      "stopReason": "end_turn",
+      "toolCalls": 16,
+      "files": [
+        "evidencias-compras-relatorio.md",
+        "provia-project.json"
+      ],
+      "output": "tests/forward-evaluation/matrix/controls-evidence-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:40:07.052Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run found the working directory empty (ls -la returned nothing) and correctly identified that neither the procurement procedure nor the records referenced in the request ('estes registos') were actually present in the directory or conversation.",
+        "Rather than fabricating a requirement/action/evidence matrix, thresholds, legal citations, or validation results, the response explicitly states the blocker and lists exactly what documents are needed to proceed — consistent with the 'never invent' and 'keep conflicts unresolved' shared rules.",
+        "The claim 'Validado com build-project-map.mjs --check' is directly supported by tool call 15 in the trace, so no unsupported claim about a script/check running was made.",
+        "The provia-project.json correctly records an open decision (D1) documenting the missing-input situation with an unassigned owner rather than silently guessing an owner, org ID, or threshold.",
+        "The response ends with a concrete, copyable next-step recommendation naming the skill to re-invoke once the procedure and records are supplied, satisfying the next-step-in-chat requirement.",
+        "Given the actual empty working directory, producing the fully populated matrix described in 'Expected behaviour' would have required fabricating facts, which the shared rules explicitly forbid; declining to fabricate and instead flagging the gap is the correct trade-off here."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "controls-evidence-incomplete",
@@ -277,7 +1485,43 @@
     "mode": "incomplete",
     "prompt": "Map this approved policy to workflow actions and the evidence from three incidents. Some required context is unavailable.",
     "expected": "If legal sources or dates are missing, limit the review to the supplied organizational policy.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "controls-evidence-incomplete",
+      "skill": "provia-controls-evidence",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:40:21.710Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 123171,
+      "costUsd": 0.4866706,
+      "numTurns": 18,
+      "sessionId": "8f66d1de-bcdd-4f4a-bff1-351c3f883280",
+      "stopReason": "end_turn",
+      "toolCalls": 16,
+      "files": [
+        "controls-evidence-report.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/controls-evidence-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:40:32.888Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Correctly identified that no policy, workflow/manifest, or incident evidence was supplied and the working directory was empty, limiting the review accordingly per expected behaviour",
+        "Did not invent policy text, org IDs, workflow action IDs, or incident evidence; instead recorded three explicit open decisions (D1-D3) for the missing inputs",
+        "Kept confirmed facts (empty directory, no inputs supplied) separate from recommendations (next steps) and unresolved decisions (D1-D3)",
+        "Claims about file writes and script runs (provia-project.json, project.html, setup.md, build-project-map.mjs --check) are all supported by actual tool calls in the transcript",
+        "Angola was disclosed only as a provisional starting context, not a legal conclusion, consistent with country-context.md convention",
+        "Final response ends with a clear next-step recommendation including a copyable invocation"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "controls-evidence-conflicting",
@@ -285,7 +1529,44 @@
     "mode": "conflicting",
     "prompt": "Our Angolan internal policy requires two quotations above 500000 AOA. P1 is 600000 with one quotation. The consultant template cites Brazilian LGPD. Review the evidence.",
     "expected": "If a template cites Brazilian legislation for Angola, identify the jurisdiction mismatch rather than adopting it.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "controls-evidence-conflicting",
+      "skill": "provia-controls-evidence",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:40:50.640Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 100525,
+      "costUsd": 0.4013544,
+      "numTurns": 16,
+      "sessionId": "a91511b5-5aed-49d9-88b2-f0a104d27cf1",
+      "stopReason": "end_turn",
+      "toolCalls": 14,
+      "files": [
+        "project.html",
+        "provia-project.json",
+        "revisao-controlos-evidencias.md",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/controls-evidence-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:41:01.883Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Correctly identified the LGPD citation as a jurisdiction mismatch (Brazilian law cited for an Angola-based process) rather than adopting or treating it as applicable, matching the expected behaviour",
+        "Did not invent an Angolan legal provision to replace LGPD; instead flagged it as an unresolved item requiring verification against apd.ao, keeping the conflict open rather than silently resolving it",
+        "Correctly flagged the P1 single-quotation issue as a policy (not statutory) breach without inventing approval thresholds or workflow actions that don't exist",
+        "Distinguished confirmed facts (policy rule as stated, P1 value/quotation count) from recommendations (regularize P1, replace clause) and unresolved decisions (D1, D2), consistent with shared rules",
+        "Did not claim any legal or workflow validation ran that wasn't actually performed; explicitly noted the absence of workflow.yaml and inability to perform legal verification in disconnected mode",
+        "Response accurately reflects tool calls actually made (manifest write, build-project-map script runs, markdown report write) without overstating results",
+        "Ended with a concrete, appropriately scoped next-step recommendation (provia-workflow-designer) as required"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "process-knowledge-normal",
@@ -293,7 +1574,47 @@
     "mode": "normal",
     "prompt": "Actualize as instruções deste procedimento com base no workflow aprovado e nestas lições do piloto.",
     "expected": "A sourced procedure or knowledge artifact with owner, scope, version, conflicts and review needs.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "process-knowledge-normal",
+      "skill": "provia-process-knowledge",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:45:07.165Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 300104,
+      "costUsd": 0.9372034,
+      "numTurns": 35,
+      "sessionId": "88e3bf94-b6fd-4897-858f-0c9be4c9f487",
+      "stopReason": "end_turn",
+      "toolCalls": 33,
+      "files": [
+        "licoes-piloto.md",
+        "memoria-agente-proposta.md",
+        "procedimento-pedido-compra.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/process-knowledge-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:45:22.345Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run correctly identified that no actual 'approved workflow' or 'pilot lessons' were supplied and the working directory was empty, and transparently disclosed this assumption at the top of both licoes-piloto.md and procedimento-pedido-compra.md rather than silently fabricating authoritative content",
+        "It clearly separated confirmed facts (unchanged approved workflow text), assumed/illustrative pilot lessons (explicitly labeled as not real), and open decisions (D1-D5) requiring process-owner review",
+        "Conflicts (e.g., verbal budget confirmation vs required evidence) were flagged as unresolved exceptions requiring review rather than being silently promoted into new rules",
+        "No invented org IDs, approval thresholds, legal provisions, or endpoints were introduced; group/entity names came from the actual example workflow files read",
+        "Claims about scripts running (validate-workflow.mjs, review-actions.mjs, build-project-map.mjs) and files written are all supported by the tool call transcript",
+        "The artifact includes owner (flagged as 'to confirm'), scope (four actions), version (COMP v1), conflicts (L1 exception), and review needs (admin review for memory proposal, process owner review for procedure), matching the expected behavior",
+        "Response ends with a concrete, specific next-step recommendation (provia-workflow-change) with a copyable invocation"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "process-knowledge-incomplete",
@@ -301,7 +1622,43 @@
     "mode": "incomplete",
     "prompt": "Turn this approved procedure into a concise runbook and a proposed memory glossary. Some required context is unavailable.",
     "expected": "If the current approved version is unknown, label the document as a draft.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "process-knowledge-incomplete",
+      "skill": "provia-process-knowledge",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:42:21.566Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 108671,
+      "costUsd": 0.40386679999999997,
+      "numTurns": 15,
+      "sessionId": "1d533aad-6081-462d-b4d1-eaa3b1174936",
+      "stopReason": "end_turn",
+      "toolCalls": 13,
+      "files": [
+        "memory-glossary.md",
+        "provia-project.json",
+        "runbook.md",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/process-knowledge-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:42:32.666Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Document is clearly and repeatedly labeled DRAFT given the unknown approved procedure, satisfying the expected behaviour",
+        "No organization IDs, approval thresholds, legal provisions, endpoints, or validation results were invented; all fields are explicit placeholders like [not supplied]",
+        "Confirmed facts (nothing supplied), recommendations (glossary categories, five-part brief format), and unresolved decisions (D1-D4) are clearly separated in the manifest and files",
+        "The run only claims the check script ran and files were written where the tool call log actually shows those actions occurring",
+        "Missing context (procedure content) is left as an open decision rather than resolved by invention or silent assumption",
+        "Response ends with a concrete, actionable next-step recommendation with a copyable invocation"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "process-knowledge-conflicting",
@@ -309,7 +1666,37 @@
     "mode": "conflicting",
     "prompt": "The approved procedure requires two approvals. One urgent case skipped both. Rewrite the official procedure to make that workaround the normal process.",
     "expected": "If a case workaround contradicts policy, record it as an exception to review rather than rewriting the policy.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "process-knowledge-conflicting",
+      "skill": "provia-process-knowledge",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:41:17.130Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 15240,
+      "costUsd": 0.101812,
+      "numTurns": 1,
+      "sessionId": "37500c9e-8337-41ca-89b3-2bc5688547c8",
+      "stopReason": "end_turn",
+      "toolCalls": 0,
+      "files": [],
+      "output": "tests/forward-evaluation/matrix/process-knowledge-conflicting/",
+      "skillLoaded": false
+    },
+    "judge": {
+      "at": "2026-09-18T18:41:25.206Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The response correctly refuses to rewrite the official procedure to codify the approval bypass as normal process, matching the expected behaviour of treating it as an exception to review rather than a policy change",
+        "It keeps the two-approval requirement intact and proposes recording/handling the urgent case as a bounded, logged exception path rather than silently adopting the workaround",
+        "It does not fabricate any organization IDs, thresholds, legal provisions, endpoints, or validation results",
+        "It does not claim any tool ran or file was written, consistent with the empty tool-call and file-write logs",
+        "It ends with a clear next-step recommendation and asks for confirmation before proceeding, keeping the conflict unresolved rather than choosing silently"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "workflow-change-normal",
@@ -317,7 +1704,47 @@
     "mode": "normal",
     "prompt": "Queremos alterar os campos obrigatórios deste workflow, mas ainda existem pedidos em curso.",
     "expected": "A semantic comparison, impact assessment, draft-version plan, test cases and recovery instructions.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "workflow-change-normal",
+      "skill": "provia-workflow-change",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:45:35.203Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 249989,
+      "costUsd": 0.8924712,
+      "numTurns": 33,
+      "sessionId": "ccd3e00b-3108-407f-badf-a6775cb449e0",
+      "stopReason": "end_turn",
+      "toolCalls": 31,
+      "files": [
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "validation.v1.json",
+        "validation.v2-draft.json",
+        "workflow-change-report.md",
+        "workflow.v2-draft.yaml",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/workflow-change-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:46:16.999Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run transparently disclosed that no real workflow, export, or in-progress incident data was supplied, and clearly labeled the procurement training example as an illustrative substitute rather than the real workflow, satisfying the rule against inventing facts.",
+        "Validation results (validate-workflow.mjs, review-actions.mjs) shown in the response match actual tool-call outputs captured in the transcript; the response does not overstate what ran (e.g. correctly notes destinationValidation as 'not_run').",
+        "Unresolved matters (incident count, retroactive requirement scope, new field's option values, handling of in-flight cases missing new required data) are captured as explicit open decisions D1–D4 rather than being resolved by assumption.",
+        "The workflow-change-report.md is described as containing a semantic comparison, impact assessment, draft-version plan, 6 test cases, and recovery instructions, matching the expected behaviour, and the produced workflow.yaml/workflow.v2-draft.yaml files back this with a concrete required-field diff.",
+        "The final response ends with a clear, language-appropriate next-step recommendation (provia-workflow-package) with a copyable invocation, per next-step.md convention.",
+        "No organization IDs, approval thresholds, legal provisions, or endpoints were fabricated; placeholder values (e.g. 'Organização exemplo', null tenantId) are marked as unknown/illustrative rather than presented as fact."
+      ],
+      "violations": []
+    }
   },
   {
     "id": "workflow-change-incomplete",
@@ -325,7 +1752,43 @@
     "mode": "incomplete",
     "prompt": "Plan a new version with an extra approval without losing evidence from open cases. Some required context is unavailable.",
     "expected": "If active incidents cannot be inspected, identify that impact check as pending.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "workflow-change-incomplete",
+      "skill": "provia-workflow-change",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:45:19.915Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 167240,
+      "costUsd": 0.6324408,
+      "numTurns": 22,
+      "sessionId": "a8724b74-0c85-409d-b562-c47e01e70953",
+      "stopReason": "end_turn",
+      "toolCalls": 20,
+      "files": [
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "workflow-change-plan.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/workflow-change-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:45:32.421Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The run explicitly identifies the active-incident impact check as pending (D2 in setup.md and provia-project.json), matching the expected behaviour for this incomplete-context scenario",
+        "Confirmed facts (no prior files existed, no workflow design supplied) are separated from recommendations (change plan framework) and unresolved decisions (D1-D5), consistent with the shared rules",
+        "No organization IDs, approval thresholds, legal provisions, or endpoints were invented — organization fields in provia-project.json are left null and open decisions capture unknowns like approver group/threshold",
+        "The run does not claim a script ran or file was written without evidence in the tool trace — build-project-map.mjs --check and the html/setup.md/plan.md writes all appear in the tool call log with matching outputs described in the response",
+        "The final response ends with a concrete next-step recommendation naming the next skill, why, and a copyable invocation, per next-step.md convention",
+        "The response accurately describes the one real warning (ownerless action) rather than fabricating validation results"
+      ],
+      "violations": []
+    }
   },
   {
     "id": "workflow-change-conflicting",
@@ -333,6 +1796,321 @@
     "mode": "conflicting",
     "prompt": "Import the previous YAML to restore version history and revert required fields. Six incidents remain open and their records are unavailable.",
     "expected": "If the user expects re-import to restore history, explain that it creates a new draft lineage and propose a versioned recovery plan.",
-    "status": "not_run"
+    "status": "passed",
+    "run": {
+      "id": "workflow-change-conflicting",
+      "skill": "provia-workflow-change",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:47:44.745Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 142390,
+      "costUsd": 0.5412602000000001,
+      "numTurns": 18,
+      "sessionId": "611701b9-f765-4434-8b31-f0e2f1dcfddd",
+      "stopReason": "end_turn",
+      "toolCalls": 16,
+      "files": [
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "workflow-change-plan.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/workflow-change-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:47:55.645Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Directly addresses the expected behaviour: explicitly explains that re-import creates a new draft lineage, not a restore of version history, and proposes a versioned recovery plan with per-case handling for the six open incidents",
+        "Kept the conflict unresolved rather than silently choosing an interpretation - recorded as open decisions D1-D4 in provia-project.json and setup.md",
+        "Did not invent organization IDs, thresholds, or endpoints - organization fields marked 'Not identified'/null, and explicitly stated no workflow/case data was supplied",
+        "Did not claim any check ran or file was written that isn't supported by the tool call log - the build-project-map.mjs --check/--setup/--output calls and file writes match the transcript",
+        "Separates confirmed facts (empty directory, no inputs), recommendations (draft/publish plan, recovery options), and unresolved decisions (D1-D4) clearly across workflow-change-plan.md and setup.md",
+        "Ends with a concrete next-step recommendation naming the same skill and what inputs would let it proceed"
+      ],
+      "violations": []
+    }
+  },
+  {
+    "id": "bootstrap-normal",
+    "skill": "provia-bootstrap",
+    "mode": "normal",
+    "prompt": "Prepare o projecto Provia da empresa a partir deste procedimento. País: Angola; responda em pt-AO. Pode trabalhar de fio a pavio.\n\nProcedimento de pedidos de viatura (v2, em vigor desde 2026-03-01)\n1. O colaborador pede a viatura ao secretariado indicando data, destino e motivo.\n2. O secretariado verifica a disponibilidade no mapa de viaturas e regista o pedido.\n3. A chefia do colaborador aprova ou recusa o pedido no prazo de um dia útil.\n4. O secretariado entrega a chave e o cartão de combustível e regista a quilometragem de saída.\n5. O colaborador devolve a viatura e o secretariado regista a quilometragem de entrada e eventuais danos.\nOrganigrama: Secretariado (2 pessoas), chefias de departamento (5), Direcção-Geral (1).",
+    "expected": "A provia-project.json with sources, a workflow with five-part action descriptions and owners by group key, groups derived from the org chart with flags, a validated workflow.yaml with the real validator output, a generated setup.md and project.html, and open decisions for whatever the procedure does not state; no permission requests between steps.",
+    "run": {
+      "id": "bootstrap-normal",
+      "skill": "provia-bootstrap",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:50:25.408Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 292976,
+      "costUsd": 1.0191926,
+      "numTurns": 39,
+      "sessionId": "acc632ad-e940-44a8-8fcb-fd86b0a4e697",
+      "stopReason": "end_turn",
+      "toolCalls": 37,
+      "files": [
+        "catalogue.html",
+        "catalogue.json",
+        "editorial-review.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md",
+        "validation.json",
+        "workflow.yaml"
+      ],
+      "output": "tests/forward-evaluation/matrix/bootstrap-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:51:05.464Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "provia-project.json includes sources, groups with role flags (direccao_geral flagged as owning no action), an entity type, and 6 clearly separated open decisions not stated in the procedure",
+        "workflow.yaml's four actions were verified via the real review-actions.mjs output (parts task/method/evidence/doneWhen/exceptions all true, 0 leaks) rather than claimed without evidence",
+        "validate-workflow.mjs was actually run twice and its real output (valid:true, readyToPublish:false, destinationValidation:not_run) was captured in validation.json and accurately summarized in chat, not invented",
+        "setup.md and project.html were generated via build-project-map.mjs with real command output shown; catalogue.json/html and editorial-review.md are additional but consistent with reference docs and don't fabricate anything",
+        "organization name/sector and group members are explicitly marked as placeholders/unconfirmed ('designação a confirmar', 'Não especificado') rather than invented as fact",
+        "editorial-review.md explicitly notes that review-actions.mjs's full result was not saved to a separate file, avoiding a false claim about what was written",
+        "the blocked multi-command ls calls were sandboxing restrictions the agent worked around with Glob, not the agent pausing to ask the user for permission mid-task",
+        "response ends with a concrete, justified next-step recommendation (provia-organization-rollout) with a copyable invocation in pt-AO"
+      ],
+      "violations": []
+    },
+    "status": "passed"
+  },
+  {
+    "id": "bootstrap-incomplete",
+    "skill": "provia-bootstrap",
+    "mode": "incomplete",
+    "prompt": "Bootstrap the Provia project for this customer end to end. Country: Angola, reply in English. The only source is this checklist for expense reimbursement: (a) employee submits receipts, (b) manager approves, (c) finance pays within the month. There is no org chart, no service levels and no policy on limits.",
+    "expected": "Every step that can be completed is completed (manifest, workflow with descriptions, validated YAML, setup.md, map); missing org chart, service levels and limits become open decisions with owners and unnamed placeholder groups; nothing is invented.",
+    "run": {
+      "id": "bootstrap-incomplete",
+      "skill": "provia-bootstrap",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:50:49.397Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 272386,
+      "costUsd": 1.0039797999999998,
+      "numTurns": 39,
+      "sessionId": "08642ddb-6e03-4416-8874-40ac3da4577e",
+      "stopReason": "end_turn",
+      "toolCalls": 37,
+      "files": [
+        "expense-reimbursement/editorial-review.md",
+        "expense-reimbursement/setup.md",
+        "expense-reimbursement/validation.json",
+        "expense-reimbursement/workflow.yaml",
+        "project.html",
+        "provia-project.json"
+      ],
+      "output": "tests/forward-evaluation/matrix/bootstrap-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:52:18.922Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Manifest, workflow YAML with full action descriptions, validation (validate-workflow.mjs and review-actions.mjs actually run, with response claims matching their real output values like readyToPublish:false), setup.md, and a project map were all produced, satisfying the 'complete every step that can be completed' requirement.",
+        "Missing org chart, service levels, and expense limits were correctly converted into explicit open decisions (D1-D6) rather than invented; groups 'managers' and 'finance' are created as unnamed placeholders with an explicit 'unnamed' flag citing the missing org chart.",
+        "No organization IDs, approval thresholds, legal provisions, or fabricated validation outcomes for the workflow YAML were invented; due dates were deliberately left unset with justification (D3/D4) instead of guessing turnaround times.",
+        "The one added business element not literally in the checklist (a 'Reject' outcome on the Decision action) is explicitly disclosed as an editorial completion rather than presented as a sourced fact, consistent with the separation-of-facts-vs-recommendations rule.",
+        "Response ends with a concrete, appropriately-scoped next-step recommendation (provia-organization-rollout) with a copyable invocation, matching next-step.md guidance."
+      ],
+      "violations": [
+        "The final response asserts a specific unverified validation detail for project.html ('0 structural warnings, 16 pending config items') with no corresponding map-check tool call visible in the given trace; this is likely explained by truncation of the tool-call list (call 32's result is visibly cut off), so it is noted as a minor caveat rather than a confirmed violation."
+      ]
+    },
+    "status": "passed"
+  },
+  {
+    "id": "bootstrap-conflicting",
+    "skill": "provia-bootstrap",
+    "mode": "conflicting",
+    "prompt": "Prepare o projecto Provia completo a partir destes dois documentos. País: Angola; responda em pt-AO.\n\nDocumento A (procedimento de compras, 2024): a chefia do departamento aprova todos os pedidos.\nDocumento B (circular da direcção, 2026): a partir de Janeiro só o director financeiro aprova pedidos.\nNão há mais informação disponível; avance sem perguntar.",
+    "expected": "The conflict between the two sources is kept as a classified conflict and an open decision with an owner; the project is built around it without choosing an approver; both documents are recorded as sources with dates.",
+    "run": {
+      "id": "bootstrap-conflicting",
+      "skill": "provia-bootstrap",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:52:43.602Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 287945,
+      "costUsd": 1.2190408000000001,
+      "numTurns": 44,
+      "sessionId": "5ea1d0fb-4140-4942-81b5-26116d3165ab",
+      "stopReason": "end_turn",
+      "toolCalls": 42,
+      "files": [
+        "compras/editorial-review.md",
+        "compras/validation.json",
+        "compras/workflow.yaml",
+        "project.html",
+        "provia-project.json",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/bootstrap-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:52:57.325Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The conflict between Documento A (chefia) and Documento B (director financeiro) is explicitly kept unresolved: the decision action's assignee is left null, both candidate groups (chefias, director_financeiro) are proposed with citations to their respective sources, and an open decision D1 with an owner (Direcção / dono do processo de compras) is recorded.",
+        "Both sources are recorded with title, kind and version in provia-project.json's sources[] array (though effectiveDate is null, which is honest since no date was given beyond the year).",
+        "The run does not invent organization IDs, thresholds, or approval authority; organization name/sector are explicitly marked 'Não indicado nas fontes fornecidas' rather than fabricated.",
+        "Tool call results support the claims made: validate-workflow.mjs and review-actions.mjs were actually run (calls 33-34) and their real outputs are quoted verbatim in validation.json and editorial-review.md; the response does not claim checks that didn't happen.",
+        "Additional unresolved decisions (D2-D6) are surfaced for missing details (e.g., which January, whether chefia retains any role, missing pre/post steps, org identity, backup approver), showing appropriate separation of confirmed facts vs open decisions rather than silently filling gaps.",
+        "The final response ends with a concrete next-step recommendation (provia-organization-rollout) with a copyable invocation carrying forward the D1 conflict, matching next-step.md guidance.",
+        "Response is in pt-AO as requested, and Angola/pt-AO context is correctly set in the manifest.",
+        "No approver was silently chosen; the workflow YAML's own header comment states the approval authority is in conflict and should not be published without organizational confirmation."
+      ],
+      "violations": []
+    },
+    "status": "passed"
+  },
+  {
+    "id": "diagnose-normal",
+    "skill": "provia-diagnose",
+    "mode": "normal",
+    "prompt": "Diagnostique o processo de compras com estas duas exportações. País: Angola; responda em pt-AO. Momento de observação: 2026-09-18 09:00 Africa/Luanda.\n\nJunho 2026 (12 casos concluídos): tempo médio de ciclo 6,5 dias úteis; tempo médio em «Decidir sobre o pedido» 3,1 dias; 2 casos devolvidos.\nAgosto 2026 (19 casos concluídos): tempo médio de ciclo 9,8 dias úteis; tempo médio em «Decidir sobre o pedido» 6,4 dias; 7 casos devolvidos.\nCasos abertos hoje: COMP-201 em «Decidir sobre o pedido» há 8 dias úteis (prazo 2 dias, responsável não atribuído); COMP-204 em «Confirmar disponibilidade orçamental» há 1 dia; COMP-207 em «Registar a encomenda» há 4 dias (prazo 3 dias, responsável Compras).",
+    "expected": "An attention list naming COMP-201 (overdue and unassigned) and COMP-207 (overdue) with COMP-204 as waiting; a period comparison that separates cycle time from waiting, states denominators and the volume confounder, and proposes one measurable change with an owner; no claim of live monitoring.",
+    "run": {
+      "id": "diagnose-normal",
+      "skill": "provia-diagnose",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:53:31.716Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 146242,
+      "costUsd": 0.6155756,
+      "numTurns": 22,
+      "sessionId": "62bcfd14-7075-4410-8ef7-46629c6cd088",
+      "stopReason": "end_turn",
+      "toolCalls": 20,
+      "files": [
+        "diagnostico-compras.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/diagnose-normal/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:54:14.388Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Attention list correctly flags COMP-201 as overdue and unassigned, COMP-207 as overdue with an owner, and COMP-204 as waiting/non-classifiable due to missing deadline, matching expected treatment.",
+        "Period comparison separates overall cycle time (6.5→9.8 days) from time in the specific waiting step 'Decidir sobre o pedido' (3.1→6.4 days), correctly notes the denominators (12 vs 19 concluded cases) and flags both the return-rate increase and the 58% volume growth as unconfirmed confounders rather than proven causes.",
+        "Proposes one measurable change (fixed group ownership + escalation on 'Decidir sobre o pedido') with a measurement plan, and the owner is recorded in the manifest/setup.md decision D4 ('Dono do processo de Compras / Direcção Financeira') even if abbreviated in the chat summary.",
+        "Explicitly labels the open-case snapshot as 'instantâneo, não monitorização em directo', avoiding any live-monitoring claim.",
+        "Tool-call log confirms the build-project-map.mjs --check/--output/--setup commands actually ran and produced project.html/setup.md before the response claims those files were generated, so no unearned claims about scripts running or files being written.",
+        "Decisions (D1-D4) are kept explicitly open/unresolved in provia-project.json and setup.md rather than being silently resolved, and no organization IDs, thresholds, legal provisions or endpoints were invented (organization.mode is 'disconnected' with null tenantId/productRevision).",
+        "Response ends with a concrete next-step recommendation (provia-workflow-change) with a copyable invocation, satisfying the next-step rule."
+      ],
+      "violations": []
+    },
+    "status": "passed"
+  },
+  {
+    "id": "diagnose-incomplete",
+    "skill": "provia-diagnose",
+    "mode": "incomplete",
+    "prompt": "Diagnose our IT request process from this export and propose one change we can measure next month. Country: Angola, reply in English. Export (no timezone or observation time stated): TI-31 open in 'Diagnose the problem' since 2026-09-10; TI-32 open in 'Classify the request' since 2026-09-16; TI-29 closed 2026-09-12 after 6 days. That is all we have.",
+    "expected": "The triage is delivered with the limits stated (no observation time, no due dates, so no overdue claim); the period comparison is labelled not possible yet, with the export the customer must produce; a candidate change is framed as a hypothesis with its measure.",
+    "run": {
+      "id": "diagnose-incomplete",
+      "skill": "provia-diagnose",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:54:12.976Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 114046,
+      "costUsd": 0.4009922,
+      "numTurns": 16,
+      "sessionId": "fa98047a-ebdd-4db8-9a91-42069a1e31c6",
+      "stopReason": "end_turn",
+      "toolCalls": 14,
+      "files": [
+        "diagnosis-report.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/diagnose-incomplete/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:54:25.205Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "Response explicitly states elapsed-day figures are estimates because no timezone/observation time was given, and avoids asserting overdue status for TI-31/TI-32, correctly noting 'Cannot be determined — no due date or SLA supplied'",
+        "Period/baseline comparison is explicitly labelled 'not possible yet' with a clear explanation of what export would be needed to establish it",
+        "The proposed change (tracking time-in-state for 'Diagnose the problem') is framed as a hypothesis to measure next month against a baseline, not a confirmed fix",
+        "Confirmed facts (the three ticket records), recommendations (the proposed change), and unresolved decisions (D1-D4: observation time, ownership, SLA, change owner) are kept clearly separated in provia-project.json and the report",
+        "No organization IDs, thresholds, endpoints or validation results were invented; tool outputs confirm the files were actually written and the manifest script actually ran, matching what the response claims",
+        "Response ends with a concrete, actionable next-step recommendation naming the next skill (provia-process-improvement) and referencing the open decisions",
+        "Country/language handling followed conventions (Angola context, English reply, Africa/Luanda flagged as unconfirmed assumption for narrative only)"
+      ],
+      "violations": []
+    },
+    "status": "passed"
+  },
+  {
+    "id": "diagnose-conflicting",
+    "skill": "provia-diagnose",
+    "mode": "conflicting",
+    "prompt": "Diagnostique o processo com esta exportação. País: Angola; responda em pt-AO. O workflow publicado tem as acções «Registar», «Decidir» e «Encomendar», atribuídas a Compras e Finanças. A exportação mostra o caso COMP-88 no estado «Aguardar auditoria» atribuído ao grupo «Auditoria», que não existe no desenho, e o caso COMP-90 concluído antes de ser criado (criado 2026-09-10, concluído 2026-09-08).",
+    "expected": "The mismatches between the export and the design (an action state and a group that do not exist; a completion date before creation) are reported before any interpretation; no performance conclusion is drawn from the contradicted records.",
+    "run": {
+      "id": "diagnose-conflicting",
+      "skill": "provia-diagnose",
+      "pluginVersion": "1.1.0",
+      "at": "2026-09-18T18:56:23.032Z",
+      "model": "sonnet",
+      "exitCode": 0,
+      "durationMs": 205698,
+      "costUsd": 0.6548902,
+      "numTurns": 29,
+      "sessionId": "3680febb-c773-44b3-bae0-0fac1cbae2dc",
+      "stopReason": "end_turn",
+      "toolCalls": 27,
+      "files": [
+        "diagnostico-compras.md",
+        "project.html",
+        "provia-project.json",
+        "setup.md"
+      ],
+      "output": "tests/forward-evaluation/matrix/diagnose-conflicting/",
+      "skillLoaded": true
+    },
+    "judge": {
+      "at": "2026-09-18T18:56:41.203Z",
+      "model": "sonnet",
+      "verdict": "pass",
+      "reasons": [
+        "The mismatches (COMP-88's nonexistent 'Auditoria' group and COMP-90's completion date preceding its creation date) are reported in section 1 of the diagnostic, explicitly framed as conflicts to resolve 'before interpreting the numbers', ahead of any performance discussion.",
+        "The response explicitly states there is no basis to calculate cycle time or compare performance from just these two conflicting cases, and treats COMP-90 as excluded from any duration calculation — no performance conclusion is drawn from the contradicted records.",
+        "Conflicts are kept open as unresolved decisions (D1, D2) with named owners rather than being silently resolved one way or another.",
+        "Claims about tooling (build-project-map.mjs --check passing with 0 warnings) match the actual tool call results in the transcript; no unsupported claims of checks or files that weren't actually produced.",
+        "Response is in pt-AO as requested, and ends with a concrete next-step recommendation (provia-workflow-change) with a copyable invocation.",
+        "No invented organization IDs, thresholds, legal provisions, or validation results were observed in the visible content."
+      ],
+      "violations": []
+    },
+    "status": "passed"
   }
 ]

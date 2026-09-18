@@ -1,0 +1,23 @@
+{
+  "id": "form-designer-conflicting",
+  "skill": "provia-form-designer",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:21:08.904Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 438752,
+  "costUsd": 1.3323213999999997,
+  "numTurns": 50,
+  "sessionId": "22441ed1-e70d-4873-baa3-bbd39874b609",
+  "stopReason": "end_turn",
+  "toolCalls": 48,
+  "files": [
+    "forms.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md",
+    "workflow.yaml"
+  ],
+  "output": "tests/forward-evaluation/matrix/form-designer-conflicting/",
+  "skillLoaded": true
+}

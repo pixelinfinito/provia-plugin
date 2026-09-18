@@ -1,0 +1,71 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "process-knowledge-draft",
+    "title": "Process knowledge draft (source procedure not supplied)",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/process-knowledge",
+    "contractRevision": null,
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "approved-procedure",
+      "title": "Approved procedure (content not supplied to this task)",
+      "kind": "sop",
+      "version": "unknown",
+      "effectiveDate": null,
+      "sections": []
+    }
+  ],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "What is the approved procedure or workflow (steps, actions, owners, versions) this runbook and memory glossary should be built from? No procedure text, workflow.yaml or export was supplied for this task.",
+      "owner": "Process owner (unspecified)",
+      "status": "open",
+      "raisedBy": "provia-process-knowledge",
+      "sourceRefs": []
+    },
+    {
+      "id": "D2",
+      "question": "Which policy documents, if any, govern this procedure? Needed to reconcile workflow vs. policy conflicts explicitly rather than leaving the reconciliation implicit.",
+      "owner": "Process owner (unspecified)",
+      "status": "open",
+      "raisedBy": "provia-process-knowledge",
+      "sourceRefs": []
+    },
+    {
+      "id": "D3",
+      "question": "Who is the update owner responsible for keeping the runbook and memory glossary current after each approved workflow change?",
+      "owner": "Process owner (unspecified)",
+      "status": "open",
+      "raisedBy": "provia-process-knowledge",
+      "sourceRefs": []
+    },
+    {
+      "id": "D4",
+      "question": "Which stable facts from this procedure should become proposed Agent Memory (organization-wide, administrator-reviewed), versus temporary case facts that stay in the incident? Cannot be decided without the actual procedure content.",
+      "owner": "Provia administrator",
+      "status": "open",
+      "raisedBy": "provia-process-knowledge",
+      "sourceRefs": []
+    }
+  ],
+  "receipts": []
+}

@@ -1,29 +1,39 @@
 ---
 name: provia-workflow-review
-description: Review a Provia workflow for ownership, sequencing, evidence, exceptions and publication readiness.
+description: "Review a Provia workflow for ownership, sequencing, evidence, exceptions, executable action briefs and publication readiness. Use when the user asks for \"review this workflow before we publish\", \"find steps without an owner\", \"can these actions run in parallel\", \"check the action instructions\", or says «revê este workflow antes de publicar», «há passos sem responsável», «faltam caminhos de rejeição», «as instruções das acções estão completas»."
 ---
+
+<!-- Generated from catalog.json by scripts/build-skills.mjs. Edit the catalogue, not this file. -->
 
 # Workflow design review
 
-Read [country context](../../references/country-context.md) and [Provia capabilities](../../references/provia-capabilities.md) before making recommendations. Read the [Angola reference](../../references/countries/angola.md) when Angola applies. Country and response language are separate; respect an explicit user choice.
+Read [shared conventions](../../references/skill-conventions.md) first. Country and language, disconnected or connected mode, the project manifest, the honesty rules, action wording and the final recommendation apply to this skill without being repeated here.
 
 ## Inputs
 
-Workflow design or export, intended business outcome, procedure and known dependencies. Use supplied documents and exports. This plugin has no Provia connection. Ask only for information that materially affects the task; identify assumptions and continue independent work.
+Workflow design or export, the project manifest, intended business outcome, procedure and known dependencies.
+
+## References
+
+- [action writing](../../references/action-writing.md): for names, descriptions and the review gate.
+- [project manifest](../../references/project-manifest.md): to check owners, forms and sources against the design.
 
 ## Procedure
 
-Read [action writing](../../references/action-writing.md) and review every action name for its initial verb, clarity, concision and agreement with the action type, source and description. Include Form Fill and AI-assigned actions. Record editorial findings separately from contract errors; preserve behavior during wording-only corrections.
-
-1. Trace each required outcome to an action and its completion evidence. Check that decisions include rejection/rework where the procedure requires them.
-2. Check predecessor dependencies, parallel actions, missing owners, unavailable groups, due bases and cancellation behavior.
-3. Review data collection, form mappings and secret dependencies. Use workflow-package for executable YAML checks; do not replace those checks with visual inspection.
-4. Distinguish a product contract error, a business-policy gap and an optional improvement. Do not claim organizational or legal compliance from a structurally valid file.
-5. Return normal, rejected, incomplete and failed-integration scenarios with expected visible results. Leave destination validation and publication clearly pending.
+1. Trace each required outcome to an action and its completion evidence. Check that decisions include rejection/rework where the procedure requires them, and that every classified source step is either an action or folded into one.
+2. Run `node scripts/review-actions.mjs workflow.yaml` when a shell is available and report, per action, the missing description parts, leaked implementer notes, over-long descriptions and unset `due`. Then review every name and description semantically: verb, object, agreement with type, source and evidence. Record editorial findings separately from contract errors.
+3. Check predecessor dependencies, parallel actions, owners by group key (every action has one; every group owns something; segregation flags raised), unavailable groups, due bases and cancellation behaviour.
+4. Review data collection, form mappings (every Form Fill action has a `formRef`), entity references and secret dependencies. Use `provia-workflow-package` for executable YAML checks; do not replace those checks with visual inspection.
+5. Distinguish a product contract error, a business-policy gap and an optional improvement. Record policy gaps as `decisions[]` with an owner. Do not claim organizational or legal compliance from a structurally valid file.
+6. Return normal, rejected, incomplete and failed-integration scenarios with expected visible results. Leave destination validation and publication clearly pending.
 
 ## Deliverable
 
-A prioritized findings list with evidence, proposed corrections and representative test scenarios. Cite supplied evidence and product references. Separate confirmed facts, recommendations and unresolved decisions. Do not invent completed checks or platform actions.
+A prioritized findings list with evidence, the per-action review gate result, proposed corrections, new `decisions[]` and representative test scenarios. Cite supplied evidence and product references. Separate confirmed facts, recommendations and unresolved decisions. Do not invent completed checks or platform actions.
+
+## Project manifest
+
+Reads: everything. Appends: `decisions[]` for policy gaps; never changes the design silently. See [project manifest](../../references/project-manifest.md).
 
 ## Examples
 
@@ -32,10 +42,10 @@ A prioritized findings list with evidence, proposed corrections and representati
 
 ## Incomplete or conflicting input
 
-If the SOP is absent, review structural issues and identify which policy questions cannot be adjudicated.
+If the SOP is absent, review structural issues and the action briefs, and identify which policy questions cannot be adjudicated.
 
 If the YAML validates but the process bypasses approval, report the business defect separately from file validity.
 
 ## Final chat recommendation
 
-Read [next-step guidance](../../references/next-step.md). End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task’s artifacts forward. Make it a recommendation, not an automatic invocation. If no further skill is needed, recommend the concrete next action instead.
+End the final chat response with the most useful next skill, a brief reason and a copyable request carrying this task's artefacts and the manifest forward, following [next-step guidance](../../references/next-step.md). It is a recommendation, not an automatic invocation.

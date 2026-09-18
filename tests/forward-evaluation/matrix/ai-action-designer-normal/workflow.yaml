@@ -1,0 +1,156 @@
+# provia-skills 1.1.0
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: Resumo e escolha de fornecedor
+  prefix: ESCF
+  description: >-
+    A IA prepara um resumo comparativo das propostas de fornecedores
+    anexadas; a escolha do fornecedor continua a ser feita pela equipa de
+    compras, numa acção de decisão separada.
+  agentMemoryEnabled: false
+
+triggers:
+  - type: manual
+    label: Iniciar pedido de compra
+    enabled: true
+    config: {}
+
+fields:
+  - name: documentos_propostas
+    label: Propostas recebidas
+    type: file
+    required: true
+    group: Propostas
+    width: full
+  - name: resumo_propostas
+    label: Resumo comparativo das propostas
+    type: rich_text
+    required: false
+    group: Propostas
+    width: full
+  - name: fornecedor_escolhido
+    label: Fornecedor escolhido
+    type: text
+    required: false
+    group: Decisão
+    width: half
+  - name: justificativa_escolha
+    label: Justificação da escolha
+    type: rich_text
+    required: false
+    group: Decisão
+    width: full
+
+actions:
+  - id: resumir-propostas
+    type: standard
+    name: Resumir as propostas dos fornecedores
+    description: >-
+      Tarefa: Rever o resumo comparativo que a IA preparou a partir das
+      propostas dos fornecedores anexadas, antes de o processo avançar
+      para a escolha do fornecedor.
+
+      Como: 1. Abrir os documentos anexos em `documentos_propostas` e o
+      resumo gerado em `resumo_propostas`. 2. Confirmar que o resumo
+      cobre todos os fornecedores anexados, com preço, prazo de entrega
+      e condições principais de cada proposta. 3. Verificar que nenhum
+      valor foi inventado ou alterado face aos documentos originais.
+
+      Evidência: Se o resumo estiver correcto e completo, concluir a
+      acção sem alterações; se faltar informação ou houver um erro,
+      corrigir directamente o campo `resumo_propostas` ou devolver com
+      um comentário a explicar o que falta.
+
+      Concluído quando: O campo `resumo_propostas` reflecte com
+      exactidão as propostas anexadas e está pronto para apoiar a
+      decisão da equipa.
+
+      Excepções: Se algum documento não puder ser lido pela IA (por
+      exemplo, ficheiro ilegível ou fora do formato aceite), não
+      concluir: anexar o documento em falta ou substituir por uma
+      versão legível e repetir a preparação do resumo.
+    executionMode: sequential
+    required: true
+    priority: normal
+    aiWorker:
+      instructions: >-
+        Preparar um resumo comparativo das propostas de fornecedores
+        anexadas a este pedido, para apoiar - sem substituir - a decisão
+        da equipa de compras.
+
+        Regras: 1. Ler apenas os documentos em `documentos_propostas`.
+        Não aceder a outros campos, casos ou histórico fora desta
+        acção. 2. Para cada proposta identificada, extrair: nome do
+        fornecedor, preço/valor total, prazo de entrega, condições de
+        pagamento e quaisquer exclusões ou condições relevantes
+        indicadas no documento. 3. Escrever o resultado em
+        `resumo_propostas` como uma tabela comparativa (uma linha por
+        fornecedor: Fornecedor | Preço | Prazo de entrega | Condições
+        de pagamento | Outras condições), seguida de uma lista curta
+        das diferenças mais relevantes entre as propostas. 4. Não
+        recomendar, ordenar por preferência, nem indicar qual
+        fornecedor escolher; o resumo apresenta factos das propostas,
+        a escolha cabe à equipa. 5. Se uma proposta não indicar um dos
+        campos acima, escrever "Não indicado" nessa célula — nunca
+        inventar um valor. 6. Se dois documentos parecerem ser a mesma
+        proposta em versões diferentes, ou um documento não for uma
+        proposta de fornecedor, sinalizar isso no topo do resumo em
+        vez de o incluir na tabela como oferta distinta. 7. Se nenhum
+        documento for legível ou não houver documentos em
+        `documentos_propostas`, não preencher `resumo_propostas`;
+        devolver a acção sem alterações e sinalizar a falta de
+        documentos legíveis.
+      readableFields:
+        - documentos_propostas
+      writableFields:
+        - resumo_propostas
+      requiredArtifacts:
+        - filenamePattern: "*.pdf"
+          mime: application/pdf
+          maxBytes: 20971520
+          description: Proposta do fornecedor em PDF
+      mode: safe
+      reviewRequired: true
+      confidenceThreshold: 0.6
+
+  - id: escolher-fornecedor
+    type: decision
+    name: Escolher o fornecedor
+    description: >-
+      Tarefa: Escolher o fornecedor a contratar, com base no resumo
+      comparativo preparado e nas propostas originais.
+
+      Como: 1. Ler `resumo_propostas` e, sempre que necessário, os
+      documentos originais em `documentos_propostas`. 2. Comparar
+      preço, prazo de entrega, condições e quaisquer critérios
+      definidos pela equipa. 3. Registar o fornecedor escolhido em
+      `fornecedor_escolhido` e a razão da escolha em
+      `justificativa_escolha`. 4. Escolher «Aprovar fornecedor»,
+      «Pedir novas propostas» ou «Cancelar processo».
+
+      Evidência: `fornecedor_escolhido` e `justificativa_escolha`
+      preenchidos antes de aprovar; comentário obrigatório em «Pedir
+      novas propostas» e «Cancelar processo».
+
+      Concluído quando: A escolha fica registada com o fornecedor, a
+      justificação e a decisão correspondente.
+
+      Excepções: Se o resumo da IA parecer incompleto ou incorrecto
+      face às propostas originais, não decidir com base nele: devolver
+      para nova preparação do resumo antes de escolher.
+    executionMode: sequential
+    required: true
+    priority: normal
+    config:
+      branches:
+        - label: Aprovar fornecedor
+          outcome: continue
+          requiresComment: false
+        - label: Pedir novas propostas
+          outcome: return_to_action
+          target: resumir-propostas
+          requiresComment: true
+        - label: Cancelar processo
+          outcome: cancel_incident
+          requiresComment: true

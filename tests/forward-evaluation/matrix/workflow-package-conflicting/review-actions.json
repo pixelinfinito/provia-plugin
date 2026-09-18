@@ -1,0 +1,58 @@
+{
+  "valid": true,
+  "workflow": "Pedido de Compra",
+  "reviewedActions": 3,
+  "summary": {
+    "applicable": 3,
+    "complete": 3,
+    "incomplete": 0,
+    "automatedWithoutDescription": 0,
+    "leaks": 0,
+    "dueMissing": 3
+  },
+  "actions": [
+    {
+      "id": "submeter_pedido",
+      "name": "Submeter o pedido de compra",
+      "type": "form_fill",
+      "applicable": true,
+      "complete": true,
+      "parts": { "task": true, "method": true, "evidence": true, "doneWhen": true, "exceptions": true },
+      "missing": [],
+      "leaks": [],
+      "length": 581,
+      "tooLong": false,
+      "empty": false,
+      "due": "missing"
+    },
+    {
+      "id": "aprovar_gestor",
+      "name": "Decidir sobre o pedido de compra",
+      "type": "decision",
+      "applicable": true,
+      "complete": true,
+      "parts": { "task": true, "method": true, "evidence": true, "doneWhen": true, "exceptions": true },
+      "missing": [],
+      "leaks": [],
+      "length": 596,
+      "tooLong": false,
+      "empty": false,
+      "due": "missing"
+    },
+    {
+      "id": "confirmar_financas",
+      "name": "Confirmar a disponibilidade orçamental",
+      "type": "standard",
+      "applicable": true,
+      "complete": true,
+      "parts": { "task": true, "method": true, "evidence": true, "doneWhen": true, "exceptions": true },
+      "missing": [],
+      "leaks": [],
+      "length": 601,
+      "tooLong": false,
+      "empty": false,
+      "due": "missing"
+    }
+  ],
+  "note": "Presence of the labelled parts (Tarefa/Task, Como/How, Evidência/Evidence, Concluído quando/Done when, Excepções/Exceptions), leaked implementer notes, length and due are checked. Wording quality and business correctness are not certified; see references/action-writing.md."
+}

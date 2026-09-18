@@ -1,0 +1,217 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "ti-exemplo",
+    "title": "Pedido de assistência de TI — exemplo",
+    "language": "pt-AO",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": "Empresa de demonstração",
+    "sector": "Serviços",
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "sop-ti",
+      "title": "Procedimento de assistência de TI (sintético)",
+      "kind": "sop",
+      "version": "1",
+      "effectiveDate": null,
+      "sections": [
+        {
+          "anchor": "1",
+          "title": "Registo e classificação"
+        },
+        {
+          "anchor": "2",
+          "title": "Diagnóstico"
+        },
+        {
+          "anchor": "3",
+          "title": "Resolução"
+        },
+        {
+          "anchor": "4",
+          "title": "Fecho com o requerente"
+        }
+      ]
+    }
+  ],
+  "entityTypes": [],
+  "groups": [
+    {
+      "key": "suporte_ti",
+      "name": "Suporte de TI",
+      "parentKey": null,
+      "purpose": "Classificam, diagnosticam e resolvem os pedidos de assistência.",
+      "members": [
+        {
+          "role": "Técnico de suporte",
+          "email": null
+        }
+      ],
+      "sourceRefs": [
+        {
+          "source": "sop-ti",
+          "section": "1"
+        },
+        {
+          "source": "sop-ti",
+          "section": "3"
+        }
+      ],
+      "flags": []
+    }
+  ],
+  "workflows": [
+    {
+      "key": "ti",
+      "name": "Pedido de assistência de TI — exemplo",
+      "prefix": "TI",
+      "file": "workflow.yaml",
+      "status": "validated",
+      "sourceRefs": [
+        {
+          "source": "sop-ti"
+        }
+      ],
+      "actions": [
+        {
+          "localId": "classificar",
+          "name": "Classificar o pedido",
+          "type": "standard",
+          "sourceRefs": [
+            {
+              "source": "sop-ti",
+              "section": "1"
+            }
+          ],
+          "assigneeRef": "suporte_ti",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Categoria e urgência preenchidas"
+          ],
+          "due": {
+            "offsetHours": 4,
+            "offsetType": "workdays",
+            "basis": "activation"
+          },
+          "folded": [
+            {
+              "section": "1",
+              "summary": "O registo inicial é feito pelo requerente ao abrir o caso."
+            }
+          ]
+        },
+        {
+          "localId": "diagnosticar",
+          "name": "Diagnosticar o problema",
+          "type": "standard",
+          "sourceRefs": [
+            {
+              "source": "sop-ti",
+              "section": "2"
+            }
+          ],
+          "assigneeRef": "suporte_ti",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Comentário com causa provável e solução prevista"
+          ],
+          "due": {
+            "offsetDays": 1,
+            "offsetType": "workdays",
+            "basis": "activation"
+          },
+          "folded": [
+            {
+              "section": "2",
+              "summary": "A chefia de TI é informada de dependências pelo próprio caso."
+            }
+          ]
+        },
+        {
+          "localId": "resolver",
+          "name": "Registar a resolução",
+          "type": "standard",
+          "sourceRefs": [
+            {
+              "source": "sop-ti",
+              "section": "3"
+            }
+          ],
+          "assigneeRef": "suporte_ti",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Campo resolution_summary preenchido",
+            "Comprovativo do teste anexado"
+          ],
+          "due": {
+            "offsetDays": 2,
+            "offsetType": "workdays",
+            "basis": "activation"
+          },
+          "folded": []
+        },
+        {
+          "localId": "confirmar",
+          "name": "Confirmar com o requerente",
+          "type": "standard",
+          "sourceRefs": [
+            {
+              "source": "sop-ti",
+              "section": "4"
+            }
+          ],
+          "assigneeRef": "suporte_ti",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Comentário com a confirmação e a data"
+          ],
+          "due": {
+            "offsetDays": 2,
+            "offsetType": "workdays",
+            "basis": "activation"
+          },
+          "folded": []
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "O YAML de formação atribui todas as acções ao criador para permitir um ensaio sem identificadores fictícios; o responsável pretendido é o grupo Suporte de TI.",
+        "Um formulário de entrada em auto-serviço substituiria o gatilho manual; desenhá-lo com provia-form-designer antes da produção.",
+        "Os prazos são ilustrativos, não níveis de serviço aprovados."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Quem reatribui um caso quando a solução prevista falha e a chefia de TI está ausente?",
+      "owner": "Responsável de TI",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": [
+        {
+          "source": "sop-ti",
+          "section": "2"
+        }
+      ]
+    }
+  ],
+  "receipts": []
+}

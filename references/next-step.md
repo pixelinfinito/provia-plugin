@@ -2,7 +2,7 @@
 
 After completing a skill, end the final chat response with one short, optional recommendation that advances the user's current workflow. Include the exact next skill name, why it is useful now, and a copyable invocation containing the relevant artifact or result from this task. Write it in the user's response language. Put it in the final chat response, not only in an attached report or intermediate commentary.
 
-Choose by what is missing, not by a fixed sequence. Carry the agreed design, country context, decisions and unresolved dependencies forward. Do not recommend repeating completed work without a reason. When several paths are possible, recommend the most useful next step and briefly state the condition for an alternative. Workflow design is iterative; data, forms, AI and integrations can feed back into it.
+Choose by what is missing, not by a fixed sequence. Carry the agreed design, country context, decisions and unresolved dependencies forward, and name the project manifest (`provia-project.json`) in the request so the next skill reads it instead of starting from prose. Do not recommend repeating completed work without a reason. When several paths are possible, recommend the most useful next step and briefly state the condition for an alternative. Workflow design is iterative; data, forms, AI and integrations can feed back into it.
 
 ## Choose the next skill
 
@@ -22,6 +22,8 @@ Choose by what is missing, not by a fixed sequence. Carry the agreed design, cou
 | Policy requirements need mapping to controls and evidence | `provia-controls-evidence` |
 | Approved process instructions, runbooks or knowledge need maintenance | `provia-process-knowledge` |
 | Findings require changes to an existing workflow and impact assessment | `provia-workflow-change` |
+| A new implementer has the customer's documents and authorization to build the whole project | `provia-bootstrap` |
+| Exports exist and the question is what to fix in a running process | `provia-diagnose` |
 
 If progress depends on missing evidence or a decision, explain that dependency in the suggested request. Do not imply it has been resolved. If no further skill adds value, say so and recommend the concrete next action, such as destination configuration, Provia import preview, a pilot, or collecting execution records. Do not force another skill solely to keep the conversation going.
 

@@ -1,6 +1,6 @@
 # Portable workflow YAML
 
-Emit `apiVersion: provia.ao/v1` and `kind: Workflow`. The legacy `provia.io/v1` alias is readable but should not be generated. Allowed top-level sections are metadata, triggers, entities, fields and actions. Unknown keys are not extensions. The full contract version and source fingerprints are in ../../contracts/workflow-v1/contract-lock.json relative to a skill, or ../contracts/workflow-v1/contract-lock.json from this reference.
+Emit `apiVersion: provia.ao/v1` and `kind: Workflow`, preceded by a first-line comment `# provia-skills <plugin version>` so an import can be attributed to the plugin (the product records only what its schema knows; the comment is the attribution until `metadata.source` exists). The legacy `provia.io/v1` alias is readable but should not be generated. Allowed top-level sections are metadata, triggers, entities, fields and actions. Unknown keys are not extensions. The full contract version and source fingerprints are in ../../contracts/workflow-v1/contract-lock.json relative to a skill, or ../contracts/workflow-v1/contract-lock.json from this reference.
 
 ## Shapes
 
@@ -25,7 +25,7 @@ Run `node scripts/validate-workflow.mjs path/to/workflow.yaml` from the plugin r
 
 The YAML input limit is 1 MiB in UTF-8. The backend plan has its own 1 MiB cap. There are at most 20 triggers, 100 actions, 10 options per decision and 50 created secrets. Archive extraction is separately bounded by the product engine. These are file/import limits, not permission or subscription guarantees.
 
-Deliver workflow.yaml, the actual validation.json output and setup.md. Do not edit a result to claim success. If a validator cannot run, state “not run”. Always preserve pending destination validation and human publication review.
+Deliver workflow.yaml, the actual validation.json output, the `review-actions.mjs` report and setup.md generated from the project manifest (`build-project-map.mjs --setup`). Owners are referenced by group key in the manifest (`assigneeRef`), never as an unknown key in YAML; `resolve-workflow-refs.mjs` writes the real `assignee` ids once receipts exist. Do not edit a result to claim success. If a validator cannot run, state “not run”. Always preserve pending destination validation and human publication review.
 
 Setup must cover actual users/groups/AI profiles, referenced workflows/entities, secret names, HTTP allowlists, generated inbound email, and excluded resources. Never fabricate IDs or substitute the creator for an intended approver without disclosing the draft simplification. Restrictive imported trigger allowlists can be narrowed to the importer when source principals do not exist; review the server warning before use.
 

@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-18T19:08:53.291Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "verdict": "pass",
+  "reasons": [
+    "Design correctly separates AI summarization (resumir-propostas, AI-assigned, restricted to reading proposal docs and writing only the summary field) from human vendor choice (escolher-fornecedor, assigned to equipa-compras) per the request",
+    "AI profile doc explicitly forbids the AI from recommending/ranking/ordering vendors, matching the required separation of concerns",
+    "Tool trace supports all claims: validate-workflow and review-actions were actually run with results matching what's stated in the response (valid: true, 5 parts present, assignment_missing/due warnings)",
+    "Response distinguishes confirmed facts from unresolved decisions (D1-D4 open decisions listed: group composition, due dates, entity catalogue, AI confidence threshold) rather than inventing organization IDs, thresholds, or assignees",
+    "No fabricated approval thresholds, legal provisions, or endpoints; explicitly notes nothing was created in Provia and manual configuration is still required",
+    "Ends with a concrete, actionable next-step recommendation (provia-information-model) with a copyable invocation, per next-step.md convention",
+    "Manifest schema violation (unknown workflow status) was caught and fixed transparently rather than hidden"
+  ],
+  "violations": []
+}

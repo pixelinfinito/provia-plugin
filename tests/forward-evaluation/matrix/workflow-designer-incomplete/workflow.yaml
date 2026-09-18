@@ -1,0 +1,262 @@
+# provia-skills 1.1.0
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: Employee onboarding
+  prefix: ONB
+  description: >-
+    Admission decision, contract, IT/Facilities provisioning, Day 1 orientation
+    and 30-day confirmation for a new hire. Skeleton built from a reconstructed
+    generic onboarding SOP because no customer document was supplied; replace
+    every step and rule with the organization's actual procedure before packaging.
+  targetDurationDays: 44
+  targetDurationType: calendar
+  agentMemoryEnabled: false
+
+triggers:
+  - type: manual
+    label: Submit new-hire request
+    enabled: true
+    config: {}
+
+fields:
+  - name: new_hire_name
+    label: New hire name
+    type: text
+    required: true
+    width: half
+  - name: role
+    label: Role
+    type: text
+    required: true
+    width: half
+  - name: department
+    label: Department
+    type: text
+    required: true
+    width: half
+  - name: start_date
+    label: Start date
+    type: date
+    required: true
+    width: half
+  - name: reporting_line
+    label: Reporting line
+    type: text
+    required: true
+    width: half
+  - name: budget_reference
+    label: Budget / headcount reference
+    type: text
+    required: false
+    width: full
+
+actions:
+  - id: decidir_admissao
+    type: decision
+    name: Decide on the admission request
+    executionMode: sequential
+    required: true
+    priority: normal
+    description: >-
+      Task: Decide whether the new-hire request proceeds, checking headcount
+      and role justification.
+      How: 1. Read the role, department, start date and reporting line
+      submitted in the request. 2. Confirm the position is within the
+      approved headcount and budget for the department, using
+      `budget_reference` when supplied. 3. Choose "Approve" or "Reject".
+      Evidence: A comment naming the headcount/budget reference checked is
+      required on both outcomes.
+      Done when: The decision is recorded with the required comment.
+      Exceptions: If the position is not within the approved headcount, do
+      not approve: reject with a comment naming the shortfall so the hiring
+      manager can revise and submit a new request.
+    config:
+      branches:
+        - label: Approve
+          outcome: continue
+          requiresComment: true
+        - label: Reject
+          outcome: cancel_incident
+          requiresComment: true
+
+  - id: preparar_contrato
+    type: standard
+    name: Prepare the employment contract
+    executionMode: sequential
+    required: true
+    priority: normal
+    description: >-
+      Task: Prepare the employment contract for the approved candidate and
+      send it for signature.
+      How: 1. Use the approved role, start date and reporting line from the
+      request. 2. Generate the contract from the standard template. 3. Send
+      it to the candidate for signature.
+      Evidence: Attach the sent contract document.
+      Done when: The contract has been sent to the candidate.
+      Exceptions: If the approved terms differ from what was requested, do
+      not send: comment with the discrepancy and correct the request before
+      proceeding.
+
+  - id: confirmar_assinatura_contrato
+    type: standard
+    name: Confirm the signed contract
+    executionMode: sequential
+    required: true
+    priority: normal
+    description: >-
+      Task: Confirm that the candidate has signed and returned the
+      employment contract.
+      How: 1. Follow up with the candidate until the signed contract is
+      received. 2. Check the signature and date. 3. File the signed copy in
+      the candidate's record.
+      Evidence: Attach the signed contract.
+      Done when: The signed contract is attached and filed.
+      Exceptions: If the candidate does not return the signed contract, do
+      not complete: comment with the delay and escalate to the hiring
+      manager for a decision on whether to continue.
+
+  - id: notificar_ti_instalacoes
+    type: notification
+    name: Notify IT and Facilities of the confirmed hire
+    executionMode: sequential
+    required: true
+    priority: normal
+    description: >-
+      Automatically notifies the IT and Facilities groups that a new hire
+      has been approved, sharing role, department and start date, so account
+      and workspace preparation can begin.
+    config:
+      recipientType: groups
+      recipientIds: []
+      channels: [in_app]
+      messageTemplate: >-
+        A new hire has been approved: {{role}} in {{department}}, starting
+        {{start_date}}. Please prepare accounts, equipment, workspace and
+        badge before the start date.
+
+  - id: provisionar_contas_ti
+    type: standard
+    name: Provision IT accounts and equipment
+    executionMode: parallel
+    required: true
+    priority: normal
+    description: >-
+      Task: Create the new hire's system accounts and order their
+      equipment.
+      How: 1. Create the email and system accounts for the role in
+      `department`. 2. Order the standard equipment for the role. 3. Confirm
+      both are ready before `start_date`.
+      Evidence: Attach the account list and the equipment order
+      confirmation.
+      Done when: Accounts are active and equipment is ordered.
+      Exceptions: If standard equipment cannot be ready before the start
+      date, do not complete: comment with the delay and notify the hiring
+      manager.
+
+  - id: preparar_espaco_e_cartao
+    type: standard
+    name: Prepare workspace and access badge
+    executionMode: parallel
+    required: true
+    priority: normal
+    description: >-
+      Task: Prepare the new hire's workspace and access badge.
+      How: 1. Assign a workspace for `department`. 2. Prepare the access
+      badge for `start_date`. 3. Confirm both are ready.
+      Evidence: Attach the badge/workspace confirmation.
+      Done when: Workspace and badge are ready.
+      Exceptions: If the badge cannot be issued before the start date, do
+      not complete: comment with the delay and notify the hiring manager.
+
+  - id: agendar_orientacao
+    type: standard
+    name: Schedule the Day 1 orientation
+    executionMode: sequential
+    required: true
+    priority: normal
+    description: >-
+      Task: Schedule the Day 1 orientation session and assign a buddy.
+      How: 1. Confirm accounts, equipment and workspace are ready. 2.
+      Schedule the orientation session for `start_date`. 3. Assign a buddy
+      from `department` and record their name.
+      Evidence: Attach the orientation invite and the buddy's name.
+      Done when: The orientation is scheduled and the buddy is assigned.
+      Exceptions: If accounts, equipment or workspace are not ready, do not
+      schedule: comment with what is missing and follow up with IT or
+      Facilities before scheduling.
+
+  - id: realizar_orientacao_dia1
+    type: standard
+    name: Deliver the Day 1 welcome and first-week review
+    executionMode: sequential
+    required: true
+    priority: normal
+    assignee:
+      type: creator
+    description: >-
+      Task: Welcome the new hire on their first day and review the
+      first-week plan with them.
+      How: 1. Meet the new hire on `start_date`. 2. Introduce them to the
+      team and the assigned buddy. 3. Review the first-week plan together.
+      Evidence: A comment confirming the first-week plan was reviewed.
+      Done when: The first-week plan has been reviewed with the new hire.
+      Exceptions: If the new hire cannot start on the scheduled date, do not
+      complete: comment with the new date and coordinate with HR to adjust
+      downstream steps.
+
+  - id: confirmar_formacao_obrigatoria
+    type: standard
+    name: Confirm mandatory compliance training
+    executionMode: sequential
+    required: true
+    priority: normal
+    description: >-
+      Task: Confirm that the new hire has completed the mandatory
+      compliance training.
+      How: 1. Check the training system or certificate for completion. 2.
+      Record the completion date.
+      Evidence: Attach the completion certificate or record.
+      Done when: Completion is confirmed and recorded.
+      Exceptions: If training is not completed within the expected period,
+      do not complete: comment with the delay and follow up with the new
+      hire and their manager.
+
+  - id: confirmar_checklist_30_dias
+    type: standard
+    name: Confirm the 30-day onboarding checklist
+    executionMode: sequential
+    required: true
+    priority: normal
+    assignee:
+      type: creator
+    due:
+      offsetDays: 30
+      offsetType: calendar
+      basis: activation
+    description: >-
+      Task: Confirm the onboarding checklist is complete 30 days after the
+      new hire's start.
+      How: 1. Review completed steps: contract, accounts, workspace,
+      orientation and training. 2. Discuss with the new hire whether
+      onboarding met expectations.
+      Evidence: A comment confirming the checklist review and any
+      outstanding items.
+      Done when: The checklist is reviewed and recorded as complete.
+      Exceptions: If items remain outstanding, do not complete: comment with
+      what remains and the owner responsible for closing it.
+
+  - id: arquivar_registo_admissao
+    type: standard
+    name: Archive the onboarding record
+    executionMode: sequential
+    required: true
+    priority: normal
+    description: >-
+      Task: Close and archive the onboarding record.
+      How: 1. Confirm the 30-day checklist is complete. 2. Archive the case
+      record per the standard retention practice.
+      Evidence: A comment confirming archiving.
+      Done when: The record is archived.
+      Exceptions: If required records are missing, do not archive: comment
+      with what is missing and return to the 30-day checklist confirmation.

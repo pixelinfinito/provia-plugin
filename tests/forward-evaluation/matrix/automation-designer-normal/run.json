@@ -1,0 +1,23 @@
+{
+  "id": "automation-designer-normal",
+  "skill": "provia-automation-designer",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:30:23.089Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 324289,
+  "costUsd": 1.0710950000000001,
+  "numTurns": 43,
+  "sessionId": "c7ac66d5-7d62-48c9-9013-b687b1f747a0",
+  "stopReason": "end_turn",
+  "toolCalls": 41,
+  "files": [
+    "integration-requirements.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md",
+    "workflow.yaml"
+  ],
+  "output": "tests/forward-evaluation/matrix/automation-designer-normal/",
+  "skillLoaded": true
+}

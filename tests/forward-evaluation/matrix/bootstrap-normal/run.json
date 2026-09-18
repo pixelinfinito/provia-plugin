@@ -1,0 +1,26 @@
+{
+  "id": "bootstrap-normal",
+  "skill": "provia-bootstrap",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:50:25.408Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 292976,
+  "costUsd": 1.0191926,
+  "numTurns": 39,
+  "sessionId": "acc632ad-e940-44a8-8fcb-fd86b0a4e697",
+  "stopReason": "end_turn",
+  "toolCalls": 37,
+  "files": [
+    "catalogue.html",
+    "catalogue.json",
+    "editorial-review.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md",
+    "validation.json",
+    "workflow.yaml"
+  ],
+  "output": "tests/forward-evaluation/matrix/bootstrap-normal/",
+  "skillLoaded": true
+}

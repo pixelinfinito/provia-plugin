@@ -1,0 +1,25 @@
+{
+  "id": "workflow-package-normal",
+  "skill": "provia-workflow-package",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:19:51.207Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 123138,
+  "costUsd": 0.686257,
+  "numTurns": 32,
+  "sessionId": "8bcc4f3d-0e74-4e1b-9123-9fea11f2f794",
+  "stopReason": "end_turn",
+  "toolCalls": 30,
+  "files": [
+    "editorial-review.md",
+    "project.html",
+    "provia-project.json",
+    "review-actions.json",
+    "setup.md",
+    "validation.json",
+    "workflow.yaml"
+  ],
+  "output": "tests/forward-evaluation/matrix/workflow-package-normal/",
+  "skillLoaded": true
+}

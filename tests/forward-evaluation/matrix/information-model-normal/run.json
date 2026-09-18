@@ -1,0 +1,20 @@
+{
+  "id": "information-model-normal",
+  "skill": "provia-information-model",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:12:10.083Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 185991,
+  "costUsd": 0.7925195999999999,
+  "numTurns": 28,
+  "sessionId": "fb126d64-4fa8-4ef5-ad3f-5420a2cd235d",
+  "stopReason": "end_turn",
+  "toolCalls": 26,
+  "files": [
+    "catalogue.html",
+    "catalogue.json"
+  ],
+  "output": "tests/forward-evaluation/matrix/information-model-normal/",
+  "skillLoaded": true
+}

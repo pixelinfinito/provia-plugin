@@ -1,0 +1,22 @@
+{
+  "id": "controls-evidence-conflicting",
+  "skill": "provia-controls-evidence",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:40:50.640Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 100525,
+  "costUsd": 0.4013544,
+  "numTurns": 16,
+  "sessionId": "a91511b5-5aed-49d9-88b2-f0a104d27cf1",
+  "stopReason": "end_turn",
+  "toolCalls": 14,
+  "files": [
+    "project.html",
+    "provia-project.json",
+    "revisao-controlos-evidencias.md",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/controls-evidence-conflicting/",
+  "skillLoaded": true
+}

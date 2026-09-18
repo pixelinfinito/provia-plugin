@@ -1,4 +1,4 @@
-# Training draft for Angola; see setup.md before importing.
+# provia-skills 1.1.0 — training draft for Angola; see setup.md and provia-project.json before importing.
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
@@ -15,32 +15,102 @@ fields:
     label: Descrição do pedido
     type: text
     required: true
+  - name: category
+    label: Categoria
+    type: select
+    required: false
+    config:
+      options:
+        - value: access
+          label: Acessos
+        - value: equipment
+          label: Equipamento
+        - value: software
+          label: Aplicações
+        - value: network
+          label: Rede
+  - name: urgency
+    label: Urgência
+    type: select
+    required: false
+    config:
+      options:
+        - value: normal
+          label: Normal
+        - value: high
+          label: Alta
+        - value: blocking
+          label: Bloqueante
+  - name: resolution_summary
+    label: Resolução
+    type: text
+    required: false
 actions:
-  - id: step_1
+  - id: classificar
     name: Classificar o pedido
     type: standard
+    description: |
+      Tarefa: Classificar o pedido por categoria e urgência para que chegue ao técnico certo com a prioridade certa.
+      Como: 1. Ler a «Descrição do pedido» e, se for ambígua, ligar ao requerente pelo contacto do caso. 2. Escolher a «Categoria» (Acessos, Equipamento, Aplicações ou Rede). 3. Escolher a «Urgência»: Bloqueante quando o requerente não consegue trabalhar, Alta quando afecta um prazo, Normal nos restantes casos.
+      Evidência: Os campos «Categoria» e «Urgência» preenchidos; um comentário quando a classificação diferir do que o requerente pediu.
+      Concluído quando: O pedido tem categoria e urgência e passa ao diagnóstico.
+      Excepções: Se o pedido não for de TI (por exemplo, uma compra), não concluir: comentar a razão e rejeitar o caso pelo canal indicado pela chefia de TI.
     executionMode: sequential
     required: true
+    due:
+      offsetHours: 4
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator
-  - id: step_2
+  - id: diagnosticar
     name: Diagnosticar o problema
     type: standard
+    description: |
+      Tarefa: Identificar a causa do problema e o que é preciso para o resolver.
+      Como: 1. Reproduzir o problema com o requerente ou no equipamento afectado. 2. Consultar o histórico de pedidos do mesmo requerente e equipamento. 3. Registar num comentário a causa provável e a solução prevista, incluindo peças, licenças ou acessos necessários.
+      Evidência: Um comentário com a causa provável e a solução prevista; capturas de ecrã ou registos do sistema quando existirem.
+      Concluído quando: A causa está identificada e a solução prevista está registada no caso.
+      Excepções: Se a resolução exigir uma compra ou uma autorização de outro departamento, não concluir: comentar a dependência e informar o requerente do prazo estimado.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 1
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator
-  - id: step_3
+  - id: resolver
     name: Registar a resolução
     type: standard
+    description: |
+      Tarefa: Aplicar a solução e registar o que foi feito de forma que outro técnico a possa repetir.
+      Como: 1. Executar a solução prevista no diagnóstico. 2. Testar com o requerente que o problema desapareceu. 3. Preencher o campo «Resolução» com os passos executados e as alterações feitas em contas, equipamentos ou configurações.
+      Evidência: O campo «Resolução» preenchido; o comprovativo do teste (captura de ecrã ou registo) anexado.
+      Concluído quando: A solução está aplicada, testada e descrita no campo «Resolução».
+      Excepções: Se a solução prevista não funcionar, não concluir: comentar o resultado e devolver ao diagnóstico pedindo à chefia de TI que reatribua o caso.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 2
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator
-  - id: step_4
+  - id: confirmar
     name: Confirmar com o requerente
     type: standard
+    description: |
+      Tarefa: Obter a confirmação do requerente de que o pedido ficou resolvido.
+      Como: 1. Contactar o requerente pelo canal indicado no pedido. 2. Confirmar que consegue trabalhar normalmente. 3. Registar num comentário a confirmação, com data e forma de contacto.
+      Evidência: Um comentário com a confirmação do requerente e a data.
+      Concluído quando: O requerente confirmou a resolução e a confirmação está registada.
+      Excepções: Se o requerente não responder em dois dias úteis, registar as tentativas de contacto num comentário e concluir; se o requerente disser que o problema persiste, não concluir: comentar e devolver ao diagnóstico.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 2
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator

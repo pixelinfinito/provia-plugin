@@ -13,6 +13,9 @@ jobs:
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
+      - run: node scripts/build-skills.mjs --check
       - run: npm test
       - run: node scripts/check-contract.mjs
-      - run: python3 scripts/build-release.py --output /tmp/provia-release
+      - run: node scripts/run-skill-evaluations.mjs --status
+      # Packaging check only; the strict evaluation gate runs in the release procedure (npm run release).
+      - run: python3 scripts/build-release.py --output /tmp/provia-release --allow-stale-evaluations

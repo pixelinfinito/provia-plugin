@@ -1,0 +1,833 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Supplier / Purchase request data boundary</title>
+  <style>
+  *{box-sizing:border-box}body{margin:0;background:#f4f6f9;color:#182230;font:16px/1.55 system-ui,sans-serif}header,main{max-width:1120px;margin:auto;padding:24px}h1{font-size:30px}h2{font-size:24px}h4{margin:0 0 12px;font-size:18px}small{font-size:13px;font-weight:400;color:#475467}button,input,textarea{font:inherit}button{padding:6px 12px;border:1px solid #98a2b3;border-radius:6px;background:white;color:#1d2939;cursor:pointer}button:hover{background:#eaf0ff}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #2563eb;outline-offset:2px}nav{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}nav a{color:#244da8;padding:4px 8px}.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}input{padding:10px;border:1px solid #98a2b3;border-radius:6px;min-width:260px}section{background:#fff;border:1px solid #d0d5dd;border-radius:12px;margin:20px 0;padding:24px;scroll-margin-top:16px}article{border-top:1px solid #d0d5dd;padding:22px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.value-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}label{font-size:13px;font-weight:600}textarea{display:block;width:100%;min-height:44px;padding:9px;border:1px solid #c7cdd6;border-radius:6px;background:#f9fafb;resize:vertical;color:#182230}dl{display:grid;grid-template-columns:140px 1fr;gap:4px 12px;font-size:14px}dt{color:#475467}dd{margin:0}.option{padding:8px 0}.notice{padding:14px;background:#eaf0ff;border-radius:8px}#status{min-height:24px}summary{cursor:pointer}li{margin-bottom:8px}[hidden]{display:none!important}@media(max-width:650px){.grid{grid-template-columns:1fr}header,main,section{padding:16px}dl{grid-template-columns:1fr}}@media print{body{background:white}button,nav,.toolbar,#status,details{display:none}section{break-before:page;border:0;padding:0}section[hidden]{display:block!important}textarea{border:0;resize:none;overflow:visible}article{break-inside:avoid}header,main{max-width:none;padding:0}}
+  </style></head><body><header><h1>Supplier / Purchase request data boundary</h1><p>Angola · 1 entity types</p>
+  <p class="notice">Manual setup specification. This JSON is not a Provia import contract. Icons come from the bundled reference; confirm the destination version. Copying does not create types, fields or records.</p><p>Create the types before configuring relationships. Copy each value into its corresponding field. Related type names are catalogue references, not destination IDs. Core model fields can be optional at creation.</p><ul><li>No sources were supplied for this task (no SOP, sample records, existing catalogue, form or reporting requirement). Angola is disclosed as a provisional country context only; currency AOA and timezone Africa/Luanda are assumptions, not confirmed. Confirm with the organization before relying on them.</li><li>Assumed baseline: a generic goods/services procurement flow (request -&gt; approval -&gt; sourcing/quotation -&gt; purchase order -&gt; receipt). No actual SOP was reviewed; adjust once a real procedure or workflow design is available.</li><li>Only Supplier is modeled as a Provia entity type here. A purchase request is one execution of a recurring process, not a stable object selected across cases, so its data belongs to workflow case metadata and Form Fill answers, not a second entity type. See setup notes below for the recommended purchase-request field disposition.</li><li>Icons verified against the snapshot referenced in entity-icons.json (product source revision 36772f7ce0831f0ea6f85a0e3e7849d32e576655); confirm availability in the destination if its product revision differs.</li><li>Metadata field types and configuration rules verified against Provia revision 2641364d9c1aa0aa2b76aa788ef521bcb6218118; confirm destination version separately.</li><li>Purchase request fields (not modeled as entity type; recommended disposition):</li><li>- Case metadata (workflow schema, needed for routing/reporting/approval thresholds): requester (native creator), department or cost center, request date (native createdAt), needed-by date, urgency/priority, supplier (entity reference to Supplier, once selected), estimated total amount, currency, budget code, purchase-order number (auto_number on the workflow once issued).</li><li>- Native workflow features, not duplicate custom fields: current approval decision and history (workflow action outcomes), overall request status (case/workflow status), assignee (action assignee).</li><li>- Form response only (collected at submission, mapped to the case only if a listed use needs it): line items (description, quantity, unit, estimated unit price), justification/business reason, delivery location, requested supplier quotations or attachments.</li><li>- Held in the Supplier entity, referenced rather than repeated on every request: supplier identity, contacts, payment terms, currency of billing, relationship status, account owner.</li><li>This disposition is a design recommendation for the next workflow/form design step; it is not workflow YAML or a form specification.</li></ul>
+  <div class="toolbar"><label for="search">Search types and fields</label><input id="search" type="search"><button id="download">Download JSON</button><button id="print">Print</button></div>
+  <p id="status" role="status" aria-live="polite"></p><nav aria-label="Types"><a href="#type-0">Supplier</a></nav></header><main><section id="type-0" data-catalogue-type>
+    <h2>1. Supplier <small>15 fields</small></h2>
+    <p>Selection on purchase requests and purchase orders, contracting, payment execution and supplier evaluation.</p><p>Owner: Procurement lead (to be designated by the organization)</p>
+    <div class="grid"><div class="value"><div class="value-heading"><label for="value-0">Type name</label><button type="button" data-copy="value-0" aria-label="Copy: Type name">Copy</button></div><textarea id="value-0" rows="1" readonly>Supplier</textarea></div><div class="value"><div class="value-heading"><label for="value-1">Icon</label><button type="button" data-copy="value-1" aria-label="Copy: Icon">Copy</button></div><textarea id="value-1" rows="1" readonly>Truck01</textarea></div><div class="value"><div class="value-heading"><label for="value-2">Description</label><button type="button" data-copy="value-2" aria-label="Copy: Description">Copy</button></div><textarea id="value-2" rows="2" readonly>Suppliers used in purchasing, contracting and evaluation processes. Lets requesters and buyers select the counterparty and consult the data needed for the relationship.</textarea></div><div class="value"><div class="value-heading"><label for="value-3">Native Name convention</label><button type="button" data-copy="value-3" aria-label="Copy: Native Name convention">Copy</button></div><textarea id="value-3" rows="2" readonly>Trading or legal name; add a known supplier/vendor code only if needed to distinguish records.</textarea></div></div>
+    <h3>Fields</h3><article><h4>Supplier code <small>Identification</small></h4>
+      <p>Optional · Required at creation: No · auto_number</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-4">Key</label><button type="button" data-copy="value-4" aria-label="Copy: Key">Copy</button></div><textarea id="value-4" rows="1" readonly>supplier_code</textarea></div><div class="value"><div class="value-heading"><label for="value-5">Label</label><button type="button" data-copy="value-5" aria-label="Copy: Label">Copy</button></div><textarea id="value-5" rows="1" readonly>Supplier code</textarea></div><div class="value"><div class="value-heading"><label for="value-6">Type</label><button type="button" data-copy="value-6" aria-label="Copy: Type">Copy</button></div><textarea id="value-6" rows="1" readonly>auto_number</textarea></div><div class="value"><div class="value-heading"><label for="value-7">Group</label><button type="button" data-copy="value-7" aria-label="Copy: Group">Copy</button></div><textarea id="value-7" rows="1" readonly>Identification</textarea></div><div class="value"><div class="value-heading"><label for="value-8">Help text</label><button type="button" data-copy="value-8" aria-label="Copy: Help text">Copy</button></div><textarea id="value-8" rows="2" readonly>Internal reference generated by Provia when the record is saved; not entered manually.</textarea></div><div class="value"><div class="value-heading"><label for="value-9">Synthetic example</label><button type="button" data-copy="value-9" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-9" rows="1" readonly>FORN-0001</textarea></div>
+      <div class="value"><div class="value-heading"><label for="value-10">config.prefix</label><button type="button" data-copy="value-10" aria-label="Copy: config.prefix">Copy</button></div><textarea id="value-10" rows="1" readonly>FORN-</textarea></div><div class="value"><div class="value-heading"><label for="value-11">config.padding</label><button type="button" data-copy="value-11" aria-label="Copy: config.padding">Copy</button></div><textarea id="value-11" rows="1" readonly>4</textarea></div><div class="value"><div class="value-heading"><label for="value-12">config.startAt</label><button type="button" data-copy="value-12" aria-label="Copy: config.startAt">Copy</button></div><textarea id="value-12" rows="1" readonly>1</textarea></div></div>
+      
+      <dl><dt>Purpose</dt><dd>Give suppliers a short reference for communications and documents distinct from the Name, when the organization has no existing vendor code to reuse.</dd><dt>Source</dt><dd>Generated by Provia; synthetic proposal to confirm with procurement.</dd><dt>Maintainer</dt><dd>Provia generates the value; procurement defines the configuration.</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Legal name <small>Identification</small></h4>
+      <p>Conditional · Required at creation: No · text</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-13">Key</label><button type="button" data-copy="value-13" aria-label="Copy: Key">Copy</button></div><textarea id="value-13" rows="1" readonly>legal_name</textarea></div><div class="value"><div class="value-heading"><label for="value-14">Label</label><button type="button" data-copy="value-14" aria-label="Copy: Label">Copy</button></div><textarea id="value-14" rows="1" readonly>Legal name</textarea></div><div class="value"><div class="value-heading"><label for="value-15">Type</label><button type="button" data-copy="value-15" aria-label="Copy: Type">Copy</button></div><textarea id="value-15" rows="1" readonly>text</textarea></div><div class="value"><div class="value-heading"><label for="value-16">Group</label><button type="button" data-copy="value-16" aria-label="Copy: Group">Copy</button></div><textarea id="value-16" rows="1" readonly>Identification</textarea></div><div class="value"><div class="value-heading"><label for="value-17">Help text</label><button type="button" data-copy="value-17" aria-label="Copy: Help text">Copy</button></div><textarea id="value-17" rows="2" readonly>Record the registered legal name when it differs from the trading name used as the record Name, for use on contracts and purchase orders.</textarea></div><div class="value"><div class="value-heading"><label for="value-18">Synthetic example</label><button type="button" data-copy="value-18" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-18" rows="1" readonly>Demonstration Supplier, Lda.</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Identify the counterparty on contracts and purchase orders when it differs from the trading Name.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with procurement.</dd><dt>Maintainer</dt><dd>Registering buyer</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Tax identification number <small>Identification</small></h4>
+      <p>Conditional · Required at creation: No · text</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-19">Key</label><button type="button" data-copy="value-19" aria-label="Copy: Key">Copy</button></div><textarea id="value-19" rows="1" readonly>tax_number</textarea></div><div class="value"><div class="value-heading"><label for="value-20">Label</label><button type="button" data-copy="value-20" aria-label="Copy: Label">Copy</button></div><textarea id="value-20" rows="1" readonly>Tax identification number</textarea></div><div class="value"><div class="value-heading"><label for="value-21">Type</label><button type="button" data-copy="value-21" aria-label="Copy: Type">Copy</button></div><textarea id="value-21" rows="1" readonly>text</textarea></div><div class="value"><div class="value-heading"><label for="value-22">Group</label><button type="button" data-copy="value-22" aria-label="Copy: Group">Copy</button></div><textarea id="value-22" rows="1" readonly>Identification</textarea></div><div class="value"><div class="value-heading"><label for="value-23">Help text</label><button type="button" data-copy="value-23" aria-label="Copy: Help text">Copy</button></div><textarea id="value-23" rows="2" readonly>Used to verify the counterparty for invoicing; confirm against the financial source of record. No official format is assumed.</textarea></div><div class="value"><div class="value-heading"><label for="value-24">Synthetic example</label><button type="button" data-copy="value-24" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-24" rows="1" readonly>TAX-DEMO-0001</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Verify the counterparty for invoicing and payment.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with finance.</dd><dt>Maintainer</dt><dd>Registering buyer</dd><dt>Sensitivity</dt><dd>Internal; restrict to staff who process payments.</dd></dl></article><article><h4>Procurement category <small>Classification</small></h4>
+      <p>Core to the model · Required at creation: No · select</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-25">Key</label><button type="button" data-copy="value-25" aria-label="Copy: Key">Copy</button></div><textarea id="value-25" rows="1" readonly>category</textarea></div><div class="value"><div class="value-heading"><label for="value-26">Label</label><button type="button" data-copy="value-26" aria-label="Copy: Label">Copy</button></div><textarea id="value-26" rows="1" readonly>Procurement category</textarea></div><div class="value"><div class="value-heading"><label for="value-27">Type</label><button type="button" data-copy="value-27" aria-label="Copy: Type">Copy</button></div><textarea id="value-27" rows="1" readonly>select</textarea></div><div class="value"><div class="value-heading"><label for="value-28">Group</label><button type="button" data-copy="value-28" aria-label="Copy: Group">Copy</button></div><textarea id="value-28" rows="1" readonly>Classification</textarea></div><div class="value"><div class="value-heading"><label for="value-29">Help text</label><button type="button" data-copy="value-29" aria-label="Copy: Help text">Copy</button></div><textarea id="value-29" rows="2" readonly>Classify what the supplier provides, to route and filter requests. Options are a starting proposal, not a confirmed vocabulary.</textarea></div><div class="value"><div class="value-heading"><label for="value-30">Synthetic example</label><button type="button" data-copy="value-30" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-30" rows="1" readonly>goods</textarea></div>
+      </div>
+      <div class="grid option"><div class="value"><div class="value-heading"><label for="value-31">Option value</label><button type="button" data-copy="value-31" aria-label="Copy: Option value">Copy</button></div><textarea id="value-31" rows="1" readonly>goods</textarea></div><div class="value"><div class="value-heading"><label for="value-32">Option label</label><button type="button" data-copy="value-32" aria-label="Copy: Option label">Copy</button></div><textarea id="value-32" rows="1" readonly>Goods</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-33">Option value</label><button type="button" data-copy="value-33" aria-label="Copy: Option value">Copy</button></div><textarea id="value-33" rows="1" readonly>services</textarea></div><div class="value"><div class="value-heading"><label for="value-34">Option label</label><button type="button" data-copy="value-34" aria-label="Copy: Option label">Copy</button></div><textarea id="value-34" rows="1" readonly>Services</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-35">Option value</label><button type="button" data-copy="value-35" aria-label="Copy: Option value">Copy</button></div><textarea id="value-35" rows="1" readonly>works</textarea></div><div class="value"><div class="value-heading"><label for="value-36">Option label</label><button type="button" data-copy="value-36" aria-label="Copy: Option label">Copy</button></div><textarea id="value-36" rows="1" readonly>Works</textarea></div></div>
+      <dl><dt>Purpose</dt><dd>Filter and route purchase requests to suppliers that provide the relevant category.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with procurement.</dd><dt>Maintainer</dt><dd>Registering buyer</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Account owner <small>Responsibility</small></h4>
+      <p>Core to the model · Required at creation: No · user</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-37">Key</label><button type="button" data-copy="value-37" aria-label="Copy: Key">Copy</button></div><textarea id="value-37" rows="1" readonly>account_owner</textarea></div><div class="value"><div class="value-heading"><label for="value-38">Label</label><button type="button" data-copy="value-38" aria-label="Copy: Label">Copy</button></div><textarea id="value-38" rows="1" readonly>Account owner</textarea></div><div class="value"><div class="value-heading"><label for="value-39">Type</label><button type="button" data-copy="value-39" aria-label="Copy: Type">Copy</button></div><textarea id="value-39" rows="1" readonly>user</textarea></div><div class="value"><div class="value-heading"><label for="value-40">Group</label><button type="button" data-copy="value-40" aria-label="Copy: Group">Copy</button></div><textarea id="value-40" rows="1" readonly>Responsibility</textarea></div><div class="value"><div class="value-heading"><label for="value-41">Help text</label><button type="button" data-copy="value-41" aria-label="Copy: Help text">Copy</button></div><textarea id="value-41" rows="2" readonly>Identify who is accountable for the relationship, sourcing decisions and renewal review.</textarea></div><div class="value"><div class="value-heading"><label for="value-42">Synthetic example</label><button type="button" data-copy="value-42" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-42" rows="1" readonly>{
+  &quot;lookupName&quot;: &quot;Demonstration procurement lead&quot;
+}</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Identify who is accountable for the relationship and sourcing decisions.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with procurement.</dd><dt>Maintainer</dt><dd>Registering buyer</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Operational contact <small>Contacts</small></h4>
+      <p>Core to the model · Required at creation: No · text</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-43">Key</label><button type="button" data-copy="value-43" aria-label="Copy: Key">Copy</button></div><textarea id="value-43" rows="1" readonly>contact_name</textarea></div><div class="value"><div class="value-heading"><label for="value-44">Label</label><button type="button" data-copy="value-44" aria-label="Copy: Label">Copy</button></div><textarea id="value-44" rows="1" readonly>Operational contact</textarea></div><div class="value"><div class="value-heading"><label for="value-45">Type</label><button type="button" data-copy="value-45" aria-label="Copy: Type">Copy</button></div><textarea id="value-45" rows="1" readonly>text</textarea></div><div class="value"><div class="value-heading"><label for="value-46">Group</label><button type="button" data-copy="value-46" aria-label="Copy: Group">Copy</button></div><textarea id="value-46" rows="1" readonly>Contacts</textarea></div><div class="value"><div class="value-heading"><label for="value-47">Help text</label><button type="button" data-copy="value-47" aria-label="Copy: Help text">Copy</button></div><textarea id="value-47" rows="1" readonly>Person to reach for quotations, order confirmation and delivery coordination.</textarea></div><div class="value"><div class="value-heading"><label for="value-48">Synthetic example</label><button type="button" data-copy="value-48" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-48" rows="1" readonly>Demonstration contact</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Reach the supplier for quotations, order confirmation and delivery coordination.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with procurement.</dd><dt>Maintainer</dt><dd>Registering buyer</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Contact email <small>Contacts</small></h4>
+      <p>Core to the model · Required at creation: No · email</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-49">Key</label><button type="button" data-copy="value-49" aria-label="Copy: Key">Copy</button></div><textarea id="value-49" rows="1" readonly>contact_email</textarea></div><div class="value"><div class="value-heading"><label for="value-50">Label</label><button type="button" data-copy="value-50" aria-label="Copy: Label">Copy</button></div><textarea id="value-50" rows="1" readonly>Contact email</textarea></div><div class="value"><div class="value-heading"><label for="value-51">Type</label><button type="button" data-copy="value-51" aria-label="Copy: Type">Copy</button></div><textarea id="value-51" rows="1" readonly>email</textarea></div><div class="value"><div class="value-heading"><label for="value-52">Group</label><button type="button" data-copy="value-52" aria-label="Copy: Group">Copy</button></div><textarea id="value-52" rows="1" readonly>Contacts</textarea></div><div class="value"><div class="value-heading"><label for="value-53">Help text</label><button type="button" data-copy="value-53" aria-label="Copy: Help text">Copy</button></div><textarea id="value-53" rows="1" readonly>Primary channel for purchase orders and quotation requests.</textarea></div><div class="value"><div class="value-heading"><label for="value-54">Synthetic example</label><button type="button" data-copy="value-54" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-54" rows="1" readonly>sales@example.com</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Send purchase orders and quotation requests.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with procurement.</dd><dt>Maintainer</dt><dd>Registering buyer</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Contact phone <small>Contacts</small></h4>
+      <p>Optional · Required at creation: No · phone</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-55">Key</label><button type="button" data-copy="value-55" aria-label="Copy: Key">Copy</button></div><textarea id="value-55" rows="1" readonly>contact_phone</textarea></div><div class="value"><div class="value-heading"><label for="value-56">Label</label><button type="button" data-copy="value-56" aria-label="Copy: Label">Copy</button></div><textarea id="value-56" rows="1" readonly>Contact phone</textarea></div><div class="value"><div class="value-heading"><label for="value-57">Type</label><button type="button" data-copy="value-57" aria-label="Copy: Type">Copy</button></div><textarea id="value-57" rows="1" readonly>phone</textarea></div><div class="value"><div class="value-heading"><label for="value-58">Group</label><button type="button" data-copy="value-58" aria-label="Copy: Group">Copy</button></div><textarea id="value-58" rows="1" readonly>Contacts</textarea></div><div class="value"><div class="value-heading"><label for="value-59">Help text</label><button type="button" data-copy="value-59" aria-label="Copy: Help text">Copy</button></div><textarea id="value-59" rows="1" readonly>Alternative contact for urgent coordination.</textarea></div><div class="value"><div class="value-heading"><label for="value-60">Synthetic example</label><button type="button" data-copy="value-60" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-60" rows="1" readonly>+244 900 000 000</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Alternative contact for urgent coordination.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with procurement.</dd><dt>Maintainer</dt><dd>Registering buyer</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Address / site <small>Contacts</small></h4>
+      <p>Conditional · Required at creation: No · text</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-61">Key</label><button type="button" data-copy="value-61" aria-label="Copy: Key">Copy</button></div><textarea id="value-61" rows="1" readonly>address</textarea></div><div class="value"><div class="value-heading"><label for="value-62">Label</label><button type="button" data-copy="value-62" aria-label="Copy: Label">Copy</button></div><textarea id="value-62" rows="1" readonly>Address / site</textarea></div><div class="value"><div class="value-heading"><label for="value-63">Type</label><button type="button" data-copy="value-63" aria-label="Copy: Type">Copy</button></div><textarea id="value-63" rows="1" readonly>text</textarea></div><div class="value"><div class="value-heading"><label for="value-64">Group</label><button type="button" data-copy="value-64" aria-label="Copy: Group">Copy</button></div><textarea id="value-64" rows="1" readonly>Contacts</textarea></div><div class="value"><div class="value-heading"><label for="value-65">Help text</label><button type="button" data-copy="value-65" aria-label="Copy: Help text">Copy</button></div><textarea id="value-65" rows="1" readonly>Needed when delivery, collection or an on-site visit must be planned.</textarea></div><div class="value"><div class="value-heading"><label for="value-66">Synthetic example</label><button type="button" data-copy="value-66" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-66" rows="1" readonly>Luanda - demonstration site</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Plan delivery, collection or an on-site visit.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with procurement.</dd><dt>Maintainer</dt><dd>Registering buyer</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Payment terms <small>Commercial</small></h4>
+      <p>Core to the model · Required at creation: No · select</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-67">Key</label><button type="button" data-copy="value-67" aria-label="Copy: Key">Copy</button></div><textarea id="value-67" rows="1" readonly>payment_terms</textarea></div><div class="value"><div class="value-heading"><label for="value-68">Label</label><button type="button" data-copy="value-68" aria-label="Copy: Label">Copy</button></div><textarea id="value-68" rows="1" readonly>Payment terms</textarea></div><div class="value"><div class="value-heading"><label for="value-69">Type</label><button type="button" data-copy="value-69" aria-label="Copy: Type">Copy</button></div><textarea id="value-69" rows="1" readonly>select</textarea></div><div class="value"><div class="value-heading"><label for="value-70">Group</label><button type="button" data-copy="value-70" aria-label="Copy: Group">Copy</button></div><textarea id="value-70" rows="1" readonly>Commercial</textarea></div><div class="value"><div class="value-heading"><label for="value-71">Help text</label><button type="button" data-copy="value-71" aria-label="Copy: Help text">Copy</button></div><textarea id="value-71" rows="2" readonly>Standing payment agreement, reused on purchase orders instead of asking on every request.</textarea></div><div class="value"><div class="value-heading"><label for="value-72">Synthetic example</label><button type="button" data-copy="value-72" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-72" rows="1" readonly>net_30</textarea></div>
+      </div>
+      <div class="grid option"><div class="value"><div class="value-heading"><label for="value-73">Option value</label><button type="button" data-copy="value-73" aria-label="Copy: Option value">Copy</button></div><textarea id="value-73" rows="1" readonly>advance</textarea></div><div class="value"><div class="value-heading"><label for="value-74">Option label</label><button type="button" data-copy="value-74" aria-label="Copy: Option label">Copy</button></div><textarea id="value-74" rows="1" readonly>Advance payment</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-75">Option value</label><button type="button" data-copy="value-75" aria-label="Copy: Option value">Copy</button></div><textarea id="value-75" rows="1" readonly>net_15</textarea></div><div class="value"><div class="value-heading"><label for="value-76">Option label</label><button type="button" data-copy="value-76" aria-label="Copy: Option label">Copy</button></div><textarea id="value-76" rows="1" readonly>Net 15 days</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-77">Option value</label><button type="button" data-copy="value-77" aria-label="Copy: Option value">Copy</button></div><textarea id="value-77" rows="1" readonly>net_30</textarea></div><div class="value"><div class="value-heading"><label for="value-78">Option label</label><button type="button" data-copy="value-78" aria-label="Copy: Option label">Copy</button></div><textarea id="value-78" rows="1" readonly>Net 30 days</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-79">Option value</label><button type="button" data-copy="value-79" aria-label="Copy: Option value">Copy</button></div><textarea id="value-79" rows="1" readonly>net_60</textarea></div><div class="value"><div class="value-heading"><label for="value-80">Option label</label><button type="button" data-copy="value-80" aria-label="Copy: Option label">Copy</button></div><textarea id="value-80" rows="1" readonly>Net 60 days</textarea></div></div>
+      <dl><dt>Purpose</dt><dd>Reuse the agreed payment terms on purchase orders without repeating the negotiation on every request.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with finance/procurement.</dd><dt>Maintainer</dt><dd>Registering buyer</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Usual billing currency <small>Commercial</small></h4>
+      <p>Conditional · Required at creation: No · select</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-81">Key</label><button type="button" data-copy="value-81" aria-label="Copy: Key">Copy</button></div><textarea id="value-81" rows="1" readonly>billing_currency</textarea></div><div class="value"><div class="value-heading"><label for="value-82">Label</label><button type="button" data-copy="value-82" aria-label="Copy: Label">Copy</button></div><textarea id="value-82" rows="1" readonly>Usual billing currency</textarea></div><div class="value"><div class="value-heading"><label for="value-83">Type</label><button type="button" data-copy="value-83" aria-label="Copy: Type">Copy</button></div><textarea id="value-83" rows="1" readonly>select</textarea></div><div class="value"><div class="value-heading"><label for="value-84">Group</label><button type="button" data-copy="value-84" aria-label="Copy: Group">Copy</button></div><textarea id="value-84" rows="1" readonly>Commercial</textarea></div><div class="value"><div class="value-heading"><label for="value-85">Help text</label><button type="button" data-copy="value-85" aria-label="Copy: Help text">Copy</button></div><textarea id="value-85" rows="2" readonly>Default currency the supplier invoices in; confirm on each purchase order rather than assuming it never varies.</textarea></div><div class="value"><div class="value-heading"><label for="value-86">Synthetic example</label><button type="button" data-copy="value-86" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-86" rows="1" readonly>aoa</textarea></div>
+      </div>
+      <div class="grid option"><div class="value"><div class="value-heading"><label for="value-87">Option value</label><button type="button" data-copy="value-87" aria-label="Copy: Option value">Copy</button></div><textarea id="value-87" rows="1" readonly>aoa</textarea></div><div class="value"><div class="value-heading"><label for="value-88">Option label</label><button type="button" data-copy="value-88" aria-label="Copy: Option label">Copy</button></div><textarea id="value-88" rows="1" readonly>Angolan kwanza (AOA)</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-89">Option value</label><button type="button" data-copy="value-89" aria-label="Copy: Option value">Copy</button></div><textarea id="value-89" rows="1" readonly>usd</textarea></div><div class="value"><div class="value-heading"><label for="value-90">Option label</label><button type="button" data-copy="value-90" aria-label="Copy: Option label">Copy</button></div><textarea id="value-90" rows="1" readonly>US dollar (USD)</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-91">Option value</label><button type="button" data-copy="value-91" aria-label="Copy: Option value">Copy</button></div><textarea id="value-91" rows="1" readonly>eur</textarea></div><div class="value"><div class="value-heading"><label for="value-92">Option label</label><button type="button" data-copy="value-92" aria-label="Copy: Option label">Copy</button></div><textarea id="value-92" rows="1" readonly>Euro (EUR)</textarea></div></div>
+      <dl><dt>Purpose</dt><dd>Pre-fill the expected currency when preparing a purchase order.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with finance.</dd><dt>Maintainer</dt><dd>Registering buyer</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Bank details <small>Commercial</small></h4>
+      <p>Conditional · Required at creation: No · text</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-93">Key</label><button type="button" data-copy="value-93" aria-label="Copy: Key">Copy</button></div><textarea id="value-93" rows="1" readonly>bank_details</textarea></div><div class="value"><div class="value-heading"><label for="value-94">Label</label><button type="button" data-copy="value-94" aria-label="Copy: Label">Copy</button></div><textarea id="value-94" rows="1" readonly>Bank details</textarea></div><div class="value"><div class="value-heading"><label for="value-95">Type</label><button type="button" data-copy="value-95" aria-label="Copy: Type">Copy</button></div><textarea id="value-95" rows="1" readonly>text</textarea></div><div class="value"><div class="value-heading"><label for="value-96">Group</label><button type="button" data-copy="value-96" aria-label="Copy: Group">Copy</button></div><textarea id="value-96" rows="1" readonly>Commercial</textarea></div><div class="value"><div class="value-heading"><label for="value-97">Help text</label><button type="button" data-copy="value-97" aria-label="Copy: Help text">Copy</button></div><textarea id="value-97" rows="2" readonly>Needed only to execute payment; restrict access and confirm the actual source and update process before collecting it.</textarea></div><div class="value"><div class="value-heading"><label for="value-98">Synthetic example</label><button type="button" data-copy="value-98" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-98" rows="1" readonly>IBAN/account reference pending confirmation</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Execute payment to the supplier.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with finance and the intended access control before collecting.</dd><dt>Maintainer</dt><dd>Finance, on verified instruction from the supplier</dd><dt>Sensitivity</dt><dd>Sensitive financial data; restrict to finance staff who execute payment.</dd></dl></article><article><h4>Relationship status <small>Lifecycle</small></h4>
+      <p>Core to the model · Required at creation: No · select</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-99">Key</label><button type="button" data-copy="value-99" aria-label="Copy: Key">Copy</button></div><textarea id="value-99" rows="1" readonly>relationship_status</textarea></div><div class="value"><div class="value-heading"><label for="value-100">Label</label><button type="button" data-copy="value-100" aria-label="Copy: Label">Copy</button></div><textarea id="value-100" rows="1" readonly>Relationship status</textarea></div><div class="value"><div class="value-heading"><label for="value-101">Type</label><button type="button" data-copy="value-101" aria-label="Copy: Type">Copy</button></div><textarea id="value-101" rows="1" readonly>select</textarea></div><div class="value"><div class="value-heading"><label for="value-102">Group</label><button type="button" data-copy="value-102" aria-label="Copy: Group">Copy</button></div><textarea id="value-102" rows="1" readonly>Lifecycle</textarea></div><div class="value"><div class="value-heading"><label for="value-103">Help text</label><button type="button" data-copy="value-103" aria-label="Copy: Help text">Copy</button></div><textarea id="value-103" rows="2" readonly>Consult before selecting the supplier on a new request. This field does not itself block selection; that needs a separate configured control.</textarea></div><div class="value"><div class="value-heading"><label for="value-104">Synthetic example</label><button type="button" data-copy="value-104" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-104" rows="1" readonly>active</textarea></div>
+      </div>
+      <div class="grid option"><div class="value"><div class="value-heading"><label for="value-105">Option value</label><button type="button" data-copy="value-105" aria-label="Copy: Option value">Copy</button></div><textarea id="value-105" rows="1" readonly>onboarding</textarea></div><div class="value"><div class="value-heading"><label for="value-106">Option label</label><button type="button" data-copy="value-106" aria-label="Copy: Option label">Copy</button></div><textarea id="value-106" rows="1" readonly>Onboarding</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-107">Option value</label><button type="button" data-copy="value-107" aria-label="Copy: Option value">Copy</button></div><textarea id="value-107" rows="1" readonly>active</textarea></div><div class="value"><div class="value-heading"><label for="value-108">Option label</label><button type="button" data-copy="value-108" aria-label="Copy: Option label">Copy</button></div><textarea id="value-108" rows="1" readonly>Active</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-109">Option value</label><button type="button" data-copy="value-109" aria-label="Copy: Option value">Copy</button></div><textarea id="value-109" rows="1" readonly>suspended</textarea></div><div class="value"><div class="value-heading"><label for="value-110">Option label</label><button type="button" data-copy="value-110" aria-label="Copy: Option label">Copy</button></div><textarea id="value-110" rows="1" readonly>Suspended</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-111">Option value</label><button type="button" data-copy="value-111" aria-label="Copy: Option value">Copy</button></div><textarea id="value-111" rows="1" readonly>blocked</textarea></div><div class="value"><div class="value-heading"><label for="value-112">Option label</label><button type="button" data-copy="value-112" aria-label="Copy: Option label">Copy</button></div><textarea id="value-112" rows="1" readonly>Blocked</textarea></div></div>
+      <dl><dt>Purpose</dt><dd>Consult the current relationship status before selecting the supplier on a new request.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with procurement.</dd><dt>Maintainer</dt><dd>Procurement lead</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Relationship start date <small>Lifecycle</small></h4>
+      <p>Optional · Required at creation: No · date</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-113">Key</label><button type="button" data-copy="value-113" aria-label="Copy: Key">Copy</button></div><textarea id="value-113" rows="1" readonly>relationship_start</textarea></div><div class="value"><div class="value-heading"><label for="value-114">Label</label><button type="button" data-copy="value-114" aria-label="Copy: Label">Copy</button></div><textarea id="value-114" rows="1" readonly>Relationship start date</textarea></div><div class="value"><div class="value-heading"><label for="value-115">Type</label><button type="button" data-copy="value-115" aria-label="Copy: Type">Copy</button></div><textarea id="value-115" rows="1" readonly>date</textarea></div><div class="value"><div class="value-heading"><label for="value-116">Group</label><button type="button" data-copy="value-116" aria-label="Copy: Group">Copy</button></div><textarea id="value-116" rows="1" readonly>Lifecycle</textarea></div><div class="value"><div class="value-heading"><label for="value-117">Help text</label><button type="button" data-copy="value-117" aria-label="Copy: Help text">Copy</button></div><textarea id="value-117" rows="1" readonly>Situates the relationship for periodic supplier review.</textarea></div><div class="value"><div class="value-heading"><label for="value-118">Synthetic example</label><button type="button" data-copy="value-118" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-118" rows="1" readonly>2026-01-15</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Situate the relationship for periodic supplier review.</dd><dt>Source</dt><dd>Synthetic proposal; confirm with procurement.</dd><dt>Maintainer</dt><dd>Registering buyer</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Evaluation record <small>Reference</small></h4>
+      <p>Optional · Required at creation: No · url</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-119">Key</label><button type="button" data-copy="value-119" aria-label="Copy: Key">Copy</button></div><textarea id="value-119" rows="1" readonly>evaluation_reference_url</textarea></div><div class="value"><div class="value-heading"><label for="value-120">Label</label><button type="button" data-copy="value-120" aria-label="Copy: Label">Copy</button></div><textarea id="value-120" rows="1" readonly>Evaluation record</textarea></div><div class="value"><div class="value-heading"><label for="value-121">Type</label><button type="button" data-copy="value-121" aria-label="Copy: Type">Copy</button></div><textarea id="value-121" rows="1" readonly>url</textarea></div><div class="value"><div class="value-heading"><label for="value-122">Group</label><button type="button" data-copy="value-122" aria-label="Copy: Group">Copy</button></div><textarea id="value-122" rows="1" readonly>Reference</textarea></div><div class="value"><div class="value-heading"><label for="value-123">Help text</label><button type="button" data-copy="value-123" aria-label="Copy: Help text">Copy</button></div><textarea id="value-123" rows="2" readonly>Link to the supplier evaluation or qualification record when a defined evaluation process exists; do not add a rating field without one.</textarea></div><div class="value"><div class="value-heading"><label for="value-124">Synthetic example</label><button type="button" data-copy="value-124" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-124" rows="1" readonly>https://example.com/suppliers/demo/evaluation</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Consult the latest supplier evaluation before renewing or expanding the relationship.</dd><dt>Source</dt><dd>Synthetic proposal; pending confirmation that an evaluation process exists.</dd><dt>Maintainer</dt><dd>Procurement lead</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article>
+    <h3>Functional coverage</h3><ul><li><strong>Identity and classification</strong>: Included. Business identification (legal name, tax number) and procurement category support invoicing and routing.</li><li><strong>Contacts and location</strong>: Included. Operational contact and address support quotation, ordering and delivery coordination.</li><li><strong>Ownership and structure</strong>: Included. Account owner names who is accountable for the relationship.</li><li><strong>Status and lifecycle</strong>: Included. Relationship status and start date support selection checks and periodic review.</li><li><strong>Operational or commercial attributes</strong>: Included. Payment terms, billing currency and bank details are reused across purchase orders instead of being re-entered per request.</li><li><strong>Relationships</strong>: Case. Purchase requests reference this Supplier record by entity selector; the request itself is not modeled as a second entity type.</li><li><strong>Evidence and source</strong>: Pending. An evaluation/qualification record link is proposed only if the organization runs a defined supplier-evaluation process; not confirmed.</li></ul>
+    <h3>Setup and dependencies</h3><ul><li>Synthetic coverage example, not a mandatory model or confirmed policy; no source document was reviewed for this task.</li><li>Confirm owners, vocabularies (procurement category, payment terms), sources and access before configuring. No synchronization with an external vendor registry is configured.</li><li>Name is native. These fields do not duplicate UUID, creator or system timestamps.</li><li>Manual walkthrough: create &#39;Demonstration Supplier&#39;; complete category, contact and payment terms before it can be selected on a purchase request or purchase order. Tax number and bank details can be completed later, before the first payment, if unknown at registration.</li><li>Configure supplier_code as auto_number, required false, no default. If the organization already assigns an external vendor code, keep this as text and drop the auto_number proposal to avoid a duplicate identifier.</li><li>bank_details holds sensitive financial data. Before collecting it, confirm field-level or role-based access in the destination; a sensitivity label alone does not restrict who can see the field.</li></ul><h3>Checks before process execution</h3><ul><li>Before selecting a supplier on a purchase request or issuing a purchase order, confirm identity, category, contact and relationship status. The status field does not itself block selection; that needs a separately configured check.</li></ul><details><summary>Type JSON</summary><div class="value"><div class="value-heading"><label for="value-125">Type JSON</label><button type="button" data-copy="value-125" aria-label="Copy: Type JSON">Copy</button></div><textarea id="value-125" rows="6" readonly>{
+  &quot;key&quot;: &quot;supplier&quot;,
+  &quot;name&quot;: &quot;Supplier&quot;,
+  &quot;description&quot;: &quot;Suppliers used in purchasing, contracting and evaluation processes. Lets requesters and buyers select the counterparty and consult the data needed for the relationship.&quot;,
+  &quot;icon&quot;: &quot;Truck01&quot;,
+  &quot;namePattern&quot;: &quot;Trading or legal name; add a known supplier/vendor code only if needed to distinguish records.&quot;,
+  &quot;purpose&quot;: &quot;Selection on purchase requests and purchase orders, contracting, payment execution and supplier evaluation.&quot;,
+  &quot;owner&quot;: &quot;Procurement lead (to be designated by the organization)&quot;,
+  &quot;fields&quot;: [
+    {
+      &quot;key&quot;: &quot;supplier_code&quot;,
+      &quot;label&quot;: &quot;Supplier code&quot;,
+      &quot;type&quot;: &quot;auto_number&quot;,
+      &quot;group&quot;: &quot;Identification&quot;,
+      &quot;helpText&quot;: &quot;Internal reference generated by Provia when the record is saved; not entered manually.&quot;,
+      &quot;purpose&quot;: &quot;Give suppliers a short reference for communications and documents distinct from the Name, when the organization has no existing vendor code to reuse.&quot;,
+      &quot;example&quot;: &quot;FORN-0001&quot;,
+      &quot;priority&quot;: &quot;optional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Generated by Provia; synthetic proposal to confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Provia generates the value; procurement defines the configuration.&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;,
+      &quot;config&quot;: {
+        &quot;prefix&quot;: &quot;FORN-&quot;,
+        &quot;padding&quot;: 4,
+        &quot;startAt&quot;: 1
+      }
+    },
+    {
+      &quot;key&quot;: &quot;legal_name&quot;,
+      &quot;label&quot;: &quot;Legal name&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;group&quot;: &quot;Identification&quot;,
+      &quot;helpText&quot;: &quot;Record the registered legal name when it differs from the trading name used as the record Name, for use on contracts and purchase orders.&quot;,
+      &quot;purpose&quot;: &quot;Identify the counterparty on contracts and purchase orders when it differs from the trading Name.&quot;,
+      &quot;example&quot;: &quot;Demonstration Supplier, Lda.&quot;,
+      &quot;priority&quot;: &quot;conditional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Registering buyer&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;tax_number&quot;,
+      &quot;label&quot;: &quot;Tax identification number&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;group&quot;: &quot;Identification&quot;,
+      &quot;helpText&quot;: &quot;Used to verify the counterparty for invoicing; confirm against the financial source of record. No official format is assumed.&quot;,
+      &quot;purpose&quot;: &quot;Verify the counterparty for invoicing and payment.&quot;,
+      &quot;example&quot;: &quot;TAX-DEMO-0001&quot;,
+      &quot;priority&quot;: &quot;conditional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with finance.&quot;,
+      &quot;maintainer&quot;: &quot;Registering buyer&quot;,
+      &quot;sensitivity&quot;: &quot;Internal; restrict to staff who process payments.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;category&quot;,
+      &quot;label&quot;: &quot;Procurement category&quot;,
+      &quot;type&quot;: &quot;select&quot;,
+      &quot;group&quot;: &quot;Classification&quot;,
+      &quot;helpText&quot;: &quot;Classify what the supplier provides, to route and filter requests. Options are a starting proposal, not a confirmed vocabulary.&quot;,
+      &quot;purpose&quot;: &quot;Filter and route purchase requests to suppliers that provide the relevant category.&quot;,
+      &quot;example&quot;: &quot;goods&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Registering buyer&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;,
+      &quot;options&quot;: [
+        {
+          &quot;value&quot;: &quot;goods&quot;,
+          &quot;label&quot;: &quot;Goods&quot;
+        },
+        {
+          &quot;value&quot;: &quot;services&quot;,
+          &quot;label&quot;: &quot;Services&quot;
+        },
+        {
+          &quot;value&quot;: &quot;works&quot;,
+          &quot;label&quot;: &quot;Works&quot;
+        }
+      ]
+    },
+    {
+      &quot;key&quot;: &quot;account_owner&quot;,
+      &quot;label&quot;: &quot;Account owner&quot;,
+      &quot;type&quot;: &quot;user&quot;,
+      &quot;group&quot;: &quot;Responsibility&quot;,
+      &quot;helpText&quot;: &quot;Identify who is accountable for the relationship, sourcing decisions and renewal review.&quot;,
+      &quot;purpose&quot;: &quot;Identify who is accountable for the relationship and sourcing decisions.&quot;,
+      &quot;example&quot;: {
+        &quot;lookupName&quot;: &quot;Demonstration procurement lead&quot;
+      },
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Registering buyer&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;contact_name&quot;,
+      &quot;label&quot;: &quot;Operational contact&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;group&quot;: &quot;Contacts&quot;,
+      &quot;helpText&quot;: &quot;Person to reach for quotations, order confirmation and delivery coordination.&quot;,
+      &quot;purpose&quot;: &quot;Reach the supplier for quotations, order confirmation and delivery coordination.&quot;,
+      &quot;example&quot;: &quot;Demonstration contact&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Registering buyer&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;contact_email&quot;,
+      &quot;label&quot;: &quot;Contact email&quot;,
+      &quot;type&quot;: &quot;email&quot;,
+      &quot;group&quot;: &quot;Contacts&quot;,
+      &quot;helpText&quot;: &quot;Primary channel for purchase orders and quotation requests.&quot;,
+      &quot;purpose&quot;: &quot;Send purchase orders and quotation requests.&quot;,
+      &quot;example&quot;: &quot;sales@example.com&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Registering buyer&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;contact_phone&quot;,
+      &quot;label&quot;: &quot;Contact phone&quot;,
+      &quot;type&quot;: &quot;phone&quot;,
+      &quot;group&quot;: &quot;Contacts&quot;,
+      &quot;helpText&quot;: &quot;Alternative contact for urgent coordination.&quot;,
+      &quot;purpose&quot;: &quot;Alternative contact for urgent coordination.&quot;,
+      &quot;example&quot;: &quot;+244 900 000 000&quot;,
+      &quot;priority&quot;: &quot;optional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Registering buyer&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;address&quot;,
+      &quot;label&quot;: &quot;Address / site&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;group&quot;: &quot;Contacts&quot;,
+      &quot;helpText&quot;: &quot;Needed when delivery, collection or an on-site visit must be planned.&quot;,
+      &quot;purpose&quot;: &quot;Plan delivery, collection or an on-site visit.&quot;,
+      &quot;example&quot;: &quot;Luanda - demonstration site&quot;,
+      &quot;priority&quot;: &quot;conditional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Registering buyer&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;payment_terms&quot;,
+      &quot;label&quot;: &quot;Payment terms&quot;,
+      &quot;type&quot;: &quot;select&quot;,
+      &quot;group&quot;: &quot;Commercial&quot;,
+      &quot;helpText&quot;: &quot;Standing payment agreement, reused on purchase orders instead of asking on every request.&quot;,
+      &quot;purpose&quot;: &quot;Reuse the agreed payment terms on purchase orders without repeating the negotiation on every request.&quot;,
+      &quot;example&quot;: &quot;net_30&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with finance/procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Registering buyer&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;,
+      &quot;options&quot;: [
+        {
+          &quot;value&quot;: &quot;advance&quot;,
+          &quot;label&quot;: &quot;Advance payment&quot;
+        },
+        {
+          &quot;value&quot;: &quot;net_15&quot;,
+          &quot;label&quot;: &quot;Net 15 days&quot;
+        },
+        {
+          &quot;value&quot;: &quot;net_30&quot;,
+          &quot;label&quot;: &quot;Net 30 days&quot;
+        },
+        {
+          &quot;value&quot;: &quot;net_60&quot;,
+          &quot;label&quot;: &quot;Net 60 days&quot;
+        }
+      ]
+    },
+    {
+      &quot;key&quot;: &quot;billing_currency&quot;,
+      &quot;label&quot;: &quot;Usual billing currency&quot;,
+      &quot;type&quot;: &quot;select&quot;,
+      &quot;group&quot;: &quot;Commercial&quot;,
+      &quot;helpText&quot;: &quot;Default currency the supplier invoices in; confirm on each purchase order rather than assuming it never varies.&quot;,
+      &quot;purpose&quot;: &quot;Pre-fill the expected currency when preparing a purchase order.&quot;,
+      &quot;example&quot;: &quot;aoa&quot;,
+      &quot;priority&quot;: &quot;conditional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with finance.&quot;,
+      &quot;maintainer&quot;: &quot;Registering buyer&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;,
+      &quot;options&quot;: [
+        {
+          &quot;value&quot;: &quot;aoa&quot;,
+          &quot;label&quot;: &quot;Angolan kwanza (AOA)&quot;
+        },
+        {
+          &quot;value&quot;: &quot;usd&quot;,
+          &quot;label&quot;: &quot;US dollar (USD)&quot;
+        },
+        {
+          &quot;value&quot;: &quot;eur&quot;,
+          &quot;label&quot;: &quot;Euro (EUR)&quot;
+        }
+      ]
+    },
+    {
+      &quot;key&quot;: &quot;bank_details&quot;,
+      &quot;label&quot;: &quot;Bank details&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;group&quot;: &quot;Commercial&quot;,
+      &quot;helpText&quot;: &quot;Needed only to execute payment; restrict access and confirm the actual source and update process before collecting it.&quot;,
+      &quot;purpose&quot;: &quot;Execute payment to the supplier.&quot;,
+      &quot;example&quot;: &quot;IBAN/account reference pending confirmation&quot;,
+      &quot;priority&quot;: &quot;conditional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with finance and the intended access control before collecting.&quot;,
+      &quot;maintainer&quot;: &quot;Finance, on verified instruction from the supplier&quot;,
+      &quot;sensitivity&quot;: &quot;Sensitive financial data; restrict to finance staff who execute payment.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;relationship_status&quot;,
+      &quot;label&quot;: &quot;Relationship status&quot;,
+      &quot;type&quot;: &quot;select&quot;,
+      &quot;group&quot;: &quot;Lifecycle&quot;,
+      &quot;helpText&quot;: &quot;Consult before selecting the supplier on a new request. This field does not itself block selection; that needs a separate configured control.&quot;,
+      &quot;purpose&quot;: &quot;Consult the current relationship status before selecting the supplier on a new request.&quot;,
+      &quot;example&quot;: &quot;active&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Procurement lead&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;,
+      &quot;options&quot;: [
+        {
+          &quot;value&quot;: &quot;onboarding&quot;,
+          &quot;label&quot;: &quot;Onboarding&quot;
+        },
+        {
+          &quot;value&quot;: &quot;active&quot;,
+          &quot;label&quot;: &quot;Active&quot;
+        },
+        {
+          &quot;value&quot;: &quot;suspended&quot;,
+          &quot;label&quot;: &quot;Suspended&quot;
+        },
+        {
+          &quot;value&quot;: &quot;blocked&quot;,
+          &quot;label&quot;: &quot;Blocked&quot;
+        }
+      ]
+    },
+    {
+      &quot;key&quot;: &quot;relationship_start&quot;,
+      &quot;label&quot;: &quot;Relationship start date&quot;,
+      &quot;type&quot;: &quot;date&quot;,
+      &quot;group&quot;: &quot;Lifecycle&quot;,
+      &quot;helpText&quot;: &quot;Situates the relationship for periodic supplier review.&quot;,
+      &quot;purpose&quot;: &quot;Situate the relationship for periodic supplier review.&quot;,
+      &quot;example&quot;: &quot;2026-01-15&quot;,
+      &quot;priority&quot;: &quot;optional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Registering buyer&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;evaluation_reference_url&quot;,
+      &quot;label&quot;: &quot;Evaluation record&quot;,
+      &quot;type&quot;: &quot;url&quot;,
+      &quot;group&quot;: &quot;Reference&quot;,
+      &quot;helpText&quot;: &quot;Link to the supplier evaluation or qualification record when a defined evaluation process exists; do not add a rating field without one.&quot;,
+      &quot;purpose&quot;: &quot;Consult the latest supplier evaluation before renewing or expanding the relationship.&quot;,
+      &quot;example&quot;: &quot;https://example.com/suppliers/demo/evaluation&quot;,
+      &quot;priority&quot;: &quot;optional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Synthetic proposal; pending confirmation that an evaluation process exists.&quot;,
+      &quot;maintainer&quot;: &quot;Procurement lead&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    }
+  ],
+  &quot;coverage&quot;: [
+    {
+      &quot;dimension&quot;: &quot;Identity and classification&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;Business identification (legal name, tax number) and procurement category support invoicing and routing.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Contacts and location&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;Operational contact and address support quotation, ordering and delivery coordination.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Ownership and structure&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;Account owner names who is accountable for the relationship.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Status and lifecycle&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;Relationship status and start date support selection checks and periodic review.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Operational or commercial attributes&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;Payment terms, billing currency and bank details are reused across purchase orders instead of being re-entered per request.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Relationships&quot;,
+      &quot;decision&quot;: &quot;case&quot;,
+      &quot;reason&quot;: &quot;Purchase requests reference this Supplier record by entity selector; the request itself is not modeled as a second entity type.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Evidence and source&quot;,
+      &quot;decision&quot;: &quot;pending&quot;,
+      &quot;reason&quot;: &quot;An evaluation/qualification record link is proposed only if the organization runs a defined supplier-evaluation process; not confirmed.&quot;
+    }
+  ],
+  &quot;setup&quot;: [
+    &quot;Synthetic coverage example, not a mandatory model or confirmed policy; no source document was reviewed for this task.&quot;,
+    &quot;Confirm owners, vocabularies (procurement category, payment terms), sources and access before configuring. No synchronization with an external vendor registry is configured.&quot;,
+    &quot;Name is native. These fields do not duplicate UUID, creator or system timestamps.&quot;,
+    &quot;Manual walkthrough: create &#39;Demonstration Supplier&#39;; complete category, contact and payment terms before it can be selected on a purchase request or purchase order. Tax number and bank details can be completed later, before the first payment, if unknown at registration.&quot;,
+    &quot;Configure supplier_code as auto_number, required false, no default. If the organization already assigns an external vendor code, keep this as text and drop the auto_number proposal to avoid a duplicate identifier.&quot;,
+    &quot;bank_details holds sensitive financial data. Before collecting it, confirm field-level or role-based access in the destination; a sensitivity label alone does not restrict who can see the field.&quot;
+  ],
+  &quot;readiness&quot;: [
+    &quot;Before selecting a supplier on a purchase request or issuing a purchase order, confirm identity, category, contact and relationship status. The status field does not itself block selection; that needs a separately configured check.&quot;
+  ]
+}</textarea></div></details></section></main>
+  <script type="application/json" id="catalogue-data">{
+  "schemaVersion": "provia-entity-catalogue/v1",
+  "title": "Supplier / Purchase request data boundary",
+  "language": "en",
+  "country": "Angola",
+  "notes": [
+    "No sources were supplied for this task (no SOP, sample records, existing catalogue, form or reporting requirement). Angola is disclosed as a provisional country context only; currency AOA and timezone Africa/Luanda are assumptions, not confirmed. Confirm with the organization before relying on them.",
+    "Assumed baseline: a generic goods/services procurement flow (request -> approval -> sourcing/quotation -> purchase order -> receipt). No actual SOP was reviewed; adjust once a real procedure or workflow design is available.",
+    "Only Supplier is modeled as a Provia entity type here. A purchase request is one execution of a recurring process, not a stable object selected across cases, so its data belongs to workflow case metadata and Form Fill answers, not a second entity type. See setup notes below for the recommended purchase-request field disposition.",
+    "Icons verified against the snapshot referenced in entity-icons.json (product source revision 36772f7ce0831f0ea6f85a0e3e7849d32e576655); confirm availability in the destination if its product revision differs.",
+    "Metadata field types and configuration rules verified against Provia revision 2641364d9c1aa0aa2b76aa788ef521bcb6218118; confirm destination version separately.",
+    "Purchase request fields (not modeled as entity type; recommended disposition):",
+    "- Case metadata (workflow schema, needed for routing/reporting/approval thresholds): requester (native creator), department or cost center, request date (native createdAt), needed-by date, urgency/priority, supplier (entity reference to Supplier, once selected), estimated total amount, currency, budget code, purchase-order number (auto_number on the workflow once issued).",
+    "- Native workflow features, not duplicate custom fields: current approval decision and history (workflow action outcomes), overall request status (case/workflow status), assignee (action assignee).",
+    "- Form response only (collected at submission, mapped to the case only if a listed use needs it): line items (description, quantity, unit, estimated unit price), justification/business reason, delivery location, requested supplier quotations or attachments.",
+    "- Held in the Supplier entity, referenced rather than repeated on every request: supplier identity, contacts, payment terms, currency of billing, relationship status, account owner.",
+    "This disposition is a design recommendation for the next workflow/form design step; it is not workflow YAML or a form specification."
+  ],
+  "types": [
+    {
+      "key": "supplier",
+      "name": "Supplier",
+      "description": "Suppliers used in purchasing, contracting and evaluation processes. Lets requesters and buyers select the counterparty and consult the data needed for the relationship.",
+      "icon": "Truck01",
+      "namePattern": "Trading or legal name; add a known supplier/vendor code only if needed to distinguish records.",
+      "purpose": "Selection on purchase requests and purchase orders, contracting, payment execution and supplier evaluation.",
+      "owner": "Procurement lead (to be designated by the organization)",
+      "fields": [
+        {
+          "key": "supplier_code",
+          "label": "Supplier code",
+          "type": "auto_number",
+          "group": "Identification",
+          "helpText": "Internal reference generated by Provia when the record is saved; not entered manually.",
+          "purpose": "Give suppliers a short reference for communications and documents distinct from the Name, when the organization has no existing vendor code to reuse.",
+          "example": "FORN-0001",
+          "priority": "optional",
+          "required": false,
+          "source": "Generated by Provia; synthetic proposal to confirm with procurement.",
+          "maintainer": "Provia generates the value; procurement defines the configuration.",
+          "sensitivity": "Internal.",
+          "config": {
+            "prefix": "FORN-",
+            "padding": 4,
+            "startAt": 1
+          }
+        },
+        {
+          "key": "legal_name",
+          "label": "Legal name",
+          "type": "text",
+          "group": "Identification",
+          "helpText": "Record the registered legal name when it differs from the trading name used as the record Name, for use on contracts and purchase orders.",
+          "purpose": "Identify the counterparty on contracts and purchase orders when it differs from the trading Name.",
+          "example": "Demonstration Supplier, Lda.",
+          "priority": "conditional",
+          "required": false,
+          "source": "Synthetic proposal; confirm with procurement.",
+          "maintainer": "Registering buyer",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "tax_number",
+          "label": "Tax identification number",
+          "type": "text",
+          "group": "Identification",
+          "helpText": "Used to verify the counterparty for invoicing; confirm against the financial source of record. No official format is assumed.",
+          "purpose": "Verify the counterparty for invoicing and payment.",
+          "example": "TAX-DEMO-0001",
+          "priority": "conditional",
+          "required": false,
+          "source": "Synthetic proposal; confirm with finance.",
+          "maintainer": "Registering buyer",
+          "sensitivity": "Internal; restrict to staff who process payments."
+        },
+        {
+          "key": "category",
+          "label": "Procurement category",
+          "type": "select",
+          "group": "Classification",
+          "helpText": "Classify what the supplier provides, to route and filter requests. Options are a starting proposal, not a confirmed vocabulary.",
+          "purpose": "Filter and route purchase requests to suppliers that provide the relevant category.",
+          "example": "goods",
+          "priority": "core",
+          "required": false,
+          "source": "Synthetic proposal; confirm with procurement.",
+          "maintainer": "Registering buyer",
+          "sensitivity": "Internal.",
+          "options": [
+            {
+              "value": "goods",
+              "label": "Goods"
+            },
+            {
+              "value": "services",
+              "label": "Services"
+            },
+            {
+              "value": "works",
+              "label": "Works"
+            }
+          ]
+        },
+        {
+          "key": "account_owner",
+          "label": "Account owner",
+          "type": "user",
+          "group": "Responsibility",
+          "helpText": "Identify who is accountable for the relationship, sourcing decisions and renewal review.",
+          "purpose": "Identify who is accountable for the relationship and sourcing decisions.",
+          "example": {
+            "lookupName": "Demonstration procurement lead"
+          },
+          "priority": "core",
+          "required": false,
+          "source": "Synthetic proposal; confirm with procurement.",
+          "maintainer": "Registering buyer",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "contact_name",
+          "label": "Operational contact",
+          "type": "text",
+          "group": "Contacts",
+          "helpText": "Person to reach for quotations, order confirmation and delivery coordination.",
+          "purpose": "Reach the supplier for quotations, order confirmation and delivery coordination.",
+          "example": "Demonstration contact",
+          "priority": "core",
+          "required": false,
+          "source": "Synthetic proposal; confirm with procurement.",
+          "maintainer": "Registering buyer",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "contact_email",
+          "label": "Contact email",
+          "type": "email",
+          "group": "Contacts",
+          "helpText": "Primary channel for purchase orders and quotation requests.",
+          "purpose": "Send purchase orders and quotation requests.",
+          "example": "sales@example.com",
+          "priority": "core",
+          "required": false,
+          "source": "Synthetic proposal; confirm with procurement.",
+          "maintainer": "Registering buyer",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "contact_phone",
+          "label": "Contact phone",
+          "type": "phone",
+          "group": "Contacts",
+          "helpText": "Alternative contact for urgent coordination.",
+          "purpose": "Alternative contact for urgent coordination.",
+          "example": "+244 900 000 000",
+          "priority": "optional",
+          "required": false,
+          "source": "Synthetic proposal; confirm with procurement.",
+          "maintainer": "Registering buyer",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "address",
+          "label": "Address / site",
+          "type": "text",
+          "group": "Contacts",
+          "helpText": "Needed when delivery, collection or an on-site visit must be planned.",
+          "purpose": "Plan delivery, collection or an on-site visit.",
+          "example": "Luanda - demonstration site",
+          "priority": "conditional",
+          "required": false,
+          "source": "Synthetic proposal; confirm with procurement.",
+          "maintainer": "Registering buyer",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "payment_terms",
+          "label": "Payment terms",
+          "type": "select",
+          "group": "Commercial",
+          "helpText": "Standing payment agreement, reused on purchase orders instead of asking on every request.",
+          "purpose": "Reuse the agreed payment terms on purchase orders without repeating the negotiation on every request.",
+          "example": "net_30",
+          "priority": "core",
+          "required": false,
+          "source": "Synthetic proposal; confirm with finance/procurement.",
+          "maintainer": "Registering buyer",
+          "sensitivity": "Internal.",
+          "options": [
+            {
+              "value": "advance",
+              "label": "Advance payment"
+            },
+            {
+              "value": "net_15",
+              "label": "Net 15 days"
+            },
+            {
+              "value": "net_30",
+              "label": "Net 30 days"
+            },
+            {
+              "value": "net_60",
+              "label": "Net 60 days"
+            }
+          ]
+        },
+        {
+          "key": "billing_currency",
+          "label": "Usual billing currency",
+          "type": "select",
+          "group": "Commercial",
+          "helpText": "Default currency the supplier invoices in; confirm on each purchase order rather than assuming it never varies.",
+          "purpose": "Pre-fill the expected currency when preparing a purchase order.",
+          "example": "aoa",
+          "priority": "conditional",
+          "required": false,
+          "source": "Synthetic proposal; confirm with finance.",
+          "maintainer": "Registering buyer",
+          "sensitivity": "Internal.",
+          "options": [
+            {
+              "value": "aoa",
+              "label": "Angolan kwanza (AOA)"
+            },
+            {
+              "value": "usd",
+              "label": "US dollar (USD)"
+            },
+            {
+              "value": "eur",
+              "label": "Euro (EUR)"
+            }
+          ]
+        },
+        {
+          "key": "bank_details",
+          "label": "Bank details",
+          "type": "text",
+          "group": "Commercial",
+          "helpText": "Needed only to execute payment; restrict access and confirm the actual source and update process before collecting it.",
+          "purpose": "Execute payment to the supplier.",
+          "example": "IBAN/account reference pending confirmation",
+          "priority": "conditional",
+          "required": false,
+          "source": "Synthetic proposal; confirm with finance and the intended access control before collecting.",
+          "maintainer": "Finance, on verified instruction from the supplier",
+          "sensitivity": "Sensitive financial data; restrict to finance staff who execute payment."
+        },
+        {
+          "key": "relationship_status",
+          "label": "Relationship status",
+          "type": "select",
+          "group": "Lifecycle",
+          "helpText": "Consult before selecting the supplier on a new request. This field does not itself block selection; that needs a separate configured control.",
+          "purpose": "Consult the current relationship status before selecting the supplier on a new request.",
+          "example": "active",
+          "priority": "core",
+          "required": false,
+          "source": "Synthetic proposal; confirm with procurement.",
+          "maintainer": "Procurement lead",
+          "sensitivity": "Internal.",
+          "options": [
+            {
+              "value": "onboarding",
+              "label": "Onboarding"
+            },
+            {
+              "value": "active",
+              "label": "Active"
+            },
+            {
+              "value": "suspended",
+              "label": "Suspended"
+            },
+            {
+              "value": "blocked",
+              "label": "Blocked"
+            }
+          ]
+        },
+        {
+          "key": "relationship_start",
+          "label": "Relationship start date",
+          "type": "date",
+          "group": "Lifecycle",
+          "helpText": "Situates the relationship for periodic supplier review.",
+          "purpose": "Situate the relationship for periodic supplier review.",
+          "example": "2026-01-15",
+          "priority": "optional",
+          "required": false,
+          "source": "Synthetic proposal; confirm with procurement.",
+          "maintainer": "Registering buyer",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "evaluation_reference_url",
+          "label": "Evaluation record",
+          "type": "url",
+          "group": "Reference",
+          "helpText": "Link to the supplier evaluation or qualification record when a defined evaluation process exists; do not add a rating field without one.",
+          "purpose": "Consult the latest supplier evaluation before renewing or expanding the relationship.",
+          "example": "https://example.com/suppliers/demo/evaluation",
+          "priority": "optional",
+          "required": false,
+          "source": "Synthetic proposal; pending confirmation that an evaluation process exists.",
+          "maintainer": "Procurement lead",
+          "sensitivity": "Internal."
+        }
+      ],
+      "coverage": [
+        {
+          "dimension": "Identity and classification",
+          "decision": "included",
+          "reason": "Business identification (legal name, tax number) and procurement category support invoicing and routing."
+        },
+        {
+          "dimension": "Contacts and location",
+          "decision": "included",
+          "reason": "Operational contact and address support quotation, ordering and delivery coordination."
+        },
+        {
+          "dimension": "Ownership and structure",
+          "decision": "included",
+          "reason": "Account owner names who is accountable for the relationship."
+        },
+        {
+          "dimension": "Status and lifecycle",
+          "decision": "included",
+          "reason": "Relationship status and start date support selection checks and periodic review."
+        },
+        {
+          "dimension": "Operational or commercial attributes",
+          "decision": "included",
+          "reason": "Payment terms, billing currency and bank details are reused across purchase orders instead of being re-entered per request."
+        },
+        {
+          "dimension": "Relationships",
+          "decision": "case",
+          "reason": "Purchase requests reference this Supplier record by entity selector; the request itself is not modeled as a second entity type."
+        },
+        {
+          "dimension": "Evidence and source",
+          "decision": "pending",
+          "reason": "An evaluation/qualification record link is proposed only if the organization runs a defined supplier-evaluation process; not confirmed."
+        }
+      ],
+      "setup": [
+        "Synthetic coverage example, not a mandatory model or confirmed policy; no source document was reviewed for this task.",
+        "Confirm owners, vocabularies (procurement category, payment terms), sources and access before configuring. No synchronization with an external vendor registry is configured.",
+        "Name is native. These fields do not duplicate UUID, creator or system timestamps.",
+        "Manual walkthrough: create 'Demonstration Supplier'; complete category, contact and payment terms before it can be selected on a purchase request or purchase order. Tax number and bank details can be completed later, before the first payment, if unknown at registration.",
+        "Configure supplier_code as auto_number, required false, no default. If the organization already assigns an external vendor code, keep this as text and drop the auto_number proposal to avoid a duplicate identifier.",
+        "bank_details holds sensitive financial data. Before collecting it, confirm field-level or role-based access in the destination; a sensitivity label alone does not restrict who can see the field."
+      ],
+      "readiness": [
+        "Before selecting a supplier on a purchase request or issuing a purchase order, confirm identity, category, contact and relationship status. The status field does not itself block selection; that needs a separately configured check."
+      ]
+    }
+  ]
+}</script><script>
+  const status = document.getElementById('status');
+  const fitText = () => document.querySelectorAll('textarea').forEach(area => {
+    area.style.height = 'auto';
+    area.style.height = (area.scrollHeight + 2) + 'px';
+  });
+  fitText();
+  window.addEventListener('resize', fitText);
+  window.addEventListener('beforeprint', fitText);
+  window.addEventListener('afterprint', fitText);
+  document.querySelectorAll('details').forEach(panel => panel.addEventListener('toggle', fitText));
+  document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', async () => {
+    const area = document.getElementById(button.dataset.copy);
+    try {
+      if (!navigator.clipboard || !window.isSecureContext) throw new Error('fallback');
+      await navigator.clipboard.writeText(area.value);
+      status.textContent = "Copied.";
+    } catch {
+      area.focus(); area.select();
+      let copied = false;
+      try { copied = document.execCommand('copy'); } catch {}
+      status.textContent = copied ? "Copied." : "Text selected. Press Ctrl+C or ⌘C to copy.";
+    }
+  }));
+  document.getElementById('search').addEventListener('input', event => {
+    const term = event.target.value.toLocaleLowerCase();
+    document.querySelectorAll('[data-catalogue-type]').forEach(section => {
+      const values = Array.from(section.querySelectorAll('textarea')).map(area => area.value).join(' ');
+      section.hidden = !(section.textContent + values).toLocaleLowerCase().includes(term);
+    });
+    fitText();
+  });
+  document.querySelectorAll('nav a').forEach(link => link.addEventListener('click', () => {
+    document.getElementById('search').value = '';
+    document.querySelectorAll('[data-catalogue-type]').forEach(section => { section.hidden = false; });
+    fitText();
+  }));
+  document.getElementById('download').addEventListener('click', () => {
+    const blob = new Blob([document.getElementById('catalogue-data').textContent], {type:'application/json'});
+    const url = URL.createObjectURL(blob), link = document.createElement('a');
+    link.href = url; link.download = 'catalogue.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+  document.getElementById('print').addEventListener('click', () => window.print());
+  </script></body></html>

@@ -1,0 +1,145 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "compras",
+    "title": "Pedido de compra",
+    "language": "pt-AO",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": "Organização exemplo",
+    "sector": "Serviços",
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "pedido-alteracao-campos",
+      "title": "Pedido do utilizador: alterar os campos obrigatórios do workflow de compras com pedidos em curso",
+      "kind": "other",
+      "version": "1",
+      "effectiveDate": "2026-09-18",
+      "sections": [
+        { "anchor": "geral", "title": "Pedido de alteração" }
+      ]
+    }
+  ],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [
+    {
+      "key": "compras",
+      "name": "Pedido de compra",
+      "prefix": "COMP",
+      "file": "workflow.yaml",
+      "status": "change_planned",
+      "sourceRefs": [
+        { "source": "pedido-alteracao-campos", "section": "geral" }
+      ],
+      "actions": [
+        {
+          "localId": "registar",
+          "name": "Registar a necessidade",
+          "type": "standard",
+          "sourceRefs": [
+            { "source": "pedido-alteracao-campos", "section": "geral" }
+          ],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Título, montante, centro de custo e categoria da despesa preenchidos na versão proposta"
+          ],
+          "due": { "offsetDays": 1, "offsetType": "workdays", "basis": "activation" },
+          "folded": []
+        },
+        {
+          "localId": "decidir",
+          "name": "Decidir sobre o pedido",
+          "type": "decision",
+          "sourceRefs": [],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Comentário obrigatório em «Devolver» e «Rejeitar»" ],
+          "due": { "offsetDays": 2, "offsetType": "workdays", "basis": "activation" },
+          "folded": []
+        },
+        {
+          "localId": "confirmar_cabimento",
+          "name": "Confirmar disponibilidade orçamental",
+          "type": "standard",
+          "sourceRefs": [
+            { "source": "pedido-alteracao-campos", "section": "geral" }
+          ],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Referência orçamental preenchida, obrigatória na versão proposta" ],
+          "due": { "offsetDays": 2, "offsetType": "workdays", "basis": "activation" },
+          "folded": []
+        },
+        {
+          "localId": "encomendar",
+          "name": "Registar a encomenda",
+          "type": "standard",
+          "sourceRefs": [],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Nota de encomenda anexada e referência da encomenda preenchida" ],
+          "due": { "offsetDays": 3, "offsetType": "workdays", "basis": "activation" },
+          "folded": []
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "Confirmar responsáveis reais (assignee) antes de publicar; o rascunho usa `creator` por não existir organização ligada.",
+        "workflow.yaml é a linha de base assumida como a versão activa (v1); workflow.v2-draft.yaml é a proposta com os campos obrigatórios alterados. Nenhum export real foi fornecido — ver workflow-change-report.md."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Quantos pedidos (incidentes) estão actualmente em curso neste workflow, e em que acção se encontra cada um? Sem esta contagem não é possível confirmar o impacto real da alteração.",
+      "owner": "Dono do processo de compras",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "pedido-alteracao-campos", "section": "geral" } ]
+    },
+    {
+      "id": "D2",
+      "question": "Confirmar se «Referência orçamental» (budget_reference) deve mesmo passar a obrigatória para todos os pedidos, incluindo os já em curso, ou só para pedidos criados a partir da nova versão.",
+      "owner": "Dono do processo de compras",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "pedido-alteracao-campos", "section": "geral" } ]
+    },
+    {
+      "id": "D3",
+      "question": "Confirmar se «Categoria da despesa» (expense_category, novo campo) é mesmo o campo obrigatório pretendido, e os valores correctos das opções (Bens/Serviços/Obras) — nenhuma lista foi fornecida pelo utilizador, esta é uma proposta ilustrativa.",
+      "owner": "Dono do processo de compras",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "pedido-alteracao-campos", "section": "geral" } ]
+    },
+    {
+      "id": "D4",
+      "question": "Como devem ser tratados os pedidos em curso sem valor em budget_reference/expense_category quando a v2 for publicada: aceitar a lacuna, pedir ao requerente que complete o campo por comentário/página, ou bloquear a acção seguinte até estar preenchido? A plataforma não garante um comportamento único — confirmar com o fornecedor/ambiente real antes de publicar.",
+      "owner": "Dono do processo de compras",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "pedido-alteracao-campos", "section": "geral" } ]
+    }
+  ],
+  "receipts": []
+}

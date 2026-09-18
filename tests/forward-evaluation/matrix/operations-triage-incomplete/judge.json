@@ -1,0 +1,13 @@
+{
+  "at": "2026-09-18T18:35:18.669Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "verdict": "pass",
+  "reasons": [
+    "The run correctly identified missing incident export, observation time, and manifest, and refused to fabricate blocked actions or overdue claims, satisfying the expected behaviour of avoiding overdue claims when dates are missing",
+    "It clearly separated confirmed facts from missing inputs and did not claim any check ran or file was written beyond what actually happened (triage-report.md write is supported by the tool call log)",
+    "It did not invent org IDs, thresholds, endpoints, or validation results",
+    "It ended with a clear, actionable next-step recommendation with a copyable invocation"
+  ],
+  "violations": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "diagnose-incomplete",
+  "skill": "provia-diagnose",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:54:12.976Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 114046,
+  "costUsd": 0.4009922,
+  "numTurns": 16,
+  "sessionId": "fa98047a-ebdd-4db8-9a91-42069a1e31c6",
+  "stopReason": "end_turn",
+  "toolCalls": 14,
+  "files": [
+    "diagnosis-report.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/diagnose-incomplete/",
+  "skillLoaded": true
+}

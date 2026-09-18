@@ -1,0 +1,20 @@
+{
+  "id": "information-model-conflicting",
+  "skill": "provia-information-model",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:13:39.984Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 161810,
+  "costUsd": 0.6037846,
+  "numTurns": 21,
+  "sessionId": "e079260f-f0e1-4e36-ad72-7fe6bab55f7f",
+  "stopReason": "end_turn",
+  "toolCalls": 19,
+  "files": [
+    "catalogue.html",
+    "catalogue.json"
+  ],
+  "output": "tests/forward-evaluation/matrix/information-model-conflicting/",
+  "skillLoaded": true
+}

@@ -1,6 +1,6 @@
 # Provia Skills
 
-Provia Skills helps organizations turn procedures into workflow designs, prepare importable Provia YAML, and review how their processes operate. The package contains 14 agent skills, shared product and country references, five business examples, and an offline workflow validator derived from Provia's code.
+Provia Skills is the toolkit for whoever implements Provia in a customer: it turns the customer's procedures, SOPs, checklists, org charts and exports into what a tenant needs (entity types, groups, workflow drafts, forms, AI profiles, rollout plan) and keeps the process healthy after go-live. The package contains 16 agent skills generated from one catalogue, a project manifest and offline project map that keep every artefact in one graph, an action-brief standard with a review gate, shared product and country references, five business examples, an offline workflow validator derived from Provia's code, and a behavioural evaluation harness.
 
 Angola is the primary country context. Skill instructions are in English; business outputs can use Angolan Portuguese or another language. Country, language, currency and applicable legislation are separate choices.
 
@@ -11,7 +11,7 @@ This is the source and community repository for `pixelinfinito/provia-plugin`. T
 - [Installation guide](https://docs.provia.ao/guides/provia-skills/install)
 - [Usage guide](https://docs.provia.ao/guides/provia-skills/using-the-plugin)
 
-The plugin works with procedures, exports and records supplied to the assistant. It has no Provia connector, credentials or telemetry. Authorized users configure, import and publish the resulting drafts in Provia.
+The plugin works with procedures, exports and records supplied to the assistant and has no credentials or telemetry. Authorized users configure, import and publish the resulting drafts in Provia. A connected mode through the `provia-implementer` MCP server is specified in [connected mode](references/connected-mode.md); until that server is released in your environment every skill behaves identically without it.
 
 ## Install from the repository marketplace
 
@@ -41,11 +41,15 @@ A workspace administrator opens **Admin → Plugins → Add → Import marketpla
 
 ChatGPT supports the repository's Claude-compatible marketplace manifest. Admins control availability and can use **Sync now** to fetch updates. If your account has no marketplace import option, use the documentation ZIP and the supported local installation route. Attaching a ZIP to a chat does not install it. See [OpenAI's workspace import guide](https://learn.chatgpt.com/docs/enterprise/plugin-management).
 
-The shared catalog is [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json). Its `./` source includes the whole plugin root, preserving all 14 skills, references and validators. Both provider plugin manifests remain in place. Add the repository URL, not the raw JSON file URL, so relative files are available. Marketplace installation follows repository changes; existing versioned documentation ZIPs remain unchanged. This repository marketplace does not imply a listing in either provider's public directory.
+The shared catalog is [`.claude-plugin/marketplace.json`](.claude-plugin/marketplace.json). Its `./` source includes the whole plugin root, preserving all 16 skills, references and validators. Both provider plugin manifests remain in place. Add the repository URL, not the raw JSON file URL, so relative files are available. Marketplace installation follows repository changes; existing versioned documentation ZIPs remain unchanged. This repository marketplace does not imply a listing in either provider's public directory.
 
 ## Contents
 
 - [Choose a skill](#choose-a-skill)
+- [One project, one map](#one-project-one-map)
+- [Executable action briefs](#executable-action-briefs)
+- [Groups as data](#groups-as-data)
+- [Connected mode](#connected-mode)
 - [Use the skills together](#use-the-skills-together)
 - [Country and organization context](#country-and-organization-context)
 - [Repository map](#repository-map)
@@ -61,35 +65,81 @@ The shared catalog is [`.claude-plugin/marketplace.json`](.claude-plugin/marketp
 
 ## Choose a skill
 
-Action names follow the shared [action-writing guide](references/action-writing.md): a Portuguese infinitive or English base-form verb names the work, while assignment and instructions carry roles and completion criteria. For example, "GC confirma o pagamento" becomes "Confirmar o pagamento"; a form title remains separate from its Form Fill task name. Package generation includes `editorial-review.md` alongside the untouched structural `validation.json`. Structural validity does not certify wording. See the [semantic acceptance cases](tests/action-writing-evaluations.md).
+Each skill lives at `skills/<skill-name>/SKILL.md` and is generated from [catalog.json](catalog.json) by `node scripts/build-skills.mjs`, which also writes the tables below and the documentation pages; edit the catalogue, not the generated files (`--check` verifies they match). Every skill starts by reading the [shared conventions](references/skill-conventions.md), so country and language, disconnected or connected mode, the project manifest, the honesty rules and the final next-step recommendation are stated once. Skill descriptions carry Portuguese and English trigger phrases, so a host that auto-selects skills matches «ajuda-me a organizar as compras» as well as "turn this SOP into a workflow".
 
-Each skill lives at `skills/<skill-name>/SKILL.md`. Select it in your assistant's installed skill interface, or ask for it by its exact name. Skills produce recommendations and artifacts; the shell commands later in this README run the deterministic checks.
+Select a skill in your assistant's installed skill interface, or ask for it by its exact name. Skills produce recommendations and artefacts; the shell commands later in this README run the deterministic checks.
 
+<!-- skills:begin -->
 ### Discover, design and prepare a process
 
 | Skill and source | When to use it | What to provide | Expected output |
 | --- | --- | --- | --- |
-| [provia-process-discovery](skills/provia-process-discovery/SKILL.md) | Choose a first process or prioritize a pilot. | Process inventory, recurring problems, volumes, owners and constraints. | Ranked shortlist, pilot recommendation, scope and success measures. |
-| [provia-workflow-designer](skills/provia-workflow-designer/SKILL.md) | Turn a procedure or checklist into a workflow design. | Procedure, approval authority, start/end conditions and exceptions. | Action table, sequence, decision outcomes, assignments and source mapping. |
-| [provia-information-model](skills/provia-information-model/SKILL.md) | Decide what belongs in entities, incident metadata, form answers and tags. | Business objects, sample records and reporting needs. | Entity model, field dictionary, mappings and a reason for each collected field. |
-| [provia-form-designer](skills/provia-form-designer/SKILL.md) | Design intake forms or collect evidence within an existing incident. | Respondents, access requirements, required answers and uploads. | Form specification with validation, mappings, confirmation and test steps. |
-| [provia-workflow-package](skills/provia-workflow-package/SKILL.md) | Generate, explain or repair portable workflow YAML. | Agreed design or export, known destination references and setup constraints. | `workflow.yaml`, the actual `validation.json` when executed, `editorial-review.md`, and `setup.md`. |
-| [provia-workflow-review](skills/provia-workflow-review/SKILL.md) | Review a draft before publication. | Workflow design or YAML, procedure, intended outcome and dependencies. | Prioritized findings, proposed corrections and representative test scenarios. |
-| [provia-organization-rollout](skills/provia-organization-rollout/SKILL.md) | Plan ownership, training and adoption across teams. | Teams, administrators, process owners, pilot results and permissions. | Role/group proposal, training exercises, rollout milestones and adoption measures. |
+| [provia-process-discovery](skills/provia-process-discovery/SKILL.md) | Choose a suitable first Provia process from an organization’s repeated work and constraints. «por onde começar com o Provia» | Process inventory, recent cases, pain points, volumes, owners, constraints and baseline measures. | A ranked shortlist, an explained pilot choice, boundaries, owner, success measures, open questions, and the manifest `sources[]` and `decisions[]` for the pilot. |
+| [provia-workflow-designer](skills/provia-workflow-designer/SKILL.md) | Turn supplied procedures, SOPs and checklists into a Provia workflow design with classified source steps, executable action briefs, a flow diagram, a YAML skeleton and the manifest entry. «transforma este procedimento num workflow» | Procedure, start/end conditions, roles, approval rules, required evidence, service levels and exceptions; the manifest when one exists. | A source step classification, an action table with owners by group key and evidence, a Mermaid flow, a YAML skeleton with full descriptions, the manifest `workflows[]` entry with proposed `groups[]` and `decisions[]`, and the open decisions to answer before packaging. |
+| [provia-information-model](skills/provia-information-model/SKILL.md) | Design complete, usable Provia entity types and field dictionaries, delivered as JSON and a copy-ready HTML catalogue for manual setup. «que campos deve ter o fornecedor» | Business processes across the requested scope, business objects, sample records, reporting questions, forms, existing catalogues and systems of record. | Matching JSON and offline HTML (or the manifest `entityTypes[]` and the map's catalogue tab), with a justification, paste-ready description, verified icon and record Name pattern for each proposed type; a complete, grouped field dictionary and functional coverage review; useful mappings/tags; a disposition of removed or deferred proposals; and a manual-entry review with unresolved setup. |
+| [provia-form-designer](skills/provia-form-designer/SKILL.md) | Design intake forms and Form Fill responses with appropriate access and mappings, traced to the workflow action they serve. «cria o formulário de pedido» | Respondents, desired answers, process stage, access constraints, uploads and response policy; the workflow action the form serves. | A form specification with fields, validation, access, mappings, uploads, confirmation and testing steps, plus the manifest `forms[]` entry linked to its workflow action. |
+| [provia-workflow-package](skills/provia-workflow-package/SKILL.md) | Generate, explain or repair portable Provia workflow YAML, run the bundled validator and the action review gate, and generate the setup handover from the project manifest. «gera o YAML do workflow» | An agreed design or YAML export, the project manifest, source contract version, known destination references or receipts, and setup constraints. | `workflow.yaml`, the exact structural `validation.json`, the `review-actions` report, `editorial-review.md`, the generated `setup.md` and the updated manifest and map. |
+| [provia-workflow-review](skills/provia-workflow-review/SKILL.md) | Review a Provia workflow for ownership, sequencing, evidence, exceptions, executable action briefs and publication readiness. «revê este workflow antes de publicar» | Workflow design or export, the project manifest, intended business outcome, procedure and known dependencies. | A prioritized findings list with evidence, the per-action review gate result, proposed corrections, new `decisions[]` and representative test scenarios. |
+| [provia-organization-rollout](skills/provia-organization-rollout/SKILL.md) | Derive the groups design as data from the sources and plan Provia ownership, training and adoption for a team or organization. «define os grupos» | Teams, org chart, administrators, process owners, the sources naming each actor, the manifest workflows, pilot results, existing permissions and rollout constraints. | The `groups[]` design as data with flags and decisions, an ownership coverage check across the workflows, training exercises, rollout milestones and measurable adoption reviews. |
 
-### Automate, operate and improve
+### Automate and extend
 
 | Skill and source | When to use it | What to provide | Expected output |
 | --- | --- | --- | --- |
-| [provia-automation-designer](skills/provia-automation-designer/SKILL.md) | Specify triggers, notifications, waits, HTTP calls or sub-workflows. | Events, actual API documentation, payloads, timing and failure requirements. | Integration design, mappings, secret dependencies, retries, timeouts and exception paths. |
-| [provia-ai-action-designer](skills/provia-ai-action-designer/SKILL.md) | Design an AI-assigned Standard action and its profile instructions. | Task, available evidence, expected artifact, field access and review policy. | Profile instructions, output contract, human review behavior and evaluation cases. |
-| [provia-operations-triage](skills/provia-operations-triage/SKILL.md) | Identify work needing attention from an incident/action snapshot. | Authorized records, observation time, statuses, owners and due dates. | Evidence-backed attention list with record references and proposed next steps. |
-| [provia-process-improvement](skills/provia-process-improvement/SKILL.md) | Investigate delays or compare process performance. | Comparable reporting periods, versions, records and metric definitions. | Reproducible calculations, findings, limitations and a measurable improvement proposal. |
-| [provia-controls-evidence](skills/provia-controls-evidence/SKILL.md) | Compare policy requirements with workflow controls and execution evidence. | Approved policy or verified legal sources, workflow and incident evidence. | Requirement/action/evidence matrix, gaps and follow-up ownership. |
-| [provia-process-knowledge](skills/provia-process-knowledge/SKILL.md) | Create or reconcile procedures, runbooks, action instructions and proposed Agent Memory. | Approved workflow version, policies, guidance and incident lessons. | Sourced knowledge artifact with scope, version, owner and unresolved conflicts. |
-| [provia-workflow-change](skills/provia-workflow-change/SKILL.md) | Plan changes to an existing workflow, including effects on active incidents. | Current/proposed designs, active-case evidence and affected dependencies. | Behavioral comparison, impact assessment, draft-version plan, tests and recovery instructions. |
+| [provia-automation-designer](skills/provia-automation-designer/SKILL.md) | Specify Provia notifications, waits, triggers, HTTP calls and reusable sub-workflows from actual API documentation. «enviar o pedido aprovado para o ERP» | Target event, system API contract, payload examples, timing, access restrictions and failure handling; the manifest workflow the automation belongs to. | An integration specification with mappings, dependencies, retries, timeouts and exception paths, and the manifest actions and setup notes it needs. |
+| [provia-ai-action-designer](skills/provia-ai-action-designer/SKILL.md) | Design reviewable AI-assigned Standard actions and narrowly scoped Provia agent profiles. «a IA resume as propostas» | Task, supplied evidence, expected artefact, available fields, review policy and plan availability; the manifest action the AI will prepare. | Profile instructions, required skills, output contract, review behaviour, evaluation cases and the manifest `aiProfiles[]` entry. |
 
-The structured catalogue is available in [catalog.json](catalog.json). Each entry includes example prompts, inputs, outputs and guidance for incomplete or conflicting information.
+### Operate, control and improve
+
+| Skill and source | When to use it | What to provide | Expected output |
+| --- | --- | --- | --- |
+| [provia-operations-triage](skills/provia-operations-triage/SKILL.md) | Analyze supplied incident/action records for overdue, blocked, unassigned or stalled work and name who can act. «que pedidos precisam de atenção hoje» | Authorized record export, observation time, timezone, statuses, ownership and due dates; the manifest for owner keys. | An evidence-backed attention list with reasons, record references, suggested owners and next steps. |
+| [provia-process-improvement](skills/provia-process-improvement/SKILL.md) | Analyze supplied Provia reports and exports to propose one measurable process improvement with its measurement plan. «porque é que as compras demoram mais» | Comparable reporting periods, workflow/version scope, raw records, metric definitions and the business question. | Findings, reproducible calculations, limitations and a proposed change with a measurement plan. |
+| [provia-controls-evidence](skills/provia-controls-evidence/SKILL.md) | Map supplied organizational requirements to Provia actions and execution evidence, separating legislation, policy and recommendation. «compara o procedimento com estes registos» | Applicable policy or verified legal sources, the workflow design or manifest, incident records and evidence. | A requirement/action/evidence matrix, gaps, source references and follow-up ownership. |
+| [provia-process-knowledge](skills/provia-process-knowledge/SKILL.md) | Create or reconcile SOPs, action instructions, runbooks and proposed Agent Memory from supplied Provia designs. «actualiza o procedimento com o workflow aprovado» | Current workflow version or manifest, approved policies, existing guidance and incident lessons. | A sourced procedure or knowledge artefact with owner, scope, version, conflicts and review needs. |
+| [provia-workflow-change](skills/provia-workflow-change/SKILL.md) | Plan changes to a Provia workflow with attention to active incidents, data and dependencies, and record the change in the manifest. «alterar os campos obrigatórios com pedidos em curso» | Current and proposed designs, the manifest and receipts, active-incident evidence, affected fields/integrations and the change reason. | A semantic comparison, impact assessment, draft-version plan, test cases, recovery instructions and the manifest update. |
+
+### Implementer entry points
+
+| Skill and source | When to use it | What to provide | Expected output |
+| --- | --- | --- | --- |
+| [provia-bootstrap](skills/provia-bootstrap/SKILL.md) | Take an implementer from the customer's documents to a reviewable Provia project in one authorized run: manifest, catalogue, groups, workflows, forms, validated packages and the project map. «prepara o projecto Provia a partir destes documentos» | The customer's procedures, SOPs, checklists, org chart and exports; country, language, timezone and currency; the process or processes in scope; explicit authorization to run end to end. | `provia-project.json`, `project.html`, one folder per workflow with `workflow.yaml`, `validation.json`, `editorial-review.md` and generated `setup.md`, the entity catalogue inside the manifest, and the list of open decisions for the customer review. |
+| [provia-diagnose](skills/provia-diagnose/SKILL.md) | Run triage and performance improvement together on supplied Provia exports: what needs attention now, where time is lost, and one measurable change with an owner. «diagnostica este processo» | Authorized incident/action exports with observation time and timezone, comparable periods when available, the manifest or workflow design, and the business question. | One diagnosis report: attention list, performance findings with calculations, a proposed measurable change with owner, decisions and data limitations. |
+<!-- skills:end -->
+
+The structured catalogue is [catalog.json](catalog.json). Each entry carries the procedure, references, trigger phrases, manifest reads/appends, example prompts, guidance for incomplete or conflicting information and the Portuguese documentation text.
+
+## One project, one map
+
+Every skill reads and appends one manifest, `provia-project.json` (schema `provia-project/v1`), so entity types, groups, workflow actions, forms, AI profiles, sources and open decisions are one graph rather than a folder of unrelated files. Actions carry `sourceRefs` to the SOP section they implement, `assigneeRef` as a group key (never an invented UUID), `formRef`, `entityRefs`, `evidence`, `due` and the source steps folded into them. Read the [project manifest reference](references/project-manifest.md) for the shape, the rules the checker enforces and what each skill appends.
+
+```sh
+node scripts/build-project-map.mjs provia-project.json --check
+node scripts/build-project-map.mjs provia-project.json --output project.html
+node scripts/build-project-map.mjs provia-project.json --setup setup.md
+node scripts/resolve-workflow-refs.mjs provia-project.json compras workflow.yaml --output workflow.resolved.yaml
+```
+
+`--check` validates every reference and compares each workflow file next to the manifest with its actions. `--output` renders an offline `project.html`: a left rail of sources, entity types, groups, workflows and forms; a centre graph with edges SOP section → action → group / form / entity type and workflow → sub-workflow; a right panel with the selected node, including the action's full brief from the YAML; an entity catalogue tab; and a pending-items tab. Unresolved references are red and receipts are green. `--setup` generates the handover from what is still unresolved, so `setup.md` shrinks as receipts arrive instead of growing with every skill. `resolve-workflow-refs` substitutes real ids from receipts into a copy of the YAML and never invents one. Try it on [examples/procurement/](examples/procurement/), which ships the manifest, the rendered map and the generated handover.
+
+## Executable action briefs
+
+Provia gives an action one instruction field, `description`, and that is the whole brief the assignee gets. The [action-writing guide](references/action-writing.md) now requires a five-part description written to the assignee: `Tarefa` (what to produce or decide), `Como` (numbered steps naming the system, document or person), `Evidência` (what to attach or fill, and where), `Concluído quando` (the observable condition) and `Excepções` (what to do when it cannot be completed as described). Source steps that are hand-offs or sub-steps are folded into `Como`, never emitted as their own action; implementer notes go to the manifest and `setup.md`, never into a description; `due` is proposed from the stated service level or recorded as an open decision.
+
+```sh
+node scripts/review-actions.mjs workflow.yaml            # JSON report, exit 1 when a brief is incomplete
+node scripts/review-actions.mjs workflow.yaml --markdown # review table for the handover
+```
+
+The gate reports, per action, the missing parts, leaked implementer notes (`setup.md`, «pendente de configuração», UUIDs, placeholders), descriptions over 5000 characters and unset `due`. It checks presence, not quality; `provia-workflow-review` still reads every brief. The five bundled examples pass the gate; the preserved 1.0.2 trial fixture does not, and its [rewrite](tests/forward-evaluation/action-writing-1.0.2/workflow-rewritten-1.1.yaml) shows the difference. Names still follow the same guide: a Portuguese infinitive or English base-form verb names the work, and a form title remains separate from its Form Fill task name. See the [acceptance cases](tests/action-writing-evaluations.md).
+
+## Groups as data
+
+`provia-organization-rollout` turns every actor named in the sources («chefia», «Finanças», «DG») into a `groups[]` entry with key, localized name, one level of parent, purpose, members by role or supplied email, the sections that justify it and flags: `single_person`, `alias`, `segregation`, `requester`, `external`, `unnamed`. `provia-workflow-designer` and `provia-workflow-package` reference owners by those keys, the map shows which group owns which actions, and the checker warns about owner-less actions and orphan groups. Read the [groups design reference](references/groups-design.md).
+
+## Connected mode
+
+Provia feature 026 specifies a `provia-implementer` MCP server on the API Gateway through which a signed-in implementer can read the tenant and create draft entity types, groups, workflow drafts and forms. The plugin side of that contract is in [connected mode](references/connected-mode.md): detection by the `org_get_context` tool, read-before-design, `apply` in dependency order with dry-run first, and receipts stored in `receipts[]` of the manifest with a `ref` back to the manifest key. The manifest, the receipt shape and `resolve-workflow-refs.mjs` ship now so that connected mode is a thin layer when the server is available; nothing in this repository connects to Provia today.
 
 ## Use the skills together
 
@@ -106,6 +156,8 @@ Choose the sequence that matches the result you need. Carry approved artifacts f
 | Investigate delayed work | Operations triage, then process improvement using comparable records. |
 | Prepare control evidence | Controls and evidence review, then process knowledge updates. |
 | Change an active process | Workflow change planning, package generation where needed, then workflow review. |
+| Build the whole project from the customer's documents in one authorized run | `provia-bootstrap`, then workflow review with the customer over `project.html`. |
+| Find what to fix in a running process | `provia-diagnose`, then workflow change or process knowledge. |
 
 For example, start with a business design request:
 
@@ -164,9 +216,15 @@ Read [country context](references/country-context.md) and [Angola guidance](refe
 
 | Location | Purpose |
 | --- | --- |
-| [skills/](skills/) | The 14 `SKILL.md` entry points loaded by the assistant. |
-| [references/](references/) | Product capabilities, country guidance, YAML shapes and action configuration details. |
-| [examples/](examples/) | Five complete workflow examples, each with a setup handover, plus a synthetic entity catalogue. |
+| [catalog.json](catalog.json) | Single source for the 16 skills, the README tables and the docs pages. |
+| [skills/](skills/) | The 16 generated `SKILL.md` entry points loaded by the assistant. |
+| [references/](references/) | Shared conventions, project manifest, connected mode, groups design, design deliverable, action writing, product capabilities, country guidance, YAML shapes and action configuration details. |
+| [examples/](examples/) | Five complete projects (manifest, workflow with five-part briefs, generated handover, rendered map) plus a synthetic entity catalogue. |
+| [scripts/build-skills.mjs](scripts/build-skills.mjs) | Generates skills, README tables and docs pages from the catalogue; `--check` verifies. |
+| [scripts/build-project-map.mjs](scripts/build-project-map.mjs) | Manifest checks, offline project map and generated `setup.md`. |
+| [scripts/review-actions.mjs](scripts/review-actions.mjs) | Deterministic gate for five-part action briefs and leaked implementer notes. |
+| [scripts/resolve-workflow-refs.mjs](scripts/resolve-workflow-refs.mjs) | Substitutes destination ids from receipts into a copy of the YAML. |
+| [scripts/run-skill-evaluations.mjs](scripts/run-skill-evaluations.mjs) | Runs the behavioural matrix through the Claude Code CLI and records results. |
 | [scripts/validate-workflow.mjs](scripts/validate-workflow.mjs) | Read-only YAML/workflow ZIP validation command. |
 | [scripts/build-entity-catalogue.mjs](scripts/build-entity-catalogue.mjs) | Editorial entity-catalogue checks and offline HTML generation. |
 | [scripts/check-contract.mjs](scripts/check-contract.mjs) | Bundled-engine checksum and optional source-fingerprint verification. |
@@ -189,10 +247,16 @@ Run the commands below from the repository root or the root of the extracted `pr
 | `node scripts/validate-workflow.mjs FILE` | After generating/editing YAML and before importing it. | YAML parsing, product preview rules, conversion and backend schemas where inputs allow, schedule configuration, size limits and detectable setup dependencies. Accepts YAML or a compatible workflow `.zip`. | JSON to standard output. Does not modify the input or contact Provia. |
 | `node scripts/build-entity-catalogue.mjs FILE --check` | After editing an entity catalogue JSON. | Editorial shape, supported icons/types, references and select examples/defaults. Does not certify business completeness or Provia import validity. | Check summary; no output file. |
 | `node scripts/build-entity-catalogue.mjs FILE --output catalogue.html` | Before manual entity-type configuration. | Same editorial checks before rendering. | Standalone HTML with copy controls and the matching JSON download. |
+| `node scripts/build-project-map.mjs FILE --check` | After any skill appends to the manifest. | Manifest shape, every cross-reference, one-level groups, receipt integrity, and the action ids of each workflow file next to it. | Warnings for owner-less actions, orphan groups and Form Fill actions without a form; errors stop generation. |
+| `node scripts/build-project-map.mjs FILE --output project.html` / `--setup setup.md` | Before reviewing with the customer; after every manifest change. | Same checks, then renders the offline map or the handover. | `project.html` or `setup.md` in the project language. |
+| `node scripts/review-actions.mjs FILE [--markdown]` | Before handing over a package; during workflow review. | Presence of the five description parts, leaked implementer notes, length limit and `due` per human/AI action. | JSON or a Markdown table; exit 1 when a brief is incomplete. |
+| `node scripts/resolve-workflow-refs.mjs MANIFEST KEY FILE --output OUT` | When receipts (connected or manual) exist for groups or workflows. | Manifest integrity, then substitutes ids. | A resolved copy of the YAML plus the list of applied and pending substitutions. |
+| `node scripts/build-skills.mjs [--check \| --docs DIR]` | After editing `catalog.json`. | Catalogue completeness and consistency with the generated files. | Regenerated `SKILL.md` files and README tables, or docs pages. |
 | `node scripts/check-contract.mjs` | Before relying on the bundled engine or preparing a release. | Engine SHA-256 against the recorded lock file. | A verification message, or a failing process with an error. |
 | `node scripts/check-contract.mjs /path/to/processonrails` | When maintainers need to detect source drift. | Engine checksum plus the recorded source-file hashes against the supplied checkout. | A verification message, or an error identifying a mismatch. |
 | `npm test` | After changing validator behavior, examples or packaging. | Workflow regressions, all five examples, integrity checks, archive reproducibility, archive contents and execution after extraction. | Test results and temporary test artifacts that the tests clean up. |
-| `python3 scripts/build-release.py` | When preparing a documentation download. | Manifest names/versions, engine checksum, 14-skill count, symlinks and output-directory safety before packaging. | A ZIP, `SHA256SUMS` and `release.json` under `dist/` by default. |
+| `node scripts/run-skill-evaluations.mjs [--judge]` | Before a release; after a skill change. | Runs the 48-case matrix through `claude -p` with this repository as the plugin, preserves outputs, optionally grades each run. | `tests/forward-evaluation/matrix/<id>/` and statuses in `tests/skill-evaluations.json`. |
+| `python3 scripts/build-release.py` | When preparing a documentation download. | Manifest names/versions, engine checksum, 16-skill count, catalogue consistency, the evaluation gate, symlinks and output-directory safety before packaging. | A ZIP, `SHA256SUMS` and `release.json` under `dist/` by default. |
 
 Workflow validation and contract integrity are separate commands. A checksum match proves consistency with the lock file, not that the installed Provia server uses that revision. The release builder performs package checks; it does not replace `npm test` or a review of skill behavior.
 
@@ -313,7 +377,7 @@ A structurally valid file can still implement the wrong approval policy. Use `pr
 
 ## Examples and shared references
 
-Every example directory contains `workflow.yaml` and `setup.md`.
+Every example directory is a small project: `provia-project.json` (sources, groups with flags, the workflow entry with `assigneeRef`, `sourceRefs`, `evidence`, `due` and folded steps, open decisions), `workflow.yaml` with a five-part brief and a proposed `due` on every action, `setup.md` generated from the manifest, and `project.html` rendered from it. The procurement project also carries a `Fornecedor` entity type in the catalogue tab.
 
 | Example | Location | What to adapt |
 | --- | --- | --- |
@@ -323,7 +387,7 @@ Every example directory contains `workflow.yaml` and `setup.md`.
 | Procedure control | [examples/procedure-control/](examples/procedure-control/) | Controlled document, reviewer, approval and revision evidence. |
 | Corrective action | [examples/corrective-action/](examples/corrective-action/) | Finding, cause analysis, correction and effectiveness review. |
 
-These are synthetic training drafts for Angola. They deliberately assign actions to the incident creator so a learner can exercise them without invented organization IDs. Replace those assignments with the actual owners before production. They do not implement segregation of duties or define legal approval thresholds.
+These are synthetic training drafts for Angola. The YAML still assigns every action to the incident creator so a learner can exercise the draft without invented organization IDs; the intended owners are the group keys in each manifest, and the generated `setup.md` lists the substitution. Service levels, approval limits and the segregation flags are illustrative, not legal thresholds or approved policy.
 
 | Reference | Read it when you need to… |
 | --- | --- |
@@ -332,6 +396,12 @@ These are synthetic training drafts for Angola. They deliberately assign actions
 | [Angola](references/countries/angola.md) | Apply Angolan terminology and identify primary-source directories. |
 | [Workflow YAML](references/workflow-yaml.md) | Generate portable shapes and identify excluded configuration. |
 | [Action configurations](references/action-configs.md) | Specify HTTP requests, waits, notifications, sub-workflows and AI settings. |
+| [Shared conventions](references/skill-conventions.md) | Know what every skill assumes before its own procedure. |
+| [Project manifest](references/project-manifest.md) | Read or append `provia-project.json` and generate the map and handover. |
+| [Action writing](references/action-writing.md) | Name actions and write the five-part brief; run the review gate. |
+| [Workflow design deliverable](references/workflow-design-output.md) | Classify source steps and deliver the table, flow, YAML skeleton and manifest entry. |
+| [Groups design](references/groups-design.md) | Turn actors into groups with flags and decisions. |
+| [Connected mode](references/connected-mode.md) | Detect the `provia-implementer` server and apply in dependency order. |
 
 ## Run tests and evaluate skill behavior
 
@@ -348,13 +418,13 @@ node --test tests/validator.test.mjs
 node --test tests/release.test.mjs
 ```
 
-The [validator tests](tests/validator.test.mjs) check accepted and rejected workflows and dependency reporting. The [release tests](tests/release.test.mjs) validate all five examples, compare archives built twice, inspect their contents, run the validator after extraction and reject output paths that overlap source directories.
+The [validator tests](tests/validator.test.mjs) check accepted and rejected workflows and dependency reporting. The [manifest tests](tests/project-manifest.test.mjs) check every example manifest, the generated handover and map, reference integrity, receipts, the resolver and the YAML emitter. The [review-gate tests](tests/review-actions.test.mjs) check the five parts in both languages and the leak patterns. The [generator tests](tests/build-skills.test.mjs) check that skills, README tables, docs pages and the evaluation matrix match the catalogue. The [release tests](tests/release.test.mjs) validate all five examples, compare archives built twice, inspect their contents, run the validator, map, gate and generator after extraction, exercise the evaluation gate and reject output paths that overlap source directories.
 
-The [CI workflow](.github/workflows/checks.yml) runs tests, contract integrity verification and release construction. It does not publish ZIP assets.
+The [CI workflow](.github/workflows/checks.yml) runs the generator check, tests, contract integrity verification, the evaluation status and a packaging build with the evaluation gate bypassed. It does not publish ZIP assets.
 
-Skill behavior needs separate evaluation. The [42-case matrix](tests/skill-evaluations.json) defines normal, incomplete and conflicting scenarios across the 14 skills. It is an evaluation backlog, not an automated test runner or a record of 42 passing tests.
+Skill behaviour needs separate evaluation. The [48-case matrix](tests/skill-evaluations.json) defines normal, incomplete and conflicting scenarios for each of the 16 skills. `node scripts/run-skill-evaluations.mjs` runs the cases through the Claude Code CLI with this repository loaded as the plugin, in a temporary folder per case, and preserves the response, the tool log and every file the run wrote under `tests/forward-evaluation/matrix/<id>/` (the raw transcript stays local and out of the ZIP); `--judge` grades each run against the expected behaviour and the shared rules with a second model call and records `passed`, `failed` or `unclear`. The status in the matrix file is the record: a case is only as run as its `run.pluginVersion` says, and a `failed` case needs a `triage` note. Use `--only`, `--skill`, `--model`, `--judge-model`, `--concurrency` and `--rerun` to scope a run; `--status` prints the summary. Running a full matrix costs real model usage; run it before a release, not on every commit.
 
-Five independent trials and their actual outputs are preserved in [tests/forward-evaluation/](tests/forward-evaluation/). Read the [evaluation report](tests/forward-evaluation/README.md) for observed behavior, a detected assignment-reporting gap and its correction. Historical before/after outputs are intentionally retained.
+Earlier independent trials and their actual outputs are preserved in [tests/forward-evaluation/](tests/forward-evaluation/). Read the [evaluation report](tests/forward-evaluation/README.md) for observed behaviour, a detected assignment-reporting gap and its correction, and the 1.0.2 fixture rewritten to the 1.1 brief standard. Historical before/after outputs are intentionally retained.
 
 For a skill change, give an evaluator the skill and a realistic request with the minimum source artifacts. Inspect the output for preservation of approval authority, country context, evidence and honest validation status. Structural checks alone do not establish these behaviors.
 
@@ -388,13 +458,17 @@ Review the source changes and generated artifacts, run the relevant tests in the
 
 ## Build a documentation download
 
-Run tests and integrity verification before building:
+Run the generator check, tests, integrity verification and the evaluation matrix before building:
 
 ```sh
+node scripts/build-skills.mjs --check
 npm test
 node scripts/check-contract.mjs
+node scripts/run-skill-evaluations.mjs --judge
 python3 scripts/build-release.py
 ```
+
+The builder refuses to package while any matrix case has not been run against the current `package.json` version or a failed case has no `triage` note; `--allow-stale-evaluations` bypasses the gate for a packaging check and records `evaluationGate: bypassed` in `release.json`, which also carries the pass/fail counts.
 
 The release builder writes these files under `dist/`, using the version from `package.json`:
 
@@ -416,7 +490,7 @@ npm run release -- --output /path/to/release-staging
 
 Use one of those alternatives. Output paths cannot overlap bundled source directories or their ancestors. This prevents earlier build artifacts from entering later archives. Building twice from unchanged inputs produces identical ZIP bytes.
 
-For a new release, update `package.json`, both plugin manifests and [CHANGELOG.md](CHANGELOG.md). Validate the package, then promote the reviewed ZIP, checksum and release metadata together to a new versioned path in the Provia documentation project. Update the English and pt-AO documentation links and verify the served download.
+For a new release, update `package.json`, both plugin manifests, the `provia-skills <version>` header of the bundled examples and [CHANGELOG.md](CHANGELOG.md), regenerate the skills and docs pages from the catalogue (`node scripts/build-skills.mjs` and `--docs <docs root>`), and run the matrix. Validate the package, then promote the reviewed ZIP, checksum and release metadata together to a new versioned path in the Provia documentation project. Update the English and pt-AO documentation links and verify the served download.
 
 Keep published versioned assets intact. A README or source commit does not update an existing documentation ZIP. GitHub maintains source history, tags, community contributions and the repository marketplace; installation ZIPs are distributed only through documentation. Do not publish binary releases to GitHub or add installation entry points to the Provia application or marketing website. Public directory submission is separate from adding this repository marketplace.
 
@@ -432,6 +506,11 @@ Keep published versioned assets intact. A README or source commit does not updat
 | A rejection label continues execution | Set the intended decision outcome explicitly, such as `cancel_incident`. A label alone does not define cancellation. |
 | Contract integrity fails | Review the engine/lock mismatch or source drift before rebuilding from the approved checkout. |
 | Release output is rejected | Choose `dist/` or a separate staging folder outside bundled source directories. |
+| `build-skills.mjs --check` reports a difference | Edit `catalog.json`, run `node scripts/build-skills.mjs`, and commit the generated files together. |
+| `build-project-map.mjs --check` reports an unknown key | Add the group, form, entity type or source the action references to the manifest, or fix the key; never invent an id. |
+| `review-actions.mjs` exits 1 | Add the missing parts to the description and move implementer notes to `setup.md`; the labels must start a line. |
+| The release builder stops at the evaluation gate | Run `node scripts/run-skill-evaluations.mjs --judge`, add a `triage` note to failed cases, or pass `--allow-stale-evaluations` for a packaging check only. |
+| A matrix run cannot write files | Claude Code blocks writes inside a loaded plugin directory; the harness runs each case in a temporary folder and copies results back. |
 | A local pass is followed by an import failure | Compare product revisions, destination references, permissions and server warnings. |
 
 For an issue report, include the plugin version, contract revision, relevant skill or command, expected result and a minimal redacted reproducer. Do not include credentials, personal records or customer documents in public issues.

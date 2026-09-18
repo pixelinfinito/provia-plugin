@@ -1,0 +1,15 @@
+{
+  "at": "2026-09-18T18:47:55.645Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "verdict": "pass",
+  "reasons": [
+    "Directly addresses the expected behaviour: explicitly explains that re-import creates a new draft lineage, not a restore of version history, and proposes a versioned recovery plan with per-case handling for the six open incidents",
+    "Kept the conflict unresolved rather than silently choosing an interpretation - recorded as open decisions D1-D4 in provia-project.json and setup.md",
+    "Did not invent organization IDs, thresholds, or endpoints - organization fields marked 'Not identified'/null, and explicitly stated no workflow/case data was supplied",
+    "Did not claim any check ran or file was written that isn't supported by the tool call log - the build-project-map.mjs --check/--setup/--output calls and file writes match the transcript",
+    "Separates confirmed facts (empty directory, no inputs), recommendations (draft/publish plan, recovery options), and unresolved decisions (D1-D4) clearly across workflow-change-plan.md and setup.md",
+    "Ends with a concrete next-step recommendation naming the same skill and what inputs would let it proceed"
+  ],
+  "violations": []
+}

@@ -1,0 +1,20 @@
+{
+  "id": "controls-evidence-normal",
+  "skill": "provia-controls-evidence",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:39:08.545Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 84994,
+  "costUsd": 0.4051284,
+  "numTurns": 18,
+  "sessionId": "5d48b302-8dcc-48a5-9bf6-7ee2c2708bf1",
+  "stopReason": "end_turn",
+  "toolCalls": 16,
+  "files": [
+    "evidencias-compras-relatorio.md",
+    "provia-project.json"
+  ],
+  "output": "tests/forward-evaluation/matrix/controls-evidence-normal/",
+  "skillLoaded": true
+}

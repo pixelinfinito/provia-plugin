@@ -1,0 +1,49 @@
+# provia-skills 1.1.0 — excerto de integração; ver setup.md antes de importar.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Pedido — envio ao ERP (excerto)"
+  prefix: PED
+  description: "Excerto de automação para inserir a seguir à decisão de aprovação do workflow real do pedido. Não é o desenho completo do pedido; falta o accionador real e as acções anteriores, que pertencem a provia-workflow-designer."
+triggers:
+  - type: manual
+    label: Placeholder — accionador real por definir
+    enabled: false
+    config: {}
+fields:
+  - name: erp_reference
+    label: Referência do ERP
+    type: text
+    required: false
+actions:
+  - id: enviar_erp
+    name: Enviar o pedido aprovado ao ERP
+    type: http_request
+    description: |
+      Envia automaticamente ao ERP os dados do pedido depois de aprovado, criando o registo correspondente através da API do ERP. Regista em «Referência do ERP» o identificador devolvido pela API. Se a chamada falhar após as tentativas configuradas, o pedido fica bloqueado com incidente para tratamento manual pela equipa responsável pela integração; não repetir o envio manualmente sem confirmar no ERP se o registo já foi criado.
+    executionMode: sequential
+    required: true
+    config:
+      endpoint: https://example.com/erp/api/v1/purchase-requests
+      method: POST
+      headers:
+        - key: Authorization
+          value: "Bearer {{secret:ERP_API_TOKEN}}"
+          enabled: true
+        - key: Content-Type
+          value: application/json
+          enabled: true
+      body:
+        type: json
+        content: |
+          {}
+      executionTiming: automatic
+      timeoutSeconds: 30
+      retryConfig:
+        maxAttempts: 1
+        failureBehavior: block_incident
+      expectedStatusCodes: [200, 201]
+      responseMappings:
+        - jsonPath: "$.id"
+          targetField: erp_reference
+          required: false

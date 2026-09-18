@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-18T18:09:04.082Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "verdict": "pass",
+  "reasons": [
+    "The run correctly identified the conflicting approvers in SOP §2 and §7 and kept the conflict explicitly unresolved (D1) rather than silently choosing one approver over the other",
+    "The action's assigneeRef was deliberately left empty/unresolved, and this was reflected consistently across provia-project.json, workflow.yaml, setup.md, and the chat response",
+    "The response clearly separates confirmed facts (the two source sections' text), recommendations (proposed groups, proposed reject branch, proposed evidence comment), and unresolved decisions (D1-D4), each explicitly labeled as proposed/unresolved where appropriate",
+    "No organization IDs, approval thresholds, legal provisions, endpoints, or validation results were invented — the manifest shows tenantId/organization fields as null and the response does not claim any live validation against a real Provia instance",
+    "Claims about scripts running and files being written (build-project-map.mjs, provia-project.json, workflow.yaml, setup.md, project.html) are all supported by the tool call log showing these were actually executed/written",
+    "The response ends with a clear, specific next-step recommendation naming provia-organization-rollout and providing a copyable invocation tied to the unresolved D1 decision",
+    "The response explicitly states the check passed with 0 errors and 3 expected warnings, which matches the actual tool output rather than overclaiming success"
+  ],
+  "violations": []
+}

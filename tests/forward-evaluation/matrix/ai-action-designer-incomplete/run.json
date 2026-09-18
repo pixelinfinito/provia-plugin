@@ -1,0 +1,23 @@
+{
+  "id": "ai-action-designer-incomplete",
+  "skill": "provia-ai-action-designer",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:36:20.960Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 345009,
+  "costUsd": 1.3004612000000002,
+  "numTurns": 49,
+  "sessionId": "e9421ebb-86cb-492e-a18a-31758011ac9e",
+  "stopReason": "end_turn",
+  "toolCalls": 47,
+  "files": [
+    "ai-profile-it-request-classification.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md",
+    "workflow.yaml"
+  ],
+  "output": "tests/forward-evaluation/matrix/ai-action-designer-incomplete/",
+  "skillLoaded": true
+}

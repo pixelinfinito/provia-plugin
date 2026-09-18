@@ -1,0 +1,65 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "piloto-rollout",
+    "title": "Pilot rollout readiness (process not named in sources)",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": null,
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [],
+  "entityTypes": [],
+  "groups": [
+    {
+      "key": "dono_processo",
+      "name": "Process owner (to be named)",
+      "parentKey": null,
+      "purpose": "Accountable for the piloted process end to end: resolves blocked cases, approves scope changes, decides go/no-go for wider rollout, and is the escalation point during adoption. No source names this actor; the request states explicitly that no process owner exists yet.",
+      "members": [
+        { "role": "To be named by an executive sponsor", "email": null }
+      ],
+      "sourceRefs": [],
+      "flags": [
+        { "code": "unnamed", "detail": "The rollout request confirms no process owner is currently named. Do not proceed to company-wide rollout with this open." }
+      ]
+    }
+  ],
+  "workflows": [],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Who is the named process owner accountable for this pilot and its company-wide rollout?",
+      "owner": "Executive sponsor",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout"
+    },
+    {
+      "id": "D2",
+      "question": "What is the root cause behind 8 of 10 pilot cases being blocked (80%), and is each one resolved, reassigned or cancelled before scope expands?",
+      "owner": "dono_processo (once named)",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout"
+    },
+    {
+      "id": "D3",
+      "question": "Given only 2 completed and 8 blocked pilot cases and no named owner, does the organization accept delaying the company-wide date beyond next week in favor of a remediation phase and a second, larger pilot cohort, or proceed on the original date at reduced scope?",
+      "owner": "Executive sponsor",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout"
+    }
+  ],
+  "receipts": []
+}

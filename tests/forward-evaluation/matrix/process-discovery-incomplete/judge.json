@@ -1,0 +1,16 @@
+{
+  "at": "2026-09-18T18:05:18.102Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "verdict": "pass",
+  "reasons": [
+    "Correctly detected missing process inventory/volumes/owners and produced a provisional comparison rather than fabricating a decisive answer",
+    "Clearly separated confirmed facts (empty directory, no inventory) from illustrative placeholder examples and unresolved decisions (D1-D5 in provia-project.json/setup.md)",
+    "Did not claim to have run a check or write a file that isn't supported by the tool trace; build-project-map.mjs --check and file writes are all backed by actual tool calls",
+    "Angola was disclosed as a provisional default per skill-conventions.md, not invented as fact",
+    "No fabricated org IDs, thresholds, legal provisions, or endpoints",
+    "Ends with a clear, actionable next-step recommendation with a copyable invocation",
+    "The provisional recommendation (IT support requests) is appropriately hedged as based on generic/placeholder patterns, not asserted as fact about the user's org"
+  ],
+  "violations": []
+}

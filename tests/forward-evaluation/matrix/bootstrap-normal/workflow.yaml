@@ -1,0 +1,113 @@
+# provia-skills 1.1.0 — training draft for Angola; see setup.md and provia-project.json before importing.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Pedido de viatura"
+  prefix: VIAT
+  description: "Pedido, aprovação, entrega e devolução de viaturas da frota. Configurar responsáveis e resolver as decisões abertas antes da publicação."
+triggers:
+  - type: manual
+    label: Registar pedido de viatura
+    enabled: true
+    config: {}
+entities:
+  mode: entity_type
+  entityType: Viatura
+  requirement: required
+fields:
+  - name: colaborador_nome
+    label: Nome do colaborador
+    type: text
+    required: true
+  - name: colaborador_departamento
+    label: Departamento do colaborador
+    type: text
+    required: true
+  - name: data_viagem
+    label: Data pretendida
+    type: date
+    required: true
+  - name: destino
+    label: Destino
+    type: text
+    required: true
+  - name: motivo
+    label: Motivo da deslocação
+    type: text
+    required: true
+  - name: mileage_out
+    label: Quilometragem de saída
+    type: number
+    required: false
+  - name: mileage_in
+    label: Quilometragem de entrada
+    type: number
+    required: false
+  - name: damage_notes
+    label: Danos registados
+    type: text
+    required: false
+actions:
+  - id: registar_pedido
+    name: Registar o pedido de viatura
+    type: standard
+    description: |
+      Tarefa: Registar o pedido de viatura do colaborador, confirmando a disponibilidade no mapa de viaturas antes de o submeter à chefia.
+      Como: 1. Recolher junto do colaborador a data pretendida, o destino e o motivo da deslocação. 2. Preencher «Nome do colaborador», «Departamento do colaborador», «Data pretendida», «Destino» e «Motivo da deslocação». 3. Consultar o mapa de viaturas e escolher uma viatura com situação «Disponível» para a data pedida. 4. Associar a viatura escolhida ao pedido.
+      Evidência: Os campos de data, destino e motivo preenchidos, e a viatura escolhida associada ao pedido.
+      Concluído quando: O pedido está registado com a viatura escolhida e segue para a decisão da chefia.
+      Excepções: Se não existir nenhuma viatura disponível para a data pedida, não concluir: informar o colaborador e registar a indisponibilidade num comentário do pedido.
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: decidir_pedido
+    name: Decidir sobre o pedido de viatura
+    type: decision
+    description: |
+      Tarefa: Decidir, no prazo de um dia útil, se o pedido de viatura do colaborador é aprovado.
+      Como: 1. Confirmar que o pedido é do seu departamento, lendo «Departamento do colaborador». 2. Ler a data pretendida, o destino e o motivo da deslocação. 3. Escolher «Aprovar» ou «Recusar».
+      Evidência: Um comentário com o motivo é obrigatório em «Recusar».
+      Concluído quando: A decisão está registada dentro do prazo de um dia útil.
+      Excepções: Se o pedido não for do seu departamento, não decidir: devolver ao secretariado para reencaminhamento, em comentário. Se não for possível decidir dentro do prazo, avisar o secretariado antes de o prazo expirar.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 1
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+    config:
+      branches:
+        - label: Aprovar
+          outcome: continue
+        - label: Recusar
+          outcome: cancel_incident
+          requiresComment: true
+  - id: entregar_viatura
+    name: Entregar a chave e o cartão de combustível
+    type: standard
+    description: |
+      Tarefa: Entregar a chave e o cartão de combustível da viatura atribuída e registar a quilometragem de saída.
+      Como: 1. Confirmar que o pedido está aprovado. 2. Entregar ao colaborador a chave e o cartão de combustível da viatura atribuída. 3. Ler o conta-quilómetros da viatura e preencher «Quilometragem de saída».
+      Evidência: «Quilometragem de saída» preenchida; entrega da chave e do cartão de combustível confirmada em comentário.
+      Concluído quando: O colaborador tem a chave e o cartão de combustível, e a quilometragem de saída está registada.
+      Excepções: Se a viatura atribuída já não estiver disponível (por exemplo, avaria), não concluir: escolher outra viatura disponível no mapa de viaturas, actualizar o pedido e só depois entregar.
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: devolver_viatura
+    name: Registar a devolução da viatura
+    type: standard
+    description: |
+      Tarefa: Registar a devolução da viatura entregue pelo colaborador, incluindo a quilometragem de entrada e eventuais danos.
+      Como: 1. Receber do colaborador a viatura, a chave e o cartão de combustível. 2. Ler o conta-quilómetros e preencher «Quilometragem de entrada». 3. Inspeccionar a viatura e, se existirem danos, descrevê-los em «Danos registados». 4. Actualizar a situação da viatura no mapa de viaturas para «Disponível».
+      Evidência: «Quilometragem de entrada» preenchida; «Danos registados» preenchido quando existirem danos.
+      Concluído quando: A viatura está devolvida, a quilometragem de entrada está registada e a situação da viatura foi actualizada no mapa de viaturas.
+      Excepções: Se existirem danos, não considerar concluído sem os descrever; accionar o procedimento interno de participação de sinistro, se aplicável.
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator

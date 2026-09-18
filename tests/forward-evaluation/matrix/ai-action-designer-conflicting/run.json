@@ -1,0 +1,22 @@
+{
+  "id": "ai-action-designer-conflicting",
+  "skill": "provia-ai-action-designer",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:34:34.307Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 207124,
+  "costUsd": 0.7569898000000002,
+  "numTurns": 32,
+  "sessionId": "f79a30fd-5c86-4372-8a6b-d677e84c0b82",
+  "stopReason": "end_turn",
+  "toolCalls": 30,
+  "files": [
+    "ai-profile-compare-supplier-quotations.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/ai-action-designer-conflicting/",
+  "skillLoaded": true
+}

@@ -1,0 +1,128 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "approval-request",
+    "title": "Request approval",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "sop",
+      "title": "Supplied SOP (title not given)",
+      "kind": "sop",
+      "version": null,
+      "effectiveDate": null,
+      "sections": [
+        { "anchor": "2", "title": "Approval (as supplied)" },
+        { "anchor": "7", "title": "Approval (as supplied)" }
+      ]
+    }
+  ],
+  "entityTypes": [],
+  "groups": [
+    {
+      "key": "department_managers",
+      "name": "Department managers",
+      "parentKey": null,
+      "purpose": "Named in SOP §2 as approver of the request; ownership of this action is unresolved pending D1.",
+      "members": [ { "role": "Department manager", "email": null } ],
+      "sourceRefs": [ { "source": "sop", "section": "2" } ],
+      "flags": [ { "code": "single_person", "detail": "Likely one manager per department; propose a delegate for absences." } ]
+    },
+    {
+      "key": "finance_director",
+      "name": "Finance director",
+      "parentKey": null,
+      "purpose": "Named in SOP §7 as the exclusive approver of the request; ownership of this action is unresolved pending D1.",
+      "members": [ { "role": "Finance director", "email": null } ],
+      "sourceRefs": [ { "source": "sop", "section": "7" } ],
+      "flags": [ { "code": "single_person", "detail": "One named role; propose a delegate for absences." } ]
+    }
+  ],
+  "workflows": [
+    {
+      "key": "approval-request",
+      "name": "Request approval",
+      "prefix": "REQ",
+      "file": "workflow.yaml",
+      "status": "design",
+      "sourceRefs": [ { "source": "sop" } ],
+      "actions": [
+        {
+          "localId": "approve_request",
+          "name": "Decide on the request",
+          "type": "decision",
+          "sourceRefs": [
+            { "source": "sop", "section": "2" },
+            { "source": "sop", "section": "7" }
+          ],
+          "assigneeRef": null,
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Comment recording the basis for the decision (proposed; not stated in the source)" ],
+          "due": null,
+          "folded": []
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "Action 'approve_request' has no assignee: SOP §2 and §7 name different, mutually exclusive approvers. Resolve via decision D1 before packaging.",
+        "Trigger 'submit_request' and its fields are an assumption; no intake step was in the supplied text. Confirm with the process owner (D3).",
+        "No rejection or return path was supplied. A 'Reject' branch is proposed as a recommendation only (D4)."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "SOP §2 states the department manager approves the request; §7 states that only the finance director approves. These may be the same approval gate under conflicting instructions, or two distinct gates in a fuller procedure (the sections between 2 and 7 were not supplied). Who approves, and if both act, in what order?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [
+        { "source": "sop", "section": "2" },
+        { "source": "sop", "section": "7" }
+      ]
+    },
+    {
+      "id": "D2",
+      "question": "No service level was stated for the approval decision. What is the expected turnaround (e.g. workdays from activation)?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "sop", "section": "2" }, { "source": "sop", "section": "7" } ]
+    },
+    {
+      "id": "D3",
+      "question": "The supplied text only covers the approval step. What precedes it (who submits the request, on what form, with what data) and what follows an approval or rejection?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "sop", "section": "2" } ]
+    },
+    {
+      "id": "D4",
+      "question": "No rejection or return path was stated. Should a rejected request end the case, or return to the requester for rework?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "sop", "section": "2" }, { "source": "sop", "section": "7" } ]
+    }
+  ],
+  "receipts": []
+}

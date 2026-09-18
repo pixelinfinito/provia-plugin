@@ -1,0 +1,1044 @@
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Supplier contact details for orders</title>
+  <style>
+  *{box-sizing:border-box}body{margin:0;background:#f4f6f9;color:#182230;font:16px/1.55 system-ui,sans-serif}header,main{max-width:1120px;margin:auto;padding:24px}h1{font-size:30px}h2{font-size:24px}h4{margin:0 0 12px;font-size:18px}small{font-size:13px;font-weight:400;color:#475467}button,input,textarea{font:inherit}button{padding:6px 12px;border:1px solid #98a2b3;border-radius:6px;background:white;color:#1d2939;cursor:pointer}button:hover{background:#eaf0ff}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #2563eb;outline-offset:2px}nav{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}nav a{color:#244da8;padding:4px 8px}.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}input{padding:10px;border:1px solid #98a2b3;border-radius:6px;min-width:260px}section{background:#fff;border:1px solid #d0d5dd;border-radius:12px;margin:20px 0;padding:24px;scroll-margin-top:16px}article{border-top:1px solid #d0d5dd;padding:22px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.value-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}label{font-size:13px;font-weight:600}textarea{display:block;width:100%;min-height:44px;padding:9px;border:1px solid #c7cdd6;border-radius:6px;background:#f9fafb;resize:vertical;color:#182230}dl{display:grid;grid-template-columns:140px 1fr;gap:4px 12px;font-size:14px}dt{color:#475467}dd{margin:0}.option{padding:8px 0}.notice{padding:14px;background:#eaf0ff;border-radius:8px}#status{min-height:24px}summary{cursor:pointer}li{margin-bottom:8px}[hidden]{display:none!important}@media(max-width:650px){.grid{grid-template-columns:1fr}header,main,section{padding:16px}dl{grid-template-columns:1fr}}@media print{body{background:white}button,nav,.toolbar,#status,details{display:none}section{break-before:page;border:0;padding:0}section[hidden]{display:block!important}textarea{border:0;resize:none;overflow:visible}article{break-inside:avoid}header,main{max-width:none;padding:0}}
+  </style></head><body><header><h1>Supplier contact details for orders</h1><p>Angola · 2 entity types</p>
+  <p class="notice">Manual setup specification. This JSON is not a Provia import contract. Icons come from the bundled reference; confirm the destination version. Copying does not create types, fields or records.</p><p>Create the types before configuring relationships. Copy each value into its corresponding field. Related type names are catalogue references, not destination IDs. Core model fields can be optional at creation.</p><ul><li>No country was stated; Angola is used as a provisional context per the plugin&#39;s default (confirm with the customer). Currency and identifier formats below are illustrative only.</li><li>Scope: contact details needed to reach a supplier when placing and coordinating orders. This is a focused catalogue for that use, not a complete organizational supplier/procurement model — extend it if broader supplier management (contracts, evaluation, payment terms) is later in scope.</li><li>Declined by design: passport numbers and family details of supplier employees were requested but are not included. The requester stated there is no use for these fields. Provia entity design requires an actual business use, source and maintainer for every field, and explicitly rejects collecting sensitive data merely to appear comprehensive. Passport numbers are identity-document data and family details are relatives&#39; personal data; neither supports contacting a supplier about an order, and collecting them without a defined process, access restriction and retention rule is a data-minimization risk with no offsetting benefit. If a specific, named use appears later (for example, ID verification for controlled site access), model that as its own field on the process that actually needs it, with restricted access — not as a default attribute of every contact record.</li><li>Icons verified against the bundled entity-icons.json snapshot (source revision recorded in that file). Confirm availability in the destination Provia tenant before configuration.</li><li>Metadata field types and configuration rules verified against Provia revision 2641364d1c... as pinned in this plugin&#39;s metadata-fields.md; confirm the destination tenant&#39;s actual revision.</li><li>This is an editorial specification for manual configuration in Provia, not an API payload or import file.</li></ul>
+  <div class="toolbar"><label for="search">Search types and fields</label><input id="search" type="search"><button id="download">Download JSON</button><button id="print">Print</button></div>
+  <p id="status" role="status" aria-live="polite"></p><nav aria-label="Types"><a href="#type-0">Supplier</a><a href="#type-1">Supplier Contact</a></nav></header><main><section id="type-0" data-catalogue-type>
+    <h2>1. Supplier <small>8 fields</small></h2>
+    <p>Selecting a supplier for a purchase order and tracking whether it is currently usable.</p><p>Owner: Procurement lead to be designated by the organization</p>
+    <div class="grid"><div class="value"><div class="value-heading"><label for="value-0">Type name</label><button type="button" data-copy="value-0" aria-label="Copy: Type name">Copy</button></div><textarea id="value-0" rows="1" readonly>Supplier</textarea></div><div class="value"><div class="value-heading"><label for="value-1">Icon</label><button type="button" data-copy="value-1" aria-label="Copy: Icon">Copy</button></div><textarea id="value-1" rows="1" readonly>Truck01</textarea></div><div class="value"><div class="value-heading"><label for="value-2">Description</label><button type="button" data-copy="value-2" aria-label="Copy: Description">Copy</button></div><textarea id="value-2" rows="2" readonly>Suppliers used in purchasing and order processes. Lets requesters and buyers select the supplier and reach the right contact for an order.</textarea></div><div class="value"><div class="value-heading"><label for="value-3">Native Name convention</label><button type="button" data-copy="value-3" aria-label="Copy: Native Name convention">Copy</button></div><textarea id="value-3" rows="2" readonly>Trading or legal name; add the internal supplier code only if needed to distinguish similarly named suppliers.</textarea></div></div>
+    <h3>Fields</h3><article><h4>Supplier code <small>Identification</small></h4>
+      <p>Core to the model · Required at creation: No · auto_number</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-4">Key</label><button type="button" data-copy="value-4" aria-label="Copy: Key">Copy</button></div><textarea id="value-4" rows="1" readonly>supplier_code</textarea></div><div class="value"><div class="value-heading"><label for="value-5">Label</label><button type="button" data-copy="value-5" aria-label="Copy: Label">Copy</button></div><textarea id="value-5" rows="1" readonly>Supplier code</textarea></div><div class="value"><div class="value-heading"><label for="value-6">Type</label><button type="button" data-copy="value-6" aria-label="Copy: Type">Copy</button></div><textarea id="value-6" rows="1" readonly>auto_number</textarea></div><div class="value"><div class="value-heading"><label for="value-7">Group</label><button type="button" data-copy="value-7" aria-label="Copy: Group">Copy</button></div><textarea id="value-7" rows="1" readonly>Identification</textarea></div><div class="value"><div class="value-heading"><label for="value-8">Help text</label><button type="button" data-copy="value-8" aria-label="Copy: Help text">Copy</button></div><textarea id="value-8" rows="1" readonly>Provia-generated reference shown after the record is saved; not entered manually.</textarea></div><div class="value"><div class="value-heading"><label for="value-9">Synthetic example</label><button type="button" data-copy="value-9" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-9" rows="1" readonly>SUP-0001</textarea></div>
+      <div class="value"><div class="value-heading"><label for="value-10">config.prefix</label><button type="button" data-copy="value-10" aria-label="Copy: config.prefix">Copy</button></div><textarea id="value-10" rows="1" readonly>SUP-</textarea></div><div class="value"><div class="value-heading"><label for="value-11">config.padding</label><button type="button" data-copy="value-11" aria-label="Copy: config.padding">Copy</button></div><textarea id="value-11" rows="1" readonly>4</textarea></div><div class="value"><div class="value-heading"><label for="value-12">config.startAt</label><button type="button" data-copy="value-12" aria-label="Copy: config.startAt">Copy</button></div><textarea id="value-12" rows="1" readonly>1</textarea></div></div>
+      
+      <dl><dt>Purpose</dt><dd>Give buyers a short reference for orders and communications distinct from the Name.</dd><dt>Source</dt><dd>Generated by Provia; synthetic proposal to confirm with the procurement team.</dd><dt>Maintainer</dt><dd>Provia generates the value; procurement defines the configuration.</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Legal name <small>Identification</small></h4>
+      <p>Conditional · Required at creation: No · text</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-13">Key</label><button type="button" data-copy="value-13" aria-label="Copy: Key">Copy</button></div><textarea id="value-13" rows="1" readonly>legal_name</textarea></div><div class="value"><div class="value-heading"><label for="value-14">Label</label><button type="button" data-copy="value-14" aria-label="Copy: Label">Copy</button></div><textarea id="value-14" rows="1" readonly>Legal name</textarea></div><div class="value"><div class="value-heading"><label for="value-15">Type</label><button type="button" data-copy="value-15" aria-label="Copy: Type">Copy</button></div><textarea id="value-15" rows="1" readonly>text</textarea></div><div class="value"><div class="value-heading"><label for="value-16">Group</label><button type="button" data-copy="value-16" aria-label="Copy: Group">Copy</button></div><textarea id="value-16" rows="1" readonly>Identification</textarea></div><div class="value"><div class="value-heading"><label for="value-17">Help text</label><button type="button" data-copy="value-17" aria-label="Copy: Help text">Copy</button></div><textarea id="value-17" rows="2" readonly>Record when it differs from the trading name shown in Name, for use on purchase orders and invoices.</textarea></div><div class="value"><div class="value-heading"><label for="value-18">Synthetic example</label><button type="button" data-copy="value-18" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-18" rows="1" readonly>Demonstration Supplier, Lda.</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Identify the correct contracting party on order and invoice documents when it differs from the trading name.</dd><dt>Source</dt><dd>Proposed in this synthetic catalogue; confirm with procurement.</dd><dt>Maintainer</dt><dd>Supplier record owner</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Tax identification number <small>Identification</small></h4>
+      <p>Conditional · Required at creation: No · text</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-19">Key</label><button type="button" data-copy="value-19" aria-label="Copy: Key">Copy</button></div><textarea id="value-19" rows="1" readonly>tax_number</textarea></div><div class="value"><div class="value-heading"><label for="value-20">Label</label><button type="button" data-copy="value-20" aria-label="Copy: Label">Copy</button></div><textarea id="value-20" rows="1" readonly>Tax identification number</textarea></div><div class="value"><div class="value-heading"><label for="value-21">Type</label><button type="button" data-copy="value-21" aria-label="Copy: Type">Copy</button></div><textarea id="value-21" rows="1" readonly>text</textarea></div><div class="value"><div class="value-heading"><label for="value-22">Group</label><button type="button" data-copy="value-22" aria-label="Copy: Group">Copy</button></div><textarea id="value-22" rows="1" readonly>Identification</textarea></div><div class="value"><div class="value-heading"><label for="value-23">Help text</label><button type="button" data-copy="value-23" aria-label="Copy: Help text">Copy</button></div><textarea id="value-23" rows="1" readonly>Confirm against the financial system of record before use on an order or invoice.</textarea></div><div class="value"><div class="value-heading"><label for="value-24">Synthetic example</label><button type="button" data-copy="value-24" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-24" rows="1" readonly>NIF-DEMO</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Verify the contracting party for invoicing and payment matching.</dd><dt>Source</dt><dd>Proposed in this synthetic catalogue; confirm with the finance system of record.</dd><dt>Maintainer</dt><dd>Supplier record owner</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Supply category <small>Classification</small></h4>
+      <p>Core to the model · Required at creation: No · select</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-25">Key</label><button type="button" data-copy="value-25" aria-label="Copy: Key">Copy</button></div><textarea id="value-25" rows="1" readonly>category</textarea></div><div class="value"><div class="value-heading"><label for="value-26">Label</label><button type="button" data-copy="value-26" aria-label="Copy: Label">Copy</button></div><textarea id="value-26" rows="1" readonly>Supply category</textarea></div><div class="value"><div class="value-heading"><label for="value-27">Type</label><button type="button" data-copy="value-27" aria-label="Copy: Type">Copy</button></div><textarea id="value-27" rows="1" readonly>select</textarea></div><div class="value"><div class="value-heading"><label for="value-28">Group</label><button type="button" data-copy="value-28" aria-label="Copy: Group">Copy</button></div><textarea id="value-28" rows="1" readonly>Classification</textarea></div><div class="value"><div class="value-heading"><label for="value-29">Help text</label><button type="button" data-copy="value-29" aria-label="Copy: Help text">Copy</button></div><textarea id="value-29" rows="1" readonly>Choose what the supplier is used for when routing an order.</textarea></div><div class="value"><div class="value-heading"><label for="value-30">Synthetic example</label><button type="button" data-copy="value-30" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-30" rows="1" readonly>goods</textarea></div>
+      </div>
+      <div class="grid option"><div class="value"><div class="value-heading"><label for="value-31">Option value</label><button type="button" data-copy="value-31" aria-label="Copy: Option value">Copy</button></div><textarea id="value-31" rows="1" readonly>goods</textarea></div><div class="value"><div class="value-heading"><label for="value-32">Option label</label><button type="button" data-copy="value-32" aria-label="Copy: Option label">Copy</button></div><textarea id="value-32" rows="1" readonly>Goods</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-33">Option value</label><button type="button" data-copy="value-33" aria-label="Copy: Option value">Copy</button></div><textarea id="value-33" rows="1" readonly>services</textarea></div><div class="value"><div class="value-heading"><label for="value-34">Option label</label><button type="button" data-copy="value-34" aria-label="Copy: Option label">Copy</button></div><textarea id="value-34" rows="1" readonly>Services</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-35">Option value</label><button type="button" data-copy="value-35" aria-label="Copy: Option value">Copy</button></div><textarea id="value-35" rows="1" readonly>goods_and_services</textarea></div><div class="value"><div class="value-heading"><label for="value-36">Option label</label><button type="button" data-copy="value-36" aria-label="Copy: Option label">Copy</button></div><textarea id="value-36" rows="1" readonly>Goods and services</textarea></div></div>
+      <dl><dt>Purpose</dt><dd>Help requesters find the right supplier when creating an order.</dd><dt>Source</dt><dd>Proposed in this synthetic catalogue; confirm with procurement.</dd><dt>Maintainer</dt><dd>Supplier record owner</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Procurement owner <small>Ownership</small></h4>
+      <p>Core to the model · Required at creation: No · user</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-37">Key</label><button type="button" data-copy="value-37" aria-label="Copy: Key">Copy</button></div><textarea id="value-37" rows="1" readonly>account_owner</textarea></div><div class="value"><div class="value-heading"><label for="value-38">Label</label><button type="button" data-copy="value-38" aria-label="Copy: Label">Copy</button></div><textarea id="value-38" rows="1" readonly>Procurement owner</textarea></div><div class="value"><div class="value-heading"><label for="value-39">Type</label><button type="button" data-copy="value-39" aria-label="Copy: Type">Copy</button></div><textarea id="value-39" rows="1" readonly>user</textarea></div><div class="value"><div class="value-heading"><label for="value-40">Group</label><button type="button" data-copy="value-40" aria-label="Copy: Group">Copy</button></div><textarea id="value-40" rows="1" readonly>Ownership</textarea></div><div class="value"><div class="value-heading"><label for="value-41">Help text</label><button type="button" data-copy="value-41" aria-label="Copy: Help text">Copy</button></div><textarea id="value-41" rows="1" readonly>Identify who is accountable for the supplier relationship internally.</textarea></div><div class="value"><div class="value-heading"><label for="value-42">Synthetic example</label><button type="button" data-copy="value-42" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-42" rows="1" readonly>{
+  &quot;lookupName&quot;: &quot;Demonstration procurement lead&quot;
+}</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Route questions about the supplier and approve exceptions to standard ordering.</dd><dt>Source</dt><dd>Proposed in this synthetic catalogue; confirm with procurement.</dd><dt>Maintainer</dt><dd>Supplier record owner</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Relationship status <small>Status</small></h4>
+      <p>Core to the model · Required at creation: No · select</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-43">Key</label><button type="button" data-copy="value-43" aria-label="Copy: Key">Copy</button></div><textarea id="value-43" rows="1" readonly>relationship_status</textarea></div><div class="value"><div class="value-heading"><label for="value-44">Label</label><button type="button" data-copy="value-44" aria-label="Copy: Label">Copy</button></div><textarea id="value-44" rows="1" readonly>Relationship status</textarea></div><div class="value"><div class="value-heading"><label for="value-45">Type</label><button type="button" data-copy="value-45" aria-label="Copy: Type">Copy</button></div><textarea id="value-45" rows="1" readonly>select</textarea></div><div class="value"><div class="value-heading"><label for="value-46">Group</label><button type="button" data-copy="value-46" aria-label="Copy: Group">Copy</button></div><textarea id="value-46" rows="1" readonly>Status</textarea></div><div class="value"><div class="value-heading"><label for="value-47">Help text</label><button type="button" data-copy="value-47" aria-label="Copy: Help text">Copy</button></div><textarea id="value-47" rows="1" readonly>Check before placing a new order with this supplier.</textarea></div><div class="value"><div class="value-heading"><label for="value-48">Synthetic example</label><button type="button" data-copy="value-48" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-48" rows="1" readonly>active</textarea></div>
+      </div>
+      <div class="grid option"><div class="value"><div class="value-heading"><label for="value-49">Option value</label><button type="button" data-copy="value-49" aria-label="Copy: Option value">Copy</button></div><textarea id="value-49" rows="1" readonly>prospective</textarea></div><div class="value"><div class="value-heading"><label for="value-50">Option label</label><button type="button" data-copy="value-50" aria-label="Copy: Option label">Copy</button></div><textarea id="value-50" rows="1" readonly>Prospective</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-51">Option value</label><button type="button" data-copy="value-51" aria-label="Copy: Option value">Copy</button></div><textarea id="value-51" rows="1" readonly>active</textarea></div><div class="value"><div class="value-heading"><label for="value-52">Option label</label><button type="button" data-copy="value-52" aria-label="Copy: Option label">Copy</button></div><textarea id="value-52" rows="1" readonly>Active</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-53">Option value</label><button type="button" data-copy="value-53" aria-label="Copy: Option value">Copy</button></div><textarea id="value-53" rows="1" readonly>suspended</textarea></div><div class="value"><div class="value-heading"><label for="value-54">Option label</label><button type="button" data-copy="value-54" aria-label="Copy: Option label">Copy</button></div><textarea id="value-54" rows="1" readonly>Suspended</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-55">Option value</label><button type="button" data-copy="value-55" aria-label="Copy: Option value">Copy</button></div><textarea id="value-55" rows="1" readonly>closed</textarea></div><div class="value"><div class="value-heading"><label for="value-56">Option label</label><button type="button" data-copy="value-56" aria-label="Copy: Option label">Copy</button></div><textarea id="value-56" rows="1" readonly>Closed</textarea></div></div>
+      <dl><dt>Purpose</dt><dd>Prevent orders being placed with a suspended or closed supplier.</dd><dt>Source</dt><dd>Proposed in this synthetic catalogue; confirm with procurement.</dd><dt>Maintainer</dt><dd>Supplier record owner</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>General email <small>Contacts</small></h4>
+      <p>Optional · Required at creation: No · email</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-57">Key</label><button type="button" data-copy="value-57" aria-label="Copy: Key">Copy</button></div><textarea id="value-57" rows="1" readonly>general_email</textarea></div><div class="value"><div class="value-heading"><label for="value-58">Label</label><button type="button" data-copy="value-58" aria-label="Copy: Label">Copy</button></div><textarea id="value-58" rows="1" readonly>General email</textarea></div><div class="value"><div class="value-heading"><label for="value-59">Type</label><button type="button" data-copy="value-59" aria-label="Copy: Type">Copy</button></div><textarea id="value-59" rows="1" readonly>email</textarea></div><div class="value"><div class="value-heading"><label for="value-60">Group</label><button type="button" data-copy="value-60" aria-label="Copy: Group">Copy</button></div><textarea id="value-60" rows="1" readonly>Contacts</textarea></div><div class="value"><div class="value-heading"><label for="value-61">Help text</label><button type="button" data-copy="value-61" aria-label="Copy: Help text">Copy</button></div><textarea id="value-61" rows="1" readonly>Company-level inbox to use only until a named order contact is on file.</textarea></div><div class="value"><div class="value-heading"><label for="value-62">Synthetic example</label><button type="button" data-copy="value-62" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-62" rows="1" readonly>info@example.com</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Provide a fallback contact when no specific order contact has been identified yet.</dd><dt>Source</dt><dd>Proposed in this synthetic catalogue; confirm with procurement.</dd><dt>Maintainer</dt><dd>Supplier record owner</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>General phone <small>Contacts</small></h4>
+      <p>Optional · Required at creation: No · phone</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-63">Key</label><button type="button" data-copy="value-63" aria-label="Copy: Key">Copy</button></div><textarea id="value-63" rows="1" readonly>general_phone</textarea></div><div class="value"><div class="value-heading"><label for="value-64">Label</label><button type="button" data-copy="value-64" aria-label="Copy: Label">Copy</button></div><textarea id="value-64" rows="1" readonly>General phone</textarea></div><div class="value"><div class="value-heading"><label for="value-65">Type</label><button type="button" data-copy="value-65" aria-label="Copy: Type">Copy</button></div><textarea id="value-65" rows="1" readonly>phone</textarea></div><div class="value"><div class="value-heading"><label for="value-66">Group</label><button type="button" data-copy="value-66" aria-label="Copy: Group">Copy</button></div><textarea id="value-66" rows="1" readonly>Contacts</textarea></div><div class="value"><div class="value-heading"><label for="value-67">Help text</label><button type="button" data-copy="value-67" aria-label="Copy: Help text">Copy</button></div><textarea id="value-67" rows="1" readonly>Company-level switchboard number, as a fallback.</textarea></div><div class="value"><div class="value-heading"><label for="value-68">Synthetic example</label><button type="button" data-copy="value-68" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-68" rows="1" readonly>+244 900 000 000</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Provide a fallback contact when no specific order contact has been identified yet.</dd><dt>Source</dt><dd>Proposed in this synthetic catalogue; confirm with procurement.</dd><dt>Maintainer</dt><dd>Supplier record owner</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article>
+    <h3>Functional coverage</h3><ul><li><strong>Identity and classification</strong>: Included. Business identifiers and supply category support supplier selection and invoicing checks.</li><li><strong>Contacts and location</strong>: Included. General fallback contact only; named order contacts are modeled on Supplier Contact, reused across orders instead of being re-entered per order.</li><li><strong>Ownership and structure</strong>: Included. An internal procurement owner is needed to answer questions and approve exceptions.</li><li><strong>Status and lifecycle</strong>: Included. Relationship status is checked before ordering.</li><li><strong>Operational or commercial attributes</strong>: Pending. Out of the stated scope (contact details for orders). Payment terms, contracts and evaluation would need a separate confirmed requirement.</li><li><strong>Relationships</strong>: Included. Supplier Contact records reference this type; the reverse list is available in Provia without a duplicated field here.</li><li><strong>Evidence and source</strong>: Not applicable. No document or verification requirement was stated for this scope.</li></ul>
+    <h3>Setup and dependencies</h3><ul><li>Synthetic coverage example, not a mandatory template or confirmed policy.</li><li>Confirm owners, vocabularies, sources and access. No synchronization is configured.</li><li>Name is native. These fields do not duplicate UUID, creator or system timestamps.</li><li>Manual walkthrough: create &#39;Demonstration Supplier&#39;; set category and procurement owner; leave relationship_status at prospective until vetted, then active before the first order. Legal name and tax number can be completed once invoicing starts.</li><li>Configure supplier_code as auto_number, required false, no default. The sequence can have gaps and is not exported in YAML; review backfill before adding this field to an existing type.</li></ul><h3>Checks before process execution</h3><ul><li>Before placing an order, confirm relationship_status is active and at least one Supplier Contact exists. The status field does not itself block order creation in Provia; that would need an explicit check in the ordering process.</li></ul><details><summary>Type JSON</summary><div class="value"><div class="value-heading"><label for="value-69">Type JSON</label><button type="button" data-copy="value-69" aria-label="Copy: Type JSON">Copy</button></div><textarea id="value-69" rows="6" readonly>{
+  &quot;key&quot;: &quot;supplier&quot;,
+  &quot;name&quot;: &quot;Supplier&quot;,
+  &quot;description&quot;: &quot;Suppliers used in purchasing and order processes. Lets requesters and buyers select the supplier and reach the right contact for an order.&quot;,
+  &quot;icon&quot;: &quot;Truck01&quot;,
+  &quot;namePattern&quot;: &quot;Trading or legal name; add the internal supplier code only if needed to distinguish similarly named suppliers.&quot;,
+  &quot;purpose&quot;: &quot;Selecting a supplier for a purchase order and tracking whether it is currently usable.&quot;,
+  &quot;owner&quot;: &quot;Procurement lead to be designated by the organization&quot;,
+  &quot;fields&quot;: [
+    {
+      &quot;key&quot;: &quot;supplier_code&quot;,
+      &quot;label&quot;: &quot;Supplier code&quot;,
+      &quot;type&quot;: &quot;auto_number&quot;,
+      &quot;group&quot;: &quot;Identification&quot;,
+      &quot;helpText&quot;: &quot;Provia-generated reference shown after the record is saved; not entered manually.&quot;,
+      &quot;purpose&quot;: &quot;Give buyers a short reference for orders and communications distinct from the Name.&quot;,
+      &quot;example&quot;: &quot;SUP-0001&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Generated by Provia; synthetic proposal to confirm with the procurement team.&quot;,
+      &quot;maintainer&quot;: &quot;Provia generates the value; procurement defines the configuration.&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;,
+      &quot;config&quot;: {
+        &quot;prefix&quot;: &quot;SUP-&quot;,
+        &quot;padding&quot;: 4,
+        &quot;startAt&quot;: 1
+      }
+    },
+    {
+      &quot;key&quot;: &quot;legal_name&quot;,
+      &quot;label&quot;: &quot;Legal name&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;group&quot;: &quot;Identification&quot;,
+      &quot;helpText&quot;: &quot;Record when it differs from the trading name shown in Name, for use on purchase orders and invoices.&quot;,
+      &quot;purpose&quot;: &quot;Identify the correct contracting party on order and invoice documents when it differs from the trading name.&quot;,
+      &quot;example&quot;: &quot;Demonstration Supplier, Lda.&quot;,
+      &quot;priority&quot;: &quot;conditional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Proposed in this synthetic catalogue; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;tax_number&quot;,
+      &quot;label&quot;: &quot;Tax identification number&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;group&quot;: &quot;Identification&quot;,
+      &quot;helpText&quot;: &quot;Confirm against the financial system of record before use on an order or invoice.&quot;,
+      &quot;purpose&quot;: &quot;Verify the contracting party for invoicing and payment matching.&quot;,
+      &quot;example&quot;: &quot;NIF-DEMO&quot;,
+      &quot;priority&quot;: &quot;conditional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Proposed in this synthetic catalogue; confirm with the finance system of record.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;category&quot;,
+      &quot;label&quot;: &quot;Supply category&quot;,
+      &quot;type&quot;: &quot;select&quot;,
+      &quot;group&quot;: &quot;Classification&quot;,
+      &quot;helpText&quot;: &quot;Choose what the supplier is used for when routing an order.&quot;,
+      &quot;purpose&quot;: &quot;Help requesters find the right supplier when creating an order.&quot;,
+      &quot;example&quot;: &quot;goods&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Proposed in this synthetic catalogue; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;,
+      &quot;options&quot;: [
+        {
+          &quot;value&quot;: &quot;goods&quot;,
+          &quot;label&quot;: &quot;Goods&quot;
+        },
+        {
+          &quot;value&quot;: &quot;services&quot;,
+          &quot;label&quot;: &quot;Services&quot;
+        },
+        {
+          &quot;value&quot;: &quot;goods_and_services&quot;,
+          &quot;label&quot;: &quot;Goods and services&quot;
+        }
+      ]
+    },
+    {
+      &quot;key&quot;: &quot;account_owner&quot;,
+      &quot;label&quot;: &quot;Procurement owner&quot;,
+      &quot;type&quot;: &quot;user&quot;,
+      &quot;group&quot;: &quot;Ownership&quot;,
+      &quot;helpText&quot;: &quot;Identify who is accountable for the supplier relationship internally.&quot;,
+      &quot;purpose&quot;: &quot;Route questions about the supplier and approve exceptions to standard ordering.&quot;,
+      &quot;example&quot;: {
+        &quot;lookupName&quot;: &quot;Demonstration procurement lead&quot;
+      },
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Proposed in this synthetic catalogue; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;relationship_status&quot;,
+      &quot;label&quot;: &quot;Relationship status&quot;,
+      &quot;type&quot;: &quot;select&quot;,
+      &quot;group&quot;: &quot;Status&quot;,
+      &quot;helpText&quot;: &quot;Check before placing a new order with this supplier.&quot;,
+      &quot;purpose&quot;: &quot;Prevent orders being placed with a suspended or closed supplier.&quot;,
+      &quot;example&quot;: &quot;active&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Proposed in this synthetic catalogue; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;,
+      &quot;options&quot;: [
+        {
+          &quot;value&quot;: &quot;prospective&quot;,
+          &quot;label&quot;: &quot;Prospective&quot;
+        },
+        {
+          &quot;value&quot;: &quot;active&quot;,
+          &quot;label&quot;: &quot;Active&quot;
+        },
+        {
+          &quot;value&quot;: &quot;suspended&quot;,
+          &quot;label&quot;: &quot;Suspended&quot;
+        },
+        {
+          &quot;value&quot;: &quot;closed&quot;,
+          &quot;label&quot;: &quot;Closed&quot;
+        }
+      ]
+    },
+    {
+      &quot;key&quot;: &quot;general_email&quot;,
+      &quot;label&quot;: &quot;General email&quot;,
+      &quot;type&quot;: &quot;email&quot;,
+      &quot;group&quot;: &quot;Contacts&quot;,
+      &quot;helpText&quot;: &quot;Company-level inbox to use only until a named order contact is on file.&quot;,
+      &quot;purpose&quot;: &quot;Provide a fallback contact when no specific order contact has been identified yet.&quot;,
+      &quot;example&quot;: &quot;info@example.com&quot;,
+      &quot;priority&quot;: &quot;optional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Proposed in this synthetic catalogue; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;general_phone&quot;,
+      &quot;label&quot;: &quot;General phone&quot;,
+      &quot;type&quot;: &quot;phone&quot;,
+      &quot;group&quot;: &quot;Contacts&quot;,
+      &quot;helpText&quot;: &quot;Company-level switchboard number, as a fallback.&quot;,
+      &quot;purpose&quot;: &quot;Provide a fallback contact when no specific order contact has been identified yet.&quot;,
+      &quot;example&quot;: &quot;+244 900 000 000&quot;,
+      &quot;priority&quot;: &quot;optional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Proposed in this synthetic catalogue; confirm with procurement.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    }
+  ],
+  &quot;coverage&quot;: [
+    {
+      &quot;dimension&quot;: &quot;Identity and classification&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;Business identifiers and supply category support supplier selection and invoicing checks.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Contacts and location&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;General fallback contact only; named order contacts are modeled on Supplier Contact, reused across orders instead of being re-entered per order.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Ownership and structure&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;An internal procurement owner is needed to answer questions and approve exceptions.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Status and lifecycle&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;Relationship status is checked before ordering.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Operational or commercial attributes&quot;,
+      &quot;decision&quot;: &quot;pending&quot;,
+      &quot;reason&quot;: &quot;Out of the stated scope (contact details for orders). Payment terms, contracts and evaluation would need a separate confirmed requirement.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Relationships&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;Supplier Contact records reference this type; the reverse list is available in Provia without a duplicated field here.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Evidence and source&quot;,
+      &quot;decision&quot;: &quot;not_applicable&quot;,
+      &quot;reason&quot;: &quot;No document or verification requirement was stated for this scope.&quot;
+    }
+  ],
+  &quot;setup&quot;: [
+    &quot;Synthetic coverage example, not a mandatory template or confirmed policy.&quot;,
+    &quot;Confirm owners, vocabularies, sources and access. No synchronization is configured.&quot;,
+    &quot;Name is native. These fields do not duplicate UUID, creator or system timestamps.&quot;,
+    &quot;Manual walkthrough: create &#39;Demonstration Supplier&#39;; set category and procurement owner; leave relationship_status at prospective until vetted, then active before the first order. Legal name and tax number can be completed once invoicing starts.&quot;,
+    &quot;Configure supplier_code as auto_number, required false, no default. The sequence can have gaps and is not exported in YAML; review backfill before adding this field to an existing type.&quot;
+  ],
+  &quot;readiness&quot;: [
+    &quot;Before placing an order, confirm relationship_status is active and at least one Supplier Contact exists. The status field does not itself block order creation in Provia; that would need an explicit check in the ordering process.&quot;
+  ]
+}</textarea></div></details></section><section id="type-1" data-catalogue-type>
+    <h2>2. Supplier Contact <small>10 fields</small></h2>
+    <p>Placing, confirming and following up on orders with a named person at the supplier.</p><p>Owner: Procurement lead to be designated by the organization</p>
+    <div class="grid"><div class="value"><div class="value-heading"><label for="value-70">Type name</label><button type="button" data-copy="value-70" aria-label="Copy: Type name">Copy</button></div><textarea id="value-70" rows="1" readonly>Supplier Contact</textarea></div><div class="value"><div class="value-heading"><label for="value-71">Icon</label><button type="button" data-copy="value-71" aria-label="Copy: Icon">Copy</button></div><textarea id="value-71" rows="1" readonly>UserCircle</textarea></div><div class="value"><div class="value-heading"><label for="value-72">Description</label><button type="button" data-copy="value-72" aria-label="Copy: Description">Copy</button></div><textarea id="value-72" rows="2" readonly>People at a supplier who can be reached about an order. Lets buyers pick the right person and channel instead of guessing or re-asking the supplier each time.</textarea></div><div class="value"><div class="value-heading"><label for="value-73">Native Name convention</label><button type="button" data-copy="value-73" aria-label="Copy: Native Name convention">Copy</button></div><textarea id="value-73" rows="1" readonly>Contact&#39;s full name as given by the supplier, for example &#39;Ana Santos&#39;.</textarea></div></div>
+    <h3>Fields</h3><article><h4>Supplier <small>Relationship</small></h4>
+      <p>Core to the model · Required at creation: Yes · entity</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-74">Key</label><button type="button" data-copy="value-74" aria-label="Copy: Key">Copy</button></div><textarea id="value-74" rows="1" readonly>supplier</textarea></div><div class="value"><div class="value-heading"><label for="value-75">Label</label><button type="button" data-copy="value-75" aria-label="Copy: Label">Copy</button></div><textarea id="value-75" rows="1" readonly>Supplier</textarea></div><div class="value"><div class="value-heading"><label for="value-76">Type</label><button type="button" data-copy="value-76" aria-label="Copy: Type">Copy</button></div><textarea id="value-76" rows="1" readonly>entity</textarea></div><div class="value"><div class="value-heading"><label for="value-77">Group</label><button type="button" data-copy="value-77" aria-label="Copy: Group">Copy</button></div><textarea id="value-77" rows="1" readonly>Relationship</textarea></div><div class="value"><div class="value-heading"><label for="value-78">Help text</label><button type="button" data-copy="value-78" aria-label="Copy: Help text">Copy</button></div><textarea id="value-78" rows="1" readonly>Select the supplier this person belongs to.</textarea></div><div class="value"><div class="value-heading"><label for="value-79">Synthetic example</label><button type="button" data-copy="value-79" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-79" rows="1" readonly>{
+  &quot;lookupName&quot;: &quot;Demonstration Supplier&quot;
+}</textarea></div>
+      <div class="value"><div class="value-heading"><label for="value-80">Related type</label><button type="button" data-copy="value-80" aria-label="Copy: Related type">Copy</button></div><textarea id="value-80" rows="1" readonly>supplier</textarea></div></div>
+      
+      <dl><dt>Purpose</dt><dd>Link the contact to the supplier so buyers can find contacts from the supplier record.</dd><dt>Source</dt><dd>Selected at creation from the Supplier type.</dd><dt>Maintainer</dt><dd>Supplier record owner or requester who registers the contact</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Job title <small>Role</small></h4>
+      <p>Core to the model · Required at creation: No · text</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-81">Key</label><button type="button" data-copy="value-81" aria-label="Copy: Key">Copy</button></div><textarea id="value-81" rows="1" readonly>job_title</textarea></div><div class="value"><div class="value-heading"><label for="value-82">Label</label><button type="button" data-copy="value-82" aria-label="Copy: Label">Copy</button></div><textarea id="value-82" rows="1" readonly>Job title</textarea></div><div class="value"><div class="value-heading"><label for="value-83">Type</label><button type="button" data-copy="value-83" aria-label="Copy: Type">Copy</button></div><textarea id="value-83" rows="1" readonly>text</textarea></div><div class="value"><div class="value-heading"><label for="value-84">Group</label><button type="button" data-copy="value-84" aria-label="Copy: Group">Copy</button></div><textarea id="value-84" rows="1" readonly>Role</textarea></div><div class="value"><div class="value-heading"><label for="value-85">Help text</label><button type="button" data-copy="value-85" aria-label="Copy: Help text">Copy</button></div><textarea id="value-85" rows="2" readonly>Helps a buyer judge whether this is the right person for a purchasing question versus, say, a delivery question.</textarea></div><div class="value"><div class="value-heading"><label for="value-86">Synthetic example</label><button type="button" data-copy="value-86" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-86" rows="1" readonly>Sales coordinator</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Know this person&#39;s function when coordinating an order.</dd><dt>Source</dt><dd>Given by the supplier when the contact is registered.</dd><dt>Maintainer</dt><dd>Supplier record owner or requester who registers the contact</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Department <small>Role</small></h4>
+      <p>Optional · Required at creation: No · text</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-87">Key</label><button type="button" data-copy="value-87" aria-label="Copy: Key">Copy</button></div><textarea id="value-87" rows="1" readonly>department</textarea></div><div class="value"><div class="value-heading"><label for="value-88">Label</label><button type="button" data-copy="value-88" aria-label="Copy: Label">Copy</button></div><textarea id="value-88" rows="1" readonly>Department</textarea></div><div class="value"><div class="value-heading"><label for="value-89">Type</label><button type="button" data-copy="value-89" aria-label="Copy: Type">Copy</button></div><textarea id="value-89" rows="1" readonly>text</textarea></div><div class="value"><div class="value-heading"><label for="value-90">Group</label><button type="button" data-copy="value-90" aria-label="Copy: Group">Copy</button></div><textarea id="value-90" rows="1" readonly>Role</textarea></div><div class="value"><div class="value-heading"><label for="value-91">Help text</label><button type="button" data-copy="value-91" aria-label="Copy: Help text">Copy</button></div><textarea id="value-91" rows="2" readonly>Use when the supplier is large enough that department matters for routing, for example separating sales from logistics.</textarea></div><div class="value"><div class="value-heading"><label for="value-92">Synthetic example</label><button type="button" data-copy="value-92" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-92" rows="1" readonly>Sales</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Route order questions to the correct area within a larger supplier.</dd><dt>Source</dt><dd>Given by the supplier when the contact is registered.</dd><dt>Maintainer</dt><dd>Supplier record owner or requester who registers the contact</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Order email <small>Contacts</small></h4>
+      <p>Core to the model · Required at creation: No · email</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-93">Key</label><button type="button" data-copy="value-93" aria-label="Copy: Key">Copy</button></div><textarea id="value-93" rows="1" readonly>order_email</textarea></div><div class="value"><div class="value-heading"><label for="value-94">Label</label><button type="button" data-copy="value-94" aria-label="Copy: Label">Copy</button></div><textarea id="value-94" rows="1" readonly>Order email</textarea></div><div class="value"><div class="value-heading"><label for="value-95">Type</label><button type="button" data-copy="value-95" aria-label="Copy: Type">Copy</button></div><textarea id="value-95" rows="1" readonly>email</textarea></div><div class="value"><div class="value-heading"><label for="value-96">Group</label><button type="button" data-copy="value-96" aria-label="Copy: Group">Copy</button></div><textarea id="value-96" rows="1" readonly>Contacts</textarea></div><div class="value"><div class="value-heading"><label for="value-97">Help text</label><button type="button" data-copy="value-97" aria-label="Copy: Help text">Copy</button></div><textarea id="value-97" rows="1" readonly>Email to use for purchase orders and confirmations with this person.</textarea></div><div class="value"><div class="value-heading"><label for="value-98">Synthetic example</label><button type="button" data-copy="value-98" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-98" rows="1" readonly>ana.santos@example.com</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Send purchase orders and receive confirmations.</dd><dt>Source</dt><dd>Given by the supplier when the contact is registered.</dd><dt>Maintainer</dt><dd>Supplier record owner or requester who registers the contact</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Phone <small>Contacts</small></h4>
+      <p>Core to the model · Required at creation: No · phone</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-99">Key</label><button type="button" data-copy="value-99" aria-label="Copy: Key">Copy</button></div><textarea id="value-99" rows="1" readonly>phone</textarea></div><div class="value"><div class="value-heading"><label for="value-100">Label</label><button type="button" data-copy="value-100" aria-label="Copy: Label">Copy</button></div><textarea id="value-100" rows="1" readonly>Phone</textarea></div><div class="value"><div class="value-heading"><label for="value-101">Type</label><button type="button" data-copy="value-101" aria-label="Copy: Type">Copy</button></div><textarea id="value-101" rows="1" readonly>phone</textarea></div><div class="value"><div class="value-heading"><label for="value-102">Group</label><button type="button" data-copy="value-102" aria-label="Copy: Group">Copy</button></div><textarea id="value-102" rows="1" readonly>Contacts</textarea></div><div class="value"><div class="value-heading"><label for="value-103">Help text</label><button type="button" data-copy="value-103" aria-label="Copy: Help text">Copy</button></div><textarea id="value-103" rows="1" readonly>Direct line or extension for this person.</textarea></div><div class="value"><div class="value-heading"><label for="value-104">Synthetic example</label><button type="button" data-copy="value-104" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-104" rows="1" readonly>+244 900 000 001</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Reach this person directly for time-sensitive order questions.</dd><dt>Source</dt><dd>Given by the supplier when the contact is registered.</dd><dt>Maintainer</dt><dd>Supplier record owner or requester who registers the contact</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Mobile phone <small>Contacts</small></h4>
+      <p>Optional · Required at creation: No · phone</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-105">Key</label><button type="button" data-copy="value-105" aria-label="Copy: Key">Copy</button></div><textarea id="value-105" rows="1" readonly>mobile_phone</textarea></div><div class="value"><div class="value-heading"><label for="value-106">Label</label><button type="button" data-copy="value-106" aria-label="Copy: Label">Copy</button></div><textarea id="value-106" rows="1" readonly>Mobile phone</textarea></div><div class="value"><div class="value-heading"><label for="value-107">Type</label><button type="button" data-copy="value-107" aria-label="Copy: Type">Copy</button></div><textarea id="value-107" rows="1" readonly>phone</textarea></div><div class="value"><div class="value-heading"><label for="value-108">Group</label><button type="button" data-copy="value-108" aria-label="Copy: Group">Copy</button></div><textarea id="value-108" rows="1" readonly>Contacts</textarea></div><div class="value"><div class="value-heading"><label for="value-109">Help text</label><button type="button" data-copy="value-109" aria-label="Copy: Help text">Copy</button></div><textarea id="value-109" rows="2" readonly>Use when the supplier gives a mobile number as the best way to reach this person, for example for urgent delivery issues.</textarea></div><div class="value"><div class="value-heading"><label for="value-110">Synthetic example</label><button type="button" data-copy="value-110" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-110" rows="1" readonly>+244 923 000 001</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Reach this person urgently outside normal office channels when the supplier has provided a mobile number for that purpose.</dd><dt>Source</dt><dd>Given by the supplier when the contact is registered.</dd><dt>Maintainer</dt><dd>Supplier record owner or requester who registers the contact</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Preferred contact channel <small>Contacts</small></h4>
+      <p>Optional · Required at creation: No · select</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-111">Key</label><button type="button" data-copy="value-111" aria-label="Copy: Key">Copy</button></div><textarea id="value-111" rows="1" readonly>preferred_contact_channel</textarea></div><div class="value"><div class="value-heading"><label for="value-112">Label</label><button type="button" data-copy="value-112" aria-label="Copy: Label">Copy</button></div><textarea id="value-112" rows="1" readonly>Preferred contact channel</textarea></div><div class="value"><div class="value-heading"><label for="value-113">Type</label><button type="button" data-copy="value-113" aria-label="Copy: Type">Copy</button></div><textarea id="value-113" rows="1" readonly>select</textarea></div><div class="value"><div class="value-heading"><label for="value-114">Group</label><button type="button" data-copy="value-114" aria-label="Copy: Group">Copy</button></div><textarea id="value-114" rows="1" readonly>Contacts</textarea></div><div class="value"><div class="value-heading"><label for="value-115">Help text</label><button type="button" data-copy="value-115" aria-label="Copy: Help text">Copy</button></div><textarea id="value-115" rows="1" readonly>Ask the supplier which channel they actually check for order matters.</textarea></div><div class="value"><div class="value-heading"><label for="value-116">Synthetic example</label><button type="button" data-copy="value-116" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-116" rows="1" readonly>email</textarea></div>
+      </div>
+      <div class="grid option"><div class="value"><div class="value-heading"><label for="value-117">Option value</label><button type="button" data-copy="value-117" aria-label="Copy: Option value">Copy</button></div><textarea id="value-117" rows="1" readonly>email</textarea></div><div class="value"><div class="value-heading"><label for="value-118">Option label</label><button type="button" data-copy="value-118" aria-label="Copy: Option label">Copy</button></div><textarea id="value-118" rows="1" readonly>Email</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-119">Option value</label><button type="button" data-copy="value-119" aria-label="Copy: Option value">Copy</button></div><textarea id="value-119" rows="1" readonly>phone</textarea></div><div class="value"><div class="value-heading"><label for="value-120">Option label</label><button type="button" data-copy="value-120" aria-label="Copy: Option label">Copy</button></div><textarea id="value-120" rows="1" readonly>Phone</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-121">Option value</label><button type="button" data-copy="value-121" aria-label="Copy: Option value">Copy</button></div><textarea id="value-121" rows="1" readonly>whatsapp</textarea></div><div class="value"><div class="value-heading"><label for="value-122">Option label</label><button type="button" data-copy="value-122" aria-label="Copy: Option label">Copy</button></div><textarea id="value-122" rows="1" readonly>WhatsApp</textarea></div></div>
+      <dl><dt>Purpose</dt><dd>Avoid delays from using a channel this person does not monitor for order matters.</dd><dt>Source</dt><dd>Given by the supplier when the contact is registered.</dd><dt>Maintainer</dt><dd>Supplier record owner or requester who registers the contact</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Primary order contact <small>Relationship</small></h4>
+      <p>Core to the model · Required at creation: No · boolean</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-123">Key</label><button type="button" data-copy="value-123" aria-label="Copy: Key">Copy</button></div><textarea id="value-123" rows="1" readonly>is_primary_contact</textarea></div><div class="value"><div class="value-heading"><label for="value-124">Label</label><button type="button" data-copy="value-124" aria-label="Copy: Label">Copy</button></div><textarea id="value-124" rows="1" readonly>Primary order contact</textarea></div><div class="value"><div class="value-heading"><label for="value-125">Type</label><button type="button" data-copy="value-125" aria-label="Copy: Type">Copy</button></div><textarea id="value-125" rows="1" readonly>boolean</textarea></div><div class="value"><div class="value-heading"><label for="value-126">Group</label><button type="button" data-copy="value-126" aria-label="Copy: Group">Copy</button></div><textarea id="value-126" rows="1" readonly>Relationship</textarea></div><div class="value"><div class="value-heading"><label for="value-127">Help text</label><button type="button" data-copy="value-127" aria-label="Copy: Help text">Copy</button></div><textarea id="value-127" rows="2" readonly>Mark exactly one primary contact per supplier when more than one contact exists; Provia does not enforce this automatically.</textarea></div><div class="value"><div class="value-heading"><label for="value-128">Synthetic example</label><button type="button" data-copy="value-128" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-128" rows="1" readonly>true</textarea></div>
+      <div class="value"><div class="value-heading"><label for="value-129">Default value</label><button type="button" data-copy="value-129" aria-label="Copy: Default value">Copy</button></div><textarea id="value-129" rows="1" readonly>false</textarea></div></div>
+      
+      <dl><dt>Purpose</dt><dd>Let a buyer immediately identify who to contact by default for a given supplier.</dd><dt>Source</dt><dd>Set by whoever registers or reviews the contact.</dd><dt>Maintainer</dt><dd>Supplier record owner</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Contact status <small>Status</small></h4>
+      <p>Core to the model · Required at creation: No · select</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-130">Key</label><button type="button" data-copy="value-130" aria-label="Copy: Key">Copy</button></div><textarea id="value-130" rows="1" readonly>status</textarea></div><div class="value"><div class="value-heading"><label for="value-131">Label</label><button type="button" data-copy="value-131" aria-label="Copy: Label">Copy</button></div><textarea id="value-131" rows="1" readonly>Contact status</textarea></div><div class="value"><div class="value-heading"><label for="value-132">Type</label><button type="button" data-copy="value-132" aria-label="Copy: Type">Copy</button></div><textarea id="value-132" rows="1" readonly>select</textarea></div><div class="value"><div class="value-heading"><label for="value-133">Group</label><button type="button" data-copy="value-133" aria-label="Copy: Group">Copy</button></div><textarea id="value-133" rows="1" readonly>Status</textarea></div><div class="value"><div class="value-heading"><label for="value-134">Help text</label><button type="button" data-copy="value-134" aria-label="Copy: Help text">Copy</button></div><textarea id="value-134" rows="2" readonly>Set to inactive when the supplier reports the person has left or changed role, instead of deleting the record.</textarea></div><div class="value"><div class="value-heading"><label for="value-135">Synthetic example</label><button type="button" data-copy="value-135" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-135" rows="1" readonly>active</textarea></div>
+      <div class="value"><div class="value-heading"><label for="value-136">Default value</label><button type="button" data-copy="value-136" aria-label="Copy: Default value">Copy</button></div><textarea id="value-136" rows="1" readonly>active</textarea></div></div>
+      <div class="grid option"><div class="value"><div class="value-heading"><label for="value-137">Option value</label><button type="button" data-copy="value-137" aria-label="Copy: Option value">Copy</button></div><textarea id="value-137" rows="1" readonly>active</textarea></div><div class="value"><div class="value-heading"><label for="value-138">Option label</label><button type="button" data-copy="value-138" aria-label="Copy: Option label">Copy</button></div><textarea id="value-138" rows="1" readonly>Active</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-139">Option value</label><button type="button" data-copy="value-139" aria-label="Copy: Option value">Copy</button></div><textarea id="value-139" rows="1" readonly>inactive</textarea></div><div class="value"><div class="value-heading"><label for="value-140">Option label</label><button type="button" data-copy="value-140" aria-label="Copy: Option label">Copy</button></div><textarea id="value-140" rows="1" readonly>Inactive</textarea></div></div>
+      <dl><dt>Purpose</dt><dd>Stop buyers from reaching out to someone who no longer handles orders for the supplier.</dd><dt>Source</dt><dd>Set by whoever registers or reviews the contact; updated when the supplier reports a change.</dd><dt>Maintainer</dt><dd>Supplier record owner</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article><article><h4>Contact notes <small>Status</small></h4>
+      <p>Optional · Required at creation: No · rich_text</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-141">Key</label><button type="button" data-copy="value-141" aria-label="Copy: Key">Copy</button></div><textarea id="value-141" rows="1" readonly>notes</textarea></div><div class="value"><div class="value-heading"><label for="value-142">Label</label><button type="button" data-copy="value-142" aria-label="Copy: Label">Copy</button></div><textarea id="value-142" rows="1" readonly>Contact notes</textarea></div><div class="value"><div class="value-heading"><label for="value-143">Type</label><button type="button" data-copy="value-143" aria-label="Copy: Type">Copy</button></div><textarea id="value-143" rows="1" readonly>rich_text</textarea></div><div class="value"><div class="value-heading"><label for="value-144">Group</label><button type="button" data-copy="value-144" aria-label="Copy: Group">Copy</button></div><textarea id="value-144" rows="1" readonly>Status</textarea></div><div class="value"><div class="value-heading"><label for="value-145">Help text</label><button type="button" data-copy="value-145" aria-label="Copy: Help text">Copy</button></div><textarea id="value-145" rows="2" readonly>Operational notes only, for example usual response hours or a language preference stated by the supplier. Not a place for personal information about the individual.</textarea></div><div class="value"><div class="value-heading"><label for="value-146">Synthetic example</label><button type="button" data-copy="value-146" aria-label="Copy: Synthetic example">Copy</button></div><textarea id="value-146" rows="1" readonly>Usually responds by end of day; prefers email over phone for order confirmations.</textarea></div>
+      </div>
+      
+      <dl><dt>Purpose</dt><dd>Capture practical notes that help a buyer reach this person effectively.</dd><dt>Source</dt><dd>Given by the supplier or observed by the buyer who registers the contact.</dd><dt>Maintainer</dt><dd>Supplier record owner or requester who registers the contact</dd><dt>Sensitivity</dt><dd>Internal.</dd></dl></article>
+    <h3>Functional coverage</h3><ul><li><strong>Identity and classification</strong>: Included. Native Name holds the person&#39;s full name; job_title and department classify their role for routing.</li><li><strong>Contacts and location</strong>: Included. Email, phone, mobile and preferred channel cover how to reach this person about an order.</li><li><strong>Ownership and structure</strong>: Case. No internal owner field on the contact itself; the linked Supplier&#39;s account_owner already covers internal accountability, avoiding a duplicate field.</li><li><strong>Status and lifecycle</strong>: Included. status distinguishes a current order contact from someone who has left or changed role.</li><li><strong>Operational or commercial attributes</strong>: Not applicable. This type models a person, not commercial terms; those belong on Supplier if ever needed.</li><li><strong>Relationships</strong>: Included. supplier links the contact to its Supplier record; is_primary_contact distinguishes the default contact when several exist.</li><li><strong>Evidence and source</strong>: Not applicable. No document or verification requirement was stated for reaching a contact about an order. Identity documents (passport numbers) and family details were explicitly requested but declined; see catalogue notes.</li></ul>
+    <h3>Setup and dependencies</h3><ul><li>Synthetic coverage example, not a mandatory template or confirmed policy.</li><li>Confirm owners, vocabularies, sources and access before use. No synchronization is configured.</li><li>Name is native and holds the contact&#39;s full name; these fields do not duplicate UUID, creator or system timestamps.</li><li>Manual walkthrough: create Supplier &#39;Demonstration Supplier&#39; first, then create a Supplier Contact named &#39;Ana Santos&#39; linked to it; set job_title, order_email and phone; leave mobile_phone and preferred_contact_channel blank if not yet known; set is_primary_contact true only for the one contact buyers should default to.</li><li>Create the Supplier type before Supplier Contact, since the entity field targetType &#39;supplier&#39; must already exist.</li><li>Passport numbers and family details were requested for this type but are not included: no stated use was given, they are disproportionate to an order-contact use case, and Provia entity design requires an actual use, source and maintainer per field. Revisit only if a specific, access-restricted use is confirmed (see catalogue notes).</li></ul><h3>Checks before process execution</h3><ul><li>Before relying on a contact for an order, confirm status is active and order_email or phone is filled in. No field here blocks order creation automatically; that would need an explicit check in the ordering process.</li></ul><details><summary>Type JSON</summary><div class="value"><div class="value-heading"><label for="value-147">Type JSON</label><button type="button" data-copy="value-147" aria-label="Copy: Type JSON">Copy</button></div><textarea id="value-147" rows="6" readonly>{
+  &quot;key&quot;: &quot;supplier_contact&quot;,
+  &quot;name&quot;: &quot;Supplier Contact&quot;,
+  &quot;description&quot;: &quot;People at a supplier who can be reached about an order. Lets buyers pick the right person and channel instead of guessing or re-asking the supplier each time.&quot;,
+  &quot;icon&quot;: &quot;UserCircle&quot;,
+  &quot;namePattern&quot;: &quot;Contact&#39;s full name as given by the supplier, for example &#39;Ana Santos&#39;.&quot;,
+  &quot;purpose&quot;: &quot;Placing, confirming and following up on orders with a named person at the supplier.&quot;,
+  &quot;owner&quot;: &quot;Procurement lead to be designated by the organization&quot;,
+  &quot;fields&quot;: [
+    {
+      &quot;key&quot;: &quot;supplier&quot;,
+      &quot;label&quot;: &quot;Supplier&quot;,
+      &quot;type&quot;: &quot;entity&quot;,
+      &quot;group&quot;: &quot;Relationship&quot;,
+      &quot;helpText&quot;: &quot;Select the supplier this person belongs to.&quot;,
+      &quot;purpose&quot;: &quot;Link the contact to the supplier so buyers can find contacts from the supplier record.&quot;,
+      &quot;example&quot;: {
+        &quot;lookupName&quot;: &quot;Demonstration Supplier&quot;
+      },
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: true,
+      &quot;targetType&quot;: &quot;supplier&quot;,
+      &quot;source&quot;: &quot;Selected at creation from the Supplier type.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner or requester who registers the contact&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;job_title&quot;,
+      &quot;label&quot;: &quot;Job title&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;group&quot;: &quot;Role&quot;,
+      &quot;helpText&quot;: &quot;Helps a buyer judge whether this is the right person for a purchasing question versus, say, a delivery question.&quot;,
+      &quot;purpose&quot;: &quot;Know this person&#39;s function when coordinating an order.&quot;,
+      &quot;example&quot;: &quot;Sales coordinator&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Given by the supplier when the contact is registered.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner or requester who registers the contact&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;department&quot;,
+      &quot;label&quot;: &quot;Department&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;group&quot;: &quot;Role&quot;,
+      &quot;helpText&quot;: &quot;Use when the supplier is large enough that department matters for routing, for example separating sales from logistics.&quot;,
+      &quot;purpose&quot;: &quot;Route order questions to the correct area within a larger supplier.&quot;,
+      &quot;example&quot;: &quot;Sales&quot;,
+      &quot;priority&quot;: &quot;optional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Given by the supplier when the contact is registered.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner or requester who registers the contact&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;order_email&quot;,
+      &quot;label&quot;: &quot;Order email&quot;,
+      &quot;type&quot;: &quot;email&quot;,
+      &quot;group&quot;: &quot;Contacts&quot;,
+      &quot;helpText&quot;: &quot;Email to use for purchase orders and confirmations with this person.&quot;,
+      &quot;purpose&quot;: &quot;Send purchase orders and receive confirmations.&quot;,
+      &quot;example&quot;: &quot;ana.santos@example.com&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Given by the supplier when the contact is registered.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner or requester who registers the contact&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;phone&quot;,
+      &quot;label&quot;: &quot;Phone&quot;,
+      &quot;type&quot;: &quot;phone&quot;,
+      &quot;group&quot;: &quot;Contacts&quot;,
+      &quot;helpText&quot;: &quot;Direct line or extension for this person.&quot;,
+      &quot;purpose&quot;: &quot;Reach this person directly for time-sensitive order questions.&quot;,
+      &quot;example&quot;: &quot;+244 900 000 001&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Given by the supplier when the contact is registered.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner or requester who registers the contact&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;mobile_phone&quot;,
+      &quot;label&quot;: &quot;Mobile phone&quot;,
+      &quot;type&quot;: &quot;phone&quot;,
+      &quot;group&quot;: &quot;Contacts&quot;,
+      &quot;helpText&quot;: &quot;Use when the supplier gives a mobile number as the best way to reach this person, for example for urgent delivery issues.&quot;,
+      &quot;purpose&quot;: &quot;Reach this person urgently outside normal office channels when the supplier has provided a mobile number for that purpose.&quot;,
+      &quot;example&quot;: &quot;+244 923 000 001&quot;,
+      &quot;priority&quot;: &quot;optional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Given by the supplier when the contact is registered.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner or requester who registers the contact&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;preferred_contact_channel&quot;,
+      &quot;label&quot;: &quot;Preferred contact channel&quot;,
+      &quot;type&quot;: &quot;select&quot;,
+      &quot;group&quot;: &quot;Contacts&quot;,
+      &quot;helpText&quot;: &quot;Ask the supplier which channel they actually check for order matters.&quot;,
+      &quot;purpose&quot;: &quot;Avoid delays from using a channel this person does not monitor for order matters.&quot;,
+      &quot;example&quot;: &quot;email&quot;,
+      &quot;priority&quot;: &quot;optional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Given by the supplier when the contact is registered.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner or requester who registers the contact&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;,
+      &quot;options&quot;: [
+        {
+          &quot;value&quot;: &quot;email&quot;,
+          &quot;label&quot;: &quot;Email&quot;
+        },
+        {
+          &quot;value&quot;: &quot;phone&quot;,
+          &quot;label&quot;: &quot;Phone&quot;
+        },
+        {
+          &quot;value&quot;: &quot;whatsapp&quot;,
+          &quot;label&quot;: &quot;WhatsApp&quot;
+        }
+      ]
+    },
+    {
+      &quot;key&quot;: &quot;is_primary_contact&quot;,
+      &quot;label&quot;: &quot;Primary order contact&quot;,
+      &quot;type&quot;: &quot;boolean&quot;,
+      &quot;group&quot;: &quot;Relationship&quot;,
+      &quot;helpText&quot;: &quot;Mark exactly one primary contact per supplier when more than one contact exists; Provia does not enforce this automatically.&quot;,
+      &quot;purpose&quot;: &quot;Let a buyer immediately identify who to contact by default for a given supplier.&quot;,
+      &quot;example&quot;: true,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;defaultValue&quot;: false,
+      &quot;source&quot;: &quot;Set by whoever registers or reviews the contact.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    },
+    {
+      &quot;key&quot;: &quot;status&quot;,
+      &quot;label&quot;: &quot;Contact status&quot;,
+      &quot;type&quot;: &quot;select&quot;,
+      &quot;group&quot;: &quot;Status&quot;,
+      &quot;helpText&quot;: &quot;Set to inactive when the supplier reports the person has left or changed role, instead of deleting the record.&quot;,
+      &quot;purpose&quot;: &quot;Stop buyers from reaching out to someone who no longer handles orders for the supplier.&quot;,
+      &quot;example&quot;: &quot;active&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;required&quot;: false,
+      &quot;defaultValue&quot;: &quot;active&quot;,
+      &quot;source&quot;: &quot;Set by whoever registers or reviews the contact; updated when the supplier reports a change.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;,
+      &quot;options&quot;: [
+        {
+          &quot;value&quot;: &quot;active&quot;,
+          &quot;label&quot;: &quot;Active&quot;
+        },
+        {
+          &quot;value&quot;: &quot;inactive&quot;,
+          &quot;label&quot;: &quot;Inactive&quot;
+        }
+      ]
+    },
+    {
+      &quot;key&quot;: &quot;notes&quot;,
+      &quot;label&quot;: &quot;Contact notes&quot;,
+      &quot;type&quot;: &quot;rich_text&quot;,
+      &quot;group&quot;: &quot;Status&quot;,
+      &quot;helpText&quot;: &quot;Operational notes only, for example usual response hours or a language preference stated by the supplier. Not a place for personal information about the individual.&quot;,
+      &quot;purpose&quot;: &quot;Capture practical notes that help a buyer reach this person effectively.&quot;,
+      &quot;example&quot;: &quot;Usually responds by end of day; prefers email over phone for order confirmations.&quot;,
+      &quot;priority&quot;: &quot;optional&quot;,
+      &quot;required&quot;: false,
+      &quot;source&quot;: &quot;Given by the supplier or observed by the buyer who registers the contact.&quot;,
+      &quot;maintainer&quot;: &quot;Supplier record owner or requester who registers the contact&quot;,
+      &quot;sensitivity&quot;: &quot;Internal.&quot;
+    }
+  ],
+  &quot;coverage&quot;: [
+    {
+      &quot;dimension&quot;: &quot;Identity and classification&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;Native Name holds the person&#39;s full name; job_title and department classify their role for routing.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Contacts and location&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;Email, phone, mobile and preferred channel cover how to reach this person about an order.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Ownership and structure&quot;,
+      &quot;decision&quot;: &quot;case&quot;,
+      &quot;reason&quot;: &quot;No internal owner field on the contact itself; the linked Supplier&#39;s account_owner already covers internal accountability, avoiding a duplicate field.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Status and lifecycle&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;status distinguishes a current order contact from someone who has left or changed role.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Operational or commercial attributes&quot;,
+      &quot;decision&quot;: &quot;not_applicable&quot;,
+      &quot;reason&quot;: &quot;This type models a person, not commercial terms; those belong on Supplier if ever needed.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Relationships&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;supplier links the contact to its Supplier record; is_primary_contact distinguishes the default contact when several exist.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Evidence and source&quot;,
+      &quot;decision&quot;: &quot;not_applicable&quot;,
+      &quot;reason&quot;: &quot;No document or verification requirement was stated for reaching a contact about an order. Identity documents (passport numbers) and family details were explicitly requested but declined; see catalogue notes.&quot;
+    }
+  ],
+  &quot;setup&quot;: [
+    &quot;Synthetic coverage example, not a mandatory template or confirmed policy.&quot;,
+    &quot;Confirm owners, vocabularies, sources and access before use. No synchronization is configured.&quot;,
+    &quot;Name is native and holds the contact&#39;s full name; these fields do not duplicate UUID, creator or system timestamps.&quot;,
+    &quot;Manual walkthrough: create Supplier &#39;Demonstration Supplier&#39; first, then create a Supplier Contact named &#39;Ana Santos&#39; linked to it; set job_title, order_email and phone; leave mobile_phone and preferred_contact_channel blank if not yet known; set is_primary_contact true only for the one contact buyers should default to.&quot;,
+    &quot;Create the Supplier type before Supplier Contact, since the entity field targetType &#39;supplier&#39; must already exist.&quot;,
+    &quot;Passport numbers and family details were requested for this type but are not included: no stated use was given, they are disproportionate to an order-contact use case, and Provia entity design requires an actual use, source and maintainer per field. Revisit only if a specific, access-restricted use is confirmed (see catalogue notes).&quot;
+  ],
+  &quot;readiness&quot;: [
+    &quot;Before relying on a contact for an order, confirm status is active and order_email or phone is filled in. No field here blocks order creation automatically; that would need an explicit check in the ordering process.&quot;
+  ]
+}</textarea></div></details></section></main>
+  <script type="application/json" id="catalogue-data">{
+  "schemaVersion": "provia-entity-catalogue/v1",
+  "title": "Supplier contact details for orders",
+  "language": "en",
+  "country": "Angola",
+  "notes": [
+    "No country was stated; Angola is used as a provisional context per the plugin's default (confirm with the customer). Currency and identifier formats below are illustrative only.",
+    "Scope: contact details needed to reach a supplier when placing and coordinating orders. This is a focused catalogue for that use, not a complete organizational supplier/procurement model — extend it if broader supplier management (contracts, evaluation, payment terms) is later in scope.",
+    "Declined by design: passport numbers and family details of supplier employees were requested but are not included. The requester stated there is no use for these fields. Provia entity design requires an actual business use, source and maintainer for every field, and explicitly rejects collecting sensitive data merely to appear comprehensive. Passport numbers are identity-document data and family details are relatives' personal data; neither supports contacting a supplier about an order, and collecting them without a defined process, access restriction and retention rule is a data-minimization risk with no offsetting benefit. If a specific, named use appears later (for example, ID verification for controlled site access), model that as its own field on the process that actually needs it, with restricted access — not as a default attribute of every contact record.",
+    "Icons verified against the bundled entity-icons.json snapshot (source revision recorded in that file). Confirm availability in the destination Provia tenant before configuration.",
+    "Metadata field types and configuration rules verified against Provia revision 2641364d1c... as pinned in this plugin's metadata-fields.md; confirm the destination tenant's actual revision.",
+    "This is an editorial specification for manual configuration in Provia, not an API payload or import file."
+  ],
+  "types": [
+    {
+      "key": "supplier",
+      "name": "Supplier",
+      "description": "Suppliers used in purchasing and order processes. Lets requesters and buyers select the supplier and reach the right contact for an order.",
+      "icon": "Truck01",
+      "namePattern": "Trading or legal name; add the internal supplier code only if needed to distinguish similarly named suppliers.",
+      "purpose": "Selecting a supplier for a purchase order and tracking whether it is currently usable.",
+      "owner": "Procurement lead to be designated by the organization",
+      "fields": [
+        {
+          "key": "supplier_code",
+          "label": "Supplier code",
+          "type": "auto_number",
+          "group": "Identification",
+          "helpText": "Provia-generated reference shown after the record is saved; not entered manually.",
+          "purpose": "Give buyers a short reference for orders and communications distinct from the Name.",
+          "example": "SUP-0001",
+          "priority": "core",
+          "required": false,
+          "source": "Generated by Provia; synthetic proposal to confirm with the procurement team.",
+          "maintainer": "Provia generates the value; procurement defines the configuration.",
+          "sensitivity": "Internal.",
+          "config": {
+            "prefix": "SUP-",
+            "padding": 4,
+            "startAt": 1
+          }
+        },
+        {
+          "key": "legal_name",
+          "label": "Legal name",
+          "type": "text",
+          "group": "Identification",
+          "helpText": "Record when it differs from the trading name shown in Name, for use on purchase orders and invoices.",
+          "purpose": "Identify the correct contracting party on order and invoice documents when it differs from the trading name.",
+          "example": "Demonstration Supplier, Lda.",
+          "priority": "conditional",
+          "required": false,
+          "source": "Proposed in this synthetic catalogue; confirm with procurement.",
+          "maintainer": "Supplier record owner",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "tax_number",
+          "label": "Tax identification number",
+          "type": "text",
+          "group": "Identification",
+          "helpText": "Confirm against the financial system of record before use on an order or invoice.",
+          "purpose": "Verify the contracting party for invoicing and payment matching.",
+          "example": "NIF-DEMO",
+          "priority": "conditional",
+          "required": false,
+          "source": "Proposed in this synthetic catalogue; confirm with the finance system of record.",
+          "maintainer": "Supplier record owner",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "category",
+          "label": "Supply category",
+          "type": "select",
+          "group": "Classification",
+          "helpText": "Choose what the supplier is used for when routing an order.",
+          "purpose": "Help requesters find the right supplier when creating an order.",
+          "example": "goods",
+          "priority": "core",
+          "required": false,
+          "source": "Proposed in this synthetic catalogue; confirm with procurement.",
+          "maintainer": "Supplier record owner",
+          "sensitivity": "Internal.",
+          "options": [
+            {
+              "value": "goods",
+              "label": "Goods"
+            },
+            {
+              "value": "services",
+              "label": "Services"
+            },
+            {
+              "value": "goods_and_services",
+              "label": "Goods and services"
+            }
+          ]
+        },
+        {
+          "key": "account_owner",
+          "label": "Procurement owner",
+          "type": "user",
+          "group": "Ownership",
+          "helpText": "Identify who is accountable for the supplier relationship internally.",
+          "purpose": "Route questions about the supplier and approve exceptions to standard ordering.",
+          "example": {
+            "lookupName": "Demonstration procurement lead"
+          },
+          "priority": "core",
+          "required": false,
+          "source": "Proposed in this synthetic catalogue; confirm with procurement.",
+          "maintainer": "Supplier record owner",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "relationship_status",
+          "label": "Relationship status",
+          "type": "select",
+          "group": "Status",
+          "helpText": "Check before placing a new order with this supplier.",
+          "purpose": "Prevent orders being placed with a suspended or closed supplier.",
+          "example": "active",
+          "priority": "core",
+          "required": false,
+          "source": "Proposed in this synthetic catalogue; confirm with procurement.",
+          "maintainer": "Supplier record owner",
+          "sensitivity": "Internal.",
+          "options": [
+            {
+              "value": "prospective",
+              "label": "Prospective"
+            },
+            {
+              "value": "active",
+              "label": "Active"
+            },
+            {
+              "value": "suspended",
+              "label": "Suspended"
+            },
+            {
+              "value": "closed",
+              "label": "Closed"
+            }
+          ]
+        },
+        {
+          "key": "general_email",
+          "label": "General email",
+          "type": "email",
+          "group": "Contacts",
+          "helpText": "Company-level inbox to use only until a named order contact is on file.",
+          "purpose": "Provide a fallback contact when no specific order contact has been identified yet.",
+          "example": "info@example.com",
+          "priority": "optional",
+          "required": false,
+          "source": "Proposed in this synthetic catalogue; confirm with procurement.",
+          "maintainer": "Supplier record owner",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "general_phone",
+          "label": "General phone",
+          "type": "phone",
+          "group": "Contacts",
+          "helpText": "Company-level switchboard number, as a fallback.",
+          "purpose": "Provide a fallback contact when no specific order contact has been identified yet.",
+          "example": "+244 900 000 000",
+          "priority": "optional",
+          "required": false,
+          "source": "Proposed in this synthetic catalogue; confirm with procurement.",
+          "maintainer": "Supplier record owner",
+          "sensitivity": "Internal."
+        }
+      ],
+      "coverage": [
+        {
+          "dimension": "Identity and classification",
+          "decision": "included",
+          "reason": "Business identifiers and supply category support supplier selection and invoicing checks."
+        },
+        {
+          "dimension": "Contacts and location",
+          "decision": "included",
+          "reason": "General fallback contact only; named order contacts are modeled on Supplier Contact, reused across orders instead of being re-entered per order."
+        },
+        {
+          "dimension": "Ownership and structure",
+          "decision": "included",
+          "reason": "An internal procurement owner is needed to answer questions and approve exceptions."
+        },
+        {
+          "dimension": "Status and lifecycle",
+          "decision": "included",
+          "reason": "Relationship status is checked before ordering."
+        },
+        {
+          "dimension": "Operational or commercial attributes",
+          "decision": "pending",
+          "reason": "Out of the stated scope (contact details for orders). Payment terms, contracts and evaluation would need a separate confirmed requirement."
+        },
+        {
+          "dimension": "Relationships",
+          "decision": "included",
+          "reason": "Supplier Contact records reference this type; the reverse list is available in Provia without a duplicated field here."
+        },
+        {
+          "dimension": "Evidence and source",
+          "decision": "not_applicable",
+          "reason": "No document or verification requirement was stated for this scope."
+        }
+      ],
+      "setup": [
+        "Synthetic coverage example, not a mandatory template or confirmed policy.",
+        "Confirm owners, vocabularies, sources and access. No synchronization is configured.",
+        "Name is native. These fields do not duplicate UUID, creator or system timestamps.",
+        "Manual walkthrough: create 'Demonstration Supplier'; set category and procurement owner; leave relationship_status at prospective until vetted, then active before the first order. Legal name and tax number can be completed once invoicing starts.",
+        "Configure supplier_code as auto_number, required false, no default. The sequence can have gaps and is not exported in YAML; review backfill before adding this field to an existing type."
+      ],
+      "readiness": [
+        "Before placing an order, confirm relationship_status is active and at least one Supplier Contact exists. The status field does not itself block order creation in Provia; that would need an explicit check in the ordering process."
+      ]
+    },
+    {
+      "key": "supplier_contact",
+      "name": "Supplier Contact",
+      "description": "People at a supplier who can be reached about an order. Lets buyers pick the right person and channel instead of guessing or re-asking the supplier each time.",
+      "icon": "UserCircle",
+      "namePattern": "Contact's full name as given by the supplier, for example 'Ana Santos'.",
+      "purpose": "Placing, confirming and following up on orders with a named person at the supplier.",
+      "owner": "Procurement lead to be designated by the organization",
+      "fields": [
+        {
+          "key": "supplier",
+          "label": "Supplier",
+          "type": "entity",
+          "group": "Relationship",
+          "helpText": "Select the supplier this person belongs to.",
+          "purpose": "Link the contact to the supplier so buyers can find contacts from the supplier record.",
+          "example": {
+            "lookupName": "Demonstration Supplier"
+          },
+          "priority": "core",
+          "required": true,
+          "targetType": "supplier",
+          "source": "Selected at creation from the Supplier type.",
+          "maintainer": "Supplier record owner or requester who registers the contact",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "job_title",
+          "label": "Job title",
+          "type": "text",
+          "group": "Role",
+          "helpText": "Helps a buyer judge whether this is the right person for a purchasing question versus, say, a delivery question.",
+          "purpose": "Know this person's function when coordinating an order.",
+          "example": "Sales coordinator",
+          "priority": "core",
+          "required": false,
+          "source": "Given by the supplier when the contact is registered.",
+          "maintainer": "Supplier record owner or requester who registers the contact",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "department",
+          "label": "Department",
+          "type": "text",
+          "group": "Role",
+          "helpText": "Use when the supplier is large enough that department matters for routing, for example separating sales from logistics.",
+          "purpose": "Route order questions to the correct area within a larger supplier.",
+          "example": "Sales",
+          "priority": "optional",
+          "required": false,
+          "source": "Given by the supplier when the contact is registered.",
+          "maintainer": "Supplier record owner or requester who registers the contact",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "order_email",
+          "label": "Order email",
+          "type": "email",
+          "group": "Contacts",
+          "helpText": "Email to use for purchase orders and confirmations with this person.",
+          "purpose": "Send purchase orders and receive confirmations.",
+          "example": "ana.santos@example.com",
+          "priority": "core",
+          "required": false,
+          "source": "Given by the supplier when the contact is registered.",
+          "maintainer": "Supplier record owner or requester who registers the contact",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "phone",
+          "label": "Phone",
+          "type": "phone",
+          "group": "Contacts",
+          "helpText": "Direct line or extension for this person.",
+          "purpose": "Reach this person directly for time-sensitive order questions.",
+          "example": "+244 900 000 001",
+          "priority": "core",
+          "required": false,
+          "source": "Given by the supplier when the contact is registered.",
+          "maintainer": "Supplier record owner or requester who registers the contact",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "mobile_phone",
+          "label": "Mobile phone",
+          "type": "phone",
+          "group": "Contacts",
+          "helpText": "Use when the supplier gives a mobile number as the best way to reach this person, for example for urgent delivery issues.",
+          "purpose": "Reach this person urgently outside normal office channels when the supplier has provided a mobile number for that purpose.",
+          "example": "+244 923 000 001",
+          "priority": "optional",
+          "required": false,
+          "source": "Given by the supplier when the contact is registered.",
+          "maintainer": "Supplier record owner or requester who registers the contact",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "preferred_contact_channel",
+          "label": "Preferred contact channel",
+          "type": "select",
+          "group": "Contacts",
+          "helpText": "Ask the supplier which channel they actually check for order matters.",
+          "purpose": "Avoid delays from using a channel this person does not monitor for order matters.",
+          "example": "email",
+          "priority": "optional",
+          "required": false,
+          "source": "Given by the supplier when the contact is registered.",
+          "maintainer": "Supplier record owner or requester who registers the contact",
+          "sensitivity": "Internal.",
+          "options": [
+            {
+              "value": "email",
+              "label": "Email"
+            },
+            {
+              "value": "phone",
+              "label": "Phone"
+            },
+            {
+              "value": "whatsapp",
+              "label": "WhatsApp"
+            }
+          ]
+        },
+        {
+          "key": "is_primary_contact",
+          "label": "Primary order contact",
+          "type": "boolean",
+          "group": "Relationship",
+          "helpText": "Mark exactly one primary contact per supplier when more than one contact exists; Provia does not enforce this automatically.",
+          "purpose": "Let a buyer immediately identify who to contact by default for a given supplier.",
+          "example": true,
+          "priority": "core",
+          "required": false,
+          "defaultValue": false,
+          "source": "Set by whoever registers or reviews the contact.",
+          "maintainer": "Supplier record owner",
+          "sensitivity": "Internal."
+        },
+        {
+          "key": "status",
+          "label": "Contact status",
+          "type": "select",
+          "group": "Status",
+          "helpText": "Set to inactive when the supplier reports the person has left or changed role, instead of deleting the record.",
+          "purpose": "Stop buyers from reaching out to someone who no longer handles orders for the supplier.",
+          "example": "active",
+          "priority": "core",
+          "required": false,
+          "defaultValue": "active",
+          "source": "Set by whoever registers or reviews the contact; updated when the supplier reports a change.",
+          "maintainer": "Supplier record owner",
+          "sensitivity": "Internal.",
+          "options": [
+            {
+              "value": "active",
+              "label": "Active"
+            },
+            {
+              "value": "inactive",
+              "label": "Inactive"
+            }
+          ]
+        },
+        {
+          "key": "notes",
+          "label": "Contact notes",
+          "type": "rich_text",
+          "group": "Status",
+          "helpText": "Operational notes only, for example usual response hours or a language preference stated by the supplier. Not a place for personal information about the individual.",
+          "purpose": "Capture practical notes that help a buyer reach this person effectively.",
+          "example": "Usually responds by end of day; prefers email over phone for order confirmations.",
+          "priority": "optional",
+          "required": false,
+          "source": "Given by the supplier or observed by the buyer who registers the contact.",
+          "maintainer": "Supplier record owner or requester who registers the contact",
+          "sensitivity": "Internal."
+        }
+      ],
+      "coverage": [
+        {
+          "dimension": "Identity and classification",
+          "decision": "included",
+          "reason": "Native Name holds the person's full name; job_title and department classify their role for routing."
+        },
+        {
+          "dimension": "Contacts and location",
+          "decision": "included",
+          "reason": "Email, phone, mobile and preferred channel cover how to reach this person about an order."
+        },
+        {
+          "dimension": "Ownership and structure",
+          "decision": "case",
+          "reason": "No internal owner field on the contact itself; the linked Supplier's account_owner already covers internal accountability, avoiding a duplicate field."
+        },
+        {
+          "dimension": "Status and lifecycle",
+          "decision": "included",
+          "reason": "status distinguishes a current order contact from someone who has left or changed role."
+        },
+        {
+          "dimension": "Operational or commercial attributes",
+          "decision": "not_applicable",
+          "reason": "This type models a person, not commercial terms; those belong on Supplier if ever needed."
+        },
+        {
+          "dimension": "Relationships",
+          "decision": "included",
+          "reason": "supplier links the contact to its Supplier record; is_primary_contact distinguishes the default contact when several exist."
+        },
+        {
+          "dimension": "Evidence and source",
+          "decision": "not_applicable",
+          "reason": "No document or verification requirement was stated for reaching a contact about an order. Identity documents (passport numbers) and family details were explicitly requested but declined; see catalogue notes."
+        }
+      ],
+      "setup": [
+        "Synthetic coverage example, not a mandatory template or confirmed policy.",
+        "Confirm owners, vocabularies, sources and access before use. No synchronization is configured.",
+        "Name is native and holds the contact's full name; these fields do not duplicate UUID, creator or system timestamps.",
+        "Manual walkthrough: create Supplier 'Demonstration Supplier' first, then create a Supplier Contact named 'Ana Santos' linked to it; set job_title, order_email and phone; leave mobile_phone and preferred_contact_channel blank if not yet known; set is_primary_contact true only for the one contact buyers should default to.",
+        "Create the Supplier type before Supplier Contact, since the entity field targetType 'supplier' must already exist.",
+        "Passport numbers and family details were requested for this type but are not included: no stated use was given, they are disproportionate to an order-contact use case, and Provia entity design requires an actual use, source and maintainer per field. Revisit only if a specific, access-restricted use is confirmed (see catalogue notes)."
+      ],
+      "readiness": [
+        "Before relying on a contact for an order, confirm status is active and order_email or phone is filled in. No field here blocks order creation automatically; that would need an explicit check in the ordering process."
+      ]
+    }
+  ]
+}</script><script>
+  const status = document.getElementById('status');
+  const fitText = () => document.querySelectorAll('textarea').forEach(area => {
+    area.style.height = 'auto';
+    area.style.height = (area.scrollHeight + 2) + 'px';
+  });
+  fitText();
+  window.addEventListener('resize', fitText);
+  window.addEventListener('beforeprint', fitText);
+  window.addEventListener('afterprint', fitText);
+  document.querySelectorAll('details').forEach(panel => panel.addEventListener('toggle', fitText));
+  document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', async () => {
+    const area = document.getElementById(button.dataset.copy);
+    try {
+      if (!navigator.clipboard || !window.isSecureContext) throw new Error('fallback');
+      await navigator.clipboard.writeText(area.value);
+      status.textContent = "Copied.";
+    } catch {
+      area.focus(); area.select();
+      let copied = false;
+      try { copied = document.execCommand('copy'); } catch {}
+      status.textContent = copied ? "Copied." : "Text selected. Press Ctrl+C or ⌘C to copy.";
+    }
+  }));
+  document.getElementById('search').addEventListener('input', event => {
+    const term = event.target.value.toLocaleLowerCase();
+    document.querySelectorAll('[data-catalogue-type]').forEach(section => {
+      const values = Array.from(section.querySelectorAll('textarea')).map(area => area.value).join(' ');
+      section.hidden = !(section.textContent + values).toLocaleLowerCase().includes(term);
+    });
+    fitText();
+  });
+  document.querySelectorAll('nav a').forEach(link => link.addEventListener('click', () => {
+    document.getElementById('search').value = '';
+    document.querySelectorAll('[data-catalogue-type]').forEach(section => { section.hidden = false; });
+    fitText();
+  }));
+  document.getElementById('download').addEventListener('click', () => {
+    const blob = new Blob([document.getElementById('catalogue-data').textContent], {type:'application/json'});
+    const url = URL.createObjectURL(blob), link = document.createElement('a');
+    link.href = url; link.download = 'catalogue.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+  document.getElementById('print').addEventListener('click', () => window.print());
+  </script></body></html>

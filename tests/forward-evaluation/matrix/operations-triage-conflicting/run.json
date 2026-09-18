@@ -1,0 +1,19 @@
+{
+  "id": "operations-triage-conflicting",
+  "skill": "provia-operations-triage",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:35:52.855Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 65044,
+  "costUsd": 0.25132279999999996,
+  "numTurns": 8,
+  "sessionId": "2432216d-6e5a-4b45-adac-e54021b90ad2",
+  "stopReason": "end_turn",
+  "toolCalls": 6,
+  "files": [
+    "triage-report.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/operations-triage-conflicting/",
+  "skillLoaded": true
+}

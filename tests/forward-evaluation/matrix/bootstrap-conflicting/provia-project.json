@@ -1,0 +1,181 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "compras",
+    "title": "Aprovação de pedidos de compra",
+    "language": "pt-AO",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": "Não indicado nas fontes fornecidas",
+    "sector": "Não indicado nas fontes fornecidas",
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "sop-compras-2024",
+      "title": "Procedimento de compras (2024)",
+      "kind": "sop",
+      "version": "2024",
+      "effectiveDate": null,
+      "sections": [
+        { "anchor": "1", "title": "Aprovação do pedido pela chefia do departamento" }
+      ]
+    },
+    {
+      "id": "circular-direccao-2026",
+      "title": "Circular da direcção (2026)",
+      "kind": "policy",
+      "version": "2026",
+      "effectiveDate": null,
+      "sections": [
+        { "anchor": "1", "title": "Aprovação do pedido pelo director financeiro" }
+      ]
+    }
+  ],
+  "entityTypes": [],
+  "groups": [
+    {
+      "key": "chefias",
+      "name": "Chefias de departamento",
+      "parentKey": null,
+      "purpose": "Segundo o procedimento de compras de 2024 (Documento A), aprovavam todos os pedidos de compra do seu departamento. A circular de 2026 (Documento B) contradiz esta regra — ver decisão D1; não escolher entre as duas fontes sem confirmação da organização.",
+      "members": [
+        { "role": "Chefe de departamento", "email": null }
+      ],
+      "sourceRefs": [
+        { "source": "sop-compras-2024", "section": "1" }
+      ],
+      "flags": [
+        {
+          "code": "segregation",
+          "detail": "Se a chefia também puder ser quem regista o pedido do seu próprio departamento, confirmar com o dono do processo se pode aprovar um pedido que ela própria iniciou."
+        }
+      ]
+    },
+    {
+      "key": "director_financeiro",
+      "name": "Director financeiro",
+      "parentKey": null,
+      "purpose": "Segundo a circular da direcção de 2026 (Documento B), passa a ser o único aprovador dos pedidos de compra a partir de Janeiro. O procedimento de 2024 (Documento A) contradiz esta regra — ver decisão D1; não escolher entre as duas fontes sem confirmação da organização.",
+      "members": [
+        { "role": "Director financeiro", "email": null }
+      ],
+      "sourceRefs": [
+        { "source": "circular-direccao-2026", "section": "1" }
+      ],
+      "flags": [
+        {
+          "code": "single_person",
+          "detail": "Actor de pessoa única. Nomear um substituto para ausências, para que a aprovação não fique bloqueada."
+        }
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "key": "compras",
+      "name": "Aprovação de pedidos de compra",
+      "prefix": "COMP",
+      "file": "compras/workflow.yaml",
+      "status": "validated",
+      "sourceRefs": [
+        { "source": "sop-compras-2024" },
+        { "source": "circular-direccao-2026" }
+      ],
+      "actions": [
+        {
+          "localId": "decidir",
+          "name": "Decidir sobre o pedido de compra",
+          "type": "decision",
+          "sourceRefs": [
+            { "source": "sop-compras-2024", "section": "1" },
+            { "source": "circular-direccao-2026", "section": "1" }
+          ],
+          "assigneeRef": null,
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Comentário obrigatório em «Rejeitar»" ],
+          "due": null,
+          "folded": []
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "O responsável desta acção não está definido no YAML porque as duas fontes fornecidas indicam autoridades diferentes (chefia do departamento vs. director financeiro) — ver decisão D1. Não atribuir o grupo até a organização confirmar a regra em vigor.",
+        "As fontes fornecidas descrevem apenas a regra de aprovação. Não há informação sobre o registo do pedido, campos obrigatórios, cabimento orçamental, emissão de encomenda ou qualquer etapa posterior à decisão — ver decisão D4. O workflow foi mantido deliberadamente mínimo (accionador manual + uma decisão) para não inventar etapas de processo.",
+        "Nenhum campo de caso (metadata) foi definido: as fontes não indicam que dados o pedido deve conter. Confirmar os campos reais antes de usar provia-form-designer ou provia-information-model.",
+        "Prazo (due) não foi proposto por não constar de nenhuma das fontes."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Quem tem autoridade para aprovar os pedidos de compra: a chefia do departamento (procedimento de compras de 2024) ou o director financeiro (circular da direcção de 2026)? As duas fontes fornecidas contradizem-se e não há informação adicional para resolver o conflito.",
+      "owner": "Direcção / dono do processo de compras",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [
+        { "source": "sop-compras-2024", "section": "1" },
+        { "source": "circular-direccao-2026", "section": "1" }
+      ]
+    },
+    {
+      "id": "D2",
+      "question": "A circular de 2026 diz que a nova regra é válida «a partir de Janeiro», sem indicar o ano. É Janeiro de 2026 (o próprio ano da circular) ou de um ano posterior?",
+      "owner": "Direcção",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [
+        { "source": "circular-direccao-2026", "section": "1" }
+      ]
+    },
+    {
+      "id": "D3",
+      "question": "A circular substitui o procedimento de 2024 para todos os pedidos, sem excepção de valor ou categoria, ou mantém-se algum papel para a chefia do departamento (por exemplo, iniciar ou visar o pedido antes da aprovação financeira)?",
+      "owner": "Direcção financeira",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [
+        { "source": "circular-direccao-2026", "section": "1" }
+      ]
+    },
+    {
+      "id": "D4",
+      "question": "Que etapas existem antes da decisão (registo do pedido, dados a preencher) e depois dela (cabimento orçamental, emissão de encomenda, comunicação ao requerente)? Nenhum dos dois documentos fornecidos as descreve.",
+      "owner": "Dono do processo de compras",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D5",
+      "question": "Qual é o nome da organização e o sector de actividade, para completar o projecto?",
+      "owner": "Cliente",
+      "status": "open",
+      "raisedBy": "provia-bootstrap",
+      "sourceRefs": []
+    },
+    {
+      "id": "D6",
+      "question": "Quem substitui o director financeiro na aprovação quando este estiver ausente?",
+      "owner": "Direcção financeira",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": [
+        { "source": "circular-direccao-2026", "section": "1" }
+      ]
+    }
+  ],
+  "receipts": []
+}

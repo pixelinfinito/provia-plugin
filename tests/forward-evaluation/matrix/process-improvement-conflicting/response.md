@@ -1,0 +1,7 @@
+I've written `report.md` and `provia-project.json` to the working directory. Summary:
+
+**The data cannot prove the new manager worsened performance.** Mean cycle time did rise +2 days (2→4), but two confounders moved at the same time: completed volume tripled (10→30) and case complexity increased — both independently explain longer cycle times through queueing and harder cases, with no change in managerial competence required. No raw records, complexity metric, or active-work/waiting split exist to separate a manager effect from those confounders, so this is an unproven association, not evidence of underperformance.
+
+Proposed measurable next step: tag intake by complexity tier and track cycle time per tier alongside a volume/capacity ratio for the next two months — only a gap that persists within-tier and capacity-adjusted would support a management-performance claim. Two open decisions were logged in `provia-project.json` (raw export availability; complexity metric needed).
+
+Next recommended skill: if raw per-case records become available, `provia-diagnose` (or a follow-up `provia-process-improvement` run) can re-check this with actual case-level data instead of two aggregate means. Copyable request: "Use provia-process-improvement with provia-project.json in this directory and the raw case export (created/completed timestamps, complexity tag, assignee) for August and September. Re-run the cycle-time comparison stratified by complexity tier."

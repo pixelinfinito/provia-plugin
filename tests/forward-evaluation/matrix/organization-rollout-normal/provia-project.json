@@ -1,0 +1,191 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "adopcao-compras-rh",
+    "title": "Plano de adopção Provia — Compras (piloto) e Recursos Humanos (expansão)",
+    "language": "pt-AO",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": null,
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [],
+  "entityTypes": [],
+  "groups": [
+    {
+      "key": "administracao_ti",
+      "name": "Administração da organização Provia (TI/Sistemas)",
+      "parentKey": null,
+      "purpose": "Administra a organização Provia: cria utilizadores, atribui licenças, mantém integrações. Não é dono de processo nem responsável por acções.",
+      "members": [
+        { "role": "Responsável de TI/Sistemas (a nomear)", "email": null }
+      ],
+      "sourceRefs": [],
+      "flags": [
+        { "code": "unnamed", "detail": "Nenhum organograma ou documento foi fornecido; falta nomear quem administra a organização Provia." }
+      ]
+    },
+    {
+      "key": "dono_processo_compras",
+      "name": "Dono do processo de Compras",
+      "parentKey": null,
+      "purpose": "Aprova o desenho do workflow de Compras, define prioridades do piloto e os indicadores de adopção; não executa acções operacionais do processo.",
+      "members": [
+        { "role": "A nomear (ex.: Director de Compras/Operações)", "email": null }
+      ],
+      "sourceRefs": [],
+      "flags": [
+        { "code": "unnamed", "detail": "Nenhuma fonte identifica o responsável pelo processo de Compras; é uma condição para iniciar o piloto." }
+      ]
+    },
+    {
+      "key": "compras",
+      "name": "Equipa de Compras",
+      "parentKey": null,
+      "purpose": "Regista pedidos de compra, obtém cotações de fornecedores e executa as compras aprovadas.",
+      "members": [
+        { "role": "Técnico de compras (a nomear)", "email": null }
+      ],
+      "sourceRefs": [],
+      "flags": [
+        { "code": "segregation", "detail": "A mesma equipa não deve pedir e aprovar a compra; ver grupo aprovacao_financeira." }
+      ]
+    },
+    {
+      "key": "aprovacao_financeira",
+      "name": "Aprovação financeira",
+      "parentKey": null,
+      "purpose": "Revê e aprova ou rejeita pedidos de compra face ao orçamento e à política interna.",
+      "members": [
+        { "role": "Responsável financeiro (a nomear)", "email": null }
+      ],
+      "sourceRefs": [],
+      "flags": [
+        { "code": "segregation", "detail": "Mantido separado da equipa de Compras para evitar que quem pede também aprove." }
+      ]
+    },
+    {
+      "key": "direccao_geral",
+      "name": "Direcção Geral",
+      "parentKey": null,
+      "purpose": "Aprova compras acima do limiar delegado à Aprovação financeira e decide excepções.",
+      "members": [
+        { "role": "Director Geral (a nomear)", "email": null }
+      ],
+      "sourceRefs": [],
+      "flags": [
+        { "code": "single_person", "detail": "Papel tipicamente ocupado por uma única pessoa; falta nomear um substituto para ausências." }
+      ]
+    },
+    {
+      "key": "dono_processo_rh",
+      "name": "Dono do processo de Recursos Humanos",
+      "parentKey": null,
+      "purpose": "Aprova o desenho dos workflows de RH na fase 2 e define os indicadores de adopção da expansão.",
+      "members": [
+        { "role": "A nomear (ex.: Director/Responsável de RH)", "email": null }
+      ],
+      "sourceRefs": [],
+      "flags": [
+        { "code": "unnamed", "detail": "Nenhuma fonte identifica o responsável pelo processo de RH; é uma condição para iniciar a fase 2." }
+      ]
+    },
+    {
+      "key": "recursos_humanos",
+      "name": "Equipa de Recursos Humanos",
+      "parentKey": null,
+      "purpose": "Processa pedidos de RH (por exemplo admissão, férias e ausências) uma vez iniciada a fase 2.",
+      "members": [
+        { "role": "Técnico de RH (a nomear)", "email": null }
+      ],
+      "sourceRefs": [],
+      "flags": [
+        { "code": "segregation", "detail": "Quando um membro da própria equipa de RH submete um pedido (ex.: férias), a aprovação não pode ficar com a equipa de RH; ver decisão sobre auto-aprovação." }
+      ]
+    },
+    {
+      "key": "chefias",
+      "name": "Chefias de departamento",
+      "parentKey": null,
+      "purpose": "Aprovam pedidos submetidos pelos membros da sua equipa, tanto em Compras (requisitantes) como em RH (férias e ausências) uma vez alargado a RH.",
+      "members": [
+        { "role": "Chefe de departamento (por departamento, a nomear)", "email": null }
+      ],
+      "sourceRefs": [],
+      "flags": [
+        { "code": "unnamed", "detail": "Sem organograma, não é possível listar as chefias por departamento." }
+      ]
+    }
+  ],
+  "workflows": [],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Quem é o dono do processo de Compras, responsável por aprovar o desenho do piloto e os seus indicadores?",
+      "owner": "Direcção Geral",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": []
+    },
+    {
+      "id": "D2",
+      "question": "Quem é o dono do processo de Recursos Humanos para a fase 2 da adopção?",
+      "owner": "Direcção Geral",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": []
+    },
+    {
+      "id": "D3",
+      "question": "Qual o valor a partir do qual uma compra deixa de ser aprovada pela Aprovação financeira e passa a exigir aprovação da Direcção Geral?",
+      "owner": "Direcção Geral / Direcção Financeira",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": []
+    },
+    {
+      "id": "D4",
+      "question": "Quem substitui o Director Geral nas aprovações de compras durante ausências?",
+      "owner": "Direcção Geral",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": []
+    },
+    {
+      "id": "D5",
+      "question": "Quem administra a organização Provia (utilizadores, licenças, integrações) — TI ou outro responsável?",
+      "owner": "Direcção Geral",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": []
+    },
+    {
+      "id": "D6",
+      "question": "Quando um membro da equipa de RH submete o seu próprio pedido (ex.: férias), quem aprova para evitar auto-aprovação?",
+      "owner": "dono_processo_rh",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": []
+    },
+    {
+      "id": "D7",
+      "question": "Quais são as chefias de departamento nomeadas (nomes/emails), para preencher os membros do grupo chefias?",
+      "owner": "Direcção Geral",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": []
+    }
+  ],
+  "receipts": []
+}

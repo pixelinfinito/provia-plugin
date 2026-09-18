@@ -1,4 +1,4 @@
-# Training draft for Angola; see setup.md before importing.
+# provia-skills 1.1.0 — training draft for Angola; see setup.md and provia-project.json before importing.
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
@@ -15,32 +15,80 @@ fields:
     label: Data de início
     type: date
     required: true
+  - name: job_title
+    label: Função
+    type: text
+    required: true
+  - name: department
+    label: Departamento
+    type: text
+    required: true
 actions:
-  - id: step_1
+  - id: confirmar_dados
     name: Confirmar os dados aprovados
     type: standard
+    description: |
+      Tarefa: Confirmar que a admissão está aprovada e que os dados necessários para preparar o primeiro dia estão completos.
+      Como: 1. Verificar que existe a aprovação da admissão pela direcção, anexada ao caso ou referida no comentário de abertura. 2. Confirmar «Data de início», «Função» e «Departamento» com a chefia que vai receber a pessoa. 3. Confirmar que o contrato está assinado ou agendado para assinatura antes da data de início.
+      Evidência: A aprovação anexada e um comentário a confirmar os três campos com a chefia.
+      Concluído quando: A aprovação está no caso e os três campos estão confirmados.
+      Excepções: Se a aprovação não existir ou a data de início for anterior à assinatura do contrato, não concluir: comentar o que falta e informar a chefia do departamento.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 2
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator
-  - id: step_2
+  - id: preparar_acessos
     name: Preparar acessos e equipamento
     type: standard
+    description: |
+      Tarefa: Deixar o equipamento e os acessos prontos para o primeiro dia.
+      Como: 1. Criar a conta de correio electrónico e os acessos às aplicações usadas pelo departamento, com base na «Função». 2. Preparar o computador e o telefone atribuídos, se aplicável. 3. Registar num comentário a lista de acessos criados e o número de série do equipamento.
+      Evidência: Um comentário com a lista de acessos e o equipamento atribuído.
+      Concluído quando: Os acessos e o equipamento estão prontos e listados no caso, antes da «Data de início».
+      Excepções: Se faltar equipamento, não concluir: comentar a falta e a data prevista e informar a chefia do departamento e os Recursos Humanos.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 3
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator
-  - id: step_3
+  - id: acolher
     name: Realizar o acolhimento
     type: standard
+    description: |
+      Tarefa: Receber a pessoa no primeiro dia e apresentar a equipa, o posto e as regras essenciais.
+      Como: 1. Entregar o equipamento e confirmar que os acessos funcionam. 2. Apresentar a equipa, o horário, as regras de segurança e o ponto de contacto para dúvidas. 3. Recolher a assinatura da lista de verificação de acolhimento.
+      Evidência: A lista de verificação de acolhimento assinada, anexada ao caso.
+      Concluído quando: A lista de verificação assinada está no caso.
+      Excepções: Se a pessoa não comparecer, não concluir: comentar e informar os Recursos Humanos no próprio dia.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 1
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator
-  - id: step_4
+  - id: confirmar_conclusao
     name: Confirmar a conclusão
     type: standard
+    description: |
+      Tarefa: Confirmar que o processo administrativo de admissão está completo.
+      Como: 1. Verificar que o contrato assinado, a lista de acolhimento e o registo de acessos estão no caso. 2. Confirmar a inscrição na segurança social e no processamento salarial junto de quem os trata. 3. Registar num comentário a data em que cada verificação foi feita.
+      Evidência: Um comentário com as três verificações e as datas.
+      Concluído quando: Os documentos estão no caso e as inscrições estão confirmadas.
+      Excepções: Se alguma inscrição estiver pendente, não concluir: comentar a pendência e quem a resolve, e manter o caso aberto até à confirmação.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 5
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator

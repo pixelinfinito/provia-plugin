@@ -1,0 +1,204 @@
+# provia-skills 1.1.0 — adapted from the plugin's procurement example for Angola; see setup.md and provia-project.json before importing.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Pedido de compra"
+  prefix: COMP
+  description: "Adaptado do exemplo de compras do plugin para acolher a recolha de três propostas de fornecedores. Configurar responsáveis e regras antes da publicação."
+triggers:
+  - type: manual
+    label: Iniciar pedido
+    enabled: true
+    config: {}
+fields:
+  - name: purchase_amount
+    label: Montante solicitado
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: cost_centre
+    label: Centro de custo
+    type: text
+    required: true
+  - name: budget_reference
+    label: Referência orçamental
+    type: text
+    required: false
+  - name: order_reference
+    label: Referência da encomenda
+    type: text
+    required: false
+  - name: fornecedor_1_nome
+    label: "Fornecedor 1 — Nome"
+    type: text
+    required: true
+  - name: fornecedor_1_valor
+    label: "Fornecedor 1 — Valor da proposta"
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: fornecedor_1_prazo_entrega_dias
+    label: "Fornecedor 1 — Prazo de entrega (dias)"
+    type: number
+    required: true
+  - name: fornecedor_1_documento
+    label: "Fornecedor 1 — Documento da proposta"
+    type: file
+    required: true
+  - name: fornecedor_1_condicoes
+    label: "Fornecedor 1 — Condições / observações"
+    type: rich_text
+    required: false
+  - name: fornecedor_2_nome
+    label: "Fornecedor 2 — Nome"
+    type: text
+    required: true
+  - name: fornecedor_2_valor
+    label: "Fornecedor 2 — Valor da proposta"
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: fornecedor_2_prazo_entrega_dias
+    label: "Fornecedor 2 — Prazo de entrega (dias)"
+    type: number
+    required: true
+  - name: fornecedor_2_documento
+    label: "Fornecedor 2 — Documento da proposta"
+    type: file
+    required: true
+  - name: fornecedor_2_condicoes
+    label: "Fornecedor 2 — Condições / observações"
+    type: rich_text
+    required: false
+  - name: fornecedor_3_nome
+    label: "Fornecedor 3 — Nome"
+    type: text
+    required: true
+  - name: fornecedor_3_valor
+    label: "Fornecedor 3 — Valor da proposta"
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: fornecedor_3_prazo_entrega_dias
+    label: "Fornecedor 3 — Prazo de entrega (dias)"
+    type: number
+    required: true
+  - name: fornecedor_3_documento
+    label: "Fornecedor 3 — Documento da proposta"
+    type: file
+    required: true
+  - name: fornecedor_3_condicoes
+    label: "Fornecedor 3 — Condições / observações"
+    type: rich_text
+    required: false
+  - name: justificativa_dispensa
+    label: "Justificação de dispensa (menos de três propostas)"
+    type: rich_text
+    required: false
+actions:
+  - id: registar
+    name: Registar a necessidade
+    type: standard
+    description: |
+      Tarefa: Descrever a necessidade de compra de forma que a chefia possa decidir sem perguntar.
+      Como: 1. Preencher o campo «Montante solicitado» com o valor total estimado em Kz, sem IVA. 2. Indicar o «Centro de custo» que suportará a despesa. 3. Escrever no título do pedido o bem ou serviço e a quantidade.
+      Evidência: O título, o montante e o centro de custo preenchidos.
+      Concluído quando: O pedido tem título, montante e centro de custo, e passa à recolha de propostas.
+      Excepções: Se o montante ainda não for conhecido, não concluir: pedir uma estimativa ao serviço requisitante e registá-la antes de avançar.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 1
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+  - id: recolher_propostas
+    name: Registar as propostas dos fornecedores
+    type: form_fill
+    description: |
+      Tarefa: Registar as três propostas de fornecedores obtidas para este pedido de compra.
+      Como: 1. Contactar pelo menos três fornecedores e obter as respectivas propostas (email, telefone ou presencialmente). 2. Preencher no formulário «Propostas de fornecedores» o nome, o valor, o prazo de entrega e as condições de cada fornecedor. 3. Anexar o documento da proposta de cada fornecedor.
+      Evidência: Os campos de fornecedor, valor, prazo e o documento anexado, preenchidos para os três fornecedores.
+      Concluído quando: As três propostas estão registadas com os respectivos documentos anexados.
+      Excepções: Se não for possível obter três propostas, não concluir esta acção: preencher «Justificação de dispensa» com o motivo e comentar o pedido para que a chefia decida com a informação disponível.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 3
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+    config:
+      formKey: propostas-fornecedores
+  - id: decidir
+    name: Decidir sobre o pedido
+    type: decision
+    description: |
+      Tarefa: Decidir se o pedido de compra avança, com base na necessidade descrita, nas três propostas registadas e no orçamento do departamento.
+      Como: 1. Ler a justificação no título e as três propostas de fornecedores registadas (valor, prazo e condições). 2. Confirmar que a compra está prevista no plano do departamento e que o «Centro de custo» está correcto. 3. Escolher «Aprovar» para avançar, «Devolver» para pedir correcções ao requerente ou «Rejeitar» para encerrar o pedido.
+      Evidência: Um comentário com o motivo é obrigatório em «Devolver» e «Rejeitar».
+      Concluído quando: A decisão está registada com o comentário exigido.
+      Excepções: Se o montante exceder a sua autoridade de aprovação, não decidir: comentar o limite e devolver ao requerente para que o pedido seja encaminhado à autoridade competente.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 2
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+    config:
+      branches:
+        - label: Aprovar
+          outcome: continue
+        - label: Devolver
+          outcome: return_to_action
+          target: registar
+          requiresComment: true
+        - label: Rejeitar
+          outcome: cancel_incident
+          requiresComment: true
+  - id: confirmar_cabimento
+    name: Confirmar disponibilidade orçamental
+    type: standard
+    description: |
+      Tarefa: Confirmar que existe cabimento orçamental para o montante pedido no centro de custo indicado.
+      Como: 1. Abrir o mapa orçamental do centro de custo no sistema de contabilidade. 2. Comparar o saldo disponível com o valor em «Montante solicitado». 3. Registar a referência do cabimento no campo «Referência orçamental».
+      Evidência: Anexar a captura do saldo com data e preencher «Referência orçamental».
+      Concluído quando: O saldo cobre o montante e a referência orçamental está registada.
+      Excepções: Se não houver cabimento, não concluir: comentar o défice e pedir à chefia que reveja o pedido ou indique outro centro de custo.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 2
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+  - id: encomendar
+    name: Registar a encomenda
+    type: standard
+    description: |
+      Tarefa: Emitir a encomenda ao fornecedor escolhido e registar a sua referência no pedido.
+      Como: 1. Confirmar que o fornecedor escolhido existe no registo de fornecedores e que os seus dados estão actualizados. 2. Emitir a nota de encomenda com o montante aprovado e a referência orçamental. 3. Enviar a nota ao fornecedor pelo canal acordado. 4. Preencher «Referência da encomenda».
+      Evidência: A nota de encomenda anexada e o campo «Referência da encomenda» preenchido.
+      Concluído quando: O fornecedor recebeu a nota de encomenda e a referência está registada no pedido.
+      Excepções: Se o fornecedor não existir no registo ou os dados estiverem desactualizados, não concluir: pedir a criação ou actualização do registo e comentar o pedido.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 3
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator

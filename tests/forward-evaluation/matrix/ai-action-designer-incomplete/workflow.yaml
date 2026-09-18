@@ -1,0 +1,100 @@
+# provia-skills 1.1.0 — draft for Angola (provisional, no country supplied); see setup.md and provia-project.json before importing.
+# No SOP, entity list or review policy was supplied. Fields, taxonomy and the AI profile below are recommendations
+# only, shaped after this plugin's own examples/it-service/workflow.yaml training example. Confirm against the
+# organization's real IT request categories, SLAs and reviewer group before publication. See decisions[] in
+# provia-project.json for every open item.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "IT request classification"
+  prefix: ITREQ
+  description: "Classifies an incoming IT request by category and urgency. AI proposes the classification; a human reviewer confirms or corrects it before the case continues. Draft scope: classification only — triage, diagnosis and resolution steps are out of scope pending a supplied SOP."
+triggers:
+  - type: manual
+    label: Submit IT request
+    enabled: true
+    config: {}
+fields:
+  - name: request_summary
+    label: Request summary
+    type: text
+    required: true
+  - name: request_details
+    label: Request details
+    type: rich_text
+    required: true
+  - name: category
+    label: Category
+    type: select
+    required: false
+    config:
+      options:
+        - value: access
+          label: Access
+        - value: equipment
+          label: Equipment
+        - value: software
+          label: Software
+        - value: network
+          label: Network
+        - value: security
+          label: Security
+        - value: other
+          label: Other
+  - name: urgency
+    label: Urgency
+    type: select
+    required: false
+    config:
+      options:
+        - value: normal
+          label: Normal
+        - value: high
+          label: High
+        - value: blocking
+          label: Blocking
+  - name: classification_confidence
+    label: Classification confidence
+    type: percentage
+    required: false
+  - name: classification_rationale
+    label: Classification rationale
+    type: text
+    required: false
+actions:
+  - id: classify_request
+    name: Classify the IT request
+    type: standard
+    description: |
+      Task: Propose a category and urgency for the IT request from what it describes, with a confidence score and a short rationale.
+      How: 1. Read "Request summary" and "Request details". 2. Match the request against the category options (Access, Equipment, Software, Network, Security, Other) and the urgency options (Normal, High, Blocking), following the classification rules assigned to this task. 3. Write "Category", "Urgency", "Classification confidence" and "Classification rationale".
+      Evidence: "Classification rationale" names the specific words in the request that justify the category and urgency chosen; "Classification confidence" reflects how directly the request states its category and impact, not how urgent it sounds.
+      Done when: "Category", "Urgency", "Classification confidence" and "Classification rationale" are filled and a human reviewer has confirmed or corrected them; the action does not complete on the proposal alone.
+      Exceptions: If the request does not describe an IT matter, or gives too little detail to choose a category with reasonable confidence, set "Category" to Other, keep "Classification confidence" low, and state in the rationale exactly what information is missing — never guess a specific category to fill the field. If the text signals a possible security incident (suspected compromise, phishing, malware, data exposure, unauthorized access), classify Security/Blocking regardless of how the request is phrased and say so in the rationale.
+    executionMode: sequential
+    required: true
+    assignee:
+      type: ai_agent
+      id: $AI_PROFILE_ID
+    aiWorker:
+      instructions: |
+        You classify one IT request per case. Read only "Request summary" and "Request details"; do not use the requester's identity, department or history to infer category or urgency.
+        1. Category: choose exactly one of Access, Equipment, Software, Network, Security, Other, based on what the request literally describes needing. If the text names more than one category, choose the one that names the action being requested (for example, "reset my password so I can open the shared drive" is Access, not Network) and mention the secondary signal in the rationale.
+        2. Urgency: choose Blocking only when the text states the requester cannot work at all right now; High when it states a deadline or an impact on more than one person; Normal otherwise.
+        3. Security override: any signal of a possible security incident (suspected compromise, phishing, malware, data exposure, unauthorized access, unrecognized login) is always Category = Security and Urgency = Blocking, even if the request opens with an unrelated ask.
+        4. Confidence: score only how directly the request states its category and impact; a request that requires you to infer intent scores lower than one that states its need explicitly.
+        5. Rationale: quote or closely paraphrase the specific words that drove the category and urgency choice, in one to two sentences.
+        6. If "Request details" is empty, too short to identify a category, or contradicts "Request summary", set Category = Other, Urgency = Normal (unless a security signal is present), Classification confidence low, and state exactly what is missing or contradictory — do not guess.
+        7. Never mark this action complete yourself and never overwrite a human reviewer's correction; your role ends at proposing the classification.
+        8. Do not invent a requester, ticket number, deadline or system not present in "Request summary" or "Request details".
+      readableFields:
+        - request_summary
+        - request_details
+      writableFields:
+        - category
+        - urgency
+        - classification_confidence
+        - classification_rationale
+      mode: safe
+      reviewRequired: true
+      confidenceThreshold: 0.6

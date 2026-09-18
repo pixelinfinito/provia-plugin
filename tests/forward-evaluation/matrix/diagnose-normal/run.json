@@ -1,0 +1,22 @@
+{
+  "id": "diagnose-normal",
+  "skill": "provia-diagnose",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:53:31.716Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 146242,
+  "costUsd": 0.6155756,
+  "numTurns": 22,
+  "sessionId": "62bcfd14-7075-4410-8ef7-46629c6cd088",
+  "stopReason": "end_turn",
+  "toolCalls": 20,
+  "files": [
+    "diagnostico-compras.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/diagnose-normal/",
+  "skillLoaded": true
+}

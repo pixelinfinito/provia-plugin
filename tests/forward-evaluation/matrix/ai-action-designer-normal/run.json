@@ -1,0 +1,23 @@
+{
+  "id": "ai-action-designer-normal",
+  "skill": "provia-ai-action-designer",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T19:08:43.173Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 262671,
+  "costUsd": 0.9324558000000002,
+  "numTurns": 30,
+  "sessionId": "08b9d1ba-6f0d-461c-a03b-1003e0ba9069",
+  "stopReason": "end_turn",
+  "toolCalls": 28,
+  "skillLoaded": true,
+  "files": [
+    "ai-profile-resumir-propostas.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md",
+    "workflow.yaml"
+  ],
+  "output": "tests/forward-evaluation/matrix/ai-action-designer-normal/"
+}

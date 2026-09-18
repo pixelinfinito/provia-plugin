@@ -1,0 +1,15 @@
+{
+  "at": "2026-09-18T18:40:32.888Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "verdict": "pass",
+  "reasons": [
+    "Correctly identified that no policy, workflow/manifest, or incident evidence was supplied and the working directory was empty, limiting the review accordingly per expected behaviour",
+    "Did not invent policy text, org IDs, workflow action IDs, or incident evidence; instead recorded three explicit open decisions (D1-D3) for the missing inputs",
+    "Kept confirmed facts (empty directory, no inputs supplied) separate from recommendations (next steps) and unresolved decisions (D1-D3)",
+    "Claims about file writes and script runs (provia-project.json, project.html, setup.md, build-project-map.mjs --check) are all supported by actual tool calls in the transcript",
+    "Angola was disclosed only as a provisional starting context, not a legal conclusion, consistent with country-context.md convention",
+    "Final response ends with a clear next-step recommendation including a copyable invocation"
+  ],
+  "violations": []
+}

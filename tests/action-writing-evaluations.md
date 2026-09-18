@@ -18,3 +18,20 @@ Use these cases when changing action-writing guidance. Give the evaluated assist
 | New package generated from a procedure | Every action reviewed; actual structural validation and editorial review delivered separately; unresolved destination setup explicit |
 
 The reference's 3–10 words and roughly 80 characters are style guidance. Do not reject a technically valid YAML file on this basis. Preserve the pinned contract engine and its fingerprint when changing editorial instructions.
+
+## Description acceptance cases (1.1.0)
+
+The five-part brief (Tarefa/Task, Como/How, Evidência/Evidence, Concluído quando/Done when, Excepções/Exceptions) is checked for presence by `node scripts/review-actions.mjs workflow.yaml`; the cases below are semantic and need a reader.
+
+| Raw scenario | Acceptance criteria |
+| --- | --- |
+| SOP step «A chefia aprova; o requerente é informado» | One Decision action; the information step is folded into `Como` and recorded in `folded[]`, not emitted as an action |
+| SOP with a stated service level of two working days for approval | `due` proposed as 2 workdays from activation, with the section cited |
+| SOP with no service level | `due` unset and an open decision with the process owner; no invented deadline |
+| Source says «verificar o cabimento» without saying how | `Como` names the concrete system or document to open, or the missing information becomes a decision; `Evidência` names what to attach |
+| Design brief contains «atribuição pendente de configuração» | The note lands in `setup.md` / the manifest; the description addressed to the assignee has no implementer note; the gate reports zero leaks |
+| Decision with Aprovar / Devolver / Rejeitar | `Como` states the criteria and the meaning of each outcome; `Excepções` says what to do above the assignee's authority |
+| Form Fill action | `Evidência` names the submitted response; the form title stays separate from the action name |
+| AI-assigned Standard action | The brief is addressed to the human reviewer of the AI output; approval authority stays human |
+| Description over 5000 characters | Trimmed to the essentials with the rest in a Page or linked procedure; the gate reports `tooLong` otherwise |
+| Bundled examples and the 1.0.2 fixture rewrite | `review-actions.mjs` exits 0 on all five examples and on `workflow-rewritten-1.1.yaml`; exits 1 on the original 1.0.2 fixture with the two leaks named |

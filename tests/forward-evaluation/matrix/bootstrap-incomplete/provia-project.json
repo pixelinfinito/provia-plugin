@@ -1,0 +1,175 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "expense-reimbursement",
+    "title": "Expense reimbursement",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": "Customer organization (name not supplied)",
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "checklist-expenses",
+      "title": "Expense reimbursement checklist",
+      "kind": "checklist",
+      "version": "1",
+      "effectiveDate": null,
+      "sections": [
+        { "anchor": "a", "title": "Employee submits receipts" },
+        { "anchor": "b", "title": "Manager approves" },
+        { "anchor": "c", "title": "Finance pays within the month" }
+      ]
+    }
+  ],
+  "entityTypes": [],
+  "groups": [
+    {
+      "key": "managers",
+      "name": "Managers",
+      "parentKey": null,
+      "purpose": "Approve or reject employee expense reimbursement claims.",
+      "members": [
+        { "role": "Manager", "email": null }
+      ],
+      "sourceRefs": [ { "source": "checklist-expenses", "section": "b" } ],
+      "flags": [
+        { "code": "unnamed", "detail": "The checklist names the role \"manager\" but there is no org chart to resolve which manager owns which employee's claim. Provia needs either a per-employee reporting reference or a single shared group approving all claims until an org chart is supplied." }
+      ]
+    },
+    {
+      "key": "finance",
+      "name": "Finance",
+      "parentKey": null,
+      "purpose": "Process and pay approved employee expense reimbursement claims.",
+      "members": [
+        { "role": "Finance officer", "email": null }
+      ],
+      "sourceRefs": [ { "source": "checklist-expenses", "section": "c" } ],
+      "flags": [
+        { "code": "segregation", "detail": "If a Finance group member submits their own expense claim, the same group would end up paying itself. Confirm whether a second approver or an alternate payer is required for Finance's own claims." }
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "key": "expense-reimbursement",
+      "name": "Expense reimbursement",
+      "prefix": "EXP",
+      "file": "expense-reimbursement/workflow.yaml",
+      "status": "validated",
+      "sourceRefs": [ { "source": "checklist-expenses" } ],
+      "actions": [
+        {
+          "localId": "decide",
+          "name": "Decide on the expense reimbursement claim",
+          "type": "decision",
+          "sourceRefs": [ { "source": "checklist-expenses", "section": "b" } ],
+          "assigneeRef": "managers",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "A comment naming the reason is required on Reject" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "pay",
+          "name": "Pay the approved reimbursement",
+          "type": "standard",
+          "sourceRefs": [ { "source": "checklist-expenses", "section": "c" } ],
+          "assigneeRef": "finance",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Proof of payment attached", "Field payment_reference filled" ],
+          "due": null,
+          "folded": []
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "The checklist has only three lines and does not name an org chart, service levels or approval/expense limits; the gaps are recorded as open decisions D1-D6 below rather than invented.",
+        "The training YAML assigns both actions to the case creator so it can be imported and trialled without fabricated destination ids. The intended owners are the groups in this manifest (managers, finance); reassign the actions once those groups exist in Provia.",
+        "Step (a), \"employee submits receipts\", is modelled as the workflow's intake form (see forms[]) rather than as a workflow action, because it is data collected before the case exists. The manual trigger in workflow.yaml is a portable placeholder; a form trigger cannot be authored in YAML and must be linked in Provia after import.",
+        "The Decision action only has Approve/Reject outcomes. The checklist does not mention returning a claim for correction, and there is no prior action to return to because submission is a form, not a workflow action. If the customer wants a correction loop, model claim submission as a Form Fill action instead of a trigger form so a return target exists (see D6).",
+        "No `due` is proposed on either action: the checklist states no approval turnaround, and \"pays within the month\" cannot be expressed as the fixed day/workday offset the due field supports. See D3 and D4."
+      ]
+    }
+  ],
+  "forms": [
+    {
+      "key": "expense-claim-intake",
+      "title": "Expense reimbursement request",
+      "kind": "trigger",
+      "workflowRef": "expense-reimbursement",
+      "actionRef": null,
+      "status": "designed",
+      "fields": [
+        { "key": "claim_amount", "label": "Amount claimed", "type": "currency", "required": true, "helpText": "Total amount being claimed, in Kz.", "mapsTo": "claim_amount" },
+        { "key": "claim_description", "label": "Expense description", "type": "text", "required": true, "helpText": "What the expense was for.", "mapsTo": "claim_description" },
+        { "key": "receipts", "label": "Receipts", "type": "file", "required": true, "helpText": "Attach one file per receipt, or a single file with all receipts.", "mapsTo": "receipts" }
+      ]
+    }
+  ],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "No org chart was supplied. How is the specific manager for each employee's claim identified and assigned (a reporting-line lookup, a single shared approving group, or manual assignment per case)?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": [ { "source": "checklist-expenses", "section": "b" } ]
+    },
+    {
+      "id": "D2",
+      "question": "No policy on limits was supplied. Is there a maximum reimbursable amount, a category of expenses that is excluded, or a higher amount that needs an additional approver? Provia does not route on amount automatically; a stated rule would be applied by the manager's Decision, not invented here.",
+      "owner": "Finance director",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "checklist-expenses", "section": "b" } ]
+    },
+    {
+      "id": "D3",
+      "question": "No service level was supplied for manager approval. What is the expected turnaround (for example, 2 workdays from submission)?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "checklist-expenses", "section": "b" } ]
+    },
+    {
+      "id": "D4",
+      "question": "The checklist states Finance pays \"within the month\", but Provia's due field only supports a fixed number of days/workdays from activation or creation, not a calendar month-end. How should this be represented (a fixed workday offset from approval, a monthly payment-run date handled outside the due field, or a scheduled reminder)?",
+      "owner": "Finance director",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "checklist-expenses", "section": "c" } ]
+    },
+    {
+      "id": "D5",
+      "question": "Should a Finance group member be allowed to process payment for their own submitted expense claim, or does that require a second approver for segregation of duties?",
+      "owner": "Finance director",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": [ { "source": "checklist-expenses", "section": "c" } ]
+    },
+    {
+      "id": "D6",
+      "question": "The checklist does not mention a correction path if a manager wants more information rather than rejecting outright. Is a \"return for correction\" outcome needed? If so, claim submission should be modelled as a Form Fill action (with a return target) instead of an intake trigger form.",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "checklist-expenses", "section": "a" } ]
+    }
+  ],
+  "receipts": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "controls-evidence-incomplete",
+  "skill": "provia-controls-evidence",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:40:21.710Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 123171,
+  "costUsd": 0.4866706,
+  "numTurns": 18,
+  "sessionId": "8f66d1de-bcdd-4f4a-bff1-351c3f883280",
+  "stopReason": "end_turn",
+  "toolCalls": 16,
+  "files": [
+    "controls-evidence-report.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/controls-evidence-incomplete/",
+  "skillLoaded": true
+}

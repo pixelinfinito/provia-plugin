@@ -1,4 +1,4 @@
-# Training draft for Angola; see setup.md before importing.
+# provia-skills 1.1.0 — training draft for Angola; see setup.md and provia-project.json before importing.
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
@@ -15,39 +15,91 @@ fields:
     label: Referência do documento
     type: text
     required: true
+  - name: current_version
+    label: Versão actual
+    type: text
+    required: false
+  - name: approved_version
+    label: Versão aprovada
+    type: text
+    required: false
 actions:
-  - id: step_1
+  - id: identificar
     name: Identificar a alteração
     type: standard
+    description: |
+      Tarefa: Descrever o que deve mudar no procedimento e porquê.
+      Como: 1. Preencher «Referência do documento» e «Versão actual». 2. Descrever num comentário a alteração pretendida, a secção afectada e o motivo (auditoria, incidente, mudança legal ou de sistema). 3. Anexar a evidência que originou o pedido, quando existir.
+      Evidência: O comentário com a alteração, a secção e o motivo; a evidência anexada quando existir.
+      Concluído quando: A referência, a versão actual e a descrição da alteração estão no caso.
+      Excepções: Se o documento não estiver sob controlo documental, não concluir: comentar e pedir ao gestor da qualidade que o registe primeiro.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 2
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator
-  - id: step_2
+  - id: preparar
     name: Preparar a revisão
     type: standard
+    description: |
+      Tarefa: Redigir a nova versão do procedimento com as alterações pedidas.
+      Como: 1. Obter a versão actual no repositório de documentos controlados. 2. Aplicar a alteração descrita, com o registo de alterações preenchido no próprio documento. 3. Anexar a versão proposta ao caso, identificada como rascunho.
+      Evidência: A versão proposta anexada, com o registo de alterações.
+      Concluído quando: O rascunho está anexado e pronto para decisão.
+      Excepções: Se a alteração contradisser outro procedimento em vigor, não concluir: comentar o conflito e pedir orientação ao gestor da qualidade.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 5
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator
-  - id: step_3
-    name: Rever e aprovar
+  - id: aprovar
+    name: Decidir sobre a revisão
     type: decision
+    description: |
+      Tarefa: Decidir se a versão proposta pode substituir a versão em vigor.
+      Como: 1. Ler o rascunho anexado e o registo de alterações. 2. Confirmar que a alteração responde ao motivo indicado e não contradiz outros procedimentos. 3. Escolher «Aprovar», «Devolver» para correcções ou «Rejeitar».
+      Evidência: Um comentário com o motivo é obrigatório em «Devolver» e «Rejeitar».
+      Concluído quando: A decisão está registada com o comentário exigido.
+      Excepções: Se a decisão exigir outra autoridade (por exemplo, a direcção), não decidir: comentar e devolver com a indicação de quem deve aprovar.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 3
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator
     config:
       branches:
         - label: Aprovar
           outcome: continue
+        - label: Devolver
+          outcome: return_to_action
+          target: preparar
+          requiresComment: true
         - label: Rejeitar
           outcome: cancel_incident
           requiresComment: true
-  - id: step_4
+  - id: publicar
     name: Registar a versão aprovada
     type: standard
+    description: |
+      Tarefa: Colocar a versão aprovada em vigor e retirar a anterior.
+      Como: 1. Atribuir o novo número de versão e preencher «Versão aprovada». 2. Publicar o documento no repositório de documentos controlados e arquivar a versão anterior como obsoleta. 3. Informar as equipas afectadas e registar num comentário a data de entrada em vigor.
+      Evidência: O campo «Versão aprovada» preenchido e um comentário com a data de publicação e as equipas informadas.
+      Concluído quando: A nova versão está publicada, a anterior está obsoleta e a data está registada.
+      Excepções: Se o repositório não aceitar a publicação, não concluir: comentar o erro e pedir apoio ao administrador do repositório.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 2
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator

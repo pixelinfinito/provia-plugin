@@ -1,0 +1,69 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "compras",
+    "title": "Diagnóstico do processo de compras",
+    "language": "pt-AO",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "workflow-publicado",
+      "title": "Desenho do workflow publicado, descrito pelo utilizador (não fornecido como workflow.yaml): acções «Registar», «Decidir» e «Encomendar», atribuídas a Compras e Finanças",
+      "kind": "other"
+    },
+    {
+      "id": "export-casos-20260918",
+      "title": "Excerto de exportação de casos citado pelo utilizador (2 registos): COMP-88 e COMP-90",
+      "kind": "export"
+    }
+  ],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "O caso COMP-88 está atribuído ao grupo «Auditoria», que não existe no desenho publicado (só Compras e Finanças estão descritas). «Auditoria» é um responsável real que falta modelar como grupo e acção no workflow, ou é um erro de atribuição/dados no caso?",
+      "owner": "Dono do processo de Compras",
+      "status": "open",
+      "raisedBy": "provia-operations-triage",
+      "sourceRefs": [ { "source": "export-casos-20260918" }, { "source": "workflow-publicado" } ]
+    },
+    {
+      "id": "D2",
+      "question": "O caso COMP-90 aparece concluído em 2026-09-08, dois dias antes de ter sido criado em 2026-09-10. Investigar a origem do defeito (exportação, fuso horário, migração de dados ou introdução manual) antes de qualquer cálculo de duração que use este caso.",
+      "owner": "Responsável pela exportação/integração de casos",
+      "status": "open",
+      "raisedBy": "provia-operations-triage",
+      "sourceRefs": [ { "source": "export-casos-20260918" } ]
+    },
+    {
+      "id": "D3",
+      "question": "Para avaliar desempenho (tempo de ciclo, tempo de espera) é preciso um período comparável: exportação completa de casos com datas de criação e conclusão em ISO 8601 e fuso horário, momento de observação e versão do workflow em vigor. Só dois casos isolados e conflituosos foram fornecidos — produzir essa exportação.",
+      "owner": "Dono do processo de Compras",
+      "status": "open",
+      "raisedBy": "provia-process-improvement",
+      "sourceRefs": [ { "source": "export-casos-20260918" } ]
+    },
+    {
+      "id": "D4",
+      "question": "O desenho publicado atribui as três acções a Compras e Finanças em conjunto, sem indicar qual grupo fica com cada acção (Registar / Decidir / Encomendar). Confirmar a atribuição exacta por acção antes de qualquer revisão ou alteração do workflow.",
+      "owner": "Dono do processo de Compras",
+      "status": "open",
+      "raisedBy": "provia-operations-triage",
+      "sourceRefs": [ { "source": "workflow-publicado" } ]
+    }
+  ],
+  "receipts": []
+}

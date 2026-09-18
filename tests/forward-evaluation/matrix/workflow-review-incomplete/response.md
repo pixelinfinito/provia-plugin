@@ -1,0 +1,8 @@
+Manifest validates cleanly. Both files are written to the working directory:
+
+- **`workflow-review-findings.md`** — the review report
+- **`provia-project.json`** — minimal manifest recording D1/D2 (validated with `build-project-map.mjs --check`: 2 pending items, 0 warnings)
+
+**Bottom line:** whether the parallel actions can start before budget approval isn't a file-validity question — it depends on the predecessor wiring, which no supplied design lets me inspect. The safe default is that any action committing spend or notifying an external party should have the approval's *approved* outcome as a predecessor; parallel branches that merely share a common predecessor with the approval (rather than depending on its outcome) will run regardless of the decision, which is only correct for non-committing prep work and only if the procedure intends it. No rollback/cancellation behavior for a rejected approval was described either. Both are recorded as open decisions (D1, D2) rather than answered, since answering would mean inventing a workflow structure that wasn't given.
+
+Recommended next step: supply the actual `workflow.yaml` or export (or describe the action graph — actions, types, predecessors, `assigneeRef`s) and the SOP section on budget approval. If no workflow exists yet, `provia-workflow-designer` is the right skill to produce one from the procedure; I'd hand it this `provia-project.json` so it carries D1/D2 forward. If a design already exists elsewhere, share it and I'll continue this review against it directly.

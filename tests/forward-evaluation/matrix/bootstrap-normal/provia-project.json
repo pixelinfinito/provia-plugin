@@ -1,0 +1,242 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "viaturas",
+    "title": "Pedido de viatura",
+    "language": "pt-AO",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": "Empresa (designação a confirmar)",
+    "sector": "Não especificado",
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "proc-viaturas",
+      "title": "Procedimento de pedidos de viatura",
+      "kind": "sop",
+      "version": "2",
+      "effectiveDate": "2026-03-01",
+      "sections": [
+        { "anchor": "1", "title": "Pedido do colaborador ao secretariado" },
+        { "anchor": "2", "title": "Verificação de disponibilidade e registo do pedido" },
+        { "anchor": "3", "title": "Aprovação pela chefia" },
+        { "anchor": "4", "title": "Entrega da chave, cartão de combustível e quilometragem de saída" },
+        { "anchor": "5", "title": "Devolução da viatura e registo de quilometragem de entrada e danos" }
+      ]
+    },
+    {
+      "id": "organigrama",
+      "title": "Organigrama da empresa",
+      "kind": "other",
+      "version": null,
+      "effectiveDate": null,
+      "sections": [
+        { "anchor": "1", "title": "Estrutura organizacional (Secretariado, chefias de departamento, Direcção-Geral)" }
+      ]
+    }
+  ],
+  "entityTypes": [
+    {
+      "key": "viatura",
+      "name": "Viatura",
+      "description": "Viaturas da frota da empresa disponíveis para requisição pelos colaboradores. Reúne os dados necessários para confirmar disponibilidade, entregar e receber a viatura.",
+      "icon": "Truck01",
+      "namePattern": "Matrícula da viatura.",
+      "purpose": "Suportar o mapa de viaturas: disponibilidade, entrega e devolução em cada pedido.",
+      "owner": "Secretariado",
+      "coverage": [
+        { "dimension": "Identificação", "decision": "included", "reason": "A matrícula e o modelo identificam a viatura no pedido e na entrega." },
+        { "dimension": "Disponibilidade", "decision": "included", "reason": "O secretariado precisa de saber quais as viaturas disponíveis para atribuir ao pedido." },
+        { "dimension": "Utilização", "decision": "included", "reason": "A quilometragem actual é a base de comparação na próxima saída." },
+        { "dimension": "Manutenção", "decision": "external", "reason": "O procedimento fornecido não descreve o processo de manutenção da frota; fica fora deste âmbito." }
+      ],
+      "setup": [
+        "Confirmar com o Secretariado a lista real de viaturas e o formato de matrícula usado (matrícula angolana) antes da configuração.",
+        "O actual mapa de viaturas (papel ou folha de cálculo) deve ser migrado manualmente para este tipo de entidade."
+      ],
+      "readiness": [
+        "Antes do primeiro pedido: todas as viaturas activas têm matrícula, marca/modelo e situação preenchidas."
+      ],
+      "fields": [
+        { "key": "matricula", "label": "Matrícula", "type": "text", "required": true, "group": "Identificação", "helpText": "Matrícula de registo da viatura.", "purpose": "Identificar univocamente a viatura no pedido e na entrega.", "priority": "core", "source": "Registo da frota", "maintainer": "Secretariado", "sensitivity": "Interna", "example": "LD-12-34-AO" },
+        { "key": "marca_modelo", "label": "Marca e modelo", "type": "text", "required": true, "group": "Identificação", "helpText": "Marca e modelo da viatura.", "purpose": "Identificar o tipo de viatura disponível para o pedido.", "priority": "core", "source": "Registo da frota", "maintainer": "Secretariado", "sensitivity": "Interna", "example": "Toyota Hilux" },
+        { "key": "situacao", "label": "Situação", "type": "select", "required": true, "group": "Disponibilidade", "helpText": "Situação actual da viatura no mapa de viaturas.", "purpose": "Verificar a disponibilidade antes de atribuir a viatura a um pedido.", "priority": "core", "source": "Secretariado", "maintainer": "Secretariado", "sensitivity": "Interna", "options": [ { "value": "disponivel", "label": "Disponível" }, { "value": "em_uso", "label": "Em uso" }, { "value": "manutencao", "label": "Em manutenção" } ], "example": "disponivel", "defaultValue": "disponivel" },
+        { "key": "quilometragem_actual", "label": "Quilometragem actual", "type": "number", "required": false, "group": "Utilização", "helpText": "Última quilometragem registada da viatura.", "purpose": "Base para confirmar a quilometragem de saída no próximo pedido.", "priority": "conditional", "source": "Registo de entrega/devolução", "maintainer": "Secretariado", "sensitivity": "Interna", "example": 45000 }
+      ]
+    }
+  ],
+  "groups": [
+    {
+      "key": "secretariado",
+      "name": "Secretariado",
+      "parentKey": null,
+      "purpose": "Regista os pedidos de viatura, verifica a disponibilidade no mapa de viaturas, entrega a chave e o cartão de combustível e regista a devolução.",
+      "members": [
+        { "role": "Assistente de secretariado", "email": null },
+        { "role": "Assistente de secretariado", "email": null }
+      ],
+      "sourceRefs": [ { "source": "proc-viaturas", "section": "2" }, { "source": "proc-viaturas", "section": "4" }, { "source": "proc-viaturas", "section": "5" }, { "source": "organigrama", "section": "1" } ],
+      "flags": []
+    },
+    {
+      "key": "chefias",
+      "name": "Chefias de departamento",
+      "parentKey": null,
+      "purpose": "Aprovam ou recusam o pedido de viatura do colaborador do respectivo departamento, no prazo de um dia útil. Agrupa as 5 chefias de departamento; ver decisão sobre encaminhamento à chefia correcta.",
+      "members": [
+        { "role": "Chefe de departamento", "email": null },
+        { "role": "Chefe de departamento", "email": null },
+        { "role": "Chefe de departamento", "email": null },
+        { "role": "Chefe de departamento", "email": null },
+        { "role": "Chefe de departamento", "email": null }
+      ],
+      "sourceRefs": [ { "source": "proc-viaturas", "section": "3" }, { "source": "organigrama", "section": "1" } ],
+      "flags": []
+    },
+    {
+      "key": "direccao_geral",
+      "name": "Direcção-Geral",
+      "parentKey": null,
+      "purpose": "Consta do organigrama fornecido; o procedimento de pedidos de viatura não lhe atribui nenhuma acção. Mantida para uso noutros processos e para uma eventual função de escalonamento, a confirmar.",
+      "members": [
+        { "role": "Director-Geral", "email": null }
+      ],
+      "sourceRefs": [ { "source": "organigrama", "section": "1" } ],
+      "flags": [
+        { "code": "single_person", "detail": "É uma única pessoa (o Director-Geral); propor um delegado para ausências, a confirmar com a organização." }
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "key": "viaturas",
+      "name": "Pedido de viatura",
+      "prefix": "VIAT",
+      "file": "workflow.yaml",
+      "status": "validated",
+      "sourceRefs": [ { "source": "proc-viaturas" } ],
+      "actions": [
+        {
+          "localId": "registar_pedido",
+          "name": "Registar o pedido de viatura",
+          "type": "standard",
+          "sourceRefs": [ { "source": "proc-viaturas", "section": "1" }, { "source": "proc-viaturas", "section": "2" } ],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [ "viatura" ],
+          "evidence": [ "Data, destino e motivo preenchidos", "Viatura disponível seleccionada no mapa de viaturas" ],
+          "due": null,
+          "folded": [
+            { "section": "1", "summary": "O colaborador indica ao secretariado a data, o destino e o motivo da deslocação; estes dados são recolhidos nesta acção." }
+          ]
+        },
+        {
+          "localId": "decidir_pedido",
+          "name": "Decidir sobre o pedido de viatura",
+          "type": "decision",
+          "sourceRefs": [ { "source": "proc-viaturas", "section": "3" } ],
+          "assigneeRef": "chefias",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Comentário obrigatório em «Recusar»" ],
+          "due": { "offsetDays": 1, "offsetType": "workdays", "basis": "activation" },
+          "folded": []
+        },
+        {
+          "localId": "entregar_viatura",
+          "name": "Entregar a chave e o cartão de combustível",
+          "type": "standard",
+          "sourceRefs": [ { "source": "proc-viaturas", "section": "4" } ],
+          "assigneeRef": "secretariado",
+          "formRef": null,
+          "entityRefs": [ "viatura" ],
+          "evidence": [ "Quilometragem de saída registada", "Entrega da chave e do cartão de combustível confirmada" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "devolver_viatura",
+          "name": "Registar a devolução da viatura",
+          "type": "standard",
+          "sourceRefs": [ { "source": "proc-viaturas", "section": "5" } ],
+          "assigneeRef": "secretariado",
+          "formRef": null,
+          "entityRefs": [ "viatura" ],
+          "evidence": [ "Quilometragem de entrada registada", "Danos registados quando existirem" ],
+          "due": null,
+          "folded": [
+            { "section": "5", "summary": "O colaborador entrega fisicamente a viatura; o secretariado regista a devolução, a quilometragem de entrada e eventuais danos." }
+          ]
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "O YAML de formação atribui a primeira acção ao criador do caso. O procedimento descreve o colaborador a pedir ao secretariado, que é quem regista; propõe-se que o secretariado inicie o caso no Provia. Se a organização preferir auto-serviço do colaborador, redesenhar a entrada com provia-form-designer.",
+        "A associação ao tipo de entidade Viatura configura-se no Provia depois de criar o tipo; o YAML de formação não a inclui.",
+        "O grupo «Chefias de departamento» agrega as 5 chefias; o encaminhamento à chefia correcta do departamento do colaborador não está resolvido no YAML (ver decisão D1)."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Como encaminhar a decisão à chefia do departamento correcto do colaborador? (sub-grupos por departamento, campo de encaminhamento manual pelo secretariado, ou outro mecanismo)",
+      "owner": "Dono do processo",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": [ { "source": "proc-viaturas", "section": "3" }, { "source": "organigrama", "section": "1" } ]
+    },
+    {
+      "id": "D2",
+      "question": "A Direcção-Geral tem alguma função neste processo (por exemplo, escalonamento quando a chefia não decide a tempo, ou aprovação de pedidos da própria chefia), ou está apenas registada no organigrama para uso noutros processos?",
+      "owner": "Direcção-Geral",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "organigrama", "section": "1" } ]
+    },
+    {
+      "id": "D3",
+      "question": "O procedimento não define prazos-alvo para o registo do pedido, a entrega da viatura e o registo da devolução (só a decisão da chefia tem prazo de um dia útil). Definir prazos-alvo para estas três acções?",
+      "owner": "Dono do processo",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "proc-viaturas", "section": "2" }, { "source": "proc-viaturas", "section": "4" }, { "source": "proc-viaturas", "section": "5" } ]
+    },
+    {
+      "id": "D4",
+      "question": "O que fazer se a chefia não decidir dentro do prazo de um dia útil (escalar, lembrete automático, ou outro)? O procedimento não descreve o comportamento em caso de incumprimento do prazo.",
+      "owner": "Dono do processo",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "proc-viaturas", "section": "3" } ]
+    },
+    {
+      "id": "D5",
+      "question": "Pode a chefia aprovar um pedido de viatura submetido por si própria (segregação de funções)? O procedimento não o exclui.",
+      "owner": "Dono do processo",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": [ { "source": "proc-viaturas", "section": "3" } ]
+    },
+    {
+      "id": "D6",
+      "question": "Confirmar a designação social exacta da empresa e o sector de actividade para o manifesto do projecto.",
+      "owner": "Cliente",
+      "status": "open",
+      "raisedBy": "provia-bootstrap",
+      "sourceRefs": []
+    }
+  ],
+  "receipts": []
+}

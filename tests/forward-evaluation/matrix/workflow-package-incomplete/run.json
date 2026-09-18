@@ -1,0 +1,17 @@
+{
+  "id": "workflow-package-incomplete",
+  "skill": "provia-workflow-package",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:18:35.807Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 47128,
+  "costUsd": 0.21900339999999996,
+  "numTurns": 8,
+  "sessionId": "d44470d6-dd15-41a1-aad5-eb7f200b02c0",
+  "stopReason": "end_turn",
+  "toolCalls": 6,
+  "files": [],
+  "output": "tests/forward-evaluation/matrix/workflow-package-incomplete/",
+  "skillLoaded": true
+}

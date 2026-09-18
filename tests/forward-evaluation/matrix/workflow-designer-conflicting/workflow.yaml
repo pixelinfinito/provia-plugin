@@ -1,0 +1,36 @@
+# provia-skills 1.1.0 — design skeleton, not yet validated or published.
+# See provia-project.json and setup.md before importing. Open decisions: D1-D4.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Request approval"
+  prefix: REQ
+  description: "Skeleton built from two isolated SOP fragments (sections 2 and 7). Resolve D1-D4 in setup.md before packaging."
+triggers:
+  - type: manual
+    label: Start request
+    enabled: true
+    config: {}
+fields: []
+actions:
+  - id: approve_request
+    name: Decide on the request
+    type: decision
+    description: |
+      Task: Decide whether the request is approved, based on the SOP's approval requirement.
+      How: 1. Review the request and any supporting material recorded on the case. 2. Confirm you are the approver named for this step (see the open question about who approves — SOP sections 2 and 7 name different approvers and this has not yet been resolved). 3. Choose "Approve" to let the request proceed or "Reject" to close it.
+      Evidence: A comment stating the basis for the decision is proposed but not stated in the source; confirm before publishing.
+      Done when: The decision is recorded, with a comment on "Reject".
+      Exceptions: If you are not sure you hold the approval authority for this request, do not decide: comment and escalate to the process owner instead of guessing.
+    executionMode: sequential
+    required: true
+    # due: not set — no service level was stated in the source (see decision D2)
+    # assignee: intentionally omitted — SOP §2 names the department manager, §7 names the finance
+    # director as the sole approver; the manifest keeps this action unassigned pending decision D1.
+    config:
+      branches:
+        - label: Approve
+          outcome: continue
+        - label: Reject
+          outcome: cancel_incident
+          requiresComment: true

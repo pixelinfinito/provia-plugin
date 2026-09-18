@@ -1,4 +1,4 @@
-# Write and review action names
+# Write and review action names and descriptions
 
 Read the source procedure and the action's purpose, type, instructions and configuration before choosing a verb.
 
@@ -15,7 +15,7 @@ Choose the verb by the actual work. Preparing, reviewing, deciding, executing an
 | Information | Place |
 | --- | --- |
 | Brief instruction naming the expected work | `actions[].name` |
-| What to do, criteria, conditions, completion evidence and necessary coordination | `actions[].description` |
+| The five-part brief to the assignee: task, method, evidence, done-when, exceptions | `actions[].description` |
 | Actual designated executor, using a real destination reference | `actions[].assignee` |
 | Intended functional role and delegation when destination references are unknown | Assignment table and `setup.md` |
 | Deadline | `due` where representable, plus case calendar or instructions |
@@ -44,6 +44,41 @@ This convention applies only to action display names. Workflow, form, entity, do
 Accept "Propor uma alteração ao orçamento". Portuguese infinitives do not all end in `ar`, `er` or `ir`. Accept "Informar o DG sobre o desvio" because DG is a relevant recipient, not an actor prefix. Removing "GC" from "GC confirma o pagamento" is insufficient: the verb must become "Confirmar".
 
 Keep "Consultar o estado do pagamento" distinct from "Executar o pagamento", especially for HTTP operations. For "GC prepara; DG aprova; signatários executam", identify the separate acts and authorities; a decision to redesign that sequence is outside a wording-only edit.
+
+## Write the description as the assignee's brief
+
+Provia gives an action one instruction field, `description`, up to 5000 characters. It is the whole brief the assignee receives, so it must let them do the work without asking. Write it in the second person to the assignee, in the output language, as five labelled parts in this order:
+
+| Part | Label (pt-AO / en) | Content | Example (pt-AO) |
+| --- | --- | --- | --- |
+| Task | `Tarefa:` / `Task:` | One sentence: what to produce or decide | Confirmar que existe cabimento orçamental para o montante pedido. |
+| Method | `Como:` / `How:` | Numbered steps naming the concrete system, document or person involved | 1. Abrir o mapa orçamental do centro de custo no SAP. 2. Comparar o saldo disponível com o montante em `purchase_amount`. |
+| Evidence | `Evidência:` / `Evidence:` | Exactly what to attach or fill before completing, and where (file, field, comment) | Anexar a captura do saldo com data; preencher `budget_reference`. |
+| Done when | `Concluído quando:` / `Done when:` | The observable condition | O saldo cobre o montante e a referência orçamental está registada. |
+| Exceptions | `Excepções:` / `Exceptions:` | What to do when it cannot be completed as described | Se não houver cabimento, não concluir: comentar o défice e devolver ao requerente pela decisão «Devolver». |
+
+Each label starts a line. Keep the whole description under 5000 characters; a brief that needs more belongs partly in a Page or a linked procedure.
+
+Rules that follow:
+
+- **Fold, do not emit.** A SOP step that is not an observable unit of work (a hand-off, "the manager is informed", a sub-step of one person's task) becomes a numbered step in `Como` of the action that owns it, never its own action. Record the fold in the manifest (`actions[].folded[]`) so the source-to-design mapping stays complete.
+- **Every action names its evidence.** If the source gives none, propose one and flag it as a recommendation; an action without evidence cannot prove it happened.
+- **Implementer notes never enter the description.** «Atribuição pendente de configuração», «ver setup.md», «UUID a resolver», placeholders and manifest references go to `setup.md` and `decisions[]`. The assignee must never read a note addressed to the implementer.
+- **Propose `due`.** Take it from the SOP's service level when stated; otherwise record an open decision with the process owner and leave `due` unset. Never invent a deadline.
+- **Automated actions** (notification, wait, HTTP request, sub-workflow) need a description that explains the operation to whoever reads the case, but the five-part brief applies to the work of people and AI assignees on Standard, Decision and Form Fill actions.
+- **Decisions** state the criteria and the meaning of each outcome in `Como` and `Excepções`; the outcome labels stay short.
+
+The review gate is deterministic: `node scripts/review-actions.mjs workflow.yaml` reports, per action, which of the five parts are missing, whether an implementer note leaked, the description length and whether `due` is set. It checks the presence of the labelled parts, not their quality; the semantic review below still applies. `provia-workflow-review` runs it and reports the misses; `provia-workflow-package` runs it before handover.
+
+Example of a complete brief for a Decision, pt-AO:
+
+```text
+Tarefa: Decidir se o pedido de compra avança, com base na necessidade descrita e no orçamento do departamento.
+Como: 1. Ler a justificação e o montante em `purchase_amount`. 2. Confirmar que a compra está prevista no plano do departamento. 3. Escolher «Aprovar», «Rejeitar» ou «Devolver».
+Evidência: Um comentário com o motivo é obrigatório em «Rejeitar» e «Devolver».
+Concluído quando: A decisão fica registada com o comentário exigido.
+Excepções: Se o montante exceder a sua autoridade, não decidir: comentar e devolver ao requerente para encaminhar à autoridade competente.
+```
 
 ## Review before handover
 

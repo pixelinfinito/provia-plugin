@@ -1,0 +1,306 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "onboarding",
+    "title": "Employee onboarding",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "sop-onboarding-generic",
+      "title": "Reconstructed generic onboarding SOP (no customer document supplied)",
+      "kind": "other",
+      "version": "assumed-1",
+      "effectiveDate": null,
+      "sections": [
+        { "anchor": "1", "title": "Hiring manager submits new-hire request" },
+        { "anchor": "2", "title": "HR reviews completeness and headcount" },
+        { "anchor": "3", "title": "HR prepares and sends the contract" },
+        { "anchor": "4", "title": "Candidate signs and returns the contract" },
+        { "anchor": "5", "title": "HR informs IT and Facilities" },
+        { "anchor": "6", "title": "IT creates accounts and orders equipment" },
+        { "anchor": "7", "title": "Facilities prepares workspace and badge" },
+        { "anchor": "8", "title": "HR schedules Day 1 orientation and assigns a buddy" },
+        { "anchor": "9", "title": "Manager welcomes the new hire on Day 1" },
+        { "anchor": "10", "title": "New hire completes mandatory compliance training" },
+        { "anchor": "11", "title": "Manager confirms the checklist after 30 days" },
+        { "anchor": "12", "title": "HR closes and archives the record" }
+      ]
+    }
+  ],
+  "entityTypes": [],
+  "groups": [
+    {
+      "key": "recursos_humanos",
+      "name": "Human Resources",
+      "parentKey": null,
+      "purpose": "Owns admission decision support, contract issuance, orientation scheduling, training confirmation and record archiving.",
+      "members": [ { "role": "HR officer", "email": null } ],
+      "sourceRefs": [
+        { "source": "sop-onboarding-generic", "section": "2" },
+        { "source": "sop-onboarding-generic", "section": "3" },
+        { "source": "sop-onboarding-generic", "section": "5" },
+        { "source": "sop-onboarding-generic", "section": "8" },
+        { "source": "sop-onboarding-generic", "section": "10" },
+        { "source": "sop-onboarding-generic", "section": "12" }
+      ],
+      "flags": [
+        { "code": "segregation", "detail": "HR both prepares the contract and later confirms the signed contract; the SOP does not separate these authorities. Kept as one group here because no second approver is named; raised as decision D5." }
+      ]
+    },
+    {
+      "key": "ti",
+      "name": "IT",
+      "parentKey": null,
+      "purpose": "Provisions system accounts and equipment for new hires.",
+      "members": [ { "role": "IT technician", "email": null } ],
+      "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "6" } ],
+      "flags": []
+    },
+    {
+      "key": "instalacoes",
+      "name": "Facilities",
+      "parentKey": null,
+      "purpose": "Prepares the new hire's workspace and access badge.",
+      "members": [ { "role": "Facilities officer", "email": null } ],
+      "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "7" } ],
+      "flags": []
+    }
+  ],
+  "workflows": [
+    {
+      "key": "onboarding",
+      "name": "Employee onboarding",
+      "prefix": "ONB",
+      "file": "workflow.yaml",
+      "status": "design",
+      "sourceRefs": [ { "source": "sop-onboarding-generic" } ],
+      "actions": [
+        {
+          "localId": "decidir_admissao",
+          "name": "Decide on the admission request",
+          "type": "decision",
+          "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "2" } ],
+          "assigneeRef": "recursos_humanos",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Comment naming the headcount/budget reference checked, required on both outcomes" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "preparar_contrato",
+          "name": "Prepare the employment contract",
+          "type": "standard",
+          "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "3" } ],
+          "assigneeRef": "recursos_humanos",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Sent contract document attached" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "confirmar_assinatura_contrato",
+          "name": "Confirm the signed contract",
+          "type": "standard",
+          "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "4" } ],
+          "assigneeRef": "recursos_humanos",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Signed contract attached" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "notificar_ti_instalacoes",
+          "name": "Notify IT and Facilities of the confirmed hire",
+          "type": "notification",
+          "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "5" } ],
+          "assigneeRef": "recursos_humanos",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [],
+          "due": null,
+          "folded": [ { "section": "5", "summary": "HR informs IT and Facilities that a new hire is confirmed" } ]
+        },
+        {
+          "localId": "provisionar_contas_ti",
+          "name": "Provision IT accounts and equipment",
+          "type": "standard",
+          "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "6" } ],
+          "assigneeRef": "ti",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Account list and equipment order confirmation attached" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "preparar_espaco_e_cartao",
+          "name": "Prepare workspace and access badge",
+          "type": "standard",
+          "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "7" } ],
+          "assigneeRef": "instalacoes",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Badge/workspace confirmation attached" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "agendar_orientacao",
+          "name": "Schedule the Day 1 orientation",
+          "type": "standard",
+          "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "8" } ],
+          "assigneeRef": "recursos_humanos",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Orientation invite and buddy name attached" ],
+          "due": null,
+          "folded": [ { "section": "8", "summary": "HR assigns a buddy" } ]
+        },
+        {
+          "localId": "realizar_orientacao_dia1",
+          "name": "Deliver the Day 1 welcome and first-week review",
+          "type": "standard",
+          "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "9" } ],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Comment confirming the first-week plan was reviewed" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "confirmar_formacao_obrigatoria",
+          "name": "Confirm mandatory compliance training",
+          "type": "standard",
+          "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "10" } ],
+          "assigneeRef": "recursos_humanos",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Completion certificate or record attached" ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "confirmar_checklist_30_dias",
+          "name": "Confirm the 30-day onboarding checklist",
+          "type": "standard",
+          "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "11" } ],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Comment confirming the checklist review" ],
+          "due": { "offsetDays": 30, "offsetType": "calendar", "basis": "activation" },
+          "folded": []
+        },
+        {
+          "localId": "arquivar_registo_admissao",
+          "name": "Archive the onboarding record",
+          "type": "standard",
+          "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "12" } ],
+          "assigneeRef": "recursos_humanos",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [ "Comment confirming archiving" ],
+          "due": null,
+          "folded": []
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "No real customer SOP was supplied for this task; every step, owner and rule above is a reconstructed placeholder and must be replaced with the organization's actual procedure before packaging or publication.",
+        "No country/organization context was supplied; Angola/Africa/Luanda/AOA are provisional defaults per the plugin's country-context rule, not confirmed facts."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "No real SOP document was supplied. Is this reconstructed generic onboarding process an acceptable starting point, or should it be replaced with the organization's actual procedure before any further design work?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D2",
+      "question": "Who holds authority to confirm headcount/budget for a new hire: HR alone, or does Finance also need to confirm before 'Decide on the admission request' can approve?",
+      "owner": "HR / Finance leadership",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "2" } ]
+    },
+    {
+      "id": "D3",
+      "question": "The reconstructed SOP names no return/correction path for the admission decision, only an implicit rejection. 'Decide on the admission request' currently only supports Approve (continue) and Reject (cancel_incident) because no prior action exists in this workflow for a 'return' outcome to target. Is starting a new request after rejection acceptable, or must an earlier correction step be designed?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "2" } ]
+    },
+    {
+      "id": "D4",
+      "question": "No service level is stated for contract countersignature, IT/Facilities provisioning or training completion. What deadlines, if any, should apply, and what should happen if they are missed beyond the generic exception text proposed?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [
+        { "source": "sop-onboarding-generic", "section": "4" },
+        { "source": "sop-onboarding-generic", "section": "6" },
+        { "source": "sop-onboarding-generic", "section": "7" },
+        { "source": "sop-onboarding-generic", "section": "10" }
+      ]
+    },
+    {
+      "id": "D5",
+      "question": "HR both prepares the contract and later confirms it was signed, with no second approver named. Is this acceptable, or should confirmation move to a different group to separate preparation from verification?",
+      "owner": "HR leadership",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "3" }, { "source": "sop-onboarding-generic", "section": "4" } ]
+    },
+    {
+      "id": "D6",
+      "question": "The 30-day checklist confirmation is proposed with due.basis = activation (30 calendar days after the case is created/approved), but the SOP means 30 days after the new hire's actual start date. These can differ when approval happens before the start date. Should the due offset be measured from a different point, and how should the gap between case activation and the start_date field be handled operationally?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "11" } ]
+    },
+    {
+      "id": "D7",
+      "question": "The reconstructed SOP never states who has a Provia login among 'candidate' and 'new hire': the trigger intake, contract signature and training completion are currently designed as HR/manager-confirmed steps about that person rather than steps that person performs directly. Should the new hire receive direct system access (for example via a Form Fill link) for any of these steps once accounts exist?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "sop-onboarding-generic", "section": "4" }, { "source": "sop-onboarding-generic", "section": "10" } ]
+    },
+    {
+      "id": "D8",
+      "question": "No background-check, eligibility-verification or reference-check step is named in the reconstructed SOP. Does the real process include one, and if so, where does it sit relative to contract issuance?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": []
+    }
+  ],
+  "receipts": []
+}

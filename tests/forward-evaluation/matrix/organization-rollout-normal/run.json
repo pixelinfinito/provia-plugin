@@ -1,0 +1,22 @@
+{
+  "id": "organization-rollout-normal",
+  "skill": "provia-organization-rollout",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:24:47.444Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 150539,
+  "costUsd": 0.46370019999999995,
+  "numTurns": 14,
+  "sessionId": "835a8438-62d1-4874-982c-9bd88138bafd",
+  "stopReason": "end_turn",
+  "toolCalls": 12,
+  "files": [
+    "plano-adopcao.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/organization-rollout-normal/",
+  "skillLoaded": true
+}

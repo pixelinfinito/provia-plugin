@@ -1,0 +1,20 @@
+{
+  "id": "information-model-incomplete",
+  "skill": "provia-information-model",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:12:42.383Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 187590,
+  "costUsd": 0.7432740000000001,
+  "numTurns": 27,
+  "sessionId": "c9d77598-6f56-495b-a054-0039060ab3fa",
+  "stopReason": "end_turn",
+  "toolCalls": 25,
+  "files": [
+    "catalogue.html",
+    "catalogue.json"
+  ],
+  "output": "tests/forward-evaluation/matrix/information-model-incomplete/",
+  "skillLoaded": true
+}

@@ -1,6 +1,6 @@
 # JSON and HTML catalogue delivery
 
-Deliver both files for entity catalogue creation or revision. JSON is the source of truth for this deliverable; generate the HTML from the same JSON after every change. This is an **editorial specification for manual configuration**, not a Provia API payload, entity import format or workflow YAML extension. Its version is independent of the workflow contract.
+Deliver both files for a standalone entity catalogue creation or revision. JSON is the source of truth for this deliverable; generate the HTML from the same JSON after every change. Inside an implementation project, the same type objects live in `entityTypes[]` of `provia-project.json` (see project-manifest.md), `build-project-map.mjs --check` applies these editorial checks to them, and `project.html` renders them in its catalogue tab; a separate `catalogue.html` is then optional. This is an **editorial specification for manual configuration**, not a Provia API payload, entity import format or workflow YAML extension. Its version is independent of the workflow contract.
 
 ## Format
 

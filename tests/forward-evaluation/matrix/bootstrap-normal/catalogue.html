@@ -1,0 +1,310 @@
+<!doctype html><html lang="pt-AO"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Catálogo de entidades — Pedido de viatura</title>
+  <style>
+  *{box-sizing:border-box}body{margin:0;background:#f4f6f9;color:#182230;font:16px/1.55 system-ui,sans-serif}header,main{max-width:1120px;margin:auto;padding:24px}h1{font-size:30px}h2{font-size:24px}h4{margin:0 0 12px;font-size:18px}small{font-size:13px;font-weight:400;color:#475467}button,input,textarea{font:inherit}button{padding:6px 12px;border:1px solid #98a2b3;border-radius:6px;background:white;color:#1d2939;cursor:pointer}button:hover{background:#eaf0ff}button:focus-visible,input:focus-visible,textarea:focus-visible,a:focus-visible{outline:3px solid #2563eb;outline-offset:2px}nav{display:flex;flex-wrap:wrap;gap:8px;margin:16px 0}nav a{color:#244da8;padding:4px 8px}.toolbar{display:flex;flex-wrap:wrap;gap:10px;align-items:center}input{padding:10px;border:1px solid #98a2b3;border-radius:6px;min-width:260px}section{background:#fff;border:1px solid #d0d5dd;border-radius:12px;margin:20px 0;padding:24px;scroll-margin-top:16px}article{border-top:1px solid #d0d5dd;padding:22px 0}.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.value-heading{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:4px}label{font-size:13px;font-weight:600}textarea{display:block;width:100%;min-height:44px;padding:9px;border:1px solid #c7cdd6;border-radius:6px;background:#f9fafb;resize:vertical;color:#182230}dl{display:grid;grid-template-columns:140px 1fr;gap:4px 12px;font-size:14px}dt{color:#475467}dd{margin:0}.option{padding:8px 0}.notice{padding:14px;background:#eaf0ff;border-radius:8px}#status{min-height:24px}summary{cursor:pointer}li{margin-bottom:8px}[hidden]{display:none!important}@media(max-width:650px){.grid{grid-template-columns:1fr}header,main,section{padding:16px}dl{grid-template-columns:1fr}}@media print{body{background:white}button,nav,.toolbar,#status,details{display:none}section{break-before:page;border:0;padding:0}section[hidden]{display:block!important}textarea{border:0;resize:none;overflow:visible}article{break-inside:avoid}header,main{max-width:none;padding:0}}
+  </style></head><body><header><h1>Catálogo de entidades — Pedido de viatura</h1><p>Angola · 1 tipos de entidade</p>
+  <p class="notice">Especificação para criação manual. Este JSON não é um contrato de importação Provia. Os ícones provêm da referência incluída; confirme a versão de destino. Copiar não cria tipos, campos ou registos.</p><p>Crie os tipos antes de configurar as relações. Copie cada valor para o campo correspondente. Os nomes relacionados são referências do catálogo, não IDs de destino. Campos essenciais ao modelo podem ser opcionais na criação.</p><ul><li>Extraído de provia-project.json (workflow «viaturas»); mesma definição de tipo, não duplicada.</li><li>Fonte: Procedimento de pedidos de viatura (v2, em vigor desde 2026-03-01) e organigrama fornecido.</li><li>O nome do ícone (Truck01) não foi verificado contra o catálogo de ícones actual do Provia; confirmar disponibilidade antes da configuração.</li></ul>
+  <div class="toolbar"><label for="search">Pesquisar tipos e campos</label><input id="search" type="search"><button id="download">Descarregar JSON</button><button id="print">Imprimir</button></div>
+  <p id="status" role="status" aria-live="polite"></p><nav aria-label="Tipos"><a href="#type-0">Viatura</a></nav></header><main><section id="type-0" data-catalogue-type>
+    <h2>1. Viatura <small>4 campos</small></h2>
+    <p>Suportar o mapa de viaturas: disponibilidade, entrega e devolução em cada pedido.</p><p>Responsável: Secretariado</p>
+    <div class="grid"><div class="value"><div class="value-heading"><label for="value-0">Nome do tipo</label><button type="button" data-copy="value-0" aria-label="Copiar: Nome do tipo">Copiar</button></div><textarea id="value-0" rows="1" readonly>Viatura</textarea></div><div class="value"><div class="value-heading"><label for="value-1">Ícone</label><button type="button" data-copy="value-1" aria-label="Copiar: Ícone">Copiar</button></div><textarea id="value-1" rows="1" readonly>Truck01</textarea></div><div class="value"><div class="value-heading"><label for="value-2">Descrição</label><button type="button" data-copy="value-2" aria-label="Copiar: Descrição">Copiar</button></div><textarea id="value-2" rows="2" readonly>Viaturas da frota da empresa disponíveis para requisição pelos colaboradores. Reúne os dados necessários para confirmar disponibilidade, entregar e receber a viatura.</textarea></div><div class="value"><div class="value-heading"><label for="value-3">Convenção do Nome nativo</label><button type="button" data-copy="value-3" aria-label="Copiar: Convenção do Nome nativo">Copiar</button></div><textarea id="value-3" rows="1" readonly>Matrícula da viatura.</textarea></div></div>
+    <h3>Campos</h3><article><h4>Matrícula <small>Identificação</small></h4>
+      <p>Essencial ao modelo · Obrigatório na criação: Sim · text</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-4">Chave</label><button type="button" data-copy="value-4" aria-label="Copiar: Chave">Copiar</button></div><textarea id="value-4" rows="1" readonly>matricula</textarea></div><div class="value"><div class="value-heading"><label for="value-5">Rótulo</label><button type="button" data-copy="value-5" aria-label="Copiar: Rótulo">Copiar</button></div><textarea id="value-5" rows="1" readonly>Matrícula</textarea></div><div class="value"><div class="value-heading"><label for="value-6">Tipo</label><button type="button" data-copy="value-6" aria-label="Copiar: Tipo">Copiar</button></div><textarea id="value-6" rows="1" readonly>text</textarea></div><div class="value"><div class="value-heading"><label for="value-7">Grupo</label><button type="button" data-copy="value-7" aria-label="Copiar: Grupo">Copiar</button></div><textarea id="value-7" rows="1" readonly>Identificação</textarea></div><div class="value"><div class="value-heading"><label for="value-8">Texto de ajuda</label><button type="button" data-copy="value-8" aria-label="Copiar: Texto de ajuda">Copiar</button></div><textarea id="value-8" rows="1" readonly>Matrícula de registo da viatura.</textarea></div><div class="value"><div class="value-heading"><label for="value-9">Exemplo sintético</label><button type="button" data-copy="value-9" aria-label="Copiar: Exemplo sintético">Copiar</button></div><textarea id="value-9" rows="1" readonly>LD-12-34-AO</textarea></div>
+      </div>
+      
+      <dl><dt>Finalidade</dt><dd>Identificar univocamente a viatura no pedido e na entrega.</dd><dt>Origem</dt><dd>Registo da frota</dd><dt>Manutenção</dt><dd>Secretariado</dd><dt>Sensibilidade</dt><dd>Interna</dd></dl></article><article><h4>Marca e modelo <small>Identificação</small></h4>
+      <p>Essencial ao modelo · Obrigatório na criação: Sim · text</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-10">Chave</label><button type="button" data-copy="value-10" aria-label="Copiar: Chave">Copiar</button></div><textarea id="value-10" rows="1" readonly>marca_modelo</textarea></div><div class="value"><div class="value-heading"><label for="value-11">Rótulo</label><button type="button" data-copy="value-11" aria-label="Copiar: Rótulo">Copiar</button></div><textarea id="value-11" rows="1" readonly>Marca e modelo</textarea></div><div class="value"><div class="value-heading"><label for="value-12">Tipo</label><button type="button" data-copy="value-12" aria-label="Copiar: Tipo">Copiar</button></div><textarea id="value-12" rows="1" readonly>text</textarea></div><div class="value"><div class="value-heading"><label for="value-13">Grupo</label><button type="button" data-copy="value-13" aria-label="Copiar: Grupo">Copiar</button></div><textarea id="value-13" rows="1" readonly>Identificação</textarea></div><div class="value"><div class="value-heading"><label for="value-14">Texto de ajuda</label><button type="button" data-copy="value-14" aria-label="Copiar: Texto de ajuda">Copiar</button></div><textarea id="value-14" rows="1" readonly>Marca e modelo da viatura.</textarea></div><div class="value"><div class="value-heading"><label for="value-15">Exemplo sintético</label><button type="button" data-copy="value-15" aria-label="Copiar: Exemplo sintético">Copiar</button></div><textarea id="value-15" rows="1" readonly>Toyota Hilux</textarea></div>
+      </div>
+      
+      <dl><dt>Finalidade</dt><dd>Identificar o tipo de viatura disponível para o pedido.</dd><dt>Origem</dt><dd>Registo da frota</dd><dt>Manutenção</dt><dd>Secretariado</dd><dt>Sensibilidade</dt><dd>Interna</dd></dl></article><article><h4>Situação <small>Disponibilidade</small></h4>
+      <p>Essencial ao modelo · Obrigatório na criação: Sim · select</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-16">Chave</label><button type="button" data-copy="value-16" aria-label="Copiar: Chave">Copiar</button></div><textarea id="value-16" rows="1" readonly>situacao</textarea></div><div class="value"><div class="value-heading"><label for="value-17">Rótulo</label><button type="button" data-copy="value-17" aria-label="Copiar: Rótulo">Copiar</button></div><textarea id="value-17" rows="1" readonly>Situação</textarea></div><div class="value"><div class="value-heading"><label for="value-18">Tipo</label><button type="button" data-copy="value-18" aria-label="Copiar: Tipo">Copiar</button></div><textarea id="value-18" rows="1" readonly>select</textarea></div><div class="value"><div class="value-heading"><label for="value-19">Grupo</label><button type="button" data-copy="value-19" aria-label="Copiar: Grupo">Copiar</button></div><textarea id="value-19" rows="1" readonly>Disponibilidade</textarea></div><div class="value"><div class="value-heading"><label for="value-20">Texto de ajuda</label><button type="button" data-copy="value-20" aria-label="Copiar: Texto de ajuda">Copiar</button></div><textarea id="value-20" rows="1" readonly>Situação actual da viatura no mapa de viaturas.</textarea></div><div class="value"><div class="value-heading"><label for="value-21">Exemplo sintético</label><button type="button" data-copy="value-21" aria-label="Copiar: Exemplo sintético">Copiar</button></div><textarea id="value-21" rows="1" readonly>disponivel</textarea></div>
+      <div class="value"><div class="value-heading"><label for="value-22">Valor predefinido</label><button type="button" data-copy="value-22" aria-label="Copiar: Valor predefinido">Copiar</button></div><textarea id="value-22" rows="1" readonly>disponivel</textarea></div></div>
+      <div class="grid option"><div class="value"><div class="value-heading"><label for="value-23">Valor da opção</label><button type="button" data-copy="value-23" aria-label="Copiar: Valor da opção">Copiar</button></div><textarea id="value-23" rows="1" readonly>disponivel</textarea></div><div class="value"><div class="value-heading"><label for="value-24">Rótulo da opção</label><button type="button" data-copy="value-24" aria-label="Copiar: Rótulo da opção">Copiar</button></div><textarea id="value-24" rows="1" readonly>Disponível</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-25">Valor da opção</label><button type="button" data-copy="value-25" aria-label="Copiar: Valor da opção">Copiar</button></div><textarea id="value-25" rows="1" readonly>em_uso</textarea></div><div class="value"><div class="value-heading"><label for="value-26">Rótulo da opção</label><button type="button" data-copy="value-26" aria-label="Copiar: Rótulo da opção">Copiar</button></div><textarea id="value-26" rows="1" readonly>Em uso</textarea></div></div><div class="grid option"><div class="value"><div class="value-heading"><label for="value-27">Valor da opção</label><button type="button" data-copy="value-27" aria-label="Copiar: Valor da opção">Copiar</button></div><textarea id="value-27" rows="1" readonly>manutencao</textarea></div><div class="value"><div class="value-heading"><label for="value-28">Rótulo da opção</label><button type="button" data-copy="value-28" aria-label="Copiar: Rótulo da opção">Copiar</button></div><textarea id="value-28" rows="1" readonly>Em manutenção</textarea></div></div>
+      <dl><dt>Finalidade</dt><dd>Verificar a disponibilidade antes de atribuir a viatura a um pedido.</dd><dt>Origem</dt><dd>Secretariado</dd><dt>Manutenção</dt><dd>Secretariado</dd><dt>Sensibilidade</dt><dd>Interna</dd></dl></article><article><h4>Quilometragem actual <small>Utilização</small></h4>
+      <p>Condicional · Obrigatório na criação: Não · number</p>
+      <div class="grid"><div class="value"><div class="value-heading"><label for="value-29">Chave</label><button type="button" data-copy="value-29" aria-label="Copiar: Chave">Copiar</button></div><textarea id="value-29" rows="1" readonly>quilometragem_actual</textarea></div><div class="value"><div class="value-heading"><label for="value-30">Rótulo</label><button type="button" data-copy="value-30" aria-label="Copiar: Rótulo">Copiar</button></div><textarea id="value-30" rows="1" readonly>Quilometragem actual</textarea></div><div class="value"><div class="value-heading"><label for="value-31">Tipo</label><button type="button" data-copy="value-31" aria-label="Copiar: Tipo">Copiar</button></div><textarea id="value-31" rows="1" readonly>number</textarea></div><div class="value"><div class="value-heading"><label for="value-32">Grupo</label><button type="button" data-copy="value-32" aria-label="Copiar: Grupo">Copiar</button></div><textarea id="value-32" rows="1" readonly>Utilização</textarea></div><div class="value"><div class="value-heading"><label for="value-33">Texto de ajuda</label><button type="button" data-copy="value-33" aria-label="Copiar: Texto de ajuda">Copiar</button></div><textarea id="value-33" rows="1" readonly>Última quilometragem registada da viatura.</textarea></div><div class="value"><div class="value-heading"><label for="value-34">Exemplo sintético</label><button type="button" data-copy="value-34" aria-label="Copiar: Exemplo sintético">Copiar</button></div><textarea id="value-34" rows="1" readonly>45000</textarea></div>
+      </div>
+      
+      <dl><dt>Finalidade</dt><dd>Base para confirmar a quilometragem de saída no próximo pedido.</dd><dt>Origem</dt><dd>Registo de entrega/devolução</dd><dt>Manutenção</dt><dd>Secretariado</dd><dt>Sensibilidade</dt><dd>Interna</dd></dl></article>
+    <h3>Cobertura funcional</h3><ul><li><strong>Identificação</strong>: Incluído. A matrícula e o modelo identificam a viatura no pedido e na entrega.</li><li><strong>Disponibilidade</strong>: Incluído. O secretariado precisa de saber quais as viaturas disponíveis para atribuir ao pedido.</li><li><strong>Utilização</strong>: Incluído. A quilometragem actual é a base de comparação na próxima saída.</li><li><strong>Manutenção</strong>: Sistema externo. O procedimento fornecido não descreve o processo de manutenção da frota; fica fora deste âmbito.</li></ul>
+    <h3>Configuração e dependências</h3><ul><li>Confirmar com o Secretariado a lista real de viaturas e o formato de matrícula usado (matrícula angolana) antes da configuração.</li><li>O actual mapa de viaturas (papel ou folha de cálculo) deve ser migrado manualmente para este tipo de entidade.</li></ul><h3>Verificações antes de executar o processo</h3><ul><li>Antes do primeiro pedido: todas as viaturas activas têm matrícula, marca/modelo e situação preenchidas.</li></ul><details><summary>JSON deste tipo</summary><div class="value"><div class="value-heading"><label for="value-35">JSON deste tipo</label><button type="button" data-copy="value-35" aria-label="Copiar: JSON deste tipo">Copiar</button></div><textarea id="value-35" rows="6" readonly>{
+  &quot;key&quot;: &quot;viatura&quot;,
+  &quot;name&quot;: &quot;Viatura&quot;,
+  &quot;description&quot;: &quot;Viaturas da frota da empresa disponíveis para requisição pelos colaboradores. Reúne os dados necessários para confirmar disponibilidade, entregar e receber a viatura.&quot;,
+  &quot;icon&quot;: &quot;Truck01&quot;,
+  &quot;namePattern&quot;: &quot;Matrícula da viatura.&quot;,
+  &quot;purpose&quot;: &quot;Suportar o mapa de viaturas: disponibilidade, entrega e devolução em cada pedido.&quot;,
+  &quot;owner&quot;: &quot;Secretariado&quot;,
+  &quot;coverage&quot;: [
+    {
+      &quot;dimension&quot;: &quot;Identificação&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;A matrícula e o modelo identificam a viatura no pedido e na entrega.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Disponibilidade&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;O secretariado precisa de saber quais as viaturas disponíveis para atribuir ao pedido.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Utilização&quot;,
+      &quot;decision&quot;: &quot;included&quot;,
+      &quot;reason&quot;: &quot;A quilometragem actual é a base de comparação na próxima saída.&quot;
+    },
+    {
+      &quot;dimension&quot;: &quot;Manutenção&quot;,
+      &quot;decision&quot;: &quot;external&quot;,
+      &quot;reason&quot;: &quot;O procedimento fornecido não descreve o processo de manutenção da frota; fica fora deste âmbito.&quot;
+    }
+  ],
+  &quot;setup&quot;: [
+    &quot;Confirmar com o Secretariado a lista real de viaturas e o formato de matrícula usado (matrícula angolana) antes da configuração.&quot;,
+    &quot;O actual mapa de viaturas (papel ou folha de cálculo) deve ser migrado manualmente para este tipo de entidade.&quot;
+  ],
+  &quot;readiness&quot;: [
+    &quot;Antes do primeiro pedido: todas as viaturas activas têm matrícula, marca/modelo e situação preenchidas.&quot;
+  ],
+  &quot;fields&quot;: [
+    {
+      &quot;key&quot;: &quot;matricula&quot;,
+      &quot;label&quot;: &quot;Matrícula&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;required&quot;: true,
+      &quot;group&quot;: &quot;Identificação&quot;,
+      &quot;helpText&quot;: &quot;Matrícula de registo da viatura.&quot;,
+      &quot;purpose&quot;: &quot;Identificar univocamente a viatura no pedido e na entrega.&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;source&quot;: &quot;Registo da frota&quot;,
+      &quot;maintainer&quot;: &quot;Secretariado&quot;,
+      &quot;sensitivity&quot;: &quot;Interna&quot;,
+      &quot;example&quot;: &quot;LD-12-34-AO&quot;
+    },
+    {
+      &quot;key&quot;: &quot;marca_modelo&quot;,
+      &quot;label&quot;: &quot;Marca e modelo&quot;,
+      &quot;type&quot;: &quot;text&quot;,
+      &quot;required&quot;: true,
+      &quot;group&quot;: &quot;Identificação&quot;,
+      &quot;helpText&quot;: &quot;Marca e modelo da viatura.&quot;,
+      &quot;purpose&quot;: &quot;Identificar o tipo de viatura disponível para o pedido.&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;source&quot;: &quot;Registo da frota&quot;,
+      &quot;maintainer&quot;: &quot;Secretariado&quot;,
+      &quot;sensitivity&quot;: &quot;Interna&quot;,
+      &quot;example&quot;: &quot;Toyota Hilux&quot;
+    },
+    {
+      &quot;key&quot;: &quot;situacao&quot;,
+      &quot;label&quot;: &quot;Situação&quot;,
+      &quot;type&quot;: &quot;select&quot;,
+      &quot;required&quot;: true,
+      &quot;group&quot;: &quot;Disponibilidade&quot;,
+      &quot;helpText&quot;: &quot;Situação actual da viatura no mapa de viaturas.&quot;,
+      &quot;purpose&quot;: &quot;Verificar a disponibilidade antes de atribuir a viatura a um pedido.&quot;,
+      &quot;priority&quot;: &quot;core&quot;,
+      &quot;source&quot;: &quot;Secretariado&quot;,
+      &quot;maintainer&quot;: &quot;Secretariado&quot;,
+      &quot;sensitivity&quot;: &quot;Interna&quot;,
+      &quot;options&quot;: [
+        {
+          &quot;value&quot;: &quot;disponivel&quot;,
+          &quot;label&quot;: &quot;Disponível&quot;
+        },
+        {
+          &quot;value&quot;: &quot;em_uso&quot;,
+          &quot;label&quot;: &quot;Em uso&quot;
+        },
+        {
+          &quot;value&quot;: &quot;manutencao&quot;,
+          &quot;label&quot;: &quot;Em manutenção&quot;
+        }
+      ],
+      &quot;example&quot;: &quot;disponivel&quot;,
+      &quot;defaultValue&quot;: &quot;disponivel&quot;
+    },
+    {
+      &quot;key&quot;: &quot;quilometragem_actual&quot;,
+      &quot;label&quot;: &quot;Quilometragem actual&quot;,
+      &quot;type&quot;: &quot;number&quot;,
+      &quot;required&quot;: false,
+      &quot;group&quot;: &quot;Utilização&quot;,
+      &quot;helpText&quot;: &quot;Última quilometragem registada da viatura.&quot;,
+      &quot;purpose&quot;: &quot;Base para confirmar a quilometragem de saída no próximo pedido.&quot;,
+      &quot;priority&quot;: &quot;conditional&quot;,
+      &quot;source&quot;: &quot;Registo de entrega/devolução&quot;,
+      &quot;maintainer&quot;: &quot;Secretariado&quot;,
+      &quot;sensitivity&quot;: &quot;Interna&quot;,
+      &quot;example&quot;: 45000
+    }
+  ]
+}</textarea></div></details></section></main>
+  <script type="application/json" id="catalogue-data">{
+  "schemaVersion": "provia-entity-catalogue/v1",
+  "title": "Catálogo de entidades — Pedido de viatura",
+  "language": "pt-AO",
+  "country": "Angola",
+  "notes": [
+    "Extraído de provia-project.json (workflow «viaturas»); mesma definição de tipo, não duplicada.",
+    "Fonte: Procedimento de pedidos de viatura (v2, em vigor desde 2026-03-01) e organigrama fornecido.",
+    "O nome do ícone (Truck01) não foi verificado contra o catálogo de ícones actual do Provia; confirmar disponibilidade antes da configuração."
+  ],
+  "types": [
+    {
+      "key": "viatura",
+      "name": "Viatura",
+      "description": "Viaturas da frota da empresa disponíveis para requisição pelos colaboradores. Reúne os dados necessários para confirmar disponibilidade, entregar e receber a viatura.",
+      "icon": "Truck01",
+      "namePattern": "Matrícula da viatura.",
+      "purpose": "Suportar o mapa de viaturas: disponibilidade, entrega e devolução em cada pedido.",
+      "owner": "Secretariado",
+      "coverage": [
+        {
+          "dimension": "Identificação",
+          "decision": "included",
+          "reason": "A matrícula e o modelo identificam a viatura no pedido e na entrega."
+        },
+        {
+          "dimension": "Disponibilidade",
+          "decision": "included",
+          "reason": "O secretariado precisa de saber quais as viaturas disponíveis para atribuir ao pedido."
+        },
+        {
+          "dimension": "Utilização",
+          "decision": "included",
+          "reason": "A quilometragem actual é a base de comparação na próxima saída."
+        },
+        {
+          "dimension": "Manutenção",
+          "decision": "external",
+          "reason": "O procedimento fornecido não descreve o processo de manutenção da frota; fica fora deste âmbito."
+        }
+      ],
+      "setup": [
+        "Confirmar com o Secretariado a lista real de viaturas e o formato de matrícula usado (matrícula angolana) antes da configuração.",
+        "O actual mapa de viaturas (papel ou folha de cálculo) deve ser migrado manualmente para este tipo de entidade."
+      ],
+      "readiness": [
+        "Antes do primeiro pedido: todas as viaturas activas têm matrícula, marca/modelo e situação preenchidas."
+      ],
+      "fields": [
+        {
+          "key": "matricula",
+          "label": "Matrícula",
+          "type": "text",
+          "required": true,
+          "group": "Identificação",
+          "helpText": "Matrícula de registo da viatura.",
+          "purpose": "Identificar univocamente a viatura no pedido e na entrega.",
+          "priority": "core",
+          "source": "Registo da frota",
+          "maintainer": "Secretariado",
+          "sensitivity": "Interna",
+          "example": "LD-12-34-AO"
+        },
+        {
+          "key": "marca_modelo",
+          "label": "Marca e modelo",
+          "type": "text",
+          "required": true,
+          "group": "Identificação",
+          "helpText": "Marca e modelo da viatura.",
+          "purpose": "Identificar o tipo de viatura disponível para o pedido.",
+          "priority": "core",
+          "source": "Registo da frota",
+          "maintainer": "Secretariado",
+          "sensitivity": "Interna",
+          "example": "Toyota Hilux"
+        },
+        {
+          "key": "situacao",
+          "label": "Situação",
+          "type": "select",
+          "required": true,
+          "group": "Disponibilidade",
+          "helpText": "Situação actual da viatura no mapa de viaturas.",
+          "purpose": "Verificar a disponibilidade antes de atribuir a viatura a um pedido.",
+          "priority": "core",
+          "source": "Secretariado",
+          "maintainer": "Secretariado",
+          "sensitivity": "Interna",
+          "options": [
+            {
+              "value": "disponivel",
+              "label": "Disponível"
+            },
+            {
+              "value": "em_uso",
+              "label": "Em uso"
+            },
+            {
+              "value": "manutencao",
+              "label": "Em manutenção"
+            }
+          ],
+          "example": "disponivel",
+          "defaultValue": "disponivel"
+        },
+        {
+          "key": "quilometragem_actual",
+          "label": "Quilometragem actual",
+          "type": "number",
+          "required": false,
+          "group": "Utilização",
+          "helpText": "Última quilometragem registada da viatura.",
+          "purpose": "Base para confirmar a quilometragem de saída no próximo pedido.",
+          "priority": "conditional",
+          "source": "Registo de entrega/devolução",
+          "maintainer": "Secretariado",
+          "sensitivity": "Interna",
+          "example": 45000
+        }
+      ]
+    }
+  ]
+}</script><script>
+  const status = document.getElementById('status');
+  const fitText = () => document.querySelectorAll('textarea').forEach(area => {
+    area.style.height = 'auto';
+    area.style.height = (area.scrollHeight + 2) + 'px';
+  });
+  fitText();
+  window.addEventListener('resize', fitText);
+  window.addEventListener('beforeprint', fitText);
+  window.addEventListener('afterprint', fitText);
+  document.querySelectorAll('details').forEach(panel => panel.addEventListener('toggle', fitText));
+  document.querySelectorAll('[data-copy]').forEach(button => button.addEventListener('click', async () => {
+    const area = document.getElementById(button.dataset.copy);
+    try {
+      if (!navigator.clipboard || !window.isSecureContext) throw new Error('fallback');
+      await navigator.clipboard.writeText(area.value);
+      status.textContent = "Copiado.";
+    } catch {
+      area.focus(); area.select();
+      let copied = false;
+      try { copied = document.execCommand('copy'); } catch {}
+      status.textContent = copied ? "Copiado." : "Texto seleccionado. Use Ctrl+C ou ⌘C para copiar.";
+    }
+  }));
+  document.getElementById('search').addEventListener('input', event => {
+    const term = event.target.value.toLocaleLowerCase();
+    document.querySelectorAll('[data-catalogue-type]').forEach(section => {
+      const values = Array.from(section.querySelectorAll('textarea')).map(area => area.value).join(' ');
+      section.hidden = !(section.textContent + values).toLocaleLowerCase().includes(term);
+    });
+    fitText();
+  });
+  document.querySelectorAll('nav a').forEach(link => link.addEventListener('click', () => {
+    document.getElementById('search').value = '';
+    document.querySelectorAll('[data-catalogue-type]').forEach(section => { section.hidden = false; });
+    fitText();
+  }));
+  document.getElementById('download').addEventListener('click', () => {
+    const blob = new Blob([document.getElementById('catalogue-data').textContent], {type:'application/json'});
+    const url = URL.createObjectURL(blob), link = document.createElement('a');
+    link.href = url; link.download = 'catalogue.json'; link.click(); setTimeout(() => URL.revokeObjectURL(url), 1000);
+  });
+  document.getElementById('print').addEventListener('click', () => window.print());
+  </script></body></html>

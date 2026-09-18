@@ -1,0 +1,27 @@
+# provia-skills 1.1.0 — trigger-only draft; the review workflow's own actions are not yet designed. See setup.md and provia-project.json before importing.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Revisão mensal — arranque"
+  prefix: REVM
+  description: "Especificação do disparo (trigger) da revisão mensal. As acções da revisão em si (o que é revisto, por quem) ainda não foram definidas — ver decisão D1 em provia-project.json."
+triggers:
+  - type: schedule
+    label: Início da revisão mensal
+    enabled: true
+    config:
+      # Assunção (não confirmada): dia 1 de cada mês às 09:00, hora de Luanda.
+      # O dia/hora reais (ex.: primeiro dia útil, último dia do mês) não foram fornecidos.
+      cronExpression: "0 9 1 * *"
+      timezone: Africa/Luanda
+      # Política de execução perdida (missed-run), assumida por não ter sido indicada:
+      #   skip           — não recupera; a revisão do mês fica por fazer até ao próximo ciclo.
+      #   catch-up-one   — dispara um único incidente de recuperação assim que o sistema volta a estar disponível.
+      #   catch-up-all   — dispara um incidente por cada ocorrência mensal perdida (risco de acumular revisões atrasadas).
+      # Escolhido catch-up-one: numa cadência mensal, perder um ciclo é significativo (skip poderia saltar
+      # um mês inteiro de revisão), mas catch-up-all pode gerar vários incidentes atrasados de uma só vez
+      # se o sistema ficar indisponível por mais de um mês. catch-up-one garante que a revisão do mês em
+      # falta acontece, sem acumular um historial de incidentes tardios.
+      missedBehavior: catch-up-one
+fields: []
+actions: []

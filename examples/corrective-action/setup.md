@@ -1,23 +1,45 @@
-# Acção correctiva: setup and review
+# Acção correctiva — exemplo: Entrega de configuração
 
-Country: Angola. Language: Portuguese (pt-AO). Timezone: Africa/Luanda. This is a synthetic training draft, not an approved company policy.
+Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.1.0, 2026-09-18).
 
-## Before publication
+## Estado
 
-- All sample actions are deliberately assigned to the incident creator so a learner can exercise the draft without invented organization IDs. **Replace these assignments with the actual people/groups before production.** This does not implement segregation of duties.
-- Assign the cause analysis and effectiveness review to appropriate people. Define the observation period before concluding that a correction worked.
-- Create any intake or evidence forms, entity records, tags, files, Pages and memory documents separately. These are not transported by this YAML.
-- Confirm required fields, due dates and exception paths with the process owner. This example does not encode legislation, holidays, tax rates or retention periods.
-- Run `node scripts/validate-workflow.mjs examples/corrective-action/workflow.yaml` from the plugin root. Passing local checks leaves destination validation and publication pending.
-- Import the YAML as a draft in Provia, review preview warnings, resolve references and run the server validation offered by the import flow.
+Modo: sem ligação ao Provia (configuração manual).
 
-## Pilot cases
+## Configuração pendente
 
-1. Complete a normal synthetic incident and inspect its evidence.
-2. Omit a required field and confirm the visible validation.
-3. Exercise rejection/cancellation if configured; do not assume a label changes execution.
-4. Confirm that the correct people can act and unauthorized users cannot.
+| Onde | Item | O que fazer |
+| --- | --- | --- |
+| accao_correctiva | Acção correctiva — exemplo | Importar o YAML como rascunho e rever a pré-visualização (`workflow.yaml`) |
+| accao_correctiva / registar | Registar a constatação | Atribuir o grupo à acção depois de o grupo existir (`qualidade`) |
+| accao_correctiva / analisar | Analisar a causa | Atribuir o grupo à acção depois de o grupo existir (`donos_processo`) |
+| accao_correctiva / corrigir | Executar a correcção | Atribuir o grupo à acção depois de o grupo existir (`donos_processo`) |
+| accao_correctiva / verificar | Verificar a eficácia | Atribuir o grupo à acção depois de o grupo existir (`qualidade`) |
 
-## Configuração em português
+## Grupos a criar
 
-Este exemplo destina-se a formação em Angola. Todas as acções estão atribuídas ao criador do pedido para permitir um ensaio sem identificadores fictícios. Antes de publicar, configure os responsáveis reais, as permissões, os formulários e as regras aprovadas pela organização. Valide o ficheiro e reveja a importação no Provia. O exemplo não define obrigações legais nem substitui a revisão do dono do processo.
+- `qualidade` Gestão da qualidade: Registam constatações e verificam a eficácia das correcções.. Membros propostos: Gestor da qualidade
+- `donos_processo` Donos de processo: Analisam a causa e executam a correcção no processo afectado.. Membros propostos: Dono do processo
+
+## Sinalizações de grupos
+
+- `qualidade`: Segregação de funções: confirmar responsáveis distintos. Quem executa a correcção não verifica a sua eficácia.
+
+## Decisões em aberto
+
+- **D1** Qual é o período de verificação da eficácia por tipo de constatação? (Dono: Gestor da qualidade)
+
+## Notas de configuração
+
+- `accao_correctiva`: O YAML de formação atribui todas as acções ao criador; os responsáveis pretendidos são os grupos deste manifesto.
+- `accao_correctiva`: O período de verificação da eficácia (30 dias de calendário) é ilustrativo; a organização define-o por tipo de constatação.
+
+## Validação
+
+Execute o validador a partir da raiz do plugin, com o caminho de cada ficheiro relativo à pasta do manifesto, e guarde a saída exacta. Um resultado sem erros deixa a validação de destino e a publicação pendentes.
+
+```sh
+node scripts/validate-workflow.mjs workflow.yaml
+```
+
+Este ficheiro é gerado pelo mapa do projecto; volte a gerá-lo depois de cada alteração ao manifesto. Não substitui a revisão do dono do processo nem a pré-visualização de importação no Provia.

@@ -1,0 +1,22 @@
+{
+  "id": "process-discovery-conflicting",
+  "skill": "provia-process-discovery",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:04:36.724Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 97368,
+  "costUsd": 0.39116419999999996,
+  "numTurns": 16,
+  "sessionId": "aad39797-09ab-4979-bd06-a5532a13230f",
+  "stopReason": "end_turn",
+  "toolCalls": 14,
+  "files": [
+    "discovery-report.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/process-discovery-conflicting/",
+  "skillLoaded": true
+}

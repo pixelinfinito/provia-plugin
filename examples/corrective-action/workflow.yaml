@@ -1,4 +1,4 @@
-# Training draft for Angola; see setup.md before importing.
+# provia-skills 1.1.0 — training draft for Angola; see setup.md and provia-project.json before importing.
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
@@ -15,32 +15,90 @@ fields:
     label: Referência da constatação
     type: text
     required: true
+  - name: finding_source
+    label: Origem da constatação
+    type: select
+    required: false
+    config:
+      options:
+        - value: internal_audit
+          label: Auditoria interna
+        - value: external_audit
+          label: Auditoria externa
+        - value: incident
+          label: Incidente
+        - value: complaint
+          label: Reclamação
+  - name: root_cause
+    label: Causa raiz
+    type: text
+    required: false
 actions:
-  - id: step_1
+  - id: registar
     name: Registar a constatação
     type: standard
+    description: |
+      Tarefa: Registar a constatação de forma que a equipa possa analisar a causa sem recorrer ao relatório original.
+      Como: 1. Preencher «Referência da constatação» com o número do relatório ou do incidente de origem. 2. Escolher a «Origem da constatação». 3. Descrever num comentário o que foi observado, onde, quando e qual o requisito não cumprido. 4. Anexar o relatório ou a evidência de origem.
+      Evidência: A referência e a origem preenchidas; o relatório ou a evidência anexados; o comentário com a descrição.
+      Concluído quando: A constatação está descrita com referência, origem, evidência e requisito não cumprido.
+      Excepções: Se a constatação não identificar um requisito não cumprido, não concluir: comentar e pedir ao autor da constatação que o indique.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 2
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator
-  - id: step_2
+  - id: analisar
     name: Analisar a causa
     type: standard
+    description: |
+      Tarefa: Determinar a causa raiz da constatação e propor a correcção.
+      Como: 1. Reunir com quem executa o processo afectado e reconstituir o que aconteceu. 2. Aplicar o método de análise em uso na organização (por exemplo, cinco porquês) e registar o resultado no campo «Causa raiz». 3. Descrever num comentário a correcção proposta, o responsável e o prazo previsto.
+      Evidência: O campo «Causa raiz» preenchido e o comentário com a correcção proposta, responsável e prazo.
+      Concluído quando: A causa raiz e a correcção proposta estão registadas.
+      Excepções: Se a análise apontar para uma causa fora do âmbito da equipa (outro departamento, fornecedor), não concluir: comentar e pedir ao gestor da qualidade que envolva o responsável.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 5
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator
-  - id: step_3
+  - id: corrigir
     name: Executar a correcção
     type: standard
+    description: |
+      Tarefa: Implementar a correcção proposta e registar o que mudou.
+      Como: 1. Executar as medidas descritas na correcção proposta. 2. Actualizar os documentos, formações ou configurações afectados. 3. Registar num comentário o que foi feito, quando e por quem, com a evidência de cada medida.
+      Evidência: Um comentário com as medidas executadas e a evidência anexada (documentos actualizados, registos de formação, capturas).
+      Concluído quando: Todas as medidas da correcção proposta estão executadas e evidenciadas.
+      Excepções: Se uma medida não puder ser executada no prazo, não concluir: comentar o motivo e a nova data e informar o gestor da qualidade.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 15
+      offsetType: workdays
+      basis: activation
     assignee:
       type: creator
-  - id: step_4
+  - id: verificar
     name: Verificar a eficácia
     type: standard
+    description: |
+      Tarefa: Confirmar que a correcção eliminou a causa e que a constatação não se repetiu.
+      Como: 1. Após o período definido pelo gestor da qualidade, verificar os registos do processo afectado à procura de repetições. 2. Entrevistar quem executa o processo sobre a medida implementada. 3. Registar num comentário o resultado da verificação e a conclusão: eficaz ou não eficaz.
+      Evidência: O comentário com o resultado da verificação e os registos consultados.
+      Concluído quando: A verificação está registada com a conclusão.
+      Excepções: Se a constatação se repetiu, não concluir como eficaz: comentar a repetição e pedir ao gestor da qualidade que abra uma nova acção correctiva ligada a esta.
     executionMode: sequential
     required: true
+    due:
+      offsetDays: 30
+      offsetType: calendar
+      basis: activation
     assignee:
       type: creator

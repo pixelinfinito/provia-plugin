@@ -1,0 +1,22 @@
+{
+  "id": "form-designer-incomplete",
+  "skill": "provia-form-designer",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:17:06.641Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 252594,
+  "costUsd": 0.9966787999999999,
+  "numTurns": 32,
+  "sessionId": "e870cd02-0b21-49db-8947-fbdea7e5c48c",
+  "stopReason": "end_turn",
+  "toolCalls": 30,
+  "files": [
+    "form-it-self-service-request.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/form-designer-incomplete/",
+  "skillLoaded": true
+}

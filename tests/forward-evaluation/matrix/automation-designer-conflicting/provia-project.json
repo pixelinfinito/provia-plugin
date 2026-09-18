@@ -1,0 +1,108 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "payments",
+    "title": "Payment submission integration",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": null,
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "user-brief-payments",
+      "title": "User-supplied brief: POST /payments, no idempotency key, ambiguous timeout",
+      "kind": "other",
+      "version": "1",
+      "effectiveDate": "2026-09-18",
+      "sections": []
+    }
+  ],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [
+    {
+      "key": "payments",
+      "name": "Payment submission",
+      "prefix": "PAY",
+      "file": "workflow.yaml",
+      "status": "design",
+      "sourceRefs": [
+        { "source": "user-brief-payments" }
+      ],
+      "actions": [
+        {
+          "localId": "submit_payment",
+          "name": "Submit payment to provider",
+          "type": "http_request",
+          "sourceRefs": [
+            { "source": "user-brief-payments" }
+          ],
+          "assigneeRef": null,
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Provider response status code and reference stored in a response mapping field",
+            "On timeout or unexpected status, an incident is raised instead of an automatic resubmission"
+          ],
+          "due": null,
+          "folded": []
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "Replace the placeholder endpoint https://example.com/payments with the actual payment provider host from its API documentation before import.",
+        "Create an organization secret (e.g. PAYMENT_API_TOKEN) holding the provider's real credential; never store the value in the YAML.",
+        "Add the real payment provider domain to the HTTP allowlist before enabling this action.",
+        "Confirm the provider's actual request/response schema, auth scheme and expected status codes; the body and mapping in workflow.yaml are illustrative placeholders, not a confirmed contract.",
+        "Do not raise config.retryConfig.maxAttempts above 1 on this action until decision D-PAY-1 is resolved. Automatic retries on a non-idempotent POST /payments after an ambiguous timeout can charge the payer more than once.",
+        "No owner group is configured yet for the incident this action raises on timeout/failure. Identify who reconciles payment outcomes with the provider (decision D-PAY-3) and assign that group before publishing; provia-organization-rollout can help design it."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D-PAY-1",
+      "question": "Does the payment provider support any client-side deduplication for POST /payments (a client-generated reference/order-ID field, an Idempotency-Key-style header the docs didn't mention, or an equivalent), or a status/reconciliation endpoint (e.g. GET /payments/{reference}) that can confirm whether a timed-out call actually charged the payer?",
+      "owner": "Implementer, with the payment provider's integration contact",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": [
+        { "source": "user-brief-payments" }
+      ]
+    },
+    {
+      "id": "D-PAY-2",
+      "question": "What is the confirmed request/response schema, authentication scheme, real endpoint host and expected success status code(s) for POST /payments?",
+      "owner": "Implementer",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": [
+        { "source": "user-brief-payments" }
+      ]
+    },
+    {
+      "id": "D-PAY-3",
+      "question": "Who should be paged when a payment submission raises an incident (ambiguous timeout / failure), and what is their reconciliation procedure with the provider (dashboard, support line, statement reconciliation)?",
+      "owner": "Finance operations lead",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": [
+        { "source": "user-brief-payments" }
+      ]
+    }
+  ],
+  "receipts": []
+}

@@ -1,0 +1,22 @@
+{
+  "id": "organization-rollout-incomplete",
+  "skill": "provia-organization-rollout",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:25:29.555Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 155261,
+  "costUsd": 0.6184354,
+  "numTurns": 21,
+  "sessionId": "79066b07-2064-400b-8071-4680765d6b81",
+  "stopReason": "end_turn",
+  "toolCalls": 19,
+  "files": [
+    "project.html",
+    "provia-project.json",
+    "rollout-plan.md",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/organization-rollout-incomplete/",
+  "skillLoaded": true
+}

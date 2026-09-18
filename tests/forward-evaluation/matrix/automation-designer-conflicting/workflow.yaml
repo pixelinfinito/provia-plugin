@@ -1,0 +1,72 @@
+# provia-skills 1.1.0
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: Payment submission
+  prefix: PAY
+  description: Submits a case's payment instruction to the provider's POST /payments endpoint. Placeholder endpoint, schema and retry policy pending the confirmations recorded in provia-project.json (D-PAY-1, D-PAY-2, D-PAY-3).
+  agentMemoryEnabled: false
+triggers:
+  - type: manual
+    label: Manual submission
+    enabled: true
+    config: {}
+entities:
+  mode: none
+fields:
+  - name: payment_reference
+    label: Payment reference
+    type: text
+    required: false
+    group: Payment
+    width: half
+  - name: amount
+    label: Amount
+    type: currency
+    required: true
+    group: Payment
+    width: half
+  - name: currency
+    label: Currency
+    type: text
+    required: true
+    group: Payment
+    width: half
+actions:
+  - id: submit_payment
+    type: http_request
+    name: Submit payment to provider
+    description: >-
+      Calls POST /payments at the payment provider to submit this case's payment instruction
+      and records the returned reference. Configured with a single attempt and no automatic
+      retry, because this endpoint has no idempotency key: a timeout does not tell us whether
+      the payment executed, so retrying automatically risks charging the payer more than once.
+      Exceptions: on timeout, connection failure or an unexpected status code, this raises an
+      incident instead of resubmitting; finance operations must confirm the real outcome with
+      the provider before any manual resubmission.
+    executionMode: sequential
+    required: true
+    priority: normal
+    config:
+      endpoint: https://example.com/payments
+      method: POST
+      headers:
+        - key: Authorization
+          value: "Bearer {{secret:PAYMENT_API_TOKEN}}"
+          enabled: true
+        - key: Content-Type
+          value: application/json
+          enabled: true
+      body:
+        type: json
+        content: '{"amount": "{{amount}}", "currency": "{{currency}}", "reference": "{{case.id}}"}'
+      executionTiming: automatic
+      timeoutSeconds: 30
+      retryConfig:
+        maxAttempts: 1
+        failureBehavior: block_incident
+      expectedStatusCodes: [200, 201]
+      responseMappings:
+        - jsonPath: "$.reference"
+          targetField: payment_reference
+          required: false

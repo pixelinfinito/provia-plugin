@@ -1,0 +1,26 @@
+{
+  "id": "workflow-change-normal",
+  "skill": "provia-workflow-change",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:45:35.203Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 249989,
+  "costUsd": 0.8924712,
+  "numTurns": 33,
+  "sessionId": "ccd3e00b-3108-407f-badf-a6775cb449e0",
+  "stopReason": "end_turn",
+  "toolCalls": 31,
+  "files": [
+    "project.html",
+    "provia-project.json",
+    "setup.md",
+    "validation.v1.json",
+    "validation.v2-draft.json",
+    "workflow-change-report.md",
+    "workflow.v2-draft.yaml",
+    "workflow.yaml"
+  ],
+  "output": "tests/forward-evaluation/matrix/workflow-change-normal/",
+  "skillLoaded": true
+}

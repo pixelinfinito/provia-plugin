@@ -1,23 +1,43 @@
-# Admissão de trabalhador: setup and review
+# Admissão de trabalhador — exemplo: Entrega de configuração
 
-Country: Angola. Language: Portuguese (pt-AO). Timezone: Africa/Luanda. This is a synthetic training draft, not an approved company policy.
+Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.1.0, 2026-09-18).
 
-## Before publication
+## Estado
 
-- All sample actions are deliberately assigned to the incident creator so a learner can exercise the draft without invented organization IDs. **Replace these assignments with the actual people/groups before production.** This does not implement segregation of duties.
-- Confirm current Angolan employment requirements with the responsible HR adviser. Do not assume a statutory probation period or collect identity documents without a defined purpose.
-- Create any intake or evidence forms, entity records, tags, files, Pages and memory documents separately. These are not transported by this YAML.
-- Confirm required fields, due dates and exception paths with the process owner. This example does not encode legislation, holidays, tax rates or retention periods.
-- Run `node scripts/validate-workflow.mjs examples/employee-onboarding/workflow.yaml` from the plugin root. Passing local checks leaves destination validation and publication pending.
-- Import the YAML as a draft in Provia, review preview warnings, resolve references and run the server validation offered by the import flow.
+Modo: sem ligação ao Provia (configuração manual).
 
-## Pilot cases
+## Configuração pendente
 
-1. Complete a normal synthetic incident and inspect its evidence.
-2. Omit a required field and confirm the visible validation.
-3. Exercise rejection/cancellation if configured; do not assume a label changes execution.
-4. Confirm that the correct people can act and unauthorized users cannot.
+| Onde | Item | O que fazer |
+| --- | --- | --- |
+| admissao | Admissão de trabalhador — exemplo | Importar o YAML como rascunho e rever a pré-visualização (`workflow.yaml`) |
+| admissao / confirmar_dados | Confirmar os dados aprovados | Atribuir o grupo à acção depois de o grupo existir (`rh`) |
+| admissao / preparar_acessos | Preparar acessos e equipamento | Atribuir o grupo à acção depois de o grupo existir (`ti`) |
+| admissao / acolher | Realizar o acolhimento | Atribuir o grupo à acção depois de o grupo existir (`chefias`) |
+| admissao / confirmar_conclusao | Confirmar a conclusão | Atribuir o grupo à acção depois de o grupo existir (`rh`) |
 
-## Configuração em português
+## Grupos a criar
 
-Este exemplo destina-se a formação em Angola. Todas as acções estão atribuídas ao criador do pedido para permitir um ensaio sem identificadores fictícios. Antes de publicar, configure os responsáveis reais, as permissões, os formulários e as regras aprovadas pela organização. Valide o ficheiro e reveja a importação no Provia. O exemplo não define obrigações legais nem substitui a revisão do dono do processo.
+- `rh` Recursos Humanos: Confirmam a aprovação, os dados e o fecho administrativo da admissão.. Membros propostos: Técnico de Recursos Humanos
+- `ti` Suporte de TI: Preparam acessos e equipamento.. Membros propostos: Técnico de suporte
+- `chefias` Chefias de departamento: Recebem a pessoa no primeiro dia.. Membros propostos: Chefe de departamento
+
+## Decisões em aberto
+
+- **D1** Que documentos pessoais são exigidos na admissão e onde ficam guardados? (Dono: Responsável de Recursos Humanos)
+
+## Notas de configuração
+
+- `admissao`: O YAML de formação atribui todas as acções ao criador; os responsáveis pretendidos são os grupos deste manifesto.
+- `admissao`: Este exemplo não enumera obrigações laborais angolanas; confirmar os documentos exigidos com fontes verificadas.
+- `admissao`: Os prazos são ilustrativos. O prazo do acolhimento conta a partir da activação da acção, não da data de início.
+
+## Validação
+
+Execute o validador a partir da raiz do plugin, com o caminho de cada ficheiro relativo à pasta do manifesto, e guarde a saída exacta. Um resultado sem erros deixa a validação de destino e a publicação pendentes.
+
+```sh
+node scripts/validate-workflow.mjs workflow.yaml
+```
+
+Este ficheiro é gerado pelo mapa do projecto; volte a gerá-lo depois de cada alteração ao manifesto. Não substitui a revisão do dono do processo nem a pré-visualização de importação no Provia.

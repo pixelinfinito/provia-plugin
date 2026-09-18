@@ -1,0 +1,54 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "process-comparison",
+    "title": "Two-period process performance comparison",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": "Not supplied",
+    "sector": "Not supplied",
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Which workflow and version(s) are in scope, and what are the exact boundaries (start/end timestamps, timezone) of the two periods being compared?",
+      "owner": "Process owner (unassigned)",
+      "status": "open",
+      "raisedBy": "provia-process-improvement",
+      "sourceRefs": []
+    },
+    {
+      "id": "D2",
+      "question": "What raw case-level records are available for both periods (case id, activation timestamp, completion timestamp, status/queue transitions with timestamps) and how are cancelled, draft or duplicate cases identified for exclusion?",
+      "owner": "Process owner (unassigned)",
+      "status": "open",
+      "raisedBy": "provia-process-improvement",
+      "sourceRefs": []
+    },
+    {
+      "id": "D3",
+      "question": "How should active work vs. waiting time be defined for this workflow: which statuses/transitions count as waiting (e.g. queued, pending approval, unassigned) versus active work, and is this split already captured anywhere, or does it need to be instrumented first?",
+      "owner": "Process owner (unassigned)",
+      "status": "open",
+      "raisedBy": "provia-process-improvement",
+      "sourceRefs": []
+    }
+  ],
+  "receipts": []
+}

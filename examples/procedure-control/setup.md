@@ -1,23 +1,45 @@
-# Revisão de procedimento: setup and review
+# Revisão de procedimento — exemplo: Entrega de configuração
 
-Country: Angola. Language: Portuguese (pt-AO). Timezone: Africa/Luanda. This is a synthetic training draft, not an approved company policy.
+Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.1.0, 2026-09-18).
 
-## Before publication
+## Estado
 
-- All sample actions are deliberately assigned to the incident creator so a learner can exercise the draft without invented organization IDs. **Replace these assignments with the actual people/groups before production.** This does not implement segregation of duties.
-- Link the controlled document and approved revision record separately. This example does not certify ISO conformity or provide a document repository.
-- Create any intake or evidence forms, entity records, tags, files, Pages and memory documents separately. These are not transported by this YAML.
-- Confirm required fields, due dates and exception paths with the process owner. This example does not encode legislation, holidays, tax rates or retention periods.
-- Run `node scripts/validate-workflow.mjs examples/procedure-control/workflow.yaml` from the plugin root. Passing local checks leaves destination validation and publication pending.
-- Import the YAML as a draft in Provia, review preview warnings, resolve references and run the server validation offered by the import flow.
+Modo: sem ligação ao Provia (configuração manual).
 
-## Pilot cases
+## Configuração pendente
 
-1. Complete a normal synthetic incident and inspect its evidence.
-2. Omit a required field and confirm the visible validation.
-3. Exercise rejection/cancellation if configured; do not assume a label changes execution.
-4. Confirm that the correct people can act and unauthorized users cannot.
+| Onde | Item | O que fazer |
+| --- | --- | --- |
+| procedimentos | Revisão de procedimento — exemplo | Importar o YAML como rascunho e rever a pré-visualização (`workflow.yaml`) |
+| procedimentos / preparar | Preparar a revisão | Atribuir o grupo à acção depois de o grupo existir (`qualidade`) |
+| procedimentos / aprovar | Decidir sobre a revisão | Atribuir o grupo à acção depois de o grupo existir (`donos_processo`) |
+| procedimentos / publicar | Registar a versão aprovada | Atribuir o grupo à acção depois de o grupo existir (`qualidade`) |
 
-## Configuração em português
+## Grupos a criar
 
-Este exemplo destina-se a formação em Angola. Todas as acções estão atribuídas ao criador do pedido para permitir um ensaio sem identificadores fictícios. Antes de publicar, configure os responsáveis reais, as permissões, os formulários e as regras aprovadas pela organização. Valide o ficheiro e reveja a importação no Provia. O exemplo não define obrigações legais nem substitui a revisão do dono do processo.
+- `qualidade` Gestão da qualidade: Redigem as revisões e publicam as versões aprovadas.. Membros propostos: Gestor da qualidade
+- `donos_processo` Donos de processo: Aprovam as revisões dos procedimentos que lhes pertencem.. Membros propostos: Dono do processo
+
+## Sinalizações de grupos
+
+- `qualidade`: Actor de pessoa única: definir substituto. Uma só pessoa redige e publica; definir substituto.
+- `donos_processo`: Segregação de funções: confirmar responsáveis distintos. Quem redige não aprova; confirmar que o grupo de aprovação é distinto.
+
+## Decisões em aberto
+
+- **D1** Que revisões exigem aprovação da direcção além do dono do processo? (Dono: Gestor da qualidade)
+
+## Notas de configuração
+
+- `procedimentos`: O YAML de formação atribui todas as acções ao criador; os responsáveis pretendidos são os grupos deste manifesto.
+- `procedimentos`: A notificação das equipas afectadas pode tornar-se uma acção Notification com provia-automation-designer.
+
+## Validação
+
+Execute o validador a partir da raiz do plugin, com o caminho de cada ficheiro relativo à pasta do manifesto, e guarde a saída exacta. Um resultado sem erros deixa a validação de destino e a publicação pendentes.
+
+```sh
+node scripts/validate-workflow.mjs workflow.yaml
+```
+
+Este ficheiro é gerado pelo mapa do projecto; volte a gerá-lo depois de cada alteração ao manifesto. Não substitui a revisão do dono do processo nem a pré-visualização de importação no Provia.

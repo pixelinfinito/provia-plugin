@@ -1,6 +1,7 @@
 #!/usr/bin/env node
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, extname } from 'node:path';
+import { fileURLToPath } from 'node:url';
 import { metadataFieldSchema, validateAutoNumberConfig, collectDependentSchemaErrors, collectDependentValueErrors } from '../contracts/workflow-v1/engine.mjs';
 
 const icons = new Set(JSON.parse(readFileSync(new URL('../references/entity-icons.json', import.meta.url), 'utf8')).icons);
@@ -15,17 +16,23 @@ function strings(values, location) {
   ensure(Array.isArray(values) && values.every(text), location);
 }
 
-function validate(catalogue) {
+export function validate(catalogue) {
   ensure(object(catalogue) && catalogue.schemaVersion === 'provia-entity-catalogue/v1', 'schemaVersion');
   for (const name of ['title', 'language', 'country']) ensure(text(catalogue[name]), name);
   strings(catalogue.notes, 'notes');
   ensure(Array.isArray(catalogue.types) && catalogue.types.length > 0, 'types');
+  validateTypes(catalogue.types);
+}
+
+/** Editorial checks for a list of catalogue types; shared with the project manifest checker. */
+export function validateTypes(types) {
+  ensure(Array.isArray(types), 'types');
   const keys = new Set();
-  for (const [index, type] of catalogue.types.entries()) {
+  for (const [index, type] of types.entries()) {
     ensure(object(type) && key(type.key) && !keys.has(type.key), `types[${index}].key`);
     keys.add(type.key);
   }
-  for (const [index, type] of catalogue.types.entries()) {
+  for (const [index, type] of types.entries()) {
     const at = `types[${index}]`;
     for (const name of ['name', 'description', 'namePattern', 'purpose', 'owner']) ensure(text(type[name]), `${at}.${name}`);
     ensure(icons.has(type.icon), `${at}.icon`);
@@ -88,7 +95,7 @@ function validate(catalogue) {
 const escape = value => String(value).replace(/[&<>"']/g, character => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' })[character]);
 const display = value => typeof value === 'string' ? value : JSON.stringify(value, null, 2);
 
-function render(catalogue) {
+export function render(catalogue) {
   const pt = catalogue.language.toLowerCase().startsWith('pt');
   const labels = pt ? {
     copy: 'Copiar', copied: 'Copiado.', fallback: 'Texto seleccionado. Use Ctrl+C ou ⌘C para copiar.', search: 'Pesquisar tipos e campos',
@@ -184,7 +191,7 @@ function render(catalogue) {
   </script></body></html>`;
 }
 
-try {
+if (process.argv[1] && resolve(process.argv[1]) === fileURLToPath(import.meta.url)) try {
   const [input, flag, output, ...extra] = process.argv.slice(2);
   if (!input || extra.length || !((flag === '--check' && !output) || (flag === '--output' && output))) throw new Error('Usage: node scripts/build-entity-catalogue.mjs catalogue.json --check | --output catalogue.html');
   if (output && (resolve(input) === resolve(output) || extname(output).toLowerCase() !== '.html')) throw new Error('Output must be a separate .html file');

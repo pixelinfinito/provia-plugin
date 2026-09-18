@@ -1,0 +1,66 @@
+# provia-skills 1.1.0 — training draft for Angola; see setup.md and provia-project.json before importing.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Expense reimbursement"
+  prefix: EXP
+  description: "Draft from a three-line expense reimbursement checklist. No org chart, service levels or expense limits were supplied; configure owners and due dates before publication."
+triggers:
+  - type: manual
+    label: Submit expense reimbursement request
+    enabled: true
+    config: {}
+fields:
+  - name: claim_amount
+    label: Amount claimed
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: claim_description
+    label: Expense description
+    type: text
+    required: true
+  - name: receipts
+    label: Receipts
+    type: file
+    required: true
+  - name: payment_reference
+    label: Payment reference
+    type: text
+    required: false
+actions:
+  - id: decide
+    name: Decide on the expense reimbursement claim
+    type: decision
+    description: |
+      Task: Decide whether the expense reimbursement claim should be paid, based on the amount, description and attached receipts.
+      How: 1. Read the amount in "Amount claimed" and the "Expense description". 2. Open the attached receipts and confirm they support the claimed amount. 3. Choose "Approve" to send the claim to Finance for payment, or "Reject" to close the claim without payment.
+      Evidence: A comment naming the reason is required on "Reject".
+      Done when: The decision is recorded, with the required comment on rejection.
+      Exceptions: If the receipts do not support the claimed amount, or you need more information than the claim provides, do not approve: comment the reason and reject the claim so the employee can submit a new, corrected request.
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+    config:
+      branches:
+        - label: Approve
+          outcome: continue
+        - label: Reject
+          outcome: cancel_incident
+          requiresComment: true
+  - id: pay
+    name: Pay the approved reimbursement
+    type: standard
+    description: |
+      Task: Pay the employee the approved expense reimbursement amount and record proof of payment.
+      How: 1. Confirm the claim was approved. 2. Pay the amount in "Amount claimed" to the employee through the organization's normal payment channel. 3. Attach proof of payment. 4. Fill in "Payment reference" with the payment or transaction reference.
+      Evidence: Proof of payment attached and "Payment reference" filled in.
+      Done when: The employee has received the payment and the payment reference is recorded on the claim.
+      Exceptions: If payment cannot be made this month (for example, missing bank details), do not complete the action: comment the reason and the expected payment date.
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator

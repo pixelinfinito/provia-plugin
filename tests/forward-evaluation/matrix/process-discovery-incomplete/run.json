@@ -1,0 +1,22 @@
+{
+  "id": "process-discovery-incomplete",
+  "skill": "provia-process-discovery",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:05:07.612Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 128256,
+  "costUsd": 0.46422019999999997,
+  "numTurns": 18,
+  "sessionId": "979a466d-0b30-4ee5-95f3-d4bd5da071b3",
+  "stopReason": "end_turn",
+  "toolCalls": 16,
+  "files": [
+    "pilot-comparison.md",
+    "project.html",
+    "provia-project.json",
+    "setup.md"
+  ],
+  "output": "tests/forward-evaluation/matrix/process-discovery-incomplete/",
+  "skillLoaded": true
+}

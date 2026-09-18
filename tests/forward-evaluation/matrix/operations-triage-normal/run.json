@@ -1,0 +1,17 @@
+{
+  "id": "operations-triage-normal",
+  "skill": "provia-operations-triage",
+  "pluginVersion": "1.1.0",
+  "at": "2026-09-18T18:34:22.073Z",
+  "model": "sonnet",
+  "exitCode": 0,
+  "durationMs": 33733,
+  "costUsd": 0.22465380000000001,
+  "numTurns": 9,
+  "sessionId": "05ea2cca-3086-4aee-8ca9-a72a757c6e17",
+  "stopReason": "end_turn",
+  "toolCalls": 7,
+  "files": [],
+  "output": "tests/forward-evaluation/matrix/operations-triage-normal/",
+  "skillLoaded": true
+}

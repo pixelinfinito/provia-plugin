@@ -1,0 +1,70 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "workflow-em-alteracao",
+    "title": "Workflow change: revert required fields with open incidents (inputs pending)",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": "Not identified",
+    "sector": "Not identified",
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [
+    {
+      "key": "workflow-em-alteracao",
+      "name": "Workflow targeted by this change (real name pending)",
+      "prefix": "WF",
+      "file": null,
+      "status": "change_planned",
+      "sourceRefs": [],
+      "actions": [],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "No previous YAML, current live export, or provia-project.json was supplied in this session; the working directory was empty. This entry is a placeholder recording the change request, not a resolved design.",
+        "workflow-change-plan.md (next to this manifest) records the semantic conflict in the request, the pending impact assessment for the six open incidents, and the recovery plan skeleton.",
+        "Re-import of a previous YAML export creates a new draft lineage in Provia; it does not restore the original version history. See workflow-change-plan.md, section 'Re-import and version history'."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Which workflow is affected, what is its current published version, and what is the 'previous YAML' the request refers to? No workflow identity or YAML content was supplied in this session.",
+      "owner": "Process/workflow owner",
+      "status": "open"
+    },
+    {
+      "id": "D2",
+      "question": "What are the case IDs of the six open incidents, and what are the current values of the affected required fields on each of them? Their records are stated as unavailable.",
+      "owner": "Process owner / support",
+      "status": "open"
+    },
+    {
+      "id": "D3",
+      "question": "Which required fields, exactly (name, type, entity or workflow schema), should be reverted, and to which prior value or prior 'required' setting?",
+      "owner": "Workflow owner",
+      "status": "open"
+    },
+    {
+      "id": "D4",
+      "question": "Confirm whether the intent is a literal restoration of version history (not supported by Provia) or acceptance of a new draft lineage that reapplies the previous field design, with the six open cases handled by a separate recovery step.",
+      "owner": "Process owner",
+      "status": "open"
+    }
+  ],
+  "receipts": []
+}

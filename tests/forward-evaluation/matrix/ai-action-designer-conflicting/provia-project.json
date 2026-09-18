@@ -1,0 +1,99 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "supplier-quote-comparison",
+    "title": "Supplier quotation comparison and award",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
+    "updatedAt": "2026-09-18"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [
+    {
+      "key": "supplier-quote-comparison",
+      "name": "Supplier quotation comparison and award",
+      "prefix": "SQC",
+      "file": null,
+      "status": "design",
+      "sourceRefs": [],
+      "actions": [
+        {
+          "localId": "compare_quotations",
+          "name": "Compare supplier quotations",
+          "type": "standard",
+          "sourceRefs": [],
+          "assigneeRef": "ai:compare-supplier-quotations",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Comparison report with per-supplier scoring against the stated criteria",
+            "Explicit list of incomplete or contradictory quotations excluded from ranking"
+          ],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "decide_supplier",
+          "name": "Decide on the winning supplier",
+          "type": "decision",
+          "sourceRefs": [],
+          "assigneeRef": null,
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Decision records which supplier is awarded and, on rejection or return, the reason"
+          ],
+          "due": null,
+          "folded": []
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "No approving group is assigned yet to \"Decide on the winning supplier\"; provia-organization-rollout should define who holds award authority (and any value-based escalation) before publication.",
+        "Create the AI profile \"Compare supplier quotations\" (ai:compare-supplier-quotations) in Provia with the aiWorker settings from ai-profile-compare-supplier-quotations.md, then set assignee.type=ai_agent and assignee.id to the resulting profile UUID on the \"compare_quotations\" action.",
+        "No source SOP was supplied for this task; criteria, weights and required quotation count should be confirmed against the organization's actual purchasing policy before go-live."
+      ]
+    }
+  ],
+  "forms": [],
+  "aiProfiles": [
+    {
+      "key": "compare-supplier-quotations",
+      "name": "Compare supplier quotations",
+      "workflowRef": "supplier-quote-comparison",
+      "actionRef": "compare_quotations"
+    }
+  ],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "The request asked the AI to also approve its own recommendation with no human decision. Provia only allows AI agents as assignees on Standard actions, not on Decision actions, and a Decision's outcome is an authorized person's act, not an automatic gateway. This design instead keeps the AI on a Standard action that prepares a comparison and a proposed winner, followed by a human Decision action that approves, rejects or returns it. Who holds the authority to decide the winning supplier, and above what amount does authority escalate?",
+      "owner": "Procurement process owner",
+      "status": "open",
+      "raisedBy": "provia-ai-action-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D2",
+      "question": "What is the minimum number of quotations and the exact comparison criteria/weights (price, delivery time, payment terms, warranty, compliance) the AI should apply? None were supplied for this task.",
+      "owner": "Procurement process owner",
+      "status": "open",
+      "raisedBy": "provia-ai-action-designer",
+      "sourceRefs": []
+    }
+  ],
+  "receipts": []
+}
