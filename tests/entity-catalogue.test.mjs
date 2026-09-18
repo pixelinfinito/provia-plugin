@@ -143,3 +143,42 @@ test('readonly configuration text expands to its full content height', () => {
   const h = browserHarness();
   assert.equal(h.area.style.height, '162px');
 });
+
+function modernCatalogue() {
+  const data = sample(), fields = data.types[0].fields;
+  delete fields[1].defaultValue;
+  fields.push({ ...fields[0], key: 'reference', label: 'Referência', type: 'auto_number', example: 'FOR-0001', config: { prefix: 'FOR-', padding: 4, startAt: 1 } });
+  fields.push({ ...fields[1], key: 'reason', label: 'Motivo', example: 'assessment', config: { parentField: 'status' }, options: [{ value: 'assessment', label: 'Em avaliação', parentValue: 'pending' }, { value: 'approved', label: 'Aprovado', parentValue: 'active' }] });
+  return data;
+}
+test('renders auto-number configuration and dependent option bindings as copyable fields', () => {
+  const data = modernCatalogue(), result = run(data);
+  assert.equal(result.status, 0, result.stderr);
+  const cards = result.html.split('<script type="application/json"')[0].split('<details>')[0];
+  for (const label of ['prefix', 'padding', 'startAt', 'parentField', 'parentValue']) assert.ok(cards.includes(label), label);
+  assert.deepEqual(JSON.parse(result.html.match(/id="catalogue-data">([\s\S]*?)<\/script>/)[1]), data);
+});
+for (const [name, mutate] of [
+  ['required auto-number', f => f[2].required = true],
+  ['auto-number default', f => f[2].defaultValue = 'FOR-0001'],
+  ['invalid padding', f => f[2].config.padding = 0],
+  ['invalid prefix', f => f[2].config.prefix = '-FOR'],
+  ['invalid start', f => f[2].config.startAt = 0],
+  ['missing parent', f => f[3].config.parentField = 'missing'],
+  ['wrong parent type', f => f[1].type = 'multi_select'],
+  ['unlinked option', f => delete f[3].options[0].parentValue],
+  ['unknown parent value', f => f[3].options[0].parentValue = 'missing'],
+  ['child default', f => f[3].defaultValue = 'assessment'],
+  ['orphan binding', f => delete f[3].config.parentField],
+  ['mismatched child example', f => f[3].example = 'approved'],
+  ['self dependency', f => f[3].config.parentField = 'reason'],
+  ['cycle', f => { f[1].config = { parentField: 'reason' }; f[1].options.forEach(o => o.parentValue = 'assessment'); }],
+]) test(`rejects ${name} in an entity catalogue`, () => {
+  const data = modernCatalogue(); mutate(data.types[0].fields);
+  const result = run(data);
+  assert.notEqual(result.status, 0); assert.equal(result.html, null);
+});
+test('rejects an invalid dependent binding without auto-number fields', () => {
+  const data = modernCatalogue(); data.types[0].fields.splice(2, 1); data.types[0].fields[2].options[0].parentValue = 'missing';
+  assert.notEqual(run(data).status, 0);
+});

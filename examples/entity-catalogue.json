@@ -6,7 +6,8 @@
   "notes": [
     "Exemplo inteiramente sintético; cada campo tem uma utilização proposta. Não estabelece requisitos fiscais ou laborais.",
     "Ícones do snapshot 36772f7ce0831f0ea6f85a0e3e7849d32e576655. Confirmar disponibilidade no destino.",
-    "O catálogo e as prioridades não substituem a confirmação dos processos reais."
+    "O catálogo e as prioridades não substituem a confirmação dos processos reais.",
+    "Tipos e configurações de metadados verificados na revisão Provia 2641364d9c1aa0aa2b76aa788ef521bcb6218118; confirmar a versão de destino. A referência de ícones mantém a sua própria revisão documentada."
   ],
   "types": [
     {
@@ -21,16 +22,21 @@
         {
           "key": "customer_code",
           "label": "Código do cliente",
-          "type": "text",
+          "type": "auto_number",
           "group": "Identificação",
-          "helpText": "Conciliar a conta com o CRM usando o código existente.",
-          "purpose": "Conciliar a conta com o CRM usando o código existente.",
-          "example": "CLI-DEMO-001",
+          "helpText": "Referência comercial gerada pelo Provia ao guardar; não introduzir manualmente.",
+          "purpose": "Identificar clientes em comunicações comerciais quando seja necessária uma referência distinta do Nome.",
+          "example": "CLI-0001",
           "priority": "core",
           "required": false,
-          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
-          "maintainer": "Responsável pelo cadastro",
-          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais."
+          "source": "Gerado pelo Provia; proposta sintética a confirmar com a equipa.",
+          "maintainer": "Provia gera o valor; a equipa comercial define a configuração.",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais.",
+          "config": {
+            "prefix": "CLI-",
+            "padding": 4,
+            "startAt": 1
+          }
         },
         {
           "key": "legal_name",
@@ -87,6 +93,40 @@
               "label": "Organização sem fins lucrativos"
             }
           ]
+        },
+        {
+          "key": "service_profile",
+          "label": "Perfil de acompanhamento",
+          "type": "select",
+          "group": "Classificação",
+          "helpText": "Escolher um perfil compatível com o segmento. Classificação sintética a confirmar.",
+          "purpose": "Orientar o acompanhamento comercial por segmento.",
+          "example": "business_regular",
+          "priority": "core",
+          "required": false,
+          "source": "Origem proposta neste exemplo sintético; confirmar com a equipa responsável.",
+          "maintainer": "Responsável pelo cadastro",
+          "sensitivity": "Interna; confirmar acessos antes de recolher dados pessoais.",
+          "options": [
+            {
+              "value": "business_regular",
+              "label": "Acompanhamento empresarial",
+              "parentValue": "business"
+            },
+            {
+              "value": "public_regular",
+              "label": "Acompanhamento institucional",
+              "parentValue": "public"
+            },
+            {
+              "value": "nonprofit_regular",
+              "label": "Acompanhamento associativo",
+              "parentValue": "nonprofit"
+            }
+          ],
+          "config": {
+            "parentField": "segment"
+          }
         },
         {
           "key": "account_owner",
@@ -281,7 +321,10 @@
         "Exemplo sintético de cobertura, não um modelo obrigatório nem política confirmada.",
         "Confirmar responsáveis, vocabulários, fontes e acesso. Não existe sincronização configurada.",
         "Name é nativo. Estes campos não duplicam UUID, criador ou datas técnicas.",
-        "Percurso manual: criar Cliente Demonstração; completar contactos, responsável comercial e situação antes da contratação ou entrega. Conferir NIF e email de facturação quando houver facturação. Os dados desconhecidos não são obrigatórios na criação."
+        "Percurso manual: criar Cliente Demonstração; completar contactos, responsável comercial e situação antes da contratação ou entrega. Conferir NIF e email de facturação quando houver facturação. Os dados desconhecidos não são obrigatórios na criação.",
+        "O código de cliente deste exemplo pressupõe que o Provia atribui a referência comercial. Se o CRM atribui o código oficial, conservar text e o valor externo; não criar dois códigos sem necessidade.",
+        "Configurar Segmento antes de Perfil de acompanhamento e copiar cada parentValue. Não definir valor predefinido no campo dependente.",
+        "Configurar customer_code como auto_number, required false, sem valor predefinido. A sequência pode ter intervalos e não é exportada no YAML. Rever o preenchimento de registos existentes antes de adicionar este campo a um tipo já em uso."
       ],
       "readiness": [
         "Antes de contratar ou recrutar, confirmar identidade, responsável, situação e dados específicos da decisão. O campo de estado não bloqueia selecção automaticamente."

@@ -13,6 +13,8 @@ Business processes across the requested scope, business objects, sample records,
 
 ## Procedure
 
+Read [metadata field types and rules](../../references/metadata-fields.md) when defining or changing entity, workflow or form fields. Keep automatic numbering server-owned and dependent selections within one metadata schema. Check form-specific limits and migration effects.
+
 1. Read [practical entity design](../../references/entity-design.md). Design for functional completeness across the requested lifecycle, not the fewest fields. Review identity, classification, contacts/location, ownership/structure, status/lifecycle, dates, operational/commercial terms, relationships and evidence as applicable. Record coverage and explain exclusions; a Name plus external URL is sufficient only when it supports all stated uses. Justify each entity type by its identity, lifecycle and reuse in named processes. A conceptual business object does not automatically need a Provia entity. Prefer case metadata, form answers, documents, tags or the source system when these meet the need.
 2. Map native record Name, UUID and system timestamps before adding custom fields. Do not generate universal identifier, provenance, URL, version or verification fields. Retain real business codes and source references only for a concrete use; explain who maintains them.
 3. For every proposed type, provide a localized display name, a concise description ready to paste into Provia, a record Name pattern and an exact icon from [verified entity icons](../../references/entity-icons.json). Cite the snapshot revision and flag unverified destination differences. Do not invent icon identifiers or promise automatic controls in descriptions.

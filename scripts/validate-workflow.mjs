@@ -60,6 +60,16 @@ export function validateWorkflow(text) {
       }
     }
     dependencies(draft, '');
+    // The pinned product checks top-level defaults; also check the config-level form.
+    const configDefaultFields = (draft.fields ?? []).map(field => ({ ...field, defaultValue: field.config?.defaultValue }));
+    const configDefaultErrors = [
+      ...configDefaultFields.flatMap(field => engine.validateAutoNumberConfig(field)),
+      ...engine.collectDependentSchemaErrors(configDefaultFields),
+    ].filter(error => error.field.endsWith('.defaultValue'));
+    for (const error of configDefaultErrors) {
+      const index = configDefaultFields.findIndex(field => `${field.name}.defaultValue` === error.field);
+      report.errors.push(issue('metadata_config_default', `fields[${index}].config.defaultValue`, 'Generated and dependent fields cannot have a configured default.'));
+    }
     if (report.errors.length) return report;
     // The normalized draft is mandatory: the raw parse result has not passed scalar checks.
     if (hasPlaceholder) {

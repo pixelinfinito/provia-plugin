@@ -40,6 +40,9 @@ test('release is reproducible, has one root, both manifests, examples and offlin
     execFileSync('unzip', ['-q', path.join(a, zip), '-d', path.join(dir, 'extract')]);
     const result = JSON.parse(execFileSync(process.execPath, ['scripts/validate-workflow.mjs', 'examples/procurement/workflow.yaml'], { cwd: path.join(dir, 'extract/provia-skills'), encoding: 'utf8' }));
     assert.equal(result.valid, true);
+    const metadataResult = JSON.parse(execFileSync(process.execPath, ['scripts/validate-workflow.mjs', 'examples/metadata-fields.yaml'], { cwd: path.join(dir, 'extract/provia-skills'), encoding: 'utf8' }));
+    assert.equal(metadataResult.valid, true);
+    assert.equal(metadataResult.backendSchemaValidation, 'passed');
     const extracted = path.join(dir, 'extract/provia-skills');
     execFileSync(process.execPath, ['scripts/build-entity-catalogue.mjs', 'examples/entity-catalogue.json', '--output', path.join(dir, 'catalogue.html')], { cwd: extracted });
     assert.equal(fs.readFileSync(path.join(dir, 'catalogue.html'), 'utf8'), fs.readFileSync(path.join(extracted, 'examples/entity-catalogue.html'), 'utf8'));

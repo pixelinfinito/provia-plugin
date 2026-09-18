@@ -12,7 +12,7 @@ Use `examples/entity-catalogue.json` as a complete synthetic example. Adapt its 
 | Type | `key`, `name`, `description`, `icon`, `namePattern`, `purpose`, `owner`, `coverage`, `setup`, `readiness`, `fields` |
 | Coverage entry | `dimension`, `decision` (`included`, `external`, `case`, `not_applicable` or `pending`), `reason` |
 | Field | `key`, `label`, `type`, `required` (boolean), `group`, `helpText`, `purpose`, `priority` (`core`, `conditional`, `optional`), `source`, `maintainer`, `sensitivity`, `example` |
-| Select / multi-select | Also `options`, an array of distinct `{ "value": "stable_value", "label": "Localized label" }` objects |
+| Select / multi-select | Also `options`, an array of distinct `{ "value": "stable_value", "label": "Localized label" }` objects; dependent options also require `parentValue` |
 | Entity field | Also `targetType`, the key of a type in this catalogue; this is not a destination UUID |
 
 `setup` and `readiness` are text arrays. Record sources, assumptions, field dispositions, permissions, dependencies and manual-entry walkthroughs there or in catalogue `notes`, so they remain visible in the HTML. `coverage` explains business completeness; nonempty coverage alone does not prove it. Record the inspected icon snapshot revision in `notes` and mark destination verification pending when applicable.
@@ -21,7 +21,7 @@ Keys and option values use lowercase ASCII snake_case. Display names, help text,
 
 If an entity target already exists, include its type in the catalogue with a setup note stating that it must be reused and its existing schema verified, not recreated. Create or resolve types first, then configure relations and record entry. This also handles cyclic references without inventing an impossible creation order.
 
-The renderer shows core field properties directly and preserves the entire input JSON for download. Document any additional Provia field configuration (for example rating bounds, accepted file types or currency settings) in that field's `helpText` or type `setup`; do not silently place essential manual instructions in an extra JSON property that the HTML only exposes in its JSON panel.
+Use optional field `config` for Provia settings, including automatic-number `prefix`, `suffix`, `padding`, `startAt`, or a dependent select's `parentField`. Keep editorial `options` and `defaultValue` at field level, never duplicate them inside `config`. Read [metadata fields](metadata-fields.md) for all 19 types and the new rules. The renderer exposes every config entry and option `parentValue` as copyable values, and preserves the full JSON for download. Explain configuration choices in `helpText` or type `setup`.
 
 ## Commands
 
@@ -32,7 +32,7 @@ node scripts/build-entity-catalogue.mjs catalogue.json --check
 node scripts/build-entity-catalogue.mjs catalogue.json --output catalogue.html
 ```
 
-The output directory must already exist. Validation checks the editorial shape, unique type/field keys, supported icon and field identifiers, related catalogue types, select examples/defaults and basic number/boolean/string shapes. It does not certify business completeness, every Provia field configuration, date/URL syntax, permissions, destination IDs or legal compliance. Run the workflow validator separately if producing workflow YAML.
+The output directory must already exist. Validation checks the editorial shape, unique type/field keys, supported icon and field identifiers, related catalogue types, select examples/defaults, basic number/boolean/string shapes, config schema, automatic-number restrictions, dependent parent chains and matching parent/child examples. It does not certify business completeness, every Provia field configuration, date/URL syntax, permissions, destination IDs or legal compliance. Run the workflow validator separately if producing workflow YAML.
 
 The generated HTML runs offline with no external libraries. It includes navigation, search, complete field cards, copy controls for names/descriptions/icons/keys/labels/help/options, coverage and setup notes, type JSON and a full JSON download. Copy first uses the clipboard API; when unavailable, it selects the text and attempts the browser copy fallback. A visible message says when keyboard copying is required. It never connects to or creates data in Provia.
 

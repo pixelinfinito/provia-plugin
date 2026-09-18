@@ -13,6 +13,8 @@ Procedure, start/end conditions, roles, approval rules, required evidence and ex
 
 ## Procedure
 
+Read [metadata field types and rules](../../references/metadata-fields.md) when defining or changing entity, workflow or form fields. Keep automatic numbering server-owned and dependent selections within one metadata schema. Check form-specific limits and migration effects.
+
 1. Extract explicit requirements with references to sections of the supplied procedure. Separate executor, expected work, deadline and evidence. Read and apply [action writing](../../references/action-writing.md); name the expected work instead of copying the actor-led sentence or first phrase. Mark recommendations separately.
 2. Choose Standard, Decision, Notification, Wait, HTTP Request, Sub-workflow or Form Fill by the required outcome. AI is an assignee on Standard actions.
 3. Use sequential ordering for actual dependencies and parallel execution only for independent work. Model rework and rejection explicitly with supported decision outcomes.

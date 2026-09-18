@@ -13,6 +13,8 @@ Respondents, desired answers, process stage, access constraints, uploads and res
 
 ## Procedure
 
+Read [metadata field types and rules](../../references/metadata-fields.md) when defining or changing entity, workflow or form fields. Keep automatic numbering server-owned and dependent selections within one metadata schema. Check form-specific limits and migration effects.
+
 When there is a Form Fill task, specify both the form title and the action name. Read [action writing](../../references/action-writing.md): the form may have a noun title, but the action names what the respondent must do. Preserve bindings, mappings and response policy when improving wording.
 
 1. Decide whether submission creates an incident or supplies evidence to an existing one. Use intake Form versus Form Fill accordingly.

@@ -1,0 +1,70 @@
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: Pedido de serviço
+  prefix: SERV
+  description: Exemplo sintético de referência automática e classificação dependente para uma equipa em Angola.
+triggers:
+  - type: manual
+    label: Iniciar pedido
+    enabled: true
+    config: {}
+fields:
+  - name: service_reference
+    label: Referência de serviço
+    type: auto_number
+    required: false
+    config:
+      prefix: SRV-
+      padding: 5
+      startAt: 1
+  - name: category
+    label: Categoria
+    type: select
+    required: true
+    config:
+      options:
+        - value: support
+          label: Apoio
+        - value: maintenance
+          label: Manutenção
+  - name: service_type
+    label: Tipo de serviço
+    type: select
+    required: true
+    config:
+      parentField: category
+      options:
+        - value: remote_support
+          label: Apoio remoto
+          parentValue: support
+        - value: preventive
+          label: Manutenção preventiva
+          parentValue: maintenance
+  - name: deliverables
+    label: Resultados esperados
+    type: multi_select
+    required: false
+    config:
+      parentField: category
+      options:
+        - value: diagnosis
+          label: Diagnóstico
+          parentValue: support
+        - value: inspection
+          label: Inspecção
+          parentValue: maintenance
+        - value: maintenance_report
+          label: Relatório de manutenção
+          parentValue: maintenance
+entities:
+  mode: none
+actions:
+  - id: review
+    name: Rever o pedido de serviço
+    type: standard
+    description: Confirmar a classificação e os resultados esperados antes de encaminhar o pedido. Exemplo de responsabilidade simplificada; definir a equipa no destino.
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator

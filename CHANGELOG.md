@@ -1,5 +1,13 @@
 # Changelog
 
+## 1.0.6
+
+- Refresh the YAML contract engine and source fingerprints to Provia `2641364d9c1aa0aa2b76aa788ef521bcb6218118`.
+- Support all 19 entity/workflow metadata types, including `auto_number`, and dependent `select`/`multi_select` configuration.
+- Reject forbidden generated/dependent defaults inside `config.defaultValue` as well as at field level.
+- Validate generated-number settings, parent chains, option bindings and catalogue example consistency using bundled product rules. Expose configuration and parent bindings in copy-ready HTML.
+- Document counter lifecycle, import limits, form-specific restrictions and schema-change effects. Add matching synthetic catalogue and workflow examples.
+
 ## 1.0.5
 
 The information-model skill now requires functional completeness across the requested lifecycle, with core, conditional and optional fields separate from creation-time requirements. Existing systems remain authoritative without reducing Provia types to source links. Catalogue deliveries include matching JSON and standalone HTML with search, navigation, copy controls and JSON download. Adds the offline `build-entity-catalogue.mjs` renderer and editorial checks, a synthetic complete-catalogue example and regression tests. The workflow YAML contract and its validators are unchanged.

@@ -27,7 +27,20 @@ const aiValidation = tree.statements.filter(node => {
   return ts.isVariableStatement(node) && node.declarationList.declarations.some(d => functions.has(d.name.getText(tree)));
 }).map(node => node.getText(tree)).join('\n');
 if (aiValidation.match(/(?:const|function) /g)?.length < 4) throw new Error('AI validation extraction changed; review the source contract');
+// Extract only pure validation declarations; the sequence module also imports database services.
+const sequenceFile = path.join(sourceRoot, 'backend/src/lib/metadata-sequence.ts');
+const sequenceNames = new Set(['AUTO_NUMBER_MAX_PADDING', 'AUTO_NUMBER_AFFIX_PATTERN', 'isAutoNumberField', 'validateAutoNumberConfig']);
+const sequenceTree = ts.createSourceFile(sequenceFile, fs.readFileSync(sequenceFile, 'utf8'), ts.ScriptTarget.Latest, true, ts.ScriptKind.TS);
+const sequenceNodes = sequenceTree.statements.filter(node => {
+  if (ts.isFunctionDeclaration(node)) return sequenceNames.has(node.name?.text);
+  return ts.isVariableStatement(node) && node.declarationList.declarations.some(d => sequenceNames.has(d.name.getText(sequenceTree)));
+});
+if (sequenceNodes.length !== sequenceNames.size) throw new Error('Auto-number validation extraction changed; review the source contract');
+const sequenceValidation = sequenceNodes.map(node => node.getText(sequenceTree)).join('\n');
 const entry = `
+export { metadataFieldSchema } from './backend/src/lib/validation';
+export { validateAutoNumberConfig } from './backend/src/lib/metadata-sequence';
+export { collectDependentSchemaErrors, collectDependentValueErrors } from './backend/src/lib/dependent-options';
 export { parseYamlToDraft } from './frontend/src/lib/workflow-io/parse';
 export { validateWorkflowDraft } from './frontend/src/lib/workflow-io/validate';
 export { buildImportPlan, planToImportRequest } from './frontend/src/lib/workflow-io/create';
@@ -47,6 +60,7 @@ const result = await build({
   banner: { js: "import { createRequire } from 'node:module'; const require = createRequire(import.meta.url);" },
   alias: { '@': path.join(sourceRoot, 'frontend/src') },
   plugins: [{ name: 'pure-ai-validation', setup(builder) {
+    builder.onLoad({ filter: /metadata-sequence\.ts$/ }, () => ({ contents: sequenceValidation, loader: 'ts' }));
     builder.onLoad({ filter: /AIAgentConfig\.tsx$/ }, () => ({ contents: aiValidation, loader: 'ts' }));
   } }],
 });
@@ -64,6 +78,7 @@ for (const input of Object.keys(result.metafile.inputs)) {
     if (fs.existsSync(path.join(dir, 'package.json'))) packages.set(dir, JSON.parse(fs.readFileSync(path.join(dir, 'package.json'), 'utf8')));
   }
 }
+sources['backend/src/lib/metadata-sequence.ts'] = sha(fs.readFileSync(sequenceFile));
 sources['frontend/src/components/action/AIAgentConfig.tsx'] = sha(fs.readFileSync(aiFile));
 const revision = execFileSync('git', ['rev-parse', 'HEAD'], { cwd: sourceRoot, encoding: 'utf8' }).trim();
 fs.writeFileSync(path.join(root, 'contracts/workflow-v1/contract-lock.json'), JSON.stringify({

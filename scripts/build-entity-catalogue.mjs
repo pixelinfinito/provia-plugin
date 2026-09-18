@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, extname } from 'node:path';
+import { metadataFieldSchema, validateAutoNumberConfig, collectDependentSchemaErrors, collectDependentValueErrors } from '../contracts/workflow-v1/engine.mjs';
 
 const icons = new Set(JSON.parse(readFileSync(new URL('../references/entity-icons.json', import.meta.url), 'utf8')).icons);
-const fieldTypes = new Set(['text', 'number', 'date', 'datetime', 'boolean', 'select', 'multi_select', 'url', 'email', 'phone', 'currency', 'user', 'entity', 'file', 'rich_text', 'color', 'rating', 'percentage']);
+const fieldTypes = new Set(metadataFieldSchema.shape.type.options);
 const text = value => typeof value === 'string' && value.trim().length > 0;
 const key = value => text(value) && /^[a-z][a-z0-9_]*$/.test(value);
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -40,6 +41,10 @@ function validate(catalogue) {
       fields.add(field.key);
       for (const name of ['label', 'group', 'helpText', 'purpose', 'source', 'maintainer', 'sensitivity']) ensure(text(field[name]), `${loc}.${name}`);
       ensure(fieldTypes.has(field.type), `${loc}.type`);
+      if (Object.hasOwn(field, 'config')) {
+        ensure(object(field.config), `${loc}.config`);
+        ensure(!Object.hasOwn(field.config, 'options') && !Object.hasOwn(field.config, 'defaultValue'), `${loc}: use top-level options/defaultValue in the editorial catalogue`);
+      }
       ensure(typeof field.required === 'boolean', `${loc}.required`);
       ensure(['core', 'conditional', 'optional'].includes(field.priority), `${loc}.priority`);
       ensure(Object.hasOwn(field, 'example'), `${loc}.example`);
@@ -62,9 +67,21 @@ function validate(catalogue) {
         const value = field[property];
         if (['number', 'currency', 'rating', 'percentage'].includes(field.type)) ensure(typeof value === 'number' && Number.isFinite(value), `${loc}.${property}`);
         if (field.type === 'boolean') ensure(typeof value === 'boolean', `${loc}.${property}`);
-        if (['text', 'date', 'datetime', 'url', 'email', 'phone', 'rich_text', 'color'].includes(field.type)) ensure(typeof value === 'string', `${loc}.${property}`);
+        if (['text', 'date', 'datetime', 'url', 'email', 'phone', 'rich_text', 'color', 'auto_number'].includes(field.type)) ensure(typeof value === 'string', `${loc}.${property}`);
       }
     }
+    const schema = type.fields.map(field => ({
+      name: field.key, label: field.label, type: field.type, required: field.required,
+      ...(Object.hasOwn(field, 'defaultValue') ? { defaultValue: field.defaultValue } : {}),
+      config: { ...field.config, ...(field.options ? { options: field.options } : {}) },
+    }));
+    for (const field of schema) {
+      ensure(metadataFieldSchema.safeParse(field).success, `${at}.${field.name}.config`);
+      ensure(validateAutoNumberConfig(field).length === 0, `${at}.${field.name}: invalid auto-number configuration`);
+    }
+    ensure(collectDependentSchemaErrors(schema).length === 0, `${at}: invalid dependent select definition`);
+    const examples = Object.fromEntries(type.fields.map(field => [field.key, field.example]));
+    ensure(collectDependentValueErrors(examples, schema).length === 0, `${at}: dependent examples do not match their parent selections`);
   }
 }
 
@@ -108,8 +125,8 @@ function render(catalogue) {
     <h3>${labels.fields}</h3>${type.fields.map(field => `<article><h4>${escape(field.label)} <small>${escape(field.group)}</small></h4>
       <p>${escape(labels[field.priority])} · ${labels.required}: ${field.required ? labels.yes : labels.no} · ${escape(field.type)}</p>
       <div class="grid">${box(labels.key, field.key)}${box(labels.label, field.label)}${box(labels.type, field.type)}${box(labels.group, field.group)}${box(labels.helpText, field.helpText)}${box(labels.example, field.example)}
-      ${field.targetType ? box(labels.target, field.targetType) : ''}${Object.hasOwn(field, 'defaultValue') ? box(labels.defaultValue, field.defaultValue) : ''}</div>
-      ${(field.options ?? []).map(option => `<div class="grid option">${box(labels.optionValue, option.value)}${box(labels.optionLabel, option.label)}</div>`).join('')}
+      ${Object.entries(field.config ?? {}).map(([name, value]) => box('config.' + name, value)).join('')}${field.targetType ? box(labels.target, field.targetType) : ''}${Object.hasOwn(field, 'defaultValue') ? box(labels.defaultValue, field.defaultValue) : ''}</div>
+      ${(field.options ?? []).map(option => `<div class="grid option">${box(labels.optionValue, option.value)}${box(labels.optionLabel, option.label)}${Object.hasOwn(option, 'parentValue') ? box('parentValue', option.parentValue) : ''}</div>`).join('')}
       <dl>${['purpose', 'source', 'maintainer', 'sensitivity'].map(name => `<dt>${labels[name]}</dt><dd>${escape(field[name])}</dd>`).join('')}</dl></article>`).join('')}
     <h3>${labels.coverage}</h3><ul>${type.coverage.map(entry => `<li><strong>${escape(entry.dimension)}</strong>: ${escape(labels[entry.decision])}. ${escape(entry.reason)}</li>`).join('')}</ul>
     ${list(labels.setup, type.setup)}${list(labels.readiness, type.readiness)}<details><summary>${labels.json}</summary>${box(labels.json, type)}</details></section>`).join('');

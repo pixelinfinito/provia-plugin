@@ -216,6 +216,8 @@ That command belongs to Claude Code, not to this repository. It validates the pl
 
 ## Entity catalogue JSON and manual setup HTML
 
+Entity and workflow metadata now support 19 types, including `auto_number`. Dependent choices use `select` or `multi_select` with `config.parentField` and option `parentValue`. Read [metadata field rules](references/metadata-fields.md) for constraints, counter lifecycle, forms and migrations. The [workflow example](examples/metadata-fields.yaml) and entity catalogue demonstrate both features.
+
 For catalogue creation or revision, `provia-information-model` delivers both `catalogue.json` and `catalogue.html`. Core fields can remain optional at creation when collected later. External sources do not replace operational attributes needed inside Provia.
 
 ```bash
@@ -225,7 +227,7 @@ node scripts/build-entity-catalogue.mjs catalogue.json --output catalogue.html
 node scripts/build-entity-catalogue.mjs examples/entity-catalogue.json --output example.html
 ```
 
-Open the HTML locally. Search types/fields, copy configuration values and option labels/values, and download the matching JSON. Clipboard fallback selects the text for keyboard copying when needed. The script runs offline with Node.js 20.11+. Its checks cover the editorial format, identifiers, field types, relationships and select values; they do not certify business completeness or destination configuration. This JSON is not a Provia import contract. See [catalogue format and checks](references/entity-catalogue-format.md).
+Open the HTML locally. Search types/fields, copy configuration values and option labels/values, and download the matching JSON. Clipboard fallback selects the text for keyboard copying when needed. The script runs offline with Node.js 20.11+. Its checks cover the editorial format, identifiers, field types, relationships, automatic-number configuration and dependent selections; they do not certify business completeness or destination configuration. This JSON is not a Provia import contract. See [catalogue format and checks](references/entity-catalogue-format.md).
 
 
 ## Validate a workflow

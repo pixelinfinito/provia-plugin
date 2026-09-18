@@ -4,6 +4,8 @@ Baseline: workflow contract revision recorded in contracts/workflow-v1/contract-
 
 A Workflow defines a repeatable process. An Incident is one execution of a workflow. An Action is one step. Entities hold reusable business records, metadata holds structured case values, tags classify records, and pages/files/comments provide explanation and evidence. Explain “incident” as a process case when the business context is not emergency response.
 
+Entity and workflow metadata support the [19 field types](metadata-fields.md), including server-generated `auto_number` and dependent selections configured on `select`/`multi_select`. Form schemas have separate limits.
+
 Supported action types: Standard, Decision, Sub-workflow, Notification, Wait, HTTP Request and Form Fill. AI agents are assignees on Standard actions. Decisions have named outcomes: continue, cancel the incident, trigger another workflow or return to an action. Do not promise arbitrary BPMN gateways or automatic value-based branching. Standard actions should say what evidence proves completion.
 
 Manual, email, webhook and schedule triggers are portable. Form intake creates an incident through a separately configured form. Form Fill collects answers inside an incident. Single responses may map values; multiple responses remain separate for review and cannot map competing values to incident metadata. Form definitions and links require setup outside YAML.

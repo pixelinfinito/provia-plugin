@@ -85,3 +85,66 @@ test('omitted ownership is a visible setup requirement, not publication readines
   assert.equal(result.valid, true);
   assert.ok(result.setupRequired.some(x => x.code === 'assignment_missing'));
 });
+
+function modernFields() {
+  return [
+    { name: 'reference', label: 'Referência', type: 'auto_number', required: false, config: { prefix: 'REQ-', padding: 5, startAt: 10 } },
+    { name: 'category', label: 'Categoria', type: 'select', required: false, config: { options: [{ value: 'service', label: 'Serviço' }, { value: 'goods', label: 'Bens' }] } },
+    { name: 'detail', label: 'Detalhe', type: 'multi_select', required: false, config: { parentField: 'category', options: [{ value: 'support', label: 'Apoio', parentValue: 'service' }] } },
+  ];
+}
+test('accepts auto-number and dependent multi-select fields in a portable workflow', () => {
+  const data = workflow(); data.fields = modernFields();
+  const result = check(data);
+  assert.equal(result.valid, true, JSON.stringify(result));
+  assert.equal(result.backendSchemaValidation, 'passed');
+});
+for (const [name, mutate] of [
+  ['required auto-number', f => f[0].required = true],
+  ['auto-number default', f => f[0].defaultValue = 'REQ-00010'],
+  ['invalid padding', f => f[0].config.padding = 11],
+  ['fractional start', f => f[0].config.startAt = 1.5],
+  ['invalid affix', f => f[0].config.prefix = '-REQ'],
+  ['missing parent', f => f[2].config.parentField = 'missing'],
+  ['multi-select parent', f => f[1].type = 'multi_select'],
+  ['unlinked child option', f => delete f[2].config.options[0].parentValue],
+  ['unknown parent option', f => f[2].config.options[0].parentValue = 'missing'],
+  ['dependent default', f => f[2].defaultValue = ['support']],
+  ['orphan parent value', f => delete f[2].config.parentField],
+  ['self dependency', f => f[2].config.parentField = 'detail'],
+]) test(`rejects ${name} in workflow metadata`, () => {
+  const data = workflow(); data.fields = modernFields(); mutate(data.fields);
+  assert.equal(check(data).valid, false);
+});
+test('rejects an unknown dependent parent even without auto-number fields', () => {
+  const data = workflow(); data.fields = modernFields().slice(1); data.fields[1].config.parentField = 'missing';
+  assert.equal(check(data).valid, false);
+});
+test('preserves automatic-number and dependent configurations through import conversion', async () => {
+  const engine = await import('../contracts/workflow-v1/engine.mjs');
+  const data = workflow(); data.fields = modernFields();
+  const parsed = engine.parseYamlToDraft(JSON.stringify(data));
+  const validated = engine.validateWorkflowDraft(parsed.draft, {}, parsed.lineOf);
+  const request = engine.planToImportRequest(engine.buildImportPlan(validated.draft, { prefix: 'COMP', secretValues: {} }));
+  const result = engine.importWorkflowPlanSchema.parse(request);
+  for (const field of data.fields) {
+    const converted = result.workflow.metadataSchema.find(f => f.name === field.name);
+    assert.equal(converted.type, field.type);
+    assert.deepEqual(converted.config, field.config);
+  }
+});
+test('rejects a dependency cycle in workflow fields', () => {
+  const data = workflow(); data.fields = modernFields().slice(1);
+  data.fields[1].type = 'select';
+  data.fields[0].config.parentField = 'detail';
+  data.fields[0].config.options.forEach(o => o.parentValue = 'support');
+  assert.equal(check(data).valid, false);
+});
+for (const [name, index, value] of [['auto-number', 0, 'REQ-00010'], ['dependent', 2, ['support']]]) {
+  test(`rejects ${name} config defaults even when the top-level default is empty`, () => {
+    const data = workflow(); data.fields = modernFields();
+    data.fields[index].defaultValue = null;
+    data.fields[index].config.defaultValue = value;
+    assert.equal(check(data).valid, false);
+  });
+}

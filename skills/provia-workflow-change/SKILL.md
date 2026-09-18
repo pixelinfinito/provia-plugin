@@ -13,6 +13,8 @@ Current and proposed designs, active-incident evidence, affected fields/integrat
 
 ## Procedure
 
+Read [metadata field types and rules](../../references/metadata-fields.md) when defining or changing entity, workflow or form fields. Keep automatic numbering server-owned and dependent selections within one metadata schema. Check form-specific limits and migration effects.
+
 For action wording changes, read [action writing](../../references/action-writing.md). Review names semantically and compare the export before and after. Keep editorial corrections separate from proposed changes to routing, assignments, forms, external operations or permissions.
 
 1. Compare intended behavior, owners, decisions, fields, forms and integrations. Explain business effects instead of only listing YAML line changes.
