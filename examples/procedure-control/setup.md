@@ -1,6 +1,6 @@
 # Revisão de procedimento — exemplo: Entrega de configuração
 
-Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.1.0, 2026-09-18).
+Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.1.1, 2026-09-19).
 
 ## Estado
 

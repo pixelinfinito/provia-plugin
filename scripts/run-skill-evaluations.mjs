@@ -210,7 +210,12 @@ if (process.argv[1] && path.resolve(process.argv[1]) === fileURLToPath(import.me
       if (!outcome) continue;
       const target = cases.find(item => item.id === entry.id);
       target.run = outcome.record;
-      if (outcome.judge) { target.judge = { at: outcome.judge.at, model: outcome.judge.model, verdict: outcome.judge.verdict, reasons: outcome.judge.reasons, violations: outcome.judge.violations }; target.status = outcome.judge.verdict === 'pass' ? 'passed' : outcome.judge.verdict === 'fail' ? 'failed' : 'unclear'; }
+      if (outcome.judge) {
+        target.judge = { at: outcome.judge.at, model: outcome.judge.model, verdict: outcome.judge.verdict, reasons: outcome.judge.reasons, violations: outcome.judge.violations };
+        target.status = outcome.judge.verdict === 'pass' ? 'passed' : outcome.judge.verdict === 'fail' ? 'failed' : 'unclear';
+        // A run that never read the skill is not evidence about the skill, whatever the model did on its own.
+        if (target.status === 'passed' && !outcome.record.skillLoaded) { target.status = 'unclear'; target.judge.note = 'Behaviour matched the expectation, but the run never loaded the skill; not evidence for the skill instructions.'; }
+      }
       else target.status = outcome.record.finished ? 'run' : 'error';
       if (!outcome.record.finished) { target.status = 'error'; delete target.judge; }
       if (target.status !== 'failed') delete target.triage;

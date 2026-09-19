@@ -2,6 +2,7 @@ import { test } from 'node:test';
 import assert from 'node:assert/strict';
 import fs from 'node:fs';
 import path from 'node:path';
+import os from 'node:os';
 import { spawnSync } from 'node:child_process';
 import { parseStream, casePrompt, statusTable } from '../scripts/run-skill-evaluations.mjs';
 
@@ -49,3 +50,37 @@ test('skillLoaded detects a Skill call or a read of the SKILL.md', async () => {
   assert.equal(skillLoaded([{ tool: 'Read', input: '/x/references/next-step.md' }], 'provia-diagnose'), false);
   assert.equal(skillLoaded([], 'provia-diagnose'), false);
 });
+
+for (const loaded of [false, true]) {
+  test(`evaluation CLI records a passing judgement with skillLoaded=${loaded} correctly`, () => {
+    const dir = fs.realpathSync(fs.mkdtempSync(path.join(os.tmpdir(), 'provia-evaluation-status-')));
+    try {
+      fs.mkdirSync(path.join(dir, 'scripts'));
+      fs.mkdirSync(path.join(dir, 'tests'));
+      fs.copyFileSync(path.join(root, 'scripts/run-skill-evaluations.mjs'), path.join(dir, 'scripts/run-skill-evaluations.mjs'));
+      fs.copyFileSync(path.join(root, 'package.json'), path.join(dir, 'package.json'));
+      const matrix = path.join(dir, 'tests/skill-evaluations.json');
+      fs.writeFileSync(matrix, JSON.stringify([{ id: 'fixture', skill: 'provia-process-knowledge', prompt: 'Review the exception.', expected: 'Keep the policy unchanged.', status: 'not_run' }]));
+      const cli = path.join(dir, 'fixture-cli.mjs');
+      fs.writeFileSync(cli, `#!/usr/bin/env node
+const judge = process.argv[process.argv.indexOf('--output-format') + 1] === 'json';
+if (judge) console.log(JSON.stringify({ result: JSON.stringify({ verdict: 'pass', reasons: ['Fixture judgement'], violations: [] }) }));
+else {
+  if (${loaded}) console.log(JSON.stringify({ type: 'assistant', message: { content: [{ type: 'tool_use', id: 'read-skill', name: 'Read', input: { file_path: '/plugin/skills/provia-process-knowledge/SKILL.md' } }] } }));
+  console.log(JSON.stringify({ type: 'result', result: 'Keep the policy unchanged.', stop_reason: 'end_turn', num_turns: 1 }));
+}
+`);
+      fs.chmodSync(cli, 0o755);
+      const run = spawnSync(process.execPath, [path.join(dir, 'scripts/run-skill-evaluations.mjs'), '--only', 'fixture', '--judge'], {
+        encoding: 'utf8', env: { ...process.env, CLAUDE_CLI: cli }, timeout: 15000,
+      });
+      assert.equal(run.status, 0, run.stderr);
+      const [record] = JSON.parse(fs.readFileSync(matrix, 'utf8'));
+      assert.equal(record.run.skillLoaded, loaded);
+      assert.equal(record.judge.verdict, 'pass');
+      assert.equal(record.status, loaded ? 'passed' : 'unclear');
+      if (!loaded) assert.match(record.judge.note, /never loaded the skill/);
+      assert.equal(fs.existsSync(path.join(dir, 'tests/forward-evaluation/matrix/fixture/run.json')), true);
+    } finally { fs.rmSync(dir, { recursive: true, force: true }); }
+  });
+}

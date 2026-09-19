@@ -1,5 +1,11 @@
 # Changelog
 
+## 1.1.1
+
+- Record a passing model judgement as `unclear` when the evaluation did not load the skill. Add CLI regression coverage for both loaded and unloaded runs.
+- Include the successful 19 September rerun of `process-knowledge-conflicting`, with the skill loaded and its generated review and project manifest. All 48 preserved evaluations now record skill loading.
+- The 16 skill instructions, shared references and YAML engine are unchanged. Evaluation records retain their actual `1.1.0` run version; the full matrix was not rerun for this reporting-only patch. The documentation ZIP uses the explicit stale-evaluation override and records `evaluationGate: bypassed`, rather than claiming fresh 1.1.1 evaluations.
+
 ## 1.1.0
 
 Release 1.1 of the business improvement plan: the plugin becomes an implementer toolkit with one project spine, executable action briefs and a measured evaluation loop. The YAML contract engine, fingerprints and validator are unchanged.

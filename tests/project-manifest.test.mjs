@@ -22,7 +22,7 @@ test('every bundled example has a manifest that checks clean against its workflo
     const { errors, warnings } = checkManifest(manifest, path.join(root, 'examples', name));
     assert.deepEqual(errors, [], `${name}: ${JSON.stringify(errors)}`);
     assert.deepEqual(warnings, [], `${name}: ${JSON.stringify(warnings)}`);
-    assert.equal(manifest.project.generator, 'provia-skills/1.1.0');
+    assert.equal(manifest.project.generator, `provia-skills/${JSON.parse(fs.readFileSync(path.join(root, 'package.json'), 'utf8')).version}`);
   }
 });
 

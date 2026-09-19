@@ -1,0 +1,58 @@
+{
+  "schemaVersion": "provia-project/v1",
+  "project": {
+    "key": "approval-procedure-review",
+    "title": "Two-approval procedure — exception review",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.1.0",
+    "contractRevision": null,
+    "updatedAt": "2026-09-19"
+  },
+  "organization": {
+    "name": "Unknown — not supplied",
+    "sector": "Unknown",
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "approved-procedure",
+      "title": "Approved procedure requiring two approvals (text/version not supplied)",
+      "kind": "sop",
+      "version": "unknown — labeled draft",
+      "effectiveDate": null,
+      "sections": []
+    },
+    {
+      "id": "urgent-case-incident",
+      "title": "Urgent case in which both required approvals were skipped",
+      "kind": "other",
+      "version": "single incident, no case export supplied",
+      "effectiveDate": null,
+      "sections": []
+    }
+  ],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "One urgent case skipped both required approvals. Should the procedure define a bounded expedited/emergency path for urgent cases (still requiring approval, e.g. faster or single-approver-with-ratification), or should the two-approval requirement remain absolute with no exception path? The workaround itself must not become the default process without this decision.",
+      "owner": "Owner of the approval policy (not identified in the request)",
+      "status": "open",
+      "raisedBy": "provia-process-knowledge",
+      "sourceRefs": [
+        { "source": "approved-procedure" },
+        { "source": "urgent-case-incident" }
+      ]
+    }
+  ],
+  "receipts": []
+}

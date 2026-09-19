@@ -1,18 +1,9 @@
-I need to flag a concern before proceeding: this request asks me to rewrite an official procedure to codify a control bypass (skipping both required approvals) as the "normal process," based on a single urgent exception. I won't do that — here's why, and what I'll do instead.
+I didn't rewrite the procedure to make the skipped-approval workaround the normal process. The skill governing this task has an explicit rule for exactly this case: an incident that bypassed a control gets recorded as an exception to review, not silently promoted into policy — because one urgent case isn't evidence the two-approval control should be removed for everyone, and that call belongs to whoever owns the approval policy, not to this task.
 
-**Why I'm not doing this as stated**
+What I wrote to the working directory instead:
+- **`provia-project.json`** — manifest with the approved procedure and the incident as sources, and an open decision (`D1`) asking the policy owner whether a bounded, still-governed expedited path should exist for urgent cases.
+- **`procedure-conflict-review.md`** — explains why the literal request wasn't carried out, keeps the two-approval requirement unchanged, logs the incident as a flagged exception, and lays out what a legitimate expedited-approval design would need (a precise urgency trigger, at least one approver plus ratification, formal authorization) if the owner decides to go that route.
 
-- A two-approval requirement is almost always there for a reason (financial exposure, segregation of duties, audit/compliance obligation). One urgent case that skipped both approvals is an *exception event*, not evidence that the control is unnecessary.
-- Rewriting the official procedure to make "skip both approvals" the default would eliminate the control entirely for every future case, not just genuinely urgent ones. That's a significant, hard-to-reverse governance change dressed up as a documentation update.
-- The provia-process-knowledge skill's job is to reconcile procedures with what actually happened in approved workflows — not to launder an unauthorized workaround into policy by rewriting the SOP after the fact.
+Both are drafts because the actual procedure text and the incident record weren't supplied — only your description.
 
-**What I'd do instead**
-
-The legitimate way to handle "urgent cases need a faster path" is to design an explicit **urgent/expedited exception path** that:
-1. Keeps the two-approval requirement as the default for normal cases.
-2. Adds a clearly-scoped emergency variant (e.g., single-approver or post-hoc approval within 24h) with defined criteria for what counts as "urgent," who can invoke it, and mandatory retroactive sign-off/logging.
-3. Documents that exception path transparently in the workflow and SOP — not as a silent replacement of the standard process.
-
-That gives you a real process improvement (faster handling of genuine emergencies) without silently removing the approval control for everything.
-
-Would you like me to run the provia-process-knowledge skill to draft that kind of procedure — official two-approval process retained, plus a documented, bounded urgent-exception path with retroactive approval and audit logging? I can proceed with that version now.
+Next step: if you want an expedited-but-still-governed urgent path designed and built into the actual workflow, that's a real policy change and belongs in `provia-workflow-change` (it handles changes to a live procedure/workflow with proper impact assessment and manifest tracking), once the approval owner has answered decision `D1`.

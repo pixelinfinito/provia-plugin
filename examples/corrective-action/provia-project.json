@@ -1,6 +1,6 @@
 {
   "schemaVersion": "provia-project/v1",
-  "project": { "key": "accao-correctiva-exemplo", "title": "Acção correctiva — exemplo", "language": "pt-AO", "country": "Angola", "timezone": "Africa/Luanda", "currency": "AOA", "generator": "provia-skills/1.1.0", "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118", "updatedAt": "2026-09-18" },
+  "project": { "key": "accao-correctiva-exemplo", "title": "Acção correctiva — exemplo", "language": "pt-AO", "country": "Angola", "timezone": "Africa/Luanda", "currency": "AOA", "generator": "provia-skills/1.1.1", "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118", "updatedAt": "2026-09-19" },
   "organization": { "name": "Empresa de demonstração", "sector": "Serviços", "mode": "disconnected", "tenantId": null, "productRevision": null },
   "sources": [
     { "id": "sop-nc", "title": "Tratamento de não conformidades (sintético)", "kind": "sop", "version": "1", "effectiveDate": null, "sections": [ { "anchor": "1", "title": "Registo" }, { "anchor": "2", "title": "Análise da causa" }, { "anchor": "3", "title": "Correcção" }, { "anchor": "4", "title": "Verificação da eficácia" } ] }

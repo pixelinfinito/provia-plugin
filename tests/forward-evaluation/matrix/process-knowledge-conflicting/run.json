@@ -2,16 +2,19 @@
   "id": "process-knowledge-conflicting",
   "skill": "provia-process-knowledge",
   "pluginVersion": "1.1.0",
-  "at": "2026-09-18T18:41:17.130Z",
+  "at": "2026-09-19T07:50:53.912Z",
   "model": "sonnet",
   "exitCode": 0,
-  "durationMs": 15240,
-  "costUsd": 0.101812,
-  "numTurns": 1,
-  "sessionId": "37500c9e-8337-41ca-89b3-2bc5688547c8",
+  "durationMs": 83470,
+  "costUsd": 0.29710200000000003,
+  "numTurns": 10,
+  "sessionId": "ab34974b-4aff-42b3-8812-fb59c21e6b65",
   "stopReason": "end_turn",
-  "toolCalls": 0,
-  "files": [],
-  "output": "tests/forward-evaluation/matrix/process-knowledge-conflicting/",
-  "skillLoaded": false
+  "toolCalls": 8,
+  "skillLoaded": true,
+  "files": [
+    "procedure-conflict-review.md",
+    "provia-project.json"
+  ],
+  "output": "tests/forward-evaluation/matrix/process-knowledge-conflicting/"
 }
