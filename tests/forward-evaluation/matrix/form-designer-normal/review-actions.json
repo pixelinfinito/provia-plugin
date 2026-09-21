@@ -1,0 +1,102 @@
+{
+  "valid": true,
+  "workflow": "Pedido de compra",
+  "reviewedActions": 4,
+  "summary": {
+    "applicable": 4,
+    "complete": 4,
+    "incomplete": 0,
+    "automatedWithoutDescription": 0,
+    "leaks": 0,
+    "dueMissing": 4,
+    "nearLimit": 0
+  },
+  "warnings": [],
+  "actions": [
+    {
+      "id": "registar",
+      "name": "Registar a necessidade de compra",
+      "type": "standard",
+      "applicable": true,
+      "complete": true,
+      "parts": {
+        "task": true,
+        "method": true,
+        "evidence": true,
+        "doneWhen": true,
+        "exceptions": true
+      },
+      "missing": [],
+      "leaks": [],
+      "length": 960,
+      "tooLong": false,
+      "nearLimit": false,
+      "empty": false,
+      "due": "missing"
+    },
+    {
+      "id": "recolher_propostas",
+      "name": "Recolher as propostas de fornecedores",
+      "type": "form_fill",
+      "applicable": true,
+      "complete": true,
+      "parts": {
+        "task": true,
+        "method": true,
+        "evidence": true,
+        "doneWhen": true,
+        "exceptions": true
+      },
+      "missing": [],
+      "leaks": [],
+      "length": 1312,
+      "tooLong": false,
+      "nearLimit": false,
+      "empty": false,
+      "due": "missing"
+    },
+    {
+      "id": "comparar_propostas",
+      "name": "Comparar as propostas e recomendar o fornecedor",
+      "type": "standard",
+      "applicable": true,
+      "complete": true,
+      "parts": {
+        "task": true,
+        "method": true,
+        "evidence": true,
+        "doneWhen": true,
+        "exceptions": true
+      },
+      "missing": [],
+      "leaks": [],
+      "length": 1277,
+      "tooLong": false,
+      "nearLimit": false,
+      "empty": false,
+      "due": "missing"
+    },
+    {
+      "id": "decidir_adjudicacao",
+      "name": "Decidir a adjudicação",
+      "type": "decision",
+      "applicable": true,
+      "complete": true,
+      "parts": {
+        "task": true,
+        "method": true,
+        "evidence": true,
+        "doneWhen": true,
+        "exceptions": true
+      },
+      "missing": [],
+      "leaks": [],
+      "length": 999,
+      "tooLong": false,
+      "nearLimit": false,
+      "empty": false,
+      "due": "missing"
+    }
+  ],
+  "note": "Presence of the labelled parts (Tarefa/Task, Como/How, Evidência/Evidence, Concluído quando/Done when, Excepções/Exceptions), leaked implementer notes, length (warning from 4500 characters) and due are checked. Wording quality and business correctness are not certified; see references/action-writing.md."
+}

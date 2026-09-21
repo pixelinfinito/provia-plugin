@@ -1,0 +1,217 @@
+{
+  "schemaVersion": "provia-project/v1.1",
+  "project": {
+    "key": "expense-reimbursement",
+    "title": "Expense reimbursement",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null,
+    "language": "en",
+    "timezone": "Africa/Luanda"
+  },
+  "sources": [
+    {
+      "id": "checklist-expense",
+      "title": "Expense reimbursement checklist",
+      "kind": "checklist",
+      "version": null,
+      "effectiveDate": null,
+      "summary": "Three-item checklist supplied by the customer: (a) employee submits receipts, (b) manager approves, (c) finance pays within the month. No org chart, no service levels, no policy on limits.",
+      "sections": [
+        { "anchor": "a", "title": "Employee submits receipts", "summary": "(a) employee submits receipts" },
+        { "anchor": "b", "title": "Manager approves", "summary": "(b) manager approves" },
+        { "anchor": "c", "title": "Finance pays within the month", "summary": "(c) finance pays within the month" }
+      ],
+      "emails": []
+    }
+  ],
+  "entityTypes": [],
+  "groups": [
+    {
+      "key": "line_managers",
+      "name": "Line managers",
+      "kind": "role",
+      "area": "management",
+      "parentKey": null,
+      "purpose": "Placeholder for the employee's manager who approves the claim (checklist item b). The intended owner is the person chosen in the case field line_manager; this group receives the decision only when that field is empty. Membership cannot be proposed without an org chart",
+      "members": [
+        { "role": "Manager of the claiming employee", "email": null, "verified": false }
+      ],
+      "sourceRefs": [ { "source": "checklist-expense", "section": "b" } ],
+      "flags": [
+        { "code": "unnamed", "detail": "The checklist says «manager» without naming who manages whom; no org chart was supplied (decision D4)." },
+        { "code": "segregation", "detail": "A manager's own claim must not be approved by the same person; the checklist does not say who approves a manager's claim (decision D14)." }
+      ]
+    },
+    {
+      "key": "finance",
+      "name": "Finance",
+      "kind": "team",
+      "area": "finance",
+      "parentKey": null,
+      "purpose": "Pays approved reimbursements and records the payment evidence (checklist item c)",
+      "members": [
+        { "role": "Finance staff who execute reimbursement payments", "email": null, "verified": false }
+      ],
+      "sourceRefs": [ { "source": "checklist-expense", "section": "c" } ],
+      "flags": [
+        { "code": "unnamed", "detail": "The checklist names «finance» as a function; the people, their emails and a delegate are not supplied (decision D5)." }
+      ]
+    }
+  ],
+  "workflows": [
+    {
+      "key": "expense-reimbursement",
+      "name": "Expense reimbursement",
+      "prefix": "EXP",
+      "file": "expense-reimbursement/workflow.yaml",
+      "status": "validated",
+      "ownerArea": "finance",
+      "sourceRefs": [ { "source": "checklist-expense" } ],
+      "access": {
+        "grants": [
+          {
+            "grantee": "organization",
+            "level": "create_incident",
+            "reason": "Checklist item (a): the employee submits receipts. Any employee of the organization may open a claim; no restriction on who may claim was supplied.",
+            "sourceRefs": [ { "source": "checklist-expense", "section": "a" } ]
+          }
+        ],
+        "sensitivity": "internal",
+        "note": "Claims carry amounts and receipts of individual employees. Finance and the managers see only the claims assigned to them; no team is granted view on every case because the checklist does not describe a shared queue (decision D8). The design owner (edit) is not named in the source (decision D1)."
+      },
+      "triggers": [
+        { "type": "manual", "label": "Start expense claim", "enabled": true, "manual": { "allowedGroups": [], "allowedUsers": [] } },
+        { "type": "form", "label": "Expense claim form", "enabled": true }
+      ],
+      "templates": [],
+      "unresolvedActors": [],
+      "unresolvedEntityTypes": [],
+      "entityRequests": [],
+      "accessReview": [
+        { "question": "Does Finance need to see every claim (for example to pay a monthly batch), or only the claims assigned to it? A view grant would show every case.", "group": "finance", "status": "open" }
+      ],
+      "actions": [
+        {
+          "localId": "submit_receipts",
+          "name": "Submit the receipts for reimbursement",
+          "type": "standard",
+          "sourceRefs": [ { "source": "checklist-expense", "section": "a" } ],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [],
+          "setsFields": [ "receipts", "amount_claimed", "line_manager" ],
+          "evidence": [
+            "Receipt files attached in the field receipts (recommendation: the checklist says «submits receipts» without naming the evidence)",
+            "amount_claimed equal to the total of the receipts"
+          ],
+          "due": null,
+          "dueInSource": null,
+          "folded": [
+            { "section": "a", "summary": "The claim details (description, category, date, amount, manager) are entered at case creation; this action attaches and confirms the receipts and is the return target when the manager sends the claim back." }
+          ]
+        },
+        {
+          "localId": "decide_claim",
+          "name": "Decide on the expense claim",
+          "type": "decision",
+          "sourceRefs": [ { "source": "checklist-expense", "section": "b" } ],
+          "assigneeRef": "field:line_manager",
+          "assigneeFallback": "line_managers",
+          "formRef": null,
+          "entityRefs": [],
+          "setsFields": [ "amount_approved" ],
+          "evidence": [
+            "amount_approved filled on «Approve»",
+            "Comment with the reason mandatory on «Return for correction» and «Reject» (recommendation: the checklist has no rejection path)"
+          ],
+          "due": null,
+          "dueInSource": null,
+          "folded": []
+        },
+        {
+          "localId": "pay_reimbursement",
+          "name": "Pay the approved reimbursement",
+          "type": "standard",
+          "sourceRefs": [ { "source": "checklist-expense", "section": "c" } ],
+          "assigneeRef": "finance",
+          "formRef": null,
+          "entityRefs": [],
+          "setsFields": [ "payment_date", "payment_reference" ],
+          "evidence": [
+            "payment_date and payment_reference filled",
+            "Proof of payment attached to the case (recommendation: the checklist names no evidence)"
+          ],
+          "due": null,
+          "dueInSource": { "text": "finance pays within the month", "kind": "calendar_day" },
+          "folded": []
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "Connected mode was not used: the Provia MCP server was listed in the session, but the org_get_context call was not permitted, so the tenant was not read and nothing was applied. Run the apply steps (groups, workflow draft, form, access) after the customer review, dry run first.",
+        "Create the groups «Line managers» (fallback for the manager decision) and «Finance» before importing; the YAML carries no assignee for decide_claim and pay_reimbursement. Set decide_claim's default responsible to «Line managers» and pay_reimbursement's to «Finance» in the draft.",
+        "The manager is chosen per case in the field line_manager (user). The product cannot assign from a case field: after import, the assignee of decide_claim must be set per case (or by the group «Line managers» reassigning) until the customer supplies an org chart or an assignment rule.",
+        "Configure the intake form «Expense claim» (forms[] key expense-claim-intake) as the form trigger of this workflow; the YAML carries only the manual trigger. Map the form answers to the case fields with the same keys.",
+        "The deadline «within the month» (item c) is a calendar-month deadline that the due model (days after activation) cannot express; configure it manually or agree a workday offset (decision D2).",
+        "The currency of amount_claimed and amount_approved is AOA (Kz); confirm the currency configuration of the two fields in the destination.",
+        "Employee bank details are not collected in the case; Finance pays to the account it already holds for the employee (decision D9)."
+      ]
+    }
+  ],
+  "forms": [
+    {
+      "key": "expense-claim-intake",
+      "title": "Expense claim",
+      "kind": "trigger",
+      "workflowRef": "expense-reimbursement",
+      "actionRef": null,
+      "status": "designed",
+      "fields": [
+        { "key": "expense_description", "label": "What was the expense for?", "type": "text", "required": true, "mapsTo": "expense_description", "helpText": "One line: purpose of the expense, for example «Taxi to client meeting, Talatona»." },
+        { "key": "expense_category", "label": "Category", "type": "select", "required": true, "mapsTo": "expense_category", "options": [ "travel", "meals", "transport", "accommodation", "supplies", "other" ], "helpText": "Proposed list; no category policy was supplied (decision D13)." },
+        { "key": "expense_date", "label": "Date of the expense", "type": "date", "required": true, "mapsTo": "expense_date", "helpText": "Date on the receipt; for several receipts, the date of the first one." },
+        { "key": "amount_claimed", "label": "Amount claimed (Kz)", "type": "currency", "required": true, "mapsTo": "amount_claimed", "helpText": "Total of the attached receipts in kwanza." },
+        { "key": "line_manager", "label": "Your manager", "type": "user", "required": true, "mapsTo": "line_manager", "helpText": "The manager who approves your expenses. This person receives the approval task." },
+        { "key": "receipts", "label": "Receipts", "type": "file", "required": true, "mapsTo": "receipts", "helpText": "Attach every receipt as PDF, JPG or PNG. Each file must show date, supplier and amount. Proposed limit 10 MB per file (confirm the destination's file limits)." }
+      ],
+      "respondents": "Internal: every active member of the organization (organization holds create_incident).",
+      "confirmation": "Your expense claim {case reference} was received. Your manager will review it; you can follow the claim in Provia. Payment is made by Finance after approval.",
+      "responsePolicy": "One submission creates one claim; the answers are mapped to the case fields with the same keys.",
+      "testing": [
+        "Submit a claim with two receipts and confirm the six fields arrive in the case with the mapped values.",
+        "Confirm that the manager chosen in «Your manager» is visible in the case field line_manager and that the decision task can be assigned to that person.",
+        "Confirm that a submission without receipts is refused by the form."
+      ]
+    }
+  ],
+  "aiProfiles": [],
+  "decisions": [
+    { "id": "D1", "question": "Who owns the design of this workflow (the edit grant) and which area owns the process? The checklist names no process owner; ownerArea is provisionally set to finance.", "owner": "Customer sponsor", "status": "open", "raisedBy": "provia-bootstrap", "sourceRefs": [ { "source": "checklist-expense" } ] },
+    { "id": "D2", "question": "«Finance pays within the month»: the month of submission or of approval? Can it be expressed as a workday offset after approval (due), or must it stay a calendar-month deadline configured manually?", "owner": "Finance lead", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "checklist-expense", "section": "c" } ] },
+    { "id": "D3", "question": "There is no policy on limits. Should the manager approve any amount, or is a second approval wanted above some amount or for some categories? No threshold was encoded.", "owner": "Finance lead", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "checklist-expense", "section": "b" } ] },
+    { "id": "D4", "question": "No org chart: the employee chooses their manager in the intake field line_manager and the group «Line managers» is the fallback. Is this acceptable, or will the customer supply the org chart (employee → manager) so the assignment can be fixed?", "owner": "Human resources", "status": "open", "raisedBy": "provia-organization-rollout", "sourceRefs": [ { "source": "checklist-expense", "section": "b" } ] },
+    { "id": "D5", "question": "Who is in the group «Finance» (names and emails) and who is the delegate when the payer is absent?", "owner": "Finance lead", "status": "open", "raisedBy": "provia-organization-rollout", "sourceRefs": [ { "source": "checklist-expense", "section": "c" } ] },
+    { "id": "D6", "question": "No service levels were supplied: how many workdays does the employee have to submit receipts and the manager to decide? due is left unset on submit_receipts and decide_claim.", "owner": "Customer sponsor", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "checklist-expense", "section": "a" }, { "source": "checklist-expense", "section": "b" } ] },
+    { "id": "D7", "question": "The checklist has no rejection or correction path. The design proposes three outcomes for the manager: Approve, Return for correction, Reject (cancels the claim). Confirm or change.", "owner": "Customer sponsor", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "checklist-expense", "section": "b" } ] },
+    { "id": "D8", "question": "Does Finance need to see every claim (a monthly payment batch), which would require a view grant showing all cases, or only the claims assigned to it?", "owner": "Finance lead", "status": "open", "raisedBy": "provia-organization-rollout", "sourceRefs": [ { "source": "checklist-expense", "section": "c" } ] },
+    { "id": "D9", "question": "Where do the employee's payment details come from? The design does not collect bank details in the claim and assumes Finance pays to the account already registered for the employee (payroll). Confirm.", "owner": "Finance lead", "status": "open", "raisedBy": "provia-information-model", "sourceRefs": [ { "source": "checklist-expense", "section": "c" } ] },
+    { "id": "D10", "question": "Recommendation not in the checklist: notify the employee when the claim is rejected and when it is paid (an in-app/email notification to the creator). Add it?", "owner": "Customer sponsor", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "checklist-expense", "section": "c" } ] },
+    { "id": "D11", "question": "No entity type is proposed: the claim is a case, the receipts are files, the employee is the case creator and the manager a user field. Should a Cost centre or Employee entity be added once an org chart or cost-centre list exists?", "owner": "Customer sponsor", "status": "open", "raisedBy": "provia-information-model", "sourceRefs": [ { "source": "checklist-expense" } ] },
+    { "id": "D12", "question": "Connected mode: the Provia MCP server was present but the tool call was not permitted in this session, so the tenant was not read and nothing was applied. Grant the implementer tool access (implement:read, and implement:permissions for the organization-wide create_incident grant) and run the apply after review?", "owner": "Implementer", "status": "open", "raisedBy": "provia-bootstrap", "sourceRefs": [] },
+    { "id": "D13", "question": "The expense category list (travel, meals, transport, accommodation, supplies, other) is a proposal; no category or per-diem policy was supplied. Confirm or replace the list.", "owner": "Finance lead", "status": "open", "raisedBy": "provia-form-designer", "sourceRefs": [ { "source": "checklist-expense", "section": "a" } ] },
+    { "id": "D14", "question": "Segregation: who approves a manager's own claim, and who approves when the chosen manager is absent? The decision brief tells a manager not to decide their own claim, but no alternative approver is named.", "owner": "Customer sponsor", "status": "open", "raisedBy": "provia-organization-rollout", "sourceRefs": [ { "source": "checklist-expense", "section": "b" } ] }
+  ],
+  "receipts": []
+}

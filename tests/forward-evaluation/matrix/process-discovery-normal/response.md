@@ -1,21 +1,26 @@
-Todos os artefactos foram gerados e validados no directório de trabalho.
+## Piloto recomendado: **Pedido de compra** — com condições
 
-## Resumo
+Com apenas a frase inicial (Luanda; compras, admissão e pedidos de TI por e-mail), a comparação é provisória. Não inventei volumes, responsáveis nem poupanças; cada lacuna está registada como decisão com dono.
 
-Analisei os três processos candidatos (Compras, Admissão de trabalhadores, Pedidos de TI) por âmbito, número de áreas envolvidas, complexidade de desenho e capacidade de gerar casos reais num piloto curto — sem inventar volumes, já que nenhum foi fornecido.
+**Lista ordenada**
 
-**Piloto recomendado: Pedidos de TI** — dono único (equipa de TI), fluxo linear (pedido → triagem → execução → confirmação), cadência tipicamente alta o suficiente para aprender rapidamente, e risco contido face a Compras (exposição financeira) e Admissão (coordenação entre RH/TI/gestor). Compras fica como segundo piloto natural; Admissão fica adiada até haver clareza sobre volume de contratação.
+1. **Compras** — maior impacto (dinheiro, fornecedores, prova de quem aprovou), evidência que hoje se perde nas caixas de correio, e o padrão de decisão que depois se reutiliza nos outros dois processos. Esforço médio.
+2. **Pedidos de TI** — mais rápido e provavelmente com mais volume; é a alternativa se compras ficar sem responsável nomeado ou tiver menos de ~10 casos/mês. Ensina menos sobre aprovações, e parte dele (acessos, equipamento) reaparece dentro da admissão.
+3. **Admissão de trabalhadores** — segunda vaga: poucos casos para aprender em 4–6 semanas, três equipas a coordenar, e dados pessoais que exigem verificação de protecção de dados antes de desenhar.
 
-Ficheiros produzidos:
-- `provia-project.json` — manifesto (`provia-project/v1`), validado com `--check` (5 decisões em aberto, 0 avisos)
-- `piloto-recomendacao.md` — comparação completa, justificação e questões em aberto
-- `project.html` — mapa do projecto
-- `setup.md` — handover das pendências
+**Âmbito mínimo do piloto:** pedido → proposta anexa → decisão (aprovar / rejeitar / devolver) → confirmação ao fornecedor → informar requerente, para um ou dois departamentos. Fora: pagamento, stock, contratos. Revisão após 10 casos concluídos ou 4 semanas. Linha de base a **observar** nos últimos 20 pedidos por e-mail (dias até decisão, propostas anexadas, seguimentos) antes de fixar metas.
 
-Cinco questões ficaram registadas como decisões em aberto (D1–D5), principalmente sobre volumes reais e o responsável nomeado — nenhuma foi inventada.
+**Decisões em aberto:** D1 responsável do piloto (sem nome, não há piloto); D2 volumes dos 3 processos; D3 procedimento e regras de aprovação de compras; D4 departamentos; D5 linha de base; D6 responsável de TI / helpdesk existente; D7 admissão e APD; D8 nome, sector e tenant Provia.
 
-**Próximo passo recomendado:** `provia-workflow-designer`, para transformar o âmbito acordado de Pedidos de TI num desenho de workflow (acções, responsáveis, evidência), assim que o volume e o dono nomeado (D1, D2) forem confirmados.
+**Ficheiros escritos no directório de trabalho**
+- `discovery-report.md` — inventário, comparação, lista ordenada, âmbito, medidas e decisões
+- `provia-project.json` — manifesto novo (título do piloto, fonte `pedido-inicial` com âncoras por candidato, D1–D8)
+- `project.html` e `setup.md` — gerados pelo script do plugin
+
+**Verificado:** `build-project-map.mjs --check` passou (0 avisos, 8 itens pendentes = as decisões). Isto valida a forma do manifesto, não o relatório nem a escolha de negócio. **Pendente:** o servidor Provia estava listado, mas a leitura do contexto da organização não foi autorizada nesta sessão — trabalhei em modo desligado; nada foi lido ou alterado no Provia.
+
+Próximo passo recomendado: responder a D1–D3 e depois `provia-workflow-designer`, para transformar o âmbito acordado em acções com responsáveis. Se D1 ficar sem resposta, repita o mesmo pedido com pedidos de TI.
 
 ```text
-Use provia-workflow-designer com o piloto "Pedidos de TI" definido em provia-project.json (chave "piloto-provia"). Âmbito: pedidos de equipamento, acessos e suporte técnico simples, fluxo pedido → triagem/atribuição → execução → confirmação do requerente; excluir projectos de TI de âmbito alargado. Leia sources[] "conv-pedidos-ti" e as decisões D1/D2 ainda em aberto. País: Angola; responda em pt-AO.
+Use provia-workflow-designer com provia-project.json e discovery-report.md nesta pasta. Desenhe o workflow «Pedido de compra» no âmbito da secção 5 do relatório (pedido, proposta, decisão, confirmação ao fornecedor, informar requerente). Responsável do piloto: [nome de D1]. Regras de aprovação: [resposta a D3 ou «não há procedimento escrito; prática actual é …»]. País: Angola; responda em pt-AO.
 ```

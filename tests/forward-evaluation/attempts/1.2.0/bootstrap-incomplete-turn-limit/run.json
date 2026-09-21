@@ -1,0 +1,24 @@
+{
+  "id": "bootstrap-incomplete",
+  "skill": "provia-bootstrap",
+  "pluginVersion": "1.2.0",
+  "at": "2026-09-21T10:53:41.896Z",
+  "model": "claude-opus-5[1m]",
+  "exitCode": 1,
+  "durationMs": 385474,
+  "costUsd": 4.980330000000002,
+  "numTurns": 61,
+  "sessionId": "e3235a07-aad4-4e44-b29d-1b43c9b2b799",
+  "stopReason": "tool_use",
+  "toolCalls": 60,
+  "skillLoaded": true,
+  "files": [
+    "expense-reimbursement/design.md",
+    "expense-reimbursement/review-actions.json",
+    "expense-reimbursement/setup.md",
+    "expense-reimbursement/validation.json",
+    "expense-reimbursement/workflow.yaml",
+    "provia-project.json"
+  ],
+  "output": "tests/forward-evaluation/matrix/bootstrap-incomplete/"
+}

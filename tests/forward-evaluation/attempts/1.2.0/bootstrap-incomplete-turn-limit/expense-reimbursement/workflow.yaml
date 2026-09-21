@@ -1,0 +1,130 @@
+# provia-skills 1.2.0
+# Source: customer checklist «Expense reimbursement» (a) employee submits receipts, (b) manager approves, (c) finance pays within the month.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: Expense reimbursement
+  prefix: EXP
+  description: An employee submits receipts for an expense, the employee's manager decides on the claim and Finance pays the approved amount within the month.
+triggers:
+  - type: manual
+    label: Start expense claim
+    enabled: true
+    config: {}
+fields:
+  - name: expense_description
+    label: What was the expense for?
+    type: text
+    required: true
+    width: full
+  - name: expense_category
+    label: Category
+    type: select
+    required: true
+    width: half
+    config:
+      options:
+        - value: travel
+          label: Travel
+        - value: meals
+          label: Meals
+        - value: transport
+          label: Local transport
+        - value: accommodation
+          label: Accommodation
+        - value: supplies
+          label: Supplies
+        - value: other
+          label: Other
+  - name: expense_date
+    label: Date of the expense
+    type: date
+    required: true
+    width: half
+  - name: amount_claimed
+    label: Amount claimed (Kz)
+    type: currency
+    required: true
+    width: half
+  - name: line_manager
+    label: Your manager
+    type: user
+    required: true
+    width: half
+  - name: receipts
+    label: Receipts
+    type: file
+    required: true
+    width: full
+  - name: amount_approved
+    label: Amount approved (Kz)
+    type: currency
+    required: false
+    width: half
+  - name: payment_date
+    label: Payment date
+    type: date
+    required: false
+    width: half
+  - name: payment_reference
+    label: Payment reference
+    type: text
+    required: false
+    width: half
+entities:
+  mode: none
+access:
+  grants:
+    - grantee: organization
+      level: create_incident
+actions:
+  - id: submit_receipts
+    name: Submit the receipts for reimbursement
+    type: standard
+    description: |-
+      Task: Submit the receipts that prove the expense you are claiming so the claim can be approved and paid.
+      How: 1. Check that the description, category, date and amount claimed in the case are correct; correct them if not. 2. Scan or photograph each receipt so that the date, the supplier and the amount are legible. 3. Attach every receipt in the field `receipts`, one file per receipt or one PDF with all of them. 4. Confirm that the sum of the receipts equals `amount_claimed`. 5. Confirm that `line_manager` names the manager who approves your expenses. 6. Complete the action.
+      Evidence: The receipt files attached in `receipts`; `amount_claimed` equal to the total of the receipts.
+      Done when: Every receipt is attached and legible and the amount claimed matches the receipt total.
+      Exceptions: If a receipt is missing or illegible, do not complete: add a comment saying which expense has no proof, or reduce `amount_claimed` to the amount you can prove. If the manager returned the claim, read the return comment and correct what it asks before completing again.
+    executionMode: sequential
+    required: true
+    priority: normal
+    assignee:
+      type: creator
+  - id: decide_claim
+    name: Decide on the expense claim
+    type: decision
+    description: |-
+      Task: Decide whether the expense claim is approved for reimbursement.
+      How: 1. Open each file in `receipts` and confirm it is a legible receipt for the expense described. 2. Check that `expense_date`, `expense_category` and `amount_claimed` match the receipts and that the expense was incurred for the organization's work. 3. Enter the amount you approve in `amount_approved`; if it differs from `amount_claimed`, explain the difference in a comment. 4. Choose «Approve» to send the claim to Finance for payment, «Return for correction» when the employee must fix or complete the submission, or «Reject» when the expense is not reimbursable.
+      Evidence: `amount_approved` filled on «Approve»; a comment with the reason is mandatory on «Return for correction» and «Reject».
+      Done when: The decision is recorded with the amount approved or with the required comment.
+      Exceptions: If the claim is your own or you are not this employee's manager, do not decide: comment and ask the employee to correct `line_manager`. If you cannot tell whether the expense is reimbursable, write your question in a comment and choose «Return for correction» so the employee can add the missing information.
+    executionMode: sequential
+    required: true
+    priority: normal
+    config:
+      branches:
+        - label: Approve
+          outcome: continue
+          requiresComment: false
+        - label: Return for correction
+          outcome: return_to_action
+          target: submit_receipts
+          requiresComment: true
+        - label: Reject
+          outcome: cancel_incident
+          requiresComment: true
+  - id: pay_reimbursement
+    name: Pay the approved reimbursement
+    type: standard
+    description: |-
+      Task: Pay the approved reimbursement to the employee within the month and record the payment in the case.
+      How: 1. Read `amount_approved` and the manager's decision comment. 2. Confirm that the receipts in `receipts` support the approved amount. 3. Execute the payment through the organization's usual payment channel to the account registered for the employee. 4. Enter the date of the payment in `payment_date` and the transfer or voucher reference in `payment_reference`. 5. Attach the proof of payment as a file to the case.
+      Evidence: `payment_date` and `payment_reference` filled; the proof of payment attached to the case.
+      Done when: The payment is executed and its date, reference and proof are recorded in the case.
+      Exceptions: If the employee's payment details are missing or the payment cannot be made within the month, do not complete: comment the reason and the expected payment date so the employee and the manager can see them. If the receipts do not support the approved amount, comment and ask the manager to review the claim before paying.
+    executionMode: sequential
+    required: true
+    priority: normal

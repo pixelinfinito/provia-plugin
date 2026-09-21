@@ -1,53 +1,865 @@
-<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><title>Payment submission integration</title>
-<style>
-*{box-sizing:border-box}body{margin:0;background:#f4f6f9;color:#182230;font:15px/1.5 system-ui,sans-serif}header{padding:16px 24px;background:#fff;border-bottom:1px solid #d0d5dd}h1{margin:0 0 4px;font-size:22px}h2{font-size:18px;margin:0 0 12px}.notice{margin:8px 0 0;padding:10px 12px;background:#eaf0ff;border-radius:8px;font-size:14px}
-.tabs{display:flex;gap:6px;margin-top:12px}.tabs button{padding:8px 14px;border:1px solid #98a2b3;border-radius:8px 8px 0 0;background:#f9fafb;cursor:pointer;font:inherit}.tabs button[aria-selected=true]{background:#fff;border-bottom-color:#fff;font-weight:600}
-.panel:not([data-active]){display:none}#map[data-active]{display:grid;grid-template-columns:240px 1fr 340px;min-height:calc(100vh - 150px)}
-aside{padding:12px;border-right:1px solid #d0d5dd;background:#fff;overflow:auto}aside ul{list-style:none;padding:0 0 0 6px;margin:4px 0}aside summary{cursor:pointer;font-weight:600}
-.rail-node{display:block;width:100%;text-align:left;padding:3px 6px;border:0;background:none;cursor:pointer;font:inherit;border-left:3px solid #98a2b3;margin:2px 0;border-radius:0 4px 4px 0}.rail-node.status-unresolved{border-left-color:#b91c1c}.rail-node.status-resolved{border-left-color:#15803d}.rail-node:hover,.rail-node[aria-current]{background:#eaf0ff}
-#canvas{overflow:auto;padding:8px}#detail{padding:14px;border-left:1px solid #d0d5dd;background:#fff;overflow:auto}#detail dl{display:grid;grid-template-columns:110px 1fr;gap:4px 10px;font-size:14px}#detail dt{color:#475467}#detail dd{margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
-.node{cursor:pointer}.node:focus-visible rect,.node.selected rect{stroke:#2563eb!important;stroke-width:3!important}path.dim{opacity:.15}path.hot{stroke-width:3!important}
-.red{color:#b91c1c}input{padding:8px;border:1px solid #98a2b3;border-radius:6px;width:100%;font:inherit;margin-bottom:8px}table{border-collapse:collapse;width:100%;background:#fff}th,td{border:1px solid #d0d5dd;padding:8px;text-align:left;vertical-align:top;font-size:14px}#pending,#decisions{padding:24px}iframe{width:100%;height:calc(100vh - 160px);border:1px solid #d0d5dd;background:#fff}code{background:#f2f4f7;padding:1px 4px;border-radius:4px}
-@media(max-width:900px){#map{grid-template-columns:1fr}aside,#detail{border:0;border-bottom:1px solid #d0d5dd}}
-</style></head><body>
-<header><h1>Payment submission integration</h1><div>Angola · en · Mode: disconnected · provia-skills/1.1.0 · 2026-09-18</div>
-<p class="notice">Map generated without a Provia connection. Nothing here creates, changes or publishes configuration; it is the review baseline with the customer and the source of the connected-mode apply.</p>
-<div class="tabs" role="tablist"><button role="tab" aria-selected="true" data-tab="map">Map</button><button role="tab" aria-selected="false" data-tab="catalogue">Catalogue <small>0</small></button><button role="tab" aria-selected="false" data-tab="pending">Pending <small>4</small></button><button role="tab" aria-selected="false" data-tab="decisions">Decisions <small>3</small></button></div></header>
-<section id="map" class="panel" data-active role="tabpanel"><aside><input id="search" type="search" placeholder="Search nodes" aria-label="Search nodes"><details open><summary>Sources <small>1</small></summary><ul><li><button type="button" class="rail-node status-neutral" data-id="source:user-brief-payments">User-supplied brief: POST /payments, no idempotency key, ambiguous timeout</button></li></ul></details><details open><summary>Workflows <small>1 · <span class="red">1</span></small></summary><ul><li><button type="button" class="rail-node status-unresolved" data-id="workflow:payments">Payment submission</button></li></ul></details><details open><summary>Actions <small>1</small></summary><ul><li><button type="button" class="rail-node status-neutral" data-id="action:payments:submit_payment">Submit payment to provider</button></li></ul></details><p><small>Green: resolved by a receipt. Red: unresolved. Grey: no destination dependency.</small></p></aside><div id="canvas"><svg id="graph" viewBox="0 0 588 164" width="588" height="164" xmlns="http://www.w3.org/2000/svg" role="img"><defs><marker id="arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#667085"/></marker></defs><path id="edge-0" data-from="source:user-brief-payments" data-to="workflow:payments" data-kind="justifies" d="M234,46 C294,46 294,46 354,46" fill="none" stroke="#98a2b3" stroke-width="1.2" marker-end="url(#arrow)"/><path id="edge-1" data-from="source:user-brief-payments" data-to="action:payments:submit_payment" data-kind="source" d="M234,46 C303,46 303,104 372,104" fill="none" stroke="#98a2b3" stroke-width="1.2" marker-end="url(#arrow)"/><g class="node" data-id="source:user-brief-payments" tabindex="0" role="button" aria-label="User-supplied brief: POST /payments, no idempotency key, ambiguous timeout" transform="translate(24,24)"><rect width="210" height="44" rx="8" fill="#eef2f7" stroke="#98a2b3" stroke-width="1"/><text x="10" y="18" font-size="10" fill="#475467">source</text><text x="10" y="34" font-size="13" fill="#182230">User-supplied brief: POST /pa…</text></g><g class="node" data-id="workflow:payments" tabindex="0" role="button" aria-label="Payment submission" transform="translate(354,24)"><rect width="210" height="44" rx="8" fill="#e0e7ff" stroke="#b91c1c" stroke-width="2"/><text x="10" y="18" font-size="10" fill="#475467">workflow</text><text x="10" y="34" font-size="13" fill="#182230">Payment submission</text></g><g class="node" data-id="action:payments:submit_payment" tabindex="0" role="button" aria-label="Submit payment to provider" transform="translate(372,82)"><rect width="192" height="44" rx="8" fill="#ffffff" stroke="#98a2b3" stroke-width="1"/><text x="10" y="18" font-size="10" fill="#475467">action</text><text x="10" y="34" font-size="13" fill="#182230">Submit payment to provider</text></g></svg></div><div id="detail"><p>Select a node on the map or in the list.</p></div></section>
-<section id="catalogue" class="panel" role="tabpanel"><p>The manifest has no entity types.</p></section>
-<section id="pending" class="panel" role="tabpanel"><h2>Pending</h2><table><thead><tr><th>Where</th><th>Item</th><th>What to do</th></tr></thead><tbody><tr><td>payments</td><td>Payment submission</td><td>Import the YAML as a draft and review the preview</td></tr><tr><td>D-PAY-1</td><td>Does the payment provider support any client-side deduplication for POST /payments (a client-generated reference/order-ID field, an Idempotency-Key-style header the docs didn&#39;t mention, or an equivalent), or a status/reconciliation endpoint (e.g. GET /payments/{reference}) that can confirm whether a timed-out call actually charged the payer?</td><td>Decide</td></tr><tr><td>D-PAY-2</td><td>What is the confirmed request/response schema, authentication scheme, real endpoint host and expected success status code(s) for POST /payments?</td><td>Decide</td></tr><tr><td>D-PAY-3</td><td>Who should be paged when a payment submission raises an incident (ambiguous timeout / failure), and what is their reconciliation procedure with the provider (dashboard, support line, statement reconciliation)?</td><td>Decide</td></tr></tbody></table></section>
-<section id="decisions" class="panel" role="tabpanel"><h2>Decisions</h2><ul><li><strong>D-PAY-1</strong> Does the payment provider support any client-side deduplication for POST /payments (a client-generated reference/order-ID field, an Idempotency-Key-style header the docs didn&#39;t mention, or an equivalent), or a status/reconciliation endpoint (e.g. GET /payments/{reference}) that can confirm whether a timed-out call actually charged the payer? <small>(open, Owner: Implementer, with the payment provider&#39;s integration contact)</small></li><li><strong>D-PAY-2</strong> What is the confirmed request/response schema, authentication scheme, real endpoint host and expected success status code(s) for POST /payments? <small>(open, Owner: Implementer)</small></li><li><strong>D-PAY-3</strong> Who should be paged when a payment submission raises an incident (ambiguous timeout / failure), and what is their reconciliation procedure with the provider (dashboard, support line, statement reconciliation)? <small>(open, Owner: Finance operations lead)</small></li></ul></section>
-<script type="application/json" id="project-data">{"nodes":[{"id":"source:user-brief-payments","kind":"source","label":"User-supplied brief: POST /payments, no idempotency key, ambiguous timeout","data":{"id":"user-brief-payments","title":"User-supplied brief: POST /payments, no idempotency key, ambiguous timeout","kind":"other","version":"1","effectiveDate":"2026-09-18","sections":[]},"status":"neutral"},{"id":"workflow:payments","kind":"workflow","label":"Payment submission","data":{"key":"payments","name":"Payment submission","prefix":"PAY","file":"workflow.yaml","status":"design","sourceRefs":[{"source":"user-brief-payments"}],"actions":[{"localId":"submit_payment","name":"Submit payment to provider","type":"http_request","sourceRefs":[{"source":"user-brief-payments"}],"assigneeRef":null,"formRef":null,"entityRefs":[],"evidence":["Provider response status code and reference stored in a response mapping field","On timeout or unexpected status, an incident is raised instead of an automatic resubmission"],"due":null,"folded":[]}],"subWorkflowRefs":[],"setupNotes":["Replace the placeholder endpoint https://example.com/payments with the actual payment provider host from its API documentation before import.","Create an organization secret (e.g. PAYMENT_API_TOKEN) holding the provider's real credential; never store the value in the YAML.","Add the real payment provider domain to the HTTP allowlist before enabling this action.","Confirm the provider's actual request/response schema, auth scheme and expected status codes; the body and mapping in workflow.yaml are illustrative placeholders, not a confirmed contract.","Do not raise config.retryConfig.maxAttempts above 1 on this action until decision D-PAY-1 is resolved. Automatic retries on a non-idempotent POST /payments after an ambiguous timeout can charge the payer more than once.","No owner group is configured yet for the incident this action raises on timeout/failure. Identify who reconciles payment outcomes with the provider (decision D-PAY-3) and assign that group before publishing; provia-organization-rollout can help design it."]},"status":"unresolved"},{"id":"action:payments:submit_payment","kind":"action","label":"Submit payment to provider","data":{"localId":"submit_payment","name":"Submit payment to provider","type":"http_request","sourceRefs":[{"source":"user-brief-payments"}],"assigneeRef":null,"formRef":null,"entityRefs":[],"evidence":["Provider response status code and reference stored in a response mapping field","On timeout or unexpected status, an incident is raised instead of an automatic resubmission"],"due":null,"folded":[],"workflow":"payments"},"status":"neutral","yaml":{"description":"Calls POST /payments at the payment provider to submit this case's payment instruction and records the returned reference. Configured with a single attempt and no automatic retry, because this endpoint has no idempotency key: a timeout does not tell us whether the payment executed, so retrying automatically risks charging the payer more than once. Exceptions: on timeout, connection failure or an unexpected status code, this raises an incident instead of resubmitting; finance operations must confirm the real outcome with the provider before any manual resubmission.","due":null,"assignee":null,"type":"http_request"}}],"edges":[{"from":"source:user-brief-payments","to":"workflow:payments","kind":"justifies","status":"neutral"},{"from":"source:user-brief-payments","to":"action:payments:submit_payment","kind":"source","status":"neutral"}],"labels":{"map":"Map","catalogue":"Catalogue","pending":"Pending","decisions":"Decisions","search":"Search nodes","legend":"Green: resolved by a receipt. Red: unresolved. Grey: no destination dependency.","kinds":{"source":"Sources","section":"Sections","workflow":"Workflows","action":"Actions","group":"Groups","ai_profile":"AI profiles","form":"Forms","entity_type":"Entity types"},"select":"Select a node on the map or in the list.","noCatalogue":"The manifest has no entity types.","none":"Nothing pending.","where":"Where","item":"Item","todo":"What to do","owner":"Owner","status":"Status","fromYaml":"From the YAML file","description":"Brief","due":"Due","evidence":"Evidence","sources":"Sources","folded":"Folded steps","assignee":"Owner","form":"Form","entities":"Entities","members":"Members","flags":"Flags","purpose":"Purpose","parent":"Parent group","file":"File","type":"Type","kind":"Kind","mode":"Mode","open":"open","resolved":"resolved","receipt":"Receipt","fields":"Fields","edges":"Edges","notice":"Map generated without a Provia connection. Nothing here creates, changes or publishes configuration; it is the review baseline with the customer and the source of the connected-mode apply."},"what":{"create_entity_type":"Create the entity type with the catalogue fields (Catalogue tab of the map)","create_group":"Create the group and add the members","create_trigger_form":"Create the intake form and link it to the workflow","create_and_link_form":"Create the form and link it to the Form Fill action","configure_ai_profile":"Configure the AI profile in Provia and assign it to the action","import_workflow_draft":"Import the YAML as a draft and review the preview","assign_owner":"Set the owner; the action has none in the design","assign_group":"Assign the group to the action once the group exists","assign_ai_profile":"Assign the AI profile to the action","design_form":"Design the form for this Form Fill action","due_open":"Set the deadline; the design proposes no `due`","decide":"Decide","flag_single_person":"Single-person actor: name a delegate","flag_alias":"Alternative names: confirm the designation","flag_segregation":"Segregation of duties: confirm distinct owners","flag_requester":"Requester: uses the case creator","flag_external":"External actor: not a group","flag_unnamed":"Owner unnamed in the sources"}}</script>
-<script>
-const data = JSON.parse(document.getElementById('project-data').textContent);
-const T = data.labels, byId = new Map(data.nodes.map(n => [n.id, n]));
-const esc = s => String(s).replace(/[&<>"']/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));
-document.querySelectorAll('.tabs button').forEach(button => button.addEventListener('click', () => {
-  document.querySelectorAll('.tabs button').forEach(b => b.setAttribute('aria-selected', b === button));
-  document.querySelectorAll('.panel').forEach(p => p.toggleAttribute('data-active', p.id === button.dataset.tab));
-}));
-function due(d) { if (!d) return null; const parts = []; if (d.offsetDays != null) parts.push(d.offsetDays + ' d'); if (d.offsetHours != null) parts.push(d.offsetHours + ' h'); return parts.join(' ') + (d.offsetType ? ' ' + d.offsetType : '') + (d.basis ? ' · ' + d.basis : ''); }
-function row(label, value) { return value == null || value === '' || (Array.isArray(value) && !value.length) ? '' : '<dt>' + esc(label) + '</dt><dd>' + (Array.isArray(value) ? value.map(v => esc(typeof v === 'string' ? v : JSON.stringify(v))).join('\n') : esc(typeof value === 'string' ? value : JSON.stringify(value))) + '</dd>'; }
-function show(id) {
-  const node = byId.get(id); if (!node) return;
-  document.querySelectorAll('.node').forEach(g => g.classList.toggle('selected', g.dataset.id === id));
-  document.querySelectorAll('.rail-node').forEach(b => b.dataset.id === id ? b.setAttribute('aria-current', 'true') : b.removeAttribute('aria-current'));
-  document.querySelectorAll('#graph path').forEach(p => { const hot = p.dataset.from === id || p.dataset.to === id; p.classList.toggle('hot', hot); p.classList.toggle('dim', !hot); });
-  const d = node.data, y = node.yaml || {};
-  let html = '<h2>' + esc(node.label) + '</h2><dl>' + row(T.kind, node.kind) + row(T.status, node.status);
-  if (node.kind === 'action') html += row(T.type, d.type) + row(T.assignee, d.assigneeRef) + row(T.due, due(d.due || y.due)) + row(T.evidence, d.evidence) + row(T.form, d.formRef) + row(T.entities, d.entityRefs) + row(T.sources, (d.sourceRefs || []).map(r => r.source + (r.section ? ' §' + r.section : ''))) + row(T.folded, (d.folded || []).map(f => (f.section ? '§' + f.section + ' ' : '') + f.summary)) + row(T.description, d.description || y.description);
-  else if (node.kind === 'group') html += row(T.parent, d.parentKey) + row(T.purpose, d.purpose) + row(T.members, (d.members || []).map(m => [m.role, m.email].filter(Boolean).join(' '))) + row(T.flags, (d.flags || []).map(f => f.code + (f.detail ? ': ' + f.detail : ''))) + row(T.sources, (d.sourceRefs || []).map(r => r.source + (r.section ? ' §' + r.section : '')));
-  else if (node.kind === 'form') html += row(T.type, d.kind) + row(T.status, d.status) + row('Workflow', d.workflowRef) + row(T.type === 'Tipo' ? 'Acção' : 'Action', d.actionRef) + row(T.fields, (d.fields || []).map(f => typeof f === 'string' ? f : (f.label || f.key || JSON.stringify(f))));
-  else if (node.kind === 'entity_type') html += row(T.purpose, d.purpose) + row(T.fields, (d.fields || []).map(f => f.key + ' (' + f.type + ')')) + row(T.description, d.description);
-  else if (node.kind === 'workflow') html += row(T.status, d.status) + row(T.file, d.file) + row('Prefix', d.prefix) + row(T.sources, (d.sourceRefs || []).map(r => r.source + (r.section ? ' §' + r.section : '')));
-  else if (node.kind === 'source') html += row(T.type, d.kind) + row('Version', d.version) + row(T.fields, (d.sections || []).map(s => '§' + s.anchor + ' ' + (s.title || '')));
-  else if (node.kind === 'section') html += row(T.sources, d.source);
-  else if (node.kind === 'ai_profile') html += row(T.purpose, d.purpose) + row('Workflow', d.workflowRef);
-  const edges = data.edges.filter(e => e.from === id || e.to === id).map(e => (e.from === id ? '→ ' + (byId.get(e.to) || {}).label : '← ' + (byId.get(e.from) || {}).label) + ' (' + e.kind + ')');
-  html += row(T.edges, edges) + '</dl>';
-  document.getElementById('detail').innerHTML = html;
+<!doctype html><html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1"><meta name="generator" content="provia-skills/1.2.0"><title>Payment execution via provider API</title>
+<style>:root{--bg:#f4f6f9;--panel:#ffffff;--ink:#182230;--muted:#475467;--line:#d0d5dd;--soft:#eaf0ff;--accent:#2563eb;--ok:#15803d;--bad:#b91c1c;--warn:#b45309;--chip:#f2f4f7;--nav-w:290px;--radius:8px}
+*{box-sizing:border-box}
+html,body{height:100%}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px/1.5 system-ui,-apple-system,"Segoe UI",Roboto,sans-serif}
+a{color:var(--accent)}a:hover{text-decoration-thickness:2px}
+code{background:var(--chip);padding:1px 4px;border-radius:4px;font-size:.92em;overflow-wrap:anywhere}
+pre{white-space:pre-wrap;overflow-wrap:anywhere;background:var(--chip);padding:10px 12px;border-radius:var(--radius);margin:0}
+button,input,select,textarea{font:inherit;color:inherit}
+button{cursor:pointer;background:var(--panel);border:1px solid #98a2b3;border-radius:6px;padding:6px 12px}
+button:hover{background:var(--soft)}
+button.link{border:0;background:none;color:var(--accent);padding:0;text-decoration:underline}
+:focus-visible{outline:3px solid var(--accent);outline-offset:2px}
+.skip{position:absolute;left:-999px;top:8px;background:var(--panel);padding:8px 12px;border:1px solid var(--line);z-index:20}.skip:focus{left:8px}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip:rect(0 0 0 0);white-space:nowrap}
+.app{display:grid;grid-template-rows:auto minmax(0,1fr);height:100vh;height:100dvh}
+.top{display:flex;flex-wrap:wrap;align-items:center;gap:8px 16px;padding:10px 16px;background:var(--panel);border-bottom:1px solid var(--line)}
+.top h1{margin:0;font-size:18px;line-height:1.3}
+.top .meta{font-size:13px;color:var(--muted);display:flex;flex-wrap:wrap;gap:4px 12px}
+.top .tools{margin-left:auto;display:flex;gap:6px;align-items:center}
+.top .tools button{padding:5px 10px}
+.notice{margin:0;padding:8px 12px;background:var(--soft);border-radius:var(--radius);font-size:13px;flex-basis:100%}
+.body{display:grid;grid-template-columns:var(--nav-w) minmax(0,1fr);min-height:0}
+nav.side{overflow:auto;border-right:1px solid var(--line);background:var(--panel);padding:12px;min-height:0}
+nav.side input[type=search]{width:100%;padding:8px;border:1px solid #98a2b3;border-radius:6px;margin-bottom:10px}
+nav.side ul{list-style:none;margin:0;padding:0}
+nav.side li{margin:0}
+nav.side a{display:block;padding:5px 8px;border-radius:6px;color:var(--ink);text-decoration:none;overflow-wrap:anywhere}
+nav.side a:hover{background:var(--soft)}
+nav.side a[aria-current=page]{background:var(--soft);font-weight:600;box-shadow:inset 3px 0 0 var(--accent)}
+nav.side .count{float:right;color:var(--muted);font-size:12px;background:var(--chip);border-radius:10px;padding:0 7px}
+nav.side details{margin:4px 0}nav.side summary{cursor:pointer;padding:5px 8px;font-weight:600;border-radius:6px}nav.side summary:hover{background:var(--soft)}
+nav.side details ul{padding-left:10px}
+nav.side .section{margin-top:12px;font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted);padding:0 8px}
+main{overflow:auto;min-height:0;padding:20px 24px 48px;scroll-behavior:auto}
+main:focus{outline:0}
+.crumbs{font-size:13px;color:var(--muted);margin:0 0 10px;display:flex;flex-wrap:wrap;gap:4px}
+.crumbs a{color:var(--muted)}
+.crumbs span[aria-hidden]{color:#98a2b3}
+h2{font-size:22px;margin:0 0 6px;line-height:1.3;overflow-wrap:anywhere}
+h3{font-size:17px;margin:22px 0 8px}
+h4{font-size:15px;margin:14px 0 6px}
+.lead{color:var(--muted);margin:0 0 14px;max-width:80ch}
+.chips{display:flex;flex-wrap:wrap;gap:6px;margin:6px 0 12px}
+.chip{display:inline-block;background:var(--chip);border-radius:12px;padding:1px 9px;font-size:12.5px;color:var(--muted);border:1px solid transparent}
+.chip.ok{color:var(--ok);background:#ecfdf3;border-color:#abefc6}
+.chip.bad{color:var(--bad);background:#fef3f2;border-color:#fecdca}
+.chip.warn{color:var(--warn);background:#fffaeb;border-color:#fedf89}
+.chip.info{color:#1d4ed8;background:#eff6ff;border-color:#bfdbfe}
+.chip.kind{background:var(--soft);color:#1e3a8a}
+.cards{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));gap:12px;margin:12px 0 18px}
+.card{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:12px 14px}
+.card .n{font-size:26px;font-weight:600;line-height:1.1}
+.card .t{color:var(--muted);font-size:13px}
+.card a{text-decoration:none;color:var(--ink);display:block}
+.status-row{display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:10px;margin:10px 0 16px}
+.status-row .card{padding:10px 12px}
+.status-row .k{font-size:12px;text-transform:uppercase;letter-spacing:.04em;color:var(--muted)}
+.status-row .v{margin-top:2px}
+table{border-collapse:collapse;width:100%;background:var(--panel)}
+th,td{border:1px solid var(--line);padding:7px 9px;text-align:left;vertical-align:top;font-size:14px}
+th{background:#f9fafb;font-weight:600}
+td.num{text-align:right;white-space:nowrap}
+.scroll-x{overflow-x:auto;max-width:100%}
+dl.props{display:grid;grid-template-columns:minmax(140px,220px) minmax(0,1fr);gap:6px 14px;margin:8px 0 14px;font-size:14px}
+dl.props dt{color:var(--muted)}dl.props dd{margin:0;overflow-wrap:anywhere;white-space:pre-wrap}
+.two{display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:18px}
+ul.plain{list-style:none;padding:0;margin:6px 0}ul.plain li{padding:3px 0}
+ol.brief{padding-left:22px;margin:4px 0}
+.brief-part{margin:10px 0}
+.brief-part .k{font-weight:600;color:var(--muted);font-size:13px;text-transform:uppercase;letter-spacing:.04em}
+.brief-part p{margin:2px 0 0;white-space:pre-wrap;overflow-wrap:anywhere}
+.tabs{display:flex;flex-wrap:wrap;gap:4px;border-bottom:1px solid var(--line);margin:10px 0 14px}
+.tabs button{border:1px solid transparent;border-bottom:0;background:none;padding:8px 12px;border-radius:6px 6px 0 0;color:var(--muted)}
+.tabs button[aria-selected=true]{background:var(--panel);border-color:var(--line);color:var(--ink);font-weight:600;margin-bottom:-1px}
+.actions-list{list-style:none;padding:0;margin:0;counter-reset:step}
+.actions-list li{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:10px 12px 10px 48px;margin:0 0 8px;position:relative}
+.actions-list li::before{counter-increment:step;content:counter(step);position:absolute;left:12px;top:10px;width:26px;height:26px;border-radius:50%;background:var(--soft);color:#1e3a8a;font-weight:600;font-size:13px;display:grid;place-items:center}
+.actions-list li.parallel{border-left:4px solid #7c3aed}
+.actions-list .row{display:flex;flex-wrap:wrap;gap:4px 14px;font-size:13.5px;color:var(--muted);margin-top:3px}
+.actions-list h4{margin:0;font-size:15.5px}
+.pager{display:flex;justify-content:space-between;gap:12px;margin:18px 0 0;font-size:14px}
+.field-preview{background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:14px 16px;max-width:720px}
+.field-preview .f{margin:0 0 12px}
+.field-preview label{display:block;font-weight:600;font-size:14px}
+.field-preview .req{color:var(--bad)}
+.field-preview .help{font-size:13px;color:var(--muted);margin:2px 0 4px}
+.field-preview input,.field-preview select,.field-preview textarea{width:100%;padding:6px 8px;border:1px solid var(--line);border-radius:6px;background:#fafafa}
+.copy{display:inline-flex;align-items:center;gap:6px;background:var(--chip);border-radius:6px;padding:2px 4px 2px 8px;max-width:100%}
+.copy code{background:none;padding:0}
+.copy button{padding:1px 8px;font-size:12px;white-space:nowrap}
+.flow-wrap,.graph-wrap{overflow:auto;background:var(--panel);border:1px solid var(--line);border-radius:var(--radius);padding:8px;max-width:100%}
+svg.flow text,svg.graph text{font:12.5px system-ui,sans-serif;fill:var(--ink)}
+svg .node{cursor:pointer}svg .node:hover rect,svg .node:focus rect{stroke:var(--accent);stroke-width:2.5}
+svg .edge-label{font-size:11.5px;fill:var(--muted)}
+.legend{font-size:13px;color:var(--muted);margin:6px 0 0}
+.toolbar{display:flex;flex-wrap:wrap;gap:8px;align-items:center;margin:8px 0 12px}
+.toolbar select,.toolbar input{padding:6px 8px;border:1px solid #98a2b3;border-radius:6px;max-width:100%}
+.toolbar label{font-size:13px;color:var(--muted)}
+.queue-tabs{display:flex;flex-wrap:wrap;gap:6px;margin:8px 0}
+.queue-tabs a{text-decoration:none;color:var(--ink);border:1px solid var(--line);border-radius:14px;padding:3px 12px;background:var(--panel)}
+.queue-tabs a[aria-current=true]{background:var(--accent);color:#fff;border-color:var(--accent)}
+.issue-note{width:100%;min-width:200px;min-height:36px;padding:5px 7px;border:1px solid var(--line);border-radius:6px;resize:vertical;font-size:13px}
+.result{padding:8px 0;border-bottom:1px solid var(--line)}
+.result .where{font-size:12.5px;color:var(--muted)}
+.result mark{background:#fef08a;padding:0 1px}
+.empty{padding:20px;text-align:center;color:var(--muted);background:var(--panel);border:1px dashed var(--line);border-radius:var(--radius)}
+.status-live{position:fixed;right:16px;bottom:16px;background:var(--ink);color:#fff;padding:8px 12px;border-radius:6px;font-size:13px;opacity:0;transition:opacity .2s;pointer-events:none}
+.status-live.show{opacity:1}
+details.tech{margin:8px 0}details.tech summary{cursor:pointer;color:var(--muted)}
+.muted{color:var(--muted)}.red{color:var(--bad)}.green{color:var(--ok)}
+.small{font-size:13px}
+.hidden{display:none!important}
+.menu-btn{display:none}
+@media (max-width:900px){
+  .app .body{grid-template-columns:minmax(0,1fr)}
+  .app nav.side{display:none;border-right:0;border-bottom:1px solid var(--line);max-height:60vh}
+  .app nav.side.open{display:block}
+  .app .menu-btn{display:inline-block}
+  .app main{padding:14px 16px 40px}
+  .app .top{padding:8px 16px}
+  .app dl.props{grid-template-columns:minmax(0,1fr)}
+  .app dl.props dt{margin-top:6px}
 }
-document.querySelectorAll('.node').forEach(g => { g.addEventListener('click', () => show(g.dataset.id)); g.addEventListener('keydown', e => { if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); show(g.dataset.id); } }); });
-document.querySelectorAll('.rail-node').forEach(b => b.addEventListener('click', () => { show(b.dataset.id); const g = document.querySelector('.node[data-id="' + CSS.escape(b.dataset.id) + '"]'); if (g) g.scrollIntoView({ block: 'center', inline: 'center' }); }));
-document.getElementById('search').addEventListener('input', e => { const term = e.target.value.toLocaleLowerCase(); document.querySelectorAll('.rail-node').forEach(b => { b.parentElement.hidden = term && !b.textContent.toLocaleLowerCase().includes(term); }); });
+@media print{
+  .app{display:block;height:auto}
+  .body{display:block}
+  nav.side,.tools,.skip,.status-live,.menu-btn,.notice{display:none!important}
+  main{overflow:visible;padding:0}
+  .flow-wrap,.graph-wrap,.scroll-x{overflow:visible}
+  a{color:inherit;text-decoration:none}
+}
+</style></head><body>
+<a class="skip" href="#main">Skip to content</a>
+<div class="app">
+<header class="top"><h1>Payment execution via provider API</h1><div class="meta"><span>Angola · en</span><span>Configured mode: disconnected</span><span>Application evidence: no receipts: everything is manual setup</span><span>Generated by provia-skills/1.2.0 · Updated 2026-09-21</span></div>
+<div class="tools"><button type="button" id="menu" class="menu-btn" aria-expanded="false" aria-controls="nav">Menu</button><button type="button" id="back" title="Back" aria-label="Back">←</button><button type="button" id="forward" title="Forward" aria-label="Forward">→</button><button type="button" id="print">Print</button></div>
+<p class="notice">Generated without a Provia connection. This map is a plugin artefact. Nothing here creates, changes or publishes configuration in Provia; it is the review baseline with the customer and the source of the connected-mode apply.</p></header>
+<div class="body"><nav class="side" id="nav" aria-label="Overview"><label for="nav-search" class="sr">Search</label><input id="nav-search" type="search" placeholder="Search by name, key, description or field" autocomplete="off"><div id="nav-tree"></div></nav>
+<main id="main" tabindex="-1"><noscript><h2>Payment execution via provider API</h2><p>Workflows by area: Payment execution. Entity types: 0. Groups: 1. Forms: 0. Blockers: 0. Design questions: 10. Validation: 1. Setup to apply: 5.</p></noscript></main></div></div>
+<div id="live" class="status-live" role="status" aria-live="polite"></div>
+<script type="application/json" id="project-data">{"schemaVersion":"provia-project-map/v2","project":{"key":"pagamentos","title":"Payment execution via provider API","language":"en","country":"Angola","timezone":"Africa/Luanda","currency":"AOA","generator":"provia-skills/1.2.0","contractRevision":"fed8efaf019abc901cb2b229f3676dc4031126fa","updatedAt":"2026-09-21"},"organization":{"name":"Organization not named in the request","sector":null,"mode":"disconnected","tenantId":null,"productRevision":null},"evidence":{"receipts":0,"state":"manual","engineSupportsAccess":true},"sources":[{"id":"source/req-payment-api","title":"Request: payment API integration (chat, 2026-09-21)","kind":"interview","version":"1","effectiveDate":"2026-09-21","sections":[{"anchor":"api","title":"POST /payments, no idempotency key","id":"source/req-payment-api/section/api"},{"anchor":"timeout","title":"A timeout does not tell us whether payment happened","id":"source/req-payment-api/section/timeout"},{"anchor":"retry","title":"Retry automatically five times","id":"source/req-payment-api/section/retry"}],"emails":[],"code":"req-payment-api"}],"entityTypes":[],"groups":[{"key":"financas","name":"Finance","kind":"team","area":"financas","parentKey":null,"purpose":"Prepares payment instructions and confirms payment outcomes with the provider. Proposed; the request names no team.","members":[],"sourceRefs":[{"source":"req-payment-api","section":"api"}],"flags":[{"code":"unnamed","detail":"No source names the team that prepares and confirms payments; Finance is an assumption to be confirmed with the customer."}],"id":"group/financas","receipt":null}],"workflows":[{"key":"pagamentos","name":"Payment execution","prefix":"PAY","file":"workflow.yaml","status":"design","ownerArea":"financas","sourceRefs":[{"source":"req-payment-api"}],"access":{"grants":[{"grantee":"group:financas","level":"create_incident","reason":"Finance opens payment cases and executes the confirmation step; assumption, the request names no starter.","sourceRefs":[{"source":"req-payment-api","section":"api"}]}],"sensitivity":"restricted","note":"Payment data is treated as restricted. A create_incident grant lets every Finance member see every payment case; confirm with the customer whether this is acceptable or whether starts should be narrowed to a smaller group."},"triggers":[{"type":"manual","label":"Start payment","enabled":true,"manual":{"allowedGroups":[]}}],"templates":[],"unresolvedActors":[],"unresolvedEntityTypes":[],"actions":[{"localId":"prepare_payment","name":"Prepare the payment instruction","type":"standard","sourceRefs":[{"source":"req-payment-api","section":"api"}],"assigneeRef":"financas","formRef":null,"entityRefs":[],"evidence":["Authorizing document attached; amount and account match it"],"due":null,"dueInSource":null,"folded":[],"setsFields":["amount","beneficiary_name","beneficiary_account","payment_purpose","payment_attempt_count"],"id":"workflow/pagamentos/action/prepare_payment","index":0,"yaml":{"id":"prepare_payment","name":"Prepare the payment instruction","type":"standard","description":"Task: Complete the payment instruction so that exactly one payment can be sent to the provider.\nHow: 1. Fill `amount`, `beneficiary_name`, `beneficiary_account` and `payment_purpose` from the authorized payment request. 2. Check the beneficiary account against the supporting document (invoice, contract or payroll list). 3. Set `payment_attempt_count` to 0. 4. Note the case reference `payment_reference`: it is the client reference the provider will receive with the payment.\nEvidence: Attach the document that authorizes the payment (approved request, invoice or payroll list) and confirm that the amount and account match it.\nDone when: All four payment fields are filled and match the attached authorization.\nExceptions: If the authorization is missing or the account does not match the document, do not complete: comment what is missing and wait for the corrected authorization.","executionMode":"sequential","required":true,"priority":"normal","due":null,"assignee":{"type":"creator"},"aiWorker":null,"config":null}},{"localId":"execute_payment","name":"Send the payment to the provider","type":"http_request","sourceRefs":[{"source":"req-payment-api","section":"api"},{"source":"req-payment-api","section":"timeout"},{"source":"req-payment-api","section":"retry"}],"assigneeRef":null,"formRef":null,"entityRefs":[],"evidence":["HTTP execution log of the call; provider_payment_id and provider_status mapped from the response when the provider answers"],"due":null,"dueInSource":null,"folded":[],"setsFields":["provider_payment_id","provider_status"],"id":"workflow/pagamentos/action/execute_payment","index":1,"yaml":{"id":"execute_payment","name":"Send the payment to the provider","type":"http_request","description":"Automatic call to the payment provider: POST /payments with the amount, beneficiary and case reference from this case. The call is sent once per authorization and is never retried automatically, because the provider does not accept an idempotency key and a timeout does not reveal whether the payment happened. If the call fails or times out, the case continues to the confirmation step with a warning; nobody resends the payment until the confirmation step has established that it was not executed. When the provider answers, its payment id and status are recorded in `provider_payment_id` and `provider_status`.","executionMode":"sequential","required":true,"priority":"normal","due":null,"assignee":null,"aiWorker":null,"config":{"endpoint":"https://api.example.com/payments","method":"POST","headers":[{"key":"Authorization","value":"Bearer {{secret:PAYMENT_API_TOKEN}}","enabled":true},{"key":"Content-Type","value":"application/json","enabled":true}],"body":{"type":"json","content":"{\n  \"client_reference\": \"{{payment_reference}}\",\n  \"amount\": \"{{amount}}\",\n  \"currency\": \"AOA\",\n  \"beneficiary\": {\n    \"name\": \"{{beneficiary_name}}\",\n    \"account\": \"{{beneficiary_account}}\"\n  },\n  \"description\": \"{{payment_purpose}}\"\n}"},"responseMappings":[{"jsonPath":"$.id","targetField":"provider_payment_id","required":false},{"jsonPath":"$.status","targetField":"provider_status","required":false}],"executionTiming":"automatic","timeoutSeconds":60,"retryConfig":{"maxAttempts":1,"failureBehavior":"continue_warning"},"expectedStatusCodes":[200,201,202]}}},{"localId":"decide_payment_outcome","name":"Decide the payment outcome","type":"decision","sourceRefs":[{"source":"req-payment-api","section":"timeout"},{"source":"req-payment-api","section":"retry"}],"assigneeRef":"financas","formRef":null,"entityRefs":[],"evidence":["Provider portal screenshot or statement line with date and time","payment_status and payment_attempt_count filled","Mandatory comment on Resend and Abandon"],"due":null,"dueInSource":null,"folded":[{"section":"retry","summary":"The five-attempt limit is a human-counted cap in the decision brief (payment_attempt_count \u003c 5), not an automatic retry."}],"setsFields":["payment_status","payment_attempt_count"],"id":"workflow/pagamentos/action/decide_payment_outcome","index":2,"yaml":{"id":"decide_payment_outcome","name":"Decide the payment outcome","type":"decision","description":"Task: Establish whether the payment sent in the previous step actually happened, and decide whether the case is complete, needs one more send, or is abandoned.\nHow: 1. Add 1 to `payment_attempt_count`. 2. If `provider_payment_id` is filled, look the payment up in the provider's portal or statement by that id. 3. If it is empty (the call failed or timed out), look for the payment in the provider's portal or bank statement by the case reference `payment_reference`, the amount and the beneficiary, covering the time of the call; wait for the provider's settlement window to close before concluding it is absent. 4. Set `payment_status` to «paid», «not_executed» or «unknown». 5. Choose the outcome: «Paid» when the provider shows the payment as executed; «Resend» only when `payment_status` is «not_executed», the provider shows no payment for this reference and `payment_attempt_count` is below 5; «Abandon» when five sends have been confirmed as not executed or the payment must not proceed.\nEvidence: Attach the provider portal screenshot or statement line that proves the status, with its date and time. A comment is mandatory on «Resend» and «Abandon».\nDone when: `payment_status` and `payment_attempt_count` are filled, the proof is attached and an outcome is chosen.\nExceptions: If the provider cannot say whether the payment happened (status «unknown»), do not choose «Resend»: comment what the provider answered, keep the action open and escalate to the finance manager. A resend with an unknown outcome can pay the beneficiary twice.","executionMode":"sequential","required":true,"priority":"urgent","due":null,"assignee":{"type":"creator"},"aiWorker":null,"config":{"branches":[{"label":"Paid","outcome":"continue","requiresComment":false},{"label":"Resend","outcome":"return_to_action","target":"execute_payment","requiresComment":true},{"label":"Abandon","outcome":"cancel_incident","requiresComment":true}]}}},{"localId":"notify_payment_result","name":"Notify the requester of the payment result","type":"notification","sourceRefs":[{"source":"req-payment-api","section":"api"}],"assigneeRef":null,"formRef":null,"entityRefs":[],"evidence":["Notification delivery record in the case"],"due":null,"dueInSource":null,"folded":[],"id":"workflow/pagamentos/action/notify_payment_result","index":3,"yaml":{"id":"notify_payment_result","name":"Notify the requester of the payment result","type":"notification","description":"Automatic in-app notification to the person who opened the case once the payment has been confirmed as paid. It carries the case reference and the provider payment id so the requester can quote them.","executionMode":"sequential","required":true,"priority":"normal","due":null,"assignee":null,"aiWorker":null,"config":{"recipientType":"creator","channels":["in_app"],"subject":"Payment confirmed","messageTemplate":"The payment for this case has been confirmed as paid by the provider. Check the provider payment id and the attached proof in the case before closing your request."}}}],"subWorkflowRefs":[],"setupNotes":["Secret: create the organization secret PAYMENT_API_TOKEN with the provider's bearer token before publishing; the YAML references it as {{secret:PAYMENT_API_TOKEN}} and never carries the value.","HTTP allowlist: replace https://api.example.com/payments with the provider's real HTTPS base URL and add that host to the organization's allowed HTTP destinations. The request supplied only the path POST /payments; the host is unknown.","Request body: the JSON body in execute_payment names the case fields to send (client_reference, amount, currency, beneficiary.name, beneficiary.account, description). The provider's actual field names, types and required fields must be taken from its API documentation, and the field-substitution syntax for case values in HTTP bodies must be confirmed in the Provia UI; the pinned contract defines only {{secret:NAME}}.","Response mappings: $.id -> provider_payment_id and $.status -> provider_status are assumed JSONPaths. Replace them with the paths from the provider's response schema, or remove them if the response carries no id.","Expected status codes: [200, 201, 202] is an assumption. Set the list from the provider's documented success responses (e.g. whether 202 means accepted-but-pending).","Retry: retryConfig.maxAttempts is deliberately 1. Do not raise it while POST /payments has no idempotency key; each automatic retry after a timeout can create a duplicate payment. See integration-spec.md.","Failure behaviour: continue_warning lets the case reach the confirmation step after a timeout or error. Verify in the destination that the warning is visible on the action and that the case does not stop.","Return to action: the Resend branch returns to execute_payment. Verify in the destination that returning to an automatic HTTP action re-executes the call (and does not require a manual re-trigger); if it does not re-execute, replace the branch with a manual re-send step.","Owner assignment: actions prepare_payment and decide_payment_outcome are assigned to the creator in the YAML as a draft simplification; set the Finance group as default responsible on import once the group exists.","Loop cap: Provia does not enforce a maximum number of returns to an action; the five-send limit is applied by the decider through payment_attempt_count and the decision brief.","Authorization: this workflow starts at 'prepare the payment instruction' and assumes the payment was authorized before the case is opened; add an approval decision before execute_payment if the customer's procedure requires it."],"id":"workflow/pagamentos","yaml":{"present":true,"metadata":{"name":"Payment execution","prefix":"PAY","description":"Executes one payment through the provider's POST /payments and reconciles the outcome before any repeat call. The provider offers no idempotency key, so the HTTP action runs once per authorization and every repeat is a human decision taken after the outcome has been confirmed."},"triggers":[{"type":"manual","label":"Start payment","enabled":true,"config":{}}],"fields":[{"name":"payment_reference","label":"Payment reference","type":"auto_number","required":false,"config":{"prefix":"PAY-","padding":6,"startAt":1}},{"name":"amount","label":"Amount","type":"currency","required":true,"config":{"currency":"AOA"}},{"name":"beneficiary_name","label":"Beneficiary name","type":"text","required":true},{"name":"beneficiary_account","label":"Beneficiary account (IBAN or account number)","type":"text","required":true},{"name":"payment_purpose","label":"Payment purpose","type":"text","required":true},{"name":"provider_payment_id","label":"Provider payment id","type":"text","required":false},{"name":"provider_status","label":"Provider status (from response)","type":"text","required":false},{"name":"payment_status","label":"Confirmed payment status","type":"select","required":false,"config":{"options":[{"value":"paid","label":"Paid"},{"value":"not_executed","label":"Not executed"},{"value":"unknown","label":"Unknown"}]}},{"name":"payment_attempt_count","label":"Payment attempts sent","type":"number","required":false}],"entities":{"mode":"none"},"access":{"grants":[{"grantee":"group:Finance","level":"create_incident"}]}},"receipt":null,"review":{"design":"design","designOpen":2,"validation":{"warnings":0,"infos":1,"errors":0},"decisions":{"open":7,"resolved":0},"setup":4,"blockers":0,"evidence":{"receipt":null,"accessApplied":false,"readinessBlocked":false,"reasons":[]}}}],"forms":[],"aiProfiles":[],"decisions":[{"id":"decision/D1","question":"Does the payment provider offer any of: (a) an idempotency key or client-reference uniqueness on POST /payments, (b) a status lookup by payment id (GET /payments/{id}), (c) a search by client reference, or (d) a settlement/statement export? Automatic retries stay disabled until one of (a)–(c) is confirmed and designed into the workflow.","owner":"Integration lead / payment provider contact","status":"open","raisedBy":"provia-automation-designer","sourceRefs":[{"source":"req-payment-api","section":"api"},{"source":"req-payment-api","section":"retry"}],"code":"D1","related":["pagamentos"]},{"id":"decision/D2","question":"What are the provider's real base URL, request body schema, success status codes and response fields (payment id, status) for POST /payments? The YAML carries placeholders (api.example.com, assumed field names, $.id, $.status).","owner":"Integration lead","status":"open","raisedBy":"provia-automation-designer","sourceRefs":[{"source":"req-payment-api","section":"api"}],"code":"D2","related":["pagamentos"]},{"id":"decision/D3","question":"Is the requirement 'retry automatically five times' accepted as 'up to five human-confirmed resends' (this design), or does the customer insist on automatic retries? Automatic retries require D1 to be resolved with an idempotency key or a pre-send status check.","owner":"Finance manager / process owner","status":"open","raisedBy":"provia-automation-designer","sourceRefs":[{"source":"req-payment-api","section":"retry"},{"source":"req-payment-api","section":"timeout"}],"code":"D3","related":["pagamentos"]},{"id":"decision/D4","question":"How long after a timed-out call should the decider wait before concluding the payment was not executed (the provider's settlement window), and where does Finance look it up (portal, statement, support desk)?","owner":"Finance manager","status":"open","raisedBy":"provia-automation-designer","sourceRefs":[{"source":"req-payment-api","section":"timeout"}],"code":"D4","related":["pagamentos"]},{"id":"decision/D5","question":"Which team prepares payment instructions and confirms outcomes, and who authorizes a payment before it is sent? Finance is a proposed group with no members; no approval step exists in this draft.","owner":"Process owner","status":"open","raisedBy":"provia-automation-designer","sourceRefs":[{"source":"req-payment-api","section":"api"}],"code":"D5","related":["pagamentos"]},{"id":"decision/D6","question":"Does returning to the HTTP action (Resend branch) re-execute the call automatically in the customer's Provia environment? To verify on a test workflow before publication.","owner":"Provia implementer","status":"open","raisedBy":"provia-automation-designer","sourceRefs":[{"source":"req-payment-api","section":"retry"}],"code":"D6","related":["pagamentos"]},{"id":"decision/D7","question":"What deadlines apply to preparing the instruction and to confirming the outcome after a send? No service level was supplied, so `due` is unset on prepare_payment and decide_payment_outcome.","owner":"Finance manager","status":"open","raisedBy":"provia-automation-designer","sourceRefs":[{"source":"req-payment-api","section":"timeout"}],"code":"D7","related":["pagamentos"]}],"receipts":[],"access":[{"workflow":"pagamentos","name":"Payment execution","ownerArea":"financas","sensitivity":"restricted","default":null,"note":"Payment data is treated as restricted. A create_incident grant lets every Finance member see every payment case; confirm with the customer whether this is acceptable or whether starts should be narrowed to a smaller group.","declared":true,"grants":[{"grantee":"group:financas","kind":"group","ref":"financas","name":"Finance","level":"create_incident","reason":"Finance opens payment cases and executes the confirmation step; assumption, the request names no starter.","sourceRefs":[{"source":"req-payment-api","section":"api"}],"resolved":false,"applied":false}],"receipt":null,"readBack":false,"staleReadBack":null,"applied":false,"appliedGrants":[],"retainedExcess":[],"allowlists":[],"warnings":[],"assigned":[]}],"readiness":[{"workflow":"pagamentos","blocked":false,"reasons":[]}],"issues":[{"id":"issue-0","category":"setup","objectId":"group/financas","workflow":null,"kind":"group","what":"create_group","key":"financas","text":"Create the group and add the members","ref":null,"detail":null,"blocking":false,"owner":null},{"id":"issue-1","category":"design","objectId":"group/financas","workflow":null,"kind":"group","what":"flag_unnamed","key":"financas","text":"Owner unnamed in the sources","ref":null,"detail":"No source names the team that prepares and confirms payments; Finance is an assumption to be confirmed with the customer.","blocking":false,"owner":null},{"id":"issue-2","category":"setup","objectId":"workflow/pagamentos","workflow":"pagamentos","kind":"workflow","what":"import_workflow_draft","key":"pagamentos","text":"Import the YAML as a draft and review the preview","ref":null,"detail":null,"blocking":false,"owner":null},{"id":"issue-3","category":"setup","objectId":"workflow/pagamentos/action/prepare_payment","workflow":"pagamentos","kind":"action","what":"assign_group","key":"prepare_payment","text":"Assign the group to the action once the group exists","ref":"financas","detail":null,"blocking":false,"owner":null},{"id":"issue-4","category":"design","objectId":"workflow/pagamentos/action/prepare_payment","workflow":"pagamentos","kind":"action","what":"due_open","key":"prepare_payment","text":"Set the deadline; the design proposes no `due`","ref":null,"detail":null,"blocking":false,"owner":null},{"id":"issue-5","category":"setup","objectId":"workflow/pagamentos/action/decide_payment_outcome","workflow":"pagamentos","kind":"action","what":"assign_group","key":"decide_payment_outcome","text":"Assign the group to the action once the group exists","ref":"financas","detail":null,"blocking":false,"owner":null},{"id":"issue-6","category":"design","objectId":"workflow/pagamentos/action/decide_payment_outcome","workflow":"pagamentos","kind":"action","what":"due_open","key":"decide_payment_outcome","text":"Set the deadline; the design proposes no `due`","ref":null,"detail":null,"blocking":false,"owner":null},{"id":"issue-7","category":"setup","objectId":"workflow/pagamentos","workflow":"pagamentos","kind":"workflow","what":"apply_access","key":"pagamentos","text":"Apply the access grants (`workflow_access_apply`, dry run first) or confirm the `access` section in the import preview","ref":null,"detail":"group:financas → create_incident","blocking":false,"owner":null},{"id":"issue-8","category":"design","objectId":"decision/D1","workflow":null,"workflows":["pagamentos"],"kind":"decision","what":"decide","key":"D1","text":"Decide","ref":null,"detail":null,"blocking":false,"owner":"Integration lead / payment provider contact"},{"id":"issue-9","category":"design","objectId":"decision/D2","workflow":null,"workflows":["pagamentos"],"kind":"decision","what":"decide","key":"D2","text":"Decide","ref":null,"detail":null,"blocking":false,"owner":"Integration lead"},{"id":"issue-10","category":"design","objectId":"decision/D3","workflow":null,"workflows":["pagamentos"],"kind":"decision","what":"decide","key":"D3","text":"Decide","ref":null,"detail":null,"blocking":false,"owner":"Finance manager / process owner"},{"id":"issue-11","category":"design","objectId":"decision/D4","workflow":null,"workflows":["pagamentos"],"kind":"decision","what":"decide","key":"D4","text":"Decide","ref":null,"detail":null,"blocking":false,"owner":"Finance manager"},{"id":"issue-12","category":"design","objectId":"decision/D5","workflow":null,"workflows":["pagamentos"],"kind":"decision","what":"decide","key":"D5","text":"Decide","ref":null,"detail":null,"blocking":false,"owner":"Process owner"},{"id":"issue-13","category":"design","objectId":"decision/D6","workflow":null,"workflows":["pagamentos"],"kind":"decision","what":"decide","key":"D6","text":"Decide","ref":null,"detail":null,"blocking":false,"owner":"Provia implementer"},{"id":"issue-14","category":"design","objectId":"decision/D7","workflow":null,"workflows":["pagamentos"],"kind":"decision","what":"decide","key":"D7","text":"Decide","ref":null,"detail":null,"blocking":false,"owner":"Finance manager"},{"id":"issue-15","category":"validation","severity":"info","objectId":"workflow/pagamentos","workflow":"pagamentos","kind":"validation","what":"validation","text":"group:financas may open cases and therefore sees every case of this restricted workflow; limitation recorded in access.note (rule 5)","path":"workflows[0].access.grants[0]","blocking":false}],"edges":[{"from":"source/req-payment-api/section/api","to":"group/financas","kind":"justifies","status":"neutral"},{"from":"source/req-payment-api","to":"workflow/pagamentos","kind":"justifies","status":"neutral"},{"from":"workflow/pagamentos/action/prepare_payment","to":"group/financas","kind":"assignee","status":"unresolved"},{"from":"source/req-payment-api/section/api","to":"workflow/pagamentos/action/prepare_payment","kind":"source","status":"neutral"},{"from":"source/req-payment-api/section/api","to":"workflow/pagamentos/action/execute_payment","kind":"source","status":"neutral"},{"from":"source/req-payment-api/section/timeout","to":"workflow/pagamentos/action/execute_payment","kind":"source","status":"neutral"},{"from":"source/req-payment-api/section/retry","to":"workflow/pagamentos/action/execute_payment","kind":"source","status":"neutral"},{"from":"workflow/pagamentos/action/decide_payment_outcome","to":"group/financas","kind":"assignee","status":"unresolved"},{"from":"source/req-payment-api/section/timeout","to":"workflow/pagamentos/action/decide_payment_outcome","kind":"source","status":"neutral"},{"from":"source/req-payment-api/section/retry","to":"workflow/pagamentos/action/decide_payment_outcome","kind":"source","status":"neutral"},{"from":"source/req-payment-api/section/api","to":"workflow/pagamentos/action/notify_payment_result","kind":"source","status":"neutral"},{"from":"workflow/pagamentos","to":"group/financas","kind":"grant","status":"neutral"},{"from":"source/req-payment-api","to":"source/req-payment-api/section/api","kind":"contains","status":"neutral"},{"from":"source/req-payment-api","to":"source/req-payment-api/section/timeout","kind":"contains","status":"neutral"},{"from":"source/req-payment-api","to":"source/req-payment-api/section/retry","kind":"contains","status":"neutral"}],"labels":{"nav":{"overview":"Overview","workflows":"Workflows","entities":"Entity types","forms":"Forms","groups":"Groups","sources":"Sources","profiles":"AI profiles","decisions":"Decisions","review":"Review","access":"Access","graph":"Dependencies","search":"Search","menu":"Menu","skip":"Skip to content","back":"Back","forward":"Forward","print":"Print","noArea":"No area","collapse":"Collapse","expand":"Expand","directory":"Open directory"},"header":{"configuredMode":"Configured mode","evidence":"Application evidence","generated":"Generated by","updated":"Updated","tenant":"Tenant","modes":{"disconnected":"disconnected","connected":"connected"},"evidenceStates":{"manual":"no receipts: everything is manual setup","partial":"partially applied ({n} receipts)","applied":"applied ({n} receipts, nothing pending)"},"notice":"This map is a plugin artefact. Nothing here creates, changes or publishes configuration in Provia; it is the review baseline with the customer and the source of the connected-mode apply.","noConnection":"Generated without a Provia connection."},"overview":{"title":"Project overview","workflowsByArea":"Workflows by area","workflow":"Workflow","area":"Area","owners":"Owners","design":"Design","validation":"Validation","decisions":"Open decisions","evidence":"Application","actions":"actions","directories":"Directories","queues":"Review queues","noWorkflows":"The manifest has no workflows.","summary":"Summary","items":"items"},"kinds":{"workflow":"Workflow","action":"Action","entity":"Entity type","form":"Form","group":"Group","source":"Source","section":"Section","ai":"AI profile","decision":"Decision","issue":"Review item"},"kindsPlural":{"workflow":"Workflows","action":"Actions","entity":"Entity types","form":"Forms","group":"Groups","source":"Sources","section":"Sections","ai":"AI profiles","decision":"Decisions"},"fields":{"key":"Key","name":"Name","title":"Title","label":"Label","type":"Type","status":"Status","kind":"Kind","area":"Area","purpose":"Purpose","description":"Description","owner":"Owner","fallback":"Fallback","due":"Due","dueInSource":"Due in source","evidence":"Evidence","form":"Form","entities":"Entity types","sources":"Sources","folded":"Folded steps","members":"Members","flags":"Flags","parent":"Parent group","children":"Sub-groups","file":"YAML file","prefix":"Prefix","sensitivity":"Sensitivity","grants":"Grants","triggers":"Triggers","templates":"Templates","setupNotes":"Setup notes","subWorkflows":"Sub-workflows","calledBy":"Called by","unresolvedActors":"Actors to register","unresolvedEntityTypes":"Types to register","icon":"Icon","namePattern":"Name convention","coverage":"Functional coverage","setup":"Setup and dependencies","readiness":"Checks before execution","fieldsCount":"Fields","required":"Required","optional":"Optional","group":"Group","helpText":"Help text","example":"Example","defaultValue":"Default value","options":"Options","priority":"Priority","source":"Source","maintainer":"Maintainer","target":"Related type","config":"Configuration","mapsTo":"Maps to","version":"Version","effectiveDate":"Effective date","emails":"Emails in source","sections":"Sections","question":"Question","resolution":"Resolution","raisedBy":"Raised by","related":"Related workflows","receipt":"Receipt","workflow":"Workflow","action":"Action","executionMode":"Execution","branches":"Branches","outcome":"Outcome","targetAction":"Target action","requiresComment":"Comment required","assignee":"Assignee in YAML","role":"Role","email":"Email","verified":"Verified","unverified":"Unverified","responsibilities":"Responsibilities","assignedActions":"Assigned actions","heldGrants":"Grants held","allowlists":"Manual start allowed","referencedBy":"Referenced by","usedBy":"Used by","relationships":"Relationships","usedIn":"Used in","trigger":"Start","purposeOfWorkflow":"Purpose","caseFields":"Case fields","responsibleGroups":"Responsible groups","exceptions":"Exceptions","openQuestions":"Open questions","linkedForms":"Forms","linkedEntities":"Entity types","previous":"Previous action","next":"Next action","position":"Position","of":"of","none":"None","yes":"Yes","no":"No","noYaml":"No YAML file next to the manifest: the sequence comes from the manifest only, without branches or instructions.","brokenYaml":"The YAML file could not be read; the sequence comes from the manifest only.","dueUnset":"no due in the design","level":"Level","reason":"Reason","grantee":"Grantee","notes":"Notes","code":"Code","path":"Path","severity":"Severity","profile":"Profile","aiWorker":"AI worker","requiredAction":"Required action","entitiesMode":"Case entities","jsonOf":"JSON of this object","copy":"Copy","copied":"Copied.","copyFallback":"Text selected; press Ctrl+C or ⌘C.","downloadJson":"Download JSON","fieldPreview":"Preview","technical":"Technical details","instructions":"Instructions to the owner","brief":{"task":"Task","how":"How","evidence":"Evidence","done":"Done when","exceptions":"Exceptions"}},"tabs":{"overview":"Overview","flow":"Sequence","dependencies":"Dependencies","access":"Access","review":"Review","fields":"Fields","relationships":"Relationships","preview":"Preview","members":"Members","json":"JSON"},"status":{"design":"Design","validation":"Validation","approval":"Customer approval","application":"Application","workflow":{"design":"in design","packaged":"packaged","validated":"validated","imported":"imported","change_planned":"change planned"},"form":{"designed":"designed","created":"created","linked":"linked"},"validationOk":"no warnings","validationWarnings":"{n} warnings","validationErrors":"{n} errors","validationInfos":"{n} notes","decisionsOpen":"{n} to decide","decisionsNone":"nothing to decide","designOpen":"{n} design questions","applied":"applied","notApplied":"no application evidence","receiptAt":"receipt","accessApplied":"access applied","accessPending":"access to apply","blocked":"BLOCKED","ready":"no blocks","open":"open","resolved":"resolved","receiptResolved":"resolved by receipt","pendingSetup":"to apply","neutral":"no destination dependency"},"enums":{"actionType":{"standard":"Standard","decision":"Decision","sub_workflow":"Sub-workflow","notification":"Notification","wait":"Wait","http_request":"HTTP request","form_fill":"Form fill"},"sourceKind":{"sop":"Procedure","policy":"Policy","checklist":"Checklist","export":"Export","interview":"Interview","catalogue":"Catalogue","other":"Other"},"groupKind":{"team":"Team","container":"Container","role":"Role"},"formKind":{"trigger":"Intake form","action":"Action response (Form Fill)"},"flag":{"single_person":"Single person","alias":"Alternative names","segregation":"Segregation of duties","requester":"Requester","external":"External actor","unnamed":"Unnamed in sources"},"level":{"view":"view","create_incident":"open cases","edit":"edit","admin":"admin"},"sensitivity":{"public":"public","internal":"internal","confidential":"confidential","restricted":"restricted"},"outcome":{"continue":"continues","cancel_incident":"cancels the case","return_to_action":"returns to","trigger_workflow":"starts workflow"},"executionMode":{"sequential":"sequential","parallel":"in parallel"},"offsetType":{"calendar":"calendar days","workdays":"workdays"},"basis":{"activation":"from activation","creation":"from creation"},"assigneeType":{"user":"user","group":"group","creator":"case creator","previous":"previous owner","ai_agent":"AI agent"},"category":{"design":"Design questions","validation":"Validation","setup":"Setup to apply","blocker":"Blockers"},"severity":{"error":"error","warning":"warning","info":"note"},"edge":{"justifies":"justifies","source":"source of","contains":"contains","parent":"parent of","sub_workflow":"calls","starts":"starts","assignee":"owner","fallback":"fallback","form":"form","entity":"entity type","grant":"grant to"},"priority":{"time_sensitive":"time sensitive","urgent":"urgent","normal":"normal"},"triggerType":{"manual":"manual","email":"email","webhook":"webhook","schedule":"scheduled","form":"form"},"receiptOutcome":{"created":"created","updated":"updated","no_op":"no change","dry_run":"dry run","failed":"failed"},"creator":"case creator","previous":"previous owner","organization":"whole organization","creatorOnly":"creator and administrators only"},"flow":{"title":"Execution flow","start":"Start","end":"Done","cancelled":"Case cancelled","legend":"Sequence taken from the YAML: action order, parallel execution and decision branches. Dashed arrows return to an earlier action.","manifestOnly":"Sequence taken from the manifest.","parallel":"In parallel","decisionNoContinue":"No continuing branch","triggerWorkflow":"Starts","andContinues":"and continues the current workflow"},"graph":{"title":"Dependencies","project":"Whole project (workflows, groups, forms, entity types, sources)","scope":"Scope","intro":"Links declared in the manifest. Green: resolved by a receipt. Red: to apply. Grey: no destination dependency. Click a node to open it.","render":"Draw","tooLarge":"Scope has {n} nodes; pick a workflow for a readable diagram.","nodes":"nodes","edges":"edges"},"search":{"placeholder":"Search by name, key, description or field","results":"{n} results for “{q}”","none":"No results for “{q}”.","hint":"Accents are ignored: “acao” finds “acção”.","filters":"Filters","type":"Type","area":"Area","workflow":"Workflow","status":"Status","all":"All","clear":"Clear","empty":"Type to search the whole project.","in":"in"},"review":{"title":"Review queues","intro":"Every item links to its object and states the next step. Distinct states: design questions need a business decision; validation comes from `--check`; setup to apply is normal work not yet done in Provia; blockers stop publication.","all":"All","object":"Object","item":"Item","nextStep":"Next step","note":"Review note","notes":"Review notes","notesIntro":"Notes stay in this browser only (localStorage), keyed by object id. They are not incorporated into the manifest or Provia: export them and hand them to the implementer.","export":"Export notes","exportMd":"Export Markdown","importNotes":"Import notes","clearNotes":"Delete notes","imported":"{n} notes imported; {m} conflicts appended to the existing note.","importInvalid":"Invalid notes file: expected provia-review-notes/v1.","importOtherProject":"The notes belong to another project ({p}); nothing was imported.","importedMarker":"imported","saveFailed":"Could not save in this browser (storage unavailable).","cleared":"Notes deleted.","noNotes":"No notes to export.","count":"{n} items","filtered":"{n} of {m} items","none":"Nothing in this queue.","notePlaceholder":"Write the decision, the fix or the question for the customer…","decisionsTitle":"Decisions","workflow":"Workflow","category":"Queue","blocking":"blocks","incorporated":"Notes incorporated into the manifest","notIncorporated":"This file cannot tell whether exported notes were incorporated; check the manifest `updatedAt` after the next generation.","savedLocally":"Saved in this browser.","related":"Related objects"},"access":{"title":"Access","intro":"Workflow × grantee × level, as the manifest declares it. Whoever executes an action sees their own cases without a grant; “view” on a workflow shows every case. Grants retained in the tenant are listed below; those that block readiness are marked.","columns":["Workflow","Area","Sensitivity","Grantee","Level","Reason","Sources","Status"],"creatorOnly":"creator and administrators only (default: creator_only)","seesOwn":"sees its own cases only","applied":"applied","toApply":"to apply","retained":"Grants retained in the tenant","blocked":"BLOCKED","readiness":"Readiness","ready":"no access blocks","allowlist":"Manual start restricted to","notDeclared":"Access not declared (rule 3)","approved":"approved","start":"start","notInManifest":"not in the manifest"},"directory":{"entities":"Entity type directory","forms":"Form directory","groups":"Group directory","sources":"Source directory","profiles":"AI profiles","workflows":"Workflow directory","decisions":"Decisions","empty":"Nothing to list.","filter":"Filter the list"},"misc":{"breadcrumbHome":"Project","notFound":"Object not found: {id}","offline":"Standalone file, no external links.","generatedFrom":"generated from provia-project.json","print":"Print this page","close":"Close","more":"more","selectedObject":"Selected object","dependencyOf":"Dependencies of this object"}}}</script>
+<script>/* Offline project map: one data store, views rendered on demand from the location hash. No network, no dependencies. */
+(() => {
+'use strict';
+const DATA = JSON.parse(document.getElementById('project-data').textContent);
+const T = DATA.labels;
+const esc = s => String(s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c]));
+class Raw { constructor(s) { this.s = s; } toString() { return this.s; } }
+const raw = s => new Raw(String(s));
+const part = v => v == null || v === false ? '' : v instanceof Raw ? v.s : Array.isArray(v) ? v.map(part).join('') : esc(String(v));
+function html(strings, ...values) { let out = strings[0]; for (let i = 0; i < values.length; i++) out += part(values[i]) + strings[i + 1]; return new Raw(out); }
+const fmt = (template, values) => String(template).replace(/\{(\w+)\}/g, (m, k) => values[k] != null ? values[k] : m);
+const norm = s => String(s ?? '').normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const list = v => Array.isArray(v) ? v : [];
+const enumLabel = (table, value) => value == null ? '' : (T.enums[table] && T.enums[table][value]) || String(value);
+const isPt = String(DATA.project.language || '').toLowerCase().startsWith('pt');
+
+/* ---------- Index: every object once, by id ---------- */
+const OBJ = new Map();
+const register = (id, kind, label, data, extra) => { const o = Object.assign({ id, kind, label, data }, extra || {}); OBJ.set(id, o); return o; };
+const workflowsByKey = new Map(), groupsByKey = new Map(), formsByKey = new Map(), entitiesByKey = new Map(), entitiesByName = new Map(), profilesByKey = new Map(), sourcesByCode = new Map();
+for (const source of DATA.sources) {
+  register(source.id, 'source', source.title, source);
+  sourcesByCode.set(source.code, source);
+  for (const section of source.sections) register(section.id, 'section', ('§' + section.anchor + ' ' + (section.title || '')).trim(), section, { parent: source.id });
+}
+for (const type of DATA.entityTypes) { register(type.id, 'entity', type.name, type); entitiesByKey.set(type.key, type); entitiesByName.set(norm(type.name), type); }
+for (const group of DATA.groups) { register(group.id, 'group', group.name, group); groupsByKey.set(group.key, group); }
+for (const form of DATA.forms) { register(form.id, 'form', form.title || form.key, form); formsByKey.set(form.key, form); }
+for (const profile of DATA.aiProfiles) { register(profile.id, 'ai', profile.name, profile); profilesByKey.set(profile.key, profile); }
+for (const workflow of DATA.workflows) {
+  register(workflow.id, 'workflow', workflow.name, workflow);
+  workflowsByKey.set(workflow.key, workflow);
+  for (const action of workflow.actions) register(action.id, 'action', action.name, action, { parent: workflow.id, workflow });
+}
+for (const decision of DATA.decisions) register(decision.id, 'decision', decision.code + ' ' + decision.question, decision);
+
+const issueWorkflows = issue => issue.workflows || (issue.workflow ? [issue.workflow] : []);
+const push = (map, key, value) => { if (!map.has(key)) map.set(key, []); map.get(key).push(value); };
+const issuesByObject = new Map(), issuesByWorkflow = new Map();
+for (const issue of DATA.issues) {
+  if (issue.objectId) { if (!issuesByObject.has(issue.objectId)) issuesByObject.set(issue.objectId, []); issuesByObject.get(issue.objectId).push(issue); }
+  for (const key of issueWorkflows(issue)) push(issuesByWorkflow, key, issue);
+}
+const entityUsedBy = new Map(), formUsedBy = new Map(), groupActions = new Map(), groupFallback = new Map(), profileActions = new Map(), refsBySource = new Map(), calledBy = new Map();
+const sourceRefId = ref => ref && ref.source ? (ref.section != null ? 'source/' + ref.source + '/section/' + ref.section : 'source/' + ref.source) : null;
+const noteRefs = (refs, id) => { for (const ref of list(refs)) { const target = sourceRefId(ref); if (!target) continue; push(refsBySource, target, id); if (ref.section != null) push(refsBySource, 'source/' + ref.source, id); } };
+for (const workflow of DATA.workflows) {
+  noteRefs(workflow.sourceRefs, workflow.id);
+  for (const key of list(workflow.subWorkflowRefs)) push(calledBy, key, workflow.key);
+  for (const grant of list(workflow.access && workflow.access.grants)) noteRefs(grant.sourceRefs, workflow.id);
+  for (const action of workflow.actions) {
+    noteRefs(action.sourceRefs, action.id);
+    for (const key of list(action.entityRefs)) push(entityUsedBy, key, action.id);
+    if (action.formRef) push(formUsedBy, action.formRef, action.id);
+    const ref = action.assigneeRef;
+    if (typeof ref === 'string') {
+      if (ref.startsWith('ai:')) push(profileActions, ref.slice(3), action.id);
+      else if (ref.startsWith('field:')) { if (action.assigneeFallback && action.assigneeFallback !== 'creator') push(groupFallback, action.assigneeFallback, action.id); }
+      else if (!['creator', 'previous'].includes(ref)) push(groupActions, ref, action.id);
+    }
+  }
+}
+for (const group of DATA.groups) noteRefs(group.sourceRefs, group.id);
+for (const decision of DATA.decisions) noteRefs(decision.sourceRefs, decision.id);
+const accessOf = key => DATA.access.find(entry => entry.workflow === key) || null;
+const areaOf = workflow => workflow.ownerArea || '';
+
+/* ---------- Routing ---------- */
+const main = document.getElementById('main');
+const nav = document.getElementById('nav');
+const live = document.getElementById('live');
+const scrollMemory = new Map();
+let currentHash = null;
+function parseHash(hash) {
+  const value = (hash || location.hash || '').replace(/^#/, '');
+  const at = value.indexOf('?');
+  const path = decodeURIComponent(at === -1 ? value : value.slice(0, at));
+  const params = new URLSearchParams(at === -1 ? '' : value.slice(at + 1));
+  return { path, params };
+}
+function hashFor(path, params) {
+  const query = params ? [...Object.entries(params)].filter(([, v]) => v != null && v !== '').map(([k, v]) => encodeURIComponent(k) + '=' + encodeURIComponent(v)).join('&') : '';
+  return '#' + path + (query ? '?' + query : '');
+}
+function replaceParams(changes, keepFocus) {
+  const { path, params } = parseHash();
+  const next = Object.fromEntries(params.entries());
+  Object.assign(next, changes);
+  history.replaceState(null, '', hashFor(path, next));
+  render({ keepScroll: true, keepFocus });
+}
+const href = (path, params) => hashFor(path, params);
+const link = (id, text) => { const o = OBJ.get(id); return o ? html`<a href="${href(id)}">${text || o.label}</a>` : html`<code>${text || id}</code>`; };
+const kindChip = kind => html`<span class="chip kind">${T.kinds[kind] || kind}</span>`;
+const chip = (text, tone) => html`<span class="chip ${tone || ''}">${text}</span>`;
+const prop = (label, value) => (value == null || value === '' || (Array.isArray(value) && !value.length)) ? '' : html`<dt>${label}</dt><dd>${Array.isArray(value) ? raw(value.map(part).join('<br>')) : value}</dd>`;
+const sourceLinks = refs => list(refs).map(ref => { const id = sourceRefId(ref); const source = sourcesByCode.get(ref.source); const label = source ? source.title + (ref.section != null ? ' §' + ref.section : '') : ref.source + (ref.section != null ? ' §' + ref.section : ''); return id ? link(id, label) : html`<code>${label}</code>`; });
+function due(d) { if (!d) return ''; const parts = []; if (d.offsetDays != null) parts.push(d.offsetDays + ' ' + (d.offsetType ? enumLabel('offsetType', d.offsetType) : 'd')); if (d.offsetHours != null) parts.push(d.offsetHours + ' h'); if (d.basis) parts.push(enumLabel('basis', d.basis)); return parts.join(' · '); }
+function ownerOf(action) {
+  const ref = action.assigneeRef;
+  if (ref == null) return html`<span class="red">${T.fields.none}</span>`;
+  if (ref === 'creator') return html`${T.enums.creator}`;
+  if (ref === 'previous') return html`${T.enums.previous}`;
+  if (ref.startsWith('ai:')) return link('ai/' + ref.slice(3), (profilesByKey.get(ref.slice(3)) || {}).name || ref);
+  if (ref.startsWith('field:')) return html`<code>${ref}</code>${action.assigneeFallback ? html` · ${T.fields.fallback}: ${action.assigneeFallback === 'creator' ? T.enums.creator : link('group/' + action.assigneeFallback)}` : ''}`;
+  return link('group/' + ref, (groupsByKey.get(ref) || {}).name || ref);
+}
+function copyButton(value) { const text = value == null ? '' : typeof value === 'string' ? value : JSON.stringify(value, null, 2); return html`<button type="button" data-copy="1" data-value="${text}" aria-label="${T.fields.copy}: ${text.slice(0, 40)}">${T.fields.copy}</button>`; }
+function copyChip(value) { const text = value == null ? '' : typeof value === 'string' ? value : JSON.stringify(value, null, 2); return html`<span class="copy"><code>${text}</code><button type="button" data-copy="1" data-value="${text}" aria-label="${T.fields.copy}: ${text.slice(0, 40)}">${T.fields.copy}</button></span>`; }
+function crumbs(items) { return html`<p class="crumbs"><a href="#">${T.misc.breadcrumbHome}</a>${items.map(item => html`<span aria-hidden="true">›</span>${item.href ? html`<a href="${item.href}">${item.label}</a>` : html`<span>${item.label}</span>`}`)}</p>`; }
+const receiptChip = receipt => receipt ? chip(T.status.receiptResolved + (receipt.id ? ' · ' + receipt.id : ''), 'ok') : chip(T.status.pendingSetup, 'warn');
+function issueRows(issues, options) {
+  options = options || {};
+  if (!issues.length) return html`<p class="empty">${T.review.none}</p>`;
+  return html`<div class="scroll-x"><table><thead><tr><th>${T.review.category}</th>${options.object === false ? '' : html`<th>${T.review.object}</th>`}<th>${T.review.item}</th><th>${T.review.nextStep}</th><th>${T.review.note}</th></tr></thead><tbody>${issues.map(issue => html`<tr id="${issue.id}"><td>${chip(T.enums.category[issue.category], { blocker: 'bad', validation: issue.severity === 'error' ? 'bad' : issue.severity === 'info' ? 'info' : 'warn', design: 'info', setup: '' }[issue.category])}${issue.severity ? html` <span class="small muted">${T.enums.severity[issue.severity]}</span>` : ''}</td>${options.object === false ? '' : html`<td>${issue.objectId ? link(issue.objectId) : html`<span class="muted">—</span>`}${issue.objectId && OBJ.get(issue.objectId) ? html` <span class="small muted">${T.kinds[OBJ.get(issue.objectId).kind]}</span>` : ''}</td>`}<td>${issue.category === 'validation' ? html`<code class="small">${issue.path}</code>` : issue.kind === 'decision' ? issue.key : issue.name || (issue.objectId && OBJ.get(issue.objectId) ? OBJ.get(issue.objectId).label : '')}${issue.ref ? html` <code>${issue.ref}</code>` : ''}${issue.blocking ? html` ${chip(T.status.blocked, 'bad')}` : ''}</td><td>${issue.text}${issue.detail ? html`<br><span class="small muted">${issue.detail}</span>` : ''}${issue.owner ? html`<br><span class="small">${T.fields.owner}: ${issue.owner}</span>` : ''}</td><td><textarea class="issue-note" data-note-key="${noteKey(issue)}" aria-label="${T.review.note}" placeholder="${T.review.notePlaceholder}">${getNote(noteKey(issue))}</textarea></td></tr>`)}</tbody></table></div>`;
+}
+
+/* ---------- Review notes (browser-local, keyed by object id) ---------- */
+const NOTES_KEY = 'provia-map-notes:' + DATA.project.key;
+const noteKey = issue => [issue.objectId || 'project', issue.what, issue.ref || '', issue.path || ''].join('|');
+function loadNotes() { try { return JSON.parse(localStorage.getItem(NOTES_KEY) || '{}') || {}; } catch { return {}; } }
+function saveNotes(notes) { try { localStorage.setItem(NOTES_KEY, JSON.stringify(notes)); return true; } catch { return false; } }
+const getNote = key => { const notes = loadNotes(); return typeof notes[key] === 'string' ? notes[key] : ''; };
+function download(name, text, type) { const blob = new Blob([text], { type: type || 'application/json' }); const url = URL.createObjectURL(blob); const a = document.createElement('a'); a.href = url; a.download = name; document.body.appendChild(a); a.click(); a.remove(); setTimeout(() => URL.revokeObjectURL(url), 1000); }
+function exportNotes(markdown) {
+  const notes = loadNotes();
+  const entries = Object.entries(notes).filter(([, note]) => typeof note === 'string' && note.trim()).map(([key, note]) => { const [objectId, what, ref, path] = key.split('|'); const o = OBJ.get(objectId); return { key, objectId, object: o ? o.label : objectId, kind: o ? o.kind : null, item: what, ref: ref || null, path: path || null, note }; });
+  if (!entries.length) { toast(T.review.noNotes); return; }
+  const stamp = new Date().toISOString();
+  if (markdown) {
+    const lines = ['# ' + DATA.project.title + ': ' + T.review.notes, '', T.misc.generatedFrom + ' · ' + (DATA.project.updatedAt || '') + ' · ' + stamp, '', T.review.notIncorporated, ''];
+    for (const entry of entries) lines.push('## ' + entry.object + ' (`' + entry.objectId + '`)', '', '- ' + T.review.item + ': `' + entry.item + '`' + (entry.ref ? ' `' + entry.ref + '`' : '') + (entry.path ? ' `' + entry.path + '`' : ''), '', entry.note, '');
+    download('review-notes-' + DATA.project.key + '.md', lines.join('\n'), 'text/markdown');
+  } else download('review-notes-' + DATA.project.key + '.json', JSON.stringify({ schemaVersion: 'provia-review-notes/v1', project: DATA.project.key, title: DATA.project.title, manifestUpdatedAt: DATA.project.updatedAt || null, exportedAt: stamp, incorporated: false, notes: entries }, null, 2));
+}
+function importNotes(file) {
+  const reader = new FileReader();
+  reader.onload = () => {
+    let parsed = null;
+    try { parsed = JSON.parse(String(reader.result)); } catch { parsed = null; }
+    if (!parsed || parsed.schemaVersion !== 'provia-review-notes/v1' || !Array.isArray(parsed.notes)) { toast(T.review.importInvalid); return; }
+    if (parsed.project !== DATA.project.key) { toast(fmt(T.review.importOtherProject, { p: parsed.project || '?' })); return; }
+    const notes = loadNotes();
+    let added = 0, conflicts = 0;
+    for (const entry of parsed.notes) {
+      if (!entry || typeof entry.key !== 'string' || typeof entry.note !== 'string') continue;
+      const current = typeof notes[entry.key] === 'string' ? notes[entry.key] : '';
+      if (current.trim() === entry.note.trim()) continue;
+      if (!current.trim()) { notes[entry.key] = entry.note; added += 1; }
+      else { notes[entry.key] = current + '\n--- ' + T.review.importedMarker + ' ' + (parsed.exportedAt || '') + ' ---\n' + entry.note; conflicts += 1; }
+    }
+    if (!saveNotes(notes)) { toast(T.review.saveFailed); return; }
+    toast(fmt(T.review.imported, { n: added, m: conflicts }));
+    render({ keepScroll: true });
+  };
+  reader.onerror = () => toast(T.review.importInvalid);
+  reader.readAsText(file);
+}
+let toastTimer = null;
+function toast(text) { live.textContent = text; live.classList.add('show'); clearTimeout(toastTimer); toastTimer = setTimeout(() => live.classList.remove('show'), 1800); }
+
+/* ---------- Five-part brief ---------- */
+const BRIEF = [['task', /^(tarefa|task)\s*:/i], ['how', /^(como|how)\s*:/i], ['evidence', /^(evid[êe]ncia|evidence)\s*:/i], ['done', /^(conclu[íi]do quando|done when)\s*:/i], ['exceptions', /^(excep[çc][õo]es|exce[çc][õo]es|exceptions)\s*:/i]];
+function parseBrief(description) {
+  if (!description) return null;
+  const parts = []; let current = null;
+  for (const line of String(description).split(/\r?\n/)) {
+    const hit = BRIEF.find(([, re]) => re.test(line.trim()));
+    if (hit) { current = { key: hit[0], text: line.trim().replace(hit[1], '').trim() }; parts.push(current); }
+    else if (current) current.text += (current.text ? '\n' : '') + line;
+    else if (line.trim()) { current = { key: null, text: line.trim() }; parts.push(current); }
+  }
+  return parts.length ? parts : null;
+}
+function briefHtml(description) {
+  const parts = parseBrief(description);
+  if (!parts) return html`<p class="muted">${T.fields.none}</p>`;
+  return parts.map(p => {
+    const steps = p.key === 'how' ? p.text.split(/(?:^|\s)(?=\d{1,2}\.\s)/).map(s => s.trim()).filter(Boolean) : null;
+    const body = steps && steps.length > 1 && steps.every(s => /^\d{1,2}\.\s/.test(s)) ? html`<ol class="brief">${steps.map(s => html`<li>${s.replace(/^\d{1,2}\.\s/, '')}</li>`)}</ol>` : html`<p>${p.text}</p>`;
+    return html`<div class="brief-part">${p.key ? html`<div class="k">${T.fields.brief[p.key]}</div>` : ''}${body}</div>`;
+  });
+}
+const exceptionsOf = action => { const parts = parseBrief(action.yaml && action.yaml.description) || parseBrief(action.description); const p = parts && parts.find(x => x.key === 'exceptions'); return p ? p.text : null; };
+
+/* ---------- Views ---------- */
+function statusCards(workflow) {
+  const r = workflow.review;
+  const validation = r.validation.errors ? chip(fmt(T.status.validationErrors, { n: r.validation.errors }), 'bad') : r.validation.warnings ? chip(fmt(T.status.validationWarnings, { n: r.validation.warnings }), 'warn') : chip(T.status.validationOk, 'ok');
+  const approval = r.decisions.open ? chip(fmt(T.status.decisionsOpen, { n: r.decisions.open }), 'warn') : chip(T.status.decisionsNone, 'ok');
+  const evidence = r.evidence.readinessBlocked ? chip(T.status.blocked, 'bad') : r.evidence.receipt ? chip(T.status.applied + ' · ' + (r.evidence.receipt.id || ''), 'ok') : chip(T.status.notApplied, '');
+  return html`<div class="status-row">
+    <div class="card"><div class="k">${T.status.design}</div><div class="v">${chip(T.status.workflow[r.design] || r.design, r.design === 'validated' || r.design === 'imported' ? 'ok' : 'info')} ${r.designOpen ? chip(fmt(T.status.designOpen, { n: r.designOpen }), 'warn') : ''}</div></div>
+    <div class="card"><div class="k">${T.status.validation}</div><div class="v">${validation} ${r.validation.infos ? html`<span class="small muted">${fmt(T.status.validationInfos, { n: r.validation.infos })}</span>` : ''}</div></div>
+    <div class="card"><div class="k">${T.status.approval}</div><div class="v">${approval}</div></div>
+    <div class="card"><div class="k">${T.status.application}</div><div class="v">${evidence} ${r.evidence.accessApplied === true ? chip(T.status.accessApplied, 'ok') : r.evidence.accessApplied === false ? chip(T.status.accessPending, '') : ''}${r.blockers ? html` ${chip(r.blockers + ' × ' + T.enums.category.blocker, 'bad')}` : ''}</div></div>
+  </div>`;
+}
+const workflowGroups = workflow => { const keys = new Set(); for (const action of workflow.actions) { const ref = action.assigneeRef; if (typeof ref === 'string' && !ref.includes(':') && !['creator', 'previous'].includes(ref)) keys.add(ref); if (typeof ref === 'string' && ref.startsWith('field:') && workflow && action.assigneeFallback && action.assigneeFallback !== 'creator') keys.add(action.assigneeFallback); } return [...keys]; };
+
+function viewOverview() {
+  const areas = new Map();
+  for (const workflow of DATA.workflows) push(areas, areaOf(workflow), workflow);
+  const counts = { design: 0, validation: 0, setup: 0, blocker: 0 };
+  for (const issue of DATA.issues) counts[issue.category] += 1;
+  const actions = DATA.workflows.reduce((n, w) => n + w.actions.length, 0);
+  const cards = [['workflows', DATA.workflows.length, T.nav.workflows], ['entities', DATA.entityTypes.length, T.nav.entities], ['forms', DATA.forms.length, T.nav.forms], ['groups', DATA.groups.length, T.nav.groups], ['sources', DATA.sources.length, T.nav.sources], ['profiles', DATA.aiProfiles.length, T.nav.profiles], ['decisions', DATA.decisions.length, T.nav.decisions]];
+  return html`${crumbs([{ label: T.overview.title }])}<h2 id="view-title" tabindex="-1">${T.overview.title}</h2><p class="lead">${DATA.organization.name ? DATA.organization.name + ' · ' : ''}${DATA.project.country} · ${DATA.project.language}${DATA.project.timezone ? ' · ' + DATA.project.timezone : ''}. ${actions} ${T.overview.actions}.</p>
+  <h3>${T.overview.workflowsByArea}</h3>
+  ${DATA.workflows.length ? [...areas.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([area, workflows]) => html`<h4>${area || T.nav.noArea}</h4><div class="scroll-x"><table><thead><tr><th>${T.overview.workflow}</th><th>${T.overview.owners}</th><th>${T.status.design}</th><th>${T.status.validation}</th><th>${T.overview.decisions}</th><th>${T.enums.category.setup}</th><th>${T.overview.evidence}</th></tr></thead><tbody>${workflows.map(workflow => { const r = workflow.review; return html`<tr><td>${link(workflow.id)}<br><span class="small muted">${workflow.prefix ? workflow.prefix + ' · ' : ''}${workflow.actions.length} ${T.overview.actions}</span></td><td>${workflowGroups(workflow).map(key => link('group/' + key)).reduce((acc, item, i) => acc.concat(i ? [raw(', '), item] : [item]), [])}</td><td>${chip(T.status.workflow[r.design] || r.design, r.design === 'validated' || r.design === 'imported' ? 'ok' : 'info')}${r.designOpen ? html`<br>${chip(fmt(T.status.designOpen, { n: r.designOpen }), 'warn')}` : ''}</td><td>${r.validation.errors ? chip(fmt(T.status.validationErrors, { n: r.validation.errors }), 'bad') : r.validation.warnings ? chip(fmt(T.status.validationWarnings, { n: r.validation.warnings }), 'warn') : chip(T.status.validationOk, 'ok')}</td><td class="num">${r.decisions.open ? html`<a href="${href('review', { cat: 'design', wf: workflow.key })}">${r.decisions.open}</a>` : '0'}</td><td class="num">${r.setup ? html`<a href="${href('review', { cat: 'setup', wf: workflow.key })}">${r.setup}</a>` : '0'}</td><td>${r.evidence.readinessBlocked ? chip(T.status.blocked, 'bad') : r.evidence.receipt ? chip(T.status.applied, 'ok') : chip(T.status.notApplied, '')}</td></tr>`; })}</tbody></table></div>`) : html`<p class="empty">${T.overview.noWorkflows}</p>`}
+  <h3>${T.overview.directories}</h3><div class="cards">${cards.map(([route, n, label]) => html`<div class="card"><a href="#${route}"><div class="n">${n}</div><div class="t">${label}</div></a></div>`)}</div>
+  <h3>${T.overview.queues}</h3><div class="cards">${['blocker', 'design', 'validation', 'setup'].map(cat => html`<div class="card"><a href="${href('review', { cat })}"><div class="n ${cat === 'blocker' && counts[cat] ? 'red' : ''}">${counts[cat]}</div><div class="t">${T.enums.category[cat]}</div></a></div>`)}</div>
+  <p class="small muted">${T.header.notice}</p>`;
+}
+
+function directory(route, title, items, columns, filterKey) {
+  const { params } = parseHash();
+  const q = norm(params.get('q') || '');
+  const shown = q ? items.filter(item => norm(filterKey(item)).includes(q)) : items;
+  return html`${crumbs([{ label: title }])}<h2 id="view-title" tabindex="-1">${title} <span class="chip">${items.length}</span></h2>
+  <div class="toolbar"><label for="dir-filter">${T.directory.filter}</label><input id="dir-filter" type="search" data-param="q" value="${params.get('q') || ''}"><span class="small muted">${q ? fmt(T.review.filtered, { n: shown.length, m: items.length }) : ''}</span></div>
+  ${shown.length ? html`<div class="scroll-x"><table><thead><tr>${columns.map(c => html`<th>${c[0]}</th>`)}</tr></thead><tbody>${shown.map(item => html`<tr>${columns.map(c => html`<td>${c[1](item)}</td>`)}</tr>`)}</tbody></table></div>` : html`<p class="empty">${T.directory.empty}</p>`}`;
+}
+const viewWorkflows = () => directory('workflows', T.directory.workflows, DATA.workflows, [[T.fields.name, w => link(w.id)], [T.fields.prefix, w => w.prefix || ''], [T.fields.area, w => areaOf(w) || T.nav.noArea], [T.overview.actions, w => w.actions.length], [T.status.design, w => T.status.workflow[w.review.design] || w.review.design], [T.overview.decisions, w => w.review.decisions.open], [T.overview.evidence, w => w.review.evidence.receipt ? T.status.applied : T.status.notApplied]], w => w.name + ' ' + w.key + ' ' + (w.prefix || '') + ' ' + areaOf(w));
+const viewEntities = () => directory('entities', T.directory.entities, DATA.entityTypes, [[T.fields.name, t => link(t.id)], [T.fields.key, t => html`<code>${t.key}</code>`], [T.fields.fieldsCount, t => list(t.fields).length], [T.fields.owner, t => t.owner || ''], [T.fields.usedBy, t => (entityUsedBy.get(t.key) || []).length], [T.fields.status, t => receiptChip(t.receipt)]], t => t.name + ' ' + t.key + ' ' + (t.description || '') + ' ' + list(t.fields).map(f => f.key + ' ' + f.label).join(' '));
+const viewForms = () => directory('forms', T.directory.forms, DATA.forms, [[T.fields.title, f => link(f.id)], [T.fields.kind, f => T.enums.formKind[f.kind] || f.kind], [T.fields.workflow, f => link('workflow/' + f.workflowRef)], [T.fields.action, f => f.actionRef ? link('workflow/' + f.workflowRef + '/action/' + f.actionRef) : ''], [T.fields.fieldsCount, f => list(f.fields).length], [T.fields.status, f => (T.status.form[f.status] || f.status || '') + ' · ' + (f.receipt ? T.status.receiptResolved : T.status.pendingSetup)]], f => (f.title || '') + ' ' + f.key + ' ' + list(f.fields).map(x => (x.key || x.name || '') + ' ' + (x.label || '')).join(' '));
+const viewGroups = () => directory('groups', T.directory.groups, DATA.groups, [[T.fields.name, g => link(g.id)], [T.fields.key, g => html`<code>${g.key}</code>`], [T.fields.kind, g => T.enums.groupKind[g.kind] || g.kind || ''], [T.fields.area, g => g.area || ''], [T.fields.parent, g => g.parentKey ? link('group/' + g.parentKey) : ''], [T.fields.members, g => list(g.members).length], [T.fields.assignedActions, g => (groupActions.get(g.key) || []).length], [T.fields.status, g => receiptChip(g.receipt)]], g => g.name + ' ' + g.key + ' ' + (g.purpose || '') + ' ' + list(g.members).map(m => (m.role || '') + ' ' + (m.email || '')).join(' '));
+const viewSources = () => directory('sources', T.directory.sources, DATA.sources, [[T.fields.title, s => link(s.id)], [T.fields.kind, s => T.enums.sourceKind[s.kind] || s.kind], [T.fields.version, s => s.version || ''], [T.fields.effectiveDate, s => s.effectiveDate || ''], [T.fields.sections, s => s.sections.length], [T.fields.referencedBy, s => (refsBySource.get(s.id) || []).length]], s => s.title + ' ' + s.code + ' ' + s.sections.map(x => x.anchor + ' ' + (x.title || '')).join(' '));
+const viewProfiles = () => directory('profiles', T.directory.profiles, DATA.aiProfiles, [[T.fields.name, p => link(p.id)], [T.fields.key, p => html`<code>${p.key}</code>`], [T.fields.workflow, p => p.workflowRef ? link('workflow/' + p.workflowRef) : ''], [T.fields.action, p => p.workflowRef && p.actionRef ? link('workflow/' + p.workflowRef + '/action/' + p.actionRef) : ''], [T.fields.purpose, p => p.purpose || '']], p => p.name + ' ' + p.key + ' ' + (p.purpose || ''));
+const viewDecisions = () => directory('decisions', T.directory.decisions, DATA.decisions, [[T.fields.code, d => link(d.id, d.code)], [T.fields.question, d => d.question], [T.fields.status, d => chip(d.status === 'open' ? T.status.open : T.status.resolved, d.status === 'open' ? 'warn' : 'ok')], [T.fields.owner, d => d.owner || ''], [T.fields.related, d => d.related.map(key => link('workflow/' + key))], [T.fields.sources, d => sourceLinks(d.sourceRefs)]], d => d.code + ' ' + d.question + ' ' + (d.owner || '') + ' ' + (d.resolution || ''));
+
+function tabs(id, items, active) {
+  return html`<div class="tabs" role="tablist" aria-label="${id}">${items.map(([key, label, count]) => html`<button type="button" role="tab" id="tab-${key}" aria-selected="${key === active}" aria-controls="panel-${key}" data-tab="${key}" tabindex="${key === active ? 0 : -1}">${label}${count != null ? html` <span class="chip">${count}</span>` : ''}</button>`)}</div>`;
+}
+
+function viewWorkflow(workflow) {
+  const { params } = parseHash();
+  const tab = params.get('tab') || 'overview';
+  const issues = issuesByWorkflow.get(workflow.key) || [];
+  const related = DATA.decisions.filter(decision => decision.related.includes(workflow.key));
+  const entry = accessOf(workflow.key);
+  const groups = workflowGroups(workflow);
+  const forms = DATA.forms.filter(form => form.workflowRef === workflow.key);
+  const entities = [...new Set(workflow.actions.flatMap(action => list(action.entityRefs)))];
+  const exceptions = workflow.actions.map(action => ({ action, text: exceptionsOf(action) })).filter(item => item.text);
+  const yaml = workflow.yaml || { present: false, reason: 'none' };
+  const head = html`${crumbs([{ label: T.nav.workflows, href: '#workflows' }, { label: workflow.name }])}<h2 id="view-title" tabindex="-1">${workflow.name}</h2>
+  <div class="chips">${kindChip('workflow')}${workflow.prefix ? chip(workflow.prefix) : ''}${chip((T.fields.area) + ': ' + (areaOf(workflow) || T.nav.noArea))}${entry && entry.sensitivity ? chip(T.fields.sensitivity + ': ' + enumLabel('sensitivity', entry.sensitivity)) : ''}${workflow.file ? chip(workflow.file) : ''}</div>
+  ${statusCards(workflow)}
+  ${tabs('workflow', [['overview', T.tabs.overview], ['flow', T.tabs.flow, workflow.actions.length], ['dependencies', T.tabs.dependencies], ['access', T.tabs.access], ['review', T.tabs.review, issues.length]], tab)}`;
+  let body;
+  if (tab === 'flow') body = html`<section id="panel-flow" role="tabpanel" aria-labelledby="tab-flow"><h3>${T.flow.title}</h3>${!yaml.present ? html`<p class="lead">${yaml.reason === 'broken' ? T.fields.brokenYaml : T.fields.noYaml}</p>` : ''}<div class="flow-wrap">${raw(flowSvg(workflow))}</div><p class="legend">${yaml.present ? T.flow.legend : T.flow.manifestOnly}</p>
+    <h3>${T.kindsPlural.action}</h3><ol class="actions-list">${workflow.actions.map(action => html`<li class="${action.yaml && action.yaml.executionMode === 'parallel' ? 'parallel' : ''}"><h4>${link(action.id)}</h4><div class="row"><span>${enumLabel('actionType', action.type)}</span><span>${T.fields.owner}: ${ownerOf(action)}</span>${action.due ? html`<span>${T.fields.due}: ${due(action.due)}</span>` : html`<span class="muted">${T.fields.dueUnset}</span>`}${action.formRef ? html`<span>${T.fields.form}: ${link('form/' + action.formRef)}</span>` : ''}${list(action.entityRefs).length ? html`<span>${T.fields.entities}: ${list(action.entityRefs).map((key, i) => html`${i ? ', ' : ''}${link('entity/' + key)}`)}</span>` : ''}${action.yaml && action.yaml.executionMode === 'parallel' ? chip(T.flow.parallel, 'info') : ''}</div>${action.yaml && list(action.yaml.config && action.yaml.config.branches).length ? html`<div class="row">${list(action.yaml.config.branches).map(branch => html`<span>${branch.label} → ${enumLabel('outcome', branch.outcome || 'continue')}${branch.outcome === 'trigger_workflow' ? html` <span class="muted">(${T.flow.andContinues})</span>` : ''}${branch.target ? html` ${link('workflow/' + workflow.key + '/action/' + branch.target, branch.target)}` : ''}${branch.workflow ? html` ${workflowsByKey.has(branch.workflow) ? link('workflow/' + branch.workflow) : html`<code>${branch.workflow}</code>`}` : ''}${branch.requiresComment ? html` <span class="muted">(${T.fields.requiresComment.toLowerCase()})</span>` : ''}</span>`)}</div>` : ''}</li>`)}</ol></section>`;
+  else if (tab === 'dependencies') body = html`<section id="panel-dependencies" role="tabpanel" aria-labelledby="tab-dependencies"><h3>${T.graph.title}</h3><p class="lead">${T.graph.intro}</p><div class="graph-wrap">${raw(graphSvg(workflow.key))}</div><p class="small"><a href="${href('graph', { wf: workflow.key })}">${T.nav.graph} →</a></p></section>`;
+  else if (tab === 'access') body = html`<section id="panel-access" role="tabpanel" aria-labelledby="tab-access"><h3>${T.access.title}</h3><p class="lead">${T.access.intro}</p>${accessTable(entry ? [entry] : [])}</section>`;
+  else if (tab === 'review') body = html`<section id="panel-review" role="tabpanel" aria-labelledby="tab-review"><h3>${T.review.title}</h3>${issueRows(issues)}${related.some(d => d.status === 'resolved') ? html`<h3>${T.review.decisionsTitle}</h3><ul class="plain">${related.filter(d => d.status === 'resolved').map(decision => html`<li>${chip(decision.status === 'open' ? T.status.open : T.status.resolved, decision.status === 'open' ? 'warn' : 'ok')} ${link(decision.id)}${decision.owner ? html` <span class="small muted">· ${T.fields.owner}: ${decision.owner}</span>` : ''}</li>`)}</ul>` : ''}</section>`;
+  else body = html`<section id="panel-overview" role="tabpanel" aria-labelledby="tab-overview"><div class="two"><div>
+    ${yaml.present && yaml.metadata && yaml.metadata.description ? html`<h3>${T.fields.purposeOfWorkflow}</h3><p>${yaml.metadata.description}</p>` : ''}
+    <h3>${T.fields.trigger}</h3>${list(workflow.triggers).length || (yaml.present && yaml.triggers.length) ? html`<ul class="plain">${(list(workflow.triggers).length ? workflow.triggers : yaml.triggers).map(trigger => html`<li>${enumLabel('triggerType', trigger.type)}${trigger.label ? ' · ' + trigger.label : ''}${trigger.enabled === false ? html` <span class="muted">(off)</span>` : ''}${trigger.manual && (list(trigger.manual.allowedGroups).length || list(trigger.manual.allowedUsers).length) ? html`<br><span class="small">${T.access.allowlist}: ${list(trigger.manual.allowedGroups).map((key, i) => html`${i ? ', ' : ''}${link('group/' + key)}`)}${list(trigger.manual.allowedUsers).map(email => html`, ${email}`)}</span>` : ''}</li>`)}</ul>` : html`<p class="muted">${T.fields.none}</p>`}
+    <h3>${T.fields.responsibleGroups}</h3>${groups.length ? html`<ul class="plain">${groups.map(key => html`<li>${link('group/' + key)} <span class="small muted">· ${(groupActions.get(key) || []).filter(id => id.startsWith(workflow.id + '/')).length + (groupFallback.get(key) || []).filter(id => id.startsWith(workflow.id + '/')).length} ${T.overview.actions}</span></li>`)}</ul>` : html`<p class="muted">${T.fields.none}</p>`}
+    <h3>${T.fields.linkedForms}</h3>${forms.length ? html`<ul class="plain">${forms.map(form => html`<li>${link(form.id)} <span class="small muted">· ${T.enums.formKind[form.kind]}${form.actionRef ? html` · ${link(workflow.id + '/action/' + form.actionRef)}` : ''}</span></li>`)}</ul>` : html`<p class="muted">${T.fields.none}</p>`}
+    <h3>${T.fields.linkedEntities}</h3>${entities.length ? html`<ul class="plain">${entities.map(key => html`<li>${link('entity/' + key)}</li>`)}</ul>` : html`<p class="muted">${T.fields.none}</p>`}
+    ${list(workflow.subWorkflowRefs).length ? html`<h3>${T.fields.subWorkflows}</h3><ul class="plain">${workflow.subWorkflowRefs.map(key => html`<li>${link('workflow/' + key)}</li>`)}</ul>` : ''}
+    ${(calledBy.get(workflow.key) || []).length ? html`<h3>${T.fields.calledBy}</h3><ul class="plain">${calledBy.get(workflow.key).map(key => html`<li>${link('workflow/' + key)}</li>`)}</ul>` : ''}
+    </div><div>
+    <h3>${T.fields.sources}</h3>${list(workflow.sourceRefs).length ? html`<ul class="plain">${sourceLinks(workflow.sourceRefs).map(item => html`<li>${item}</li>`)}</ul>` : html`<p class="muted">${T.fields.none}</p>`}
+    ${yaml.present && yaml.fields.length ? html`<h3>${T.fields.caseFields}</h3><div class="scroll-x"><table><thead><tr><th>${T.fields.key}</th><th>${T.fields.label}</th><th>${T.fields.type}</th><th>${T.fields.required}</th></tr></thead><tbody>${yaml.fields.map(field => html`<tr><td><code>${field.name}</code></td><td>${field.label || ''}</td><td>${field.type}</td><td>${field.required ? T.fields.yes : T.fields.no}</td></tr>`)}</tbody></table></div>` : ''}
+    ${list(workflow.templates).length ? html`<h3>${T.fields.templates}</h3><ul class="plain">${workflow.templates.map(t => html`<li><code>${t.code}</code> ${t.title}${t.scope ? html` <span class="small muted">(${t.scope})</span>` : ''}</li>`)}</ul>` : ''}
+    ${list(workflow.setupNotes).length ? html`<h3>${T.fields.setupNotes}</h3><ul>${workflow.setupNotes.map(note => html`<li>${note}</li>`)}</ul>` : ''}
+    ${list(workflow.unresolvedActors).length ? html`<h3>${T.fields.unresolvedActors}</h3><ul class="plain">${workflow.unresolvedActors.map(item => html`<li><code>${typeof item === 'string' ? item : item.key || item.name}</code></li>`)}</ul>` : ''}
+    ${list(workflow.unresolvedEntityTypes).length ? html`<h3>${T.fields.unresolvedEntityTypes}</h3><ul class="plain">${workflow.unresolvedEntityTypes.map(item => html`<li><code>${typeof item === 'string' ? item : item.key || item.name}</code></li>`)}</ul>` : ''}
+    </div></div>
+    ${exceptions.length ? html`<h3>${T.fields.exceptions}</h3><ul>${exceptions.map(item => html`<li><strong>${link(item.action.id)}</strong>: ${item.text}</li>`)}</ul>` : ''}
+    ${related.filter(d => d.status === 'open').length ? html`<h3>${T.fields.openQuestions}</h3><ul class="plain">${related.filter(d => d.status === 'open').map(decision => html`<li>${link(decision.id)}${decision.owner ? html` <span class="small muted">· ${T.fields.owner}: ${decision.owner}</span>` : ''}</li>`)}</ul>` : ''}
+    </section>`;
+  return html`${head}${body}`;
+}
+
+function viewAction(action, workflow) {
+  const y = action.yaml || null;
+  const index = action.index;
+  const previous = workflow.actions[index - 1], next = workflow.actions[index + 1];
+  const issues = issuesByObject.get(action.id) || [];
+  const branches = y && y.config ? list(y.config.branches) : [];
+  const config = y && y.config ? Object.fromEntries(Object.entries(y.config).filter(([k]) => k !== 'branches')) : null;
+  return html`${crumbs([{ label: T.nav.workflows, href: '#workflows' }, { label: workflow.name, href: '#' + workflow.id }, { label: action.name }])}<h2 id="view-title" tabindex="-1">${action.name}</h2>
+  <div class="chips">${kindChip('action')}${chip(enumLabel('actionType', action.type))}${chip(T.fields.position + ' ' + (index + 1) + ' ' + T.fields.of + ' ' + workflow.actions.length)}${y && y.executionMode === 'parallel' ? chip(T.flow.parallel, 'info') : ''}${y && y.priority ? chip(enumLabel('priority', y.priority)) : ''}${issues.some(i => i.blocking) ? chip(T.status.blocked, 'bad') : ''}</div>
+  <div class="two"><div>
+  <h3>${T.fields.instructions}</h3>${briefHtml((y && y.description) || action.description)}
+  </div><div>
+  <dl class="props">
+  ${prop(T.fields.owner, ownerOf(action))}
+  ${y && y.assignee ? prop(T.fields.assignee, enumLabel('assigneeType', y.assignee.type) + (y.assignee.id ? ' ' + y.assignee.id : '')) : ''}
+  ${y && y.aiWorker ? prop(T.fields.aiWorker, JSON.stringify(y.aiWorker)) : ''}
+  ${prop(T.fields.due, action.due ? due(action.due) : y && y.due ? due(y.due) : html`<span class="muted">${T.fields.dueUnset}</span>`)}
+  ${action.dueInSource ? prop(T.fields.dueInSource, action.dueInSource.kind + ': ' + action.dueInSource.text) : ''}
+  ${prop(T.fields.form, action.formRef ? link('form/' + action.formRef) : null)}
+  ${prop(T.fields.entities, list(action.entityRefs).map(key => link('entity/' + key)))}
+  ${prop(T.fields.evidence, list(action.evidence))}
+  ${prop(T.fields.sources, sourceLinks(action.sourceRefs))}
+  ${prop(T.fields.folded, list(action.folded).map(f => (f.section ? '§' + f.section + ' ' : '') + f.summary))}
+  ${y ? prop(T.fields.requiredAction, y.required === false ? T.fields.no : T.fields.yes) : ''}
+  ${y ? prop(T.fields.executionMode, enumLabel('executionMode', y.executionMode)) : ''}
+  </dl>
+  ${branches.length ? html`<h3>${T.fields.branches}</h3><div class="scroll-x"><table><thead><tr><th>${T.fields.label}</th><th>${T.fields.outcome}</th><th>${T.fields.targetAction}</th><th>${T.fields.requiresComment}</th></tr></thead><tbody>${branches.map(branch => html`<tr><td>${branch.label}</td><td>${enumLabel('outcome', branch.outcome || 'continue')}</td><td>${branch.target ? link(workflow.id + '/action/' + branch.target, branch.target) : branch.workflow ? (workflowsByKey.has(branch.workflow) ? link('workflow/' + branch.workflow) : html`<code>${branch.workflow}</code>`) : ''}</td><td>${branch.requiresComment ? T.fields.yes : T.fields.no}</td></tr>`)}</tbody></table></div>` : ''}
+  ${config && Object.keys(config).length ? html`<details class="tech"><summary>${T.fields.config}</summary><pre>${JSON.stringify(config, null, 2)}</pre></details>` : ''}
+  </div></div>
+  ${issues.length ? html`<h3>${T.review.title}</h3>${issueRows(issues, { object: false })}` : ''}
+  <div class="pager"><span>${previous ? html`← ${link(previous.id)}` : ''}</span><span>${next ? html`${link(next.id)} →` : ''}</span></div>`;
+}
+
+const fieldKey = field => field.key || field.name || '';
+const fieldLabel = field => field.label || field.key || field.name || '';
+function viewEntity(type) {
+  const { params } = parseHash();
+  const tab = params.get('tab') || 'fields';
+  const focusField = params.get('field') || '';
+  const fields = list(type.fields);
+  const outbound = fields.filter(field => field.targetType).map(field => ({ field, target: entitiesByKey.get(field.targetType) || entitiesByName.get(norm(field.targetType)) || null }));
+  const inbound = DATA.entityTypes.filter(other => other.key !== type.key && list(other.fields).some(field => field.targetType && (field.targetType === type.key || norm(field.targetType) === norm(type.name)))).map(other => ({ other, fields: list(other.fields).filter(field => field.targetType && (field.targetType === type.key || norm(field.targetType) === norm(type.name))) }));
+  const users = entityUsedBy.get(type.key) || [];
+  const issues = issuesByObject.get(type.id) || [];
+  let body;
+  if (tab === 'relationships') body = html`<section id="panel-relationships" role="tabpanel"><h3>${T.fields.relationships}</h3>${outbound.length ? html`<ul class="plain">${outbound.map(({ field, target }) => html`<li><code>${field.key}</code> ${fieldLabel(field)} → ${target ? link(target.id) : html`<code>${field.targetType}</code>`}</li>`)}</ul>` : html`<p class="muted">${T.fields.none}</p>`}
+    ${inbound.length ? html`<h3>${T.fields.referencedBy}</h3><ul class="plain">${inbound.map(({ other, fields: f }) => html`<li>${link(other.id)} <span class="small muted">(${f.map(x => x.key).join(', ')})</span></li>`)}</ul>` : ''}
+    <h3>${T.fields.usedBy}</h3>${users.length ? html`<ul class="plain">${users.map(id => html`<li>${link(id)} <span class="small muted">· ${OBJ.get(id).workflow.name}</span></li>`)}</ul>` : html`<p class="muted">${T.fields.none}</p>`}</section>`;
+  else if (tab === 'json') body = html`<section id="panel-json" role="tabpanel"><h3>${T.fields.jsonOf}</h3><p><button type="button" data-copy="1" data-value="${JSON.stringify(stripMeta(type), null, 2)}">${T.fields.copy}</button> <button type="button" data-download="${type.key}.json" data-value="${JSON.stringify(stripMeta(type), null, 2)}">${T.fields.downloadJson}</button></p><pre>${JSON.stringify(stripMeta(type), null, 2)}</pre></section>`;
+  else body = html`<section id="panel-fields" role="tabpanel"><h3>${T.fields.fieldsCount} <span class="chip">${fields.length}</span></h3>
+    <div class="scroll-x"><table><thead><tr><th>${T.fields.key}</th><th>${T.fields.label}</th><th>${T.fields.type}</th><th>${T.fields.required}</th><th>${T.fields.group}</th><th>${T.fields.priority}</th><th>${T.fields.helpText}</th></tr></thead><tbody>${fields.map(field => html`<tr><td><a href="${href(type.id, { tab: 'fields', field: field.key })}"><code>${field.key}</code></a> ${copyButton(field.key)}</td><td>${field.label}</td><td>${field.type}${field.targetType ? html` → ${(entitiesByKey.get(field.targetType) || entitiesByName.get(norm(field.targetType))) ? link((entitiesByKey.get(field.targetType) || entitiesByName.get(norm(field.targetType))).id) : field.targetType}` : ''}</td><td>${field.required ? T.fields.yes : T.fields.no}</td><td>${field.group || ''}</td><td>${field.priority || ''}</td><td>${field.helpText || ''}</td></tr>`)}</tbody></table></div>
+    <h3>${T.fields.technical}</h3>${fields.map(field => html`<details class="tech" id="field-${field.key}" ${field.key === focusField ? 'open' : ''}><summary>${field.label} <code>${field.key}</code> · ${field.type}</summary><dl class="props">${prop(T.fields.key, copyChip(field.key))}${prop(T.fields.label, copyChip(field.label))}${prop(T.fields.type, copyChip(field.type))}${prop(T.fields.group, field.group ? copyChip(field.group) : null)}${prop(T.fields.helpText, field.helpText ? copyChip(field.helpText) : null)}${prop(T.fields.example, field.example != null ? copyChip(field.example) : null)}${Object.hasOwn(field, 'defaultValue') ? prop(T.fields.defaultValue, copyChip(field.defaultValue)) : ''}${prop(T.fields.target, field.targetType ? copyChip(field.targetType) : null)}${prop(T.fields.purpose, field.purpose)}${prop(T.fields.source, field.source)}${prop(T.fields.maintainer, field.maintainer)}${prop(T.fields.sensitivity, field.sensitivity)}${field.config ? prop(T.fields.config, Object.entries(field.config).map(([k, v]) => html`<span>config.${k}: ${copyChip(v)}</span>`)) : ''}${list(field.options).length ? prop(T.fields.options, list(field.options).map(option => html`<span>${copyChip(option.value)} → ${copyChip(option.label)}${Object.hasOwn(option, 'parentValue') ? html` <span class="small muted">(parent: ${option.parentValue})</span>` : ''}</span>`)) : ''}</dl></details>`)}
+    ${list(type.coverage).length ? html`<h3>${T.fields.coverage}</h3><ul>${type.coverage.map(entry => html`<li><strong>${entry.dimension}</strong>: ${entry.decision}. ${entry.reason}</li>`)}</ul>` : ''}
+    ${list(type.setup).length ? html`<h3>${T.fields.setup}</h3><ul>${type.setup.map(x => html`<li>${x}</li>`)}</ul>` : ''}
+    ${list(type.readiness).length ? html`<h3>${T.fields.readiness}</h3><ul>${type.readiness.map(x => html`<li>${x}</li>`)}</ul>` : ''}</section>`;
+  return html`${crumbs([{ label: T.nav.entities, href: '#entities' }, { label: type.name }])}<h2 id="view-title" tabindex="-1">${type.name}</h2>
+  <div class="chips">${kindChip('entity')}${chip(T.fields.key + ': ' + type.key)}${type.icon ? chip(T.fields.icon + ': ' + type.icon) : ''}${receiptChip(type.receipt)}</div>
+  ${type.description ? html`<p class="lead">${type.description}</p>` : ''}
+  <dl class="props">${prop(T.fields.purpose, type.purpose)}${prop(T.fields.owner, type.owner)}${prop(T.fields.namePattern, type.namePattern)}${prop(T.fields.name, copyChip(type.name))}${prop(T.fields.icon, type.icon ? copyChip(type.icon) : null)}${prop(T.fields.description, type.description ? copyChip(type.description) : null)}</dl>
+  ${tabs('entity', [['fields', T.tabs.fields, fields.length], ['relationships', T.tabs.relationships, outbound.length + inbound.length + users.length], ['json', T.tabs.json]], tab)}${body}
+  ${issues.length ? html`<h3>${T.review.title}</h3>${issueRows(issues, { object: false })}` : ''}`;
+}
+function stripMeta(object) { const { id, receipt, ...rest } = object; return rest; }
+
+function previewControl(field) {
+  const type = String(field.type || 'text');
+  const options = list(field.options).length ? field.options : list(field.config && field.config.options);
+  if (['select', 'multi_select', 'dropdown'].includes(type) || options.length) return html`<select disabled ${type === 'multi_select' ? 'multiple' : ''}>${options.length ? options.map(option => html`<option>${typeof option === 'string' ? option : option.label || option.value}</option>`) : html`<option>—</option>`}</select>`;
+  if (['textarea', 'rich_text', 'long_text', 'text_area'].includes(type)) return html`<textarea disabled rows="3"></textarea>`;
+  if (['checkbox', 'boolean'].includes(type)) return html`<input type="checkbox" disabled>`;
+  if (type === 'file') return html`<input type="file" disabled>`;
+  if (['number', 'currency', 'integer', 'decimal'].includes(type)) return html`<input type="number" disabled placeholder="${type}${field.config && field.config.currency ? ' · ' + field.config.currency : ''}">`;
+  if (['date', 'datetime', 'date_time'].includes(type)) return html`<input type="date" disabled>`;
+  return html`<input type="text" disabled placeholder="${type}">`;
+}
+function viewForm(form) {
+  const { params } = parseHash();
+  const tab = params.get('tab') || 'preview';
+  const fields = list(form.fields).map(field => typeof field === 'string' ? { key: field } : field);
+  const known = new Set(['key', 'name', 'label', 'type', 'required', 'helpText', 'help', 'mapsTo', 'options', 'config']);
+  const issues = issuesByObject.get(form.id) || [];
+  const action = form.actionRef ? OBJ.get('workflow/' + form.workflowRef + '/action/' + form.actionRef) : null;
+  const users = formUsedBy.get(form.key) || [];
+  const body = tab === 'fields' ? html`<section id="panel-fields" role="tabpanel"><div class="scroll-x"><table><thead><tr><th>${T.fields.key}</th><th>${T.fields.label}</th><th>${T.fields.type}</th><th>${T.fields.required}</th><th>${T.fields.mapsTo}</th><th>${T.fields.options}</th><th>${T.fields.technical}</th></tr></thead><tbody>${fields.map(field => { const extra = Object.fromEntries(Object.entries(field).filter(([k]) => !known.has(k))); const options = list(field.options).length ? field.options : list(field.config && field.config.options); return html`<tr><td><code>${fieldKey(field)}</code></td><td>${fieldLabel(field)}</td><td>${field.type || ''}</td><td>${field.required ? T.fields.yes : T.fields.no}</td><td>${field.mapsTo ? html`<code>${field.mapsTo}</code>` : ''}</td><td>${options.map(o => typeof o === 'string' ? o : (o.label || o.value)).join(', ')}</td><td>${Object.keys(extra).length || field.config ? html`<code class="small">${JSON.stringify(Object.assign({}, extra, field.config ? { config: field.config } : {}))}</code>` : ''}</td></tr>`; })}</tbody></table></div></section>`
+    : html`<section id="panel-preview" role="tabpanel"><div class="field-preview">${fields.length ? fields.map(field => html`<div class="f"><label>${fieldLabel(field)}${field.required ? html` <span class="req" aria-label="${T.fields.required}">*</span>` : ''}</label>${field.helpText || field.help ? html`<div class="help">${field.helpText || field.help}</div>` : ''}${previewControl(field)}${field.mapsTo ? html`<div class="help">${T.fields.mapsTo}: <code>${field.mapsTo}</code></div>` : ''}</div>`) : html`<p class="muted">${T.fields.none}</p>`}</div></section>`;
+  return html`${crumbs([{ label: T.nav.forms, href: '#forms' }, { label: form.title || form.key }])}<h2 id="view-title" tabindex="-1">${form.title || form.key}</h2>
+  <div class="chips">${kindChip('form')}${chip(T.enums.formKind[form.kind] || form.kind)}${form.status ? chip(T.status.form[form.status] || form.status, 'info') : ''}${receiptChip(form.receipt)}</div>
+  <dl class="props">${prop(T.fields.key, copyChip(form.key))}${prop(T.fields.workflow, link('workflow/' + form.workflowRef))}${prop(T.fields.action, action ? link(action.id) : null)}${prop(T.fields.usedBy, users.map(id => link(id)))}${prop(T.fields.fieldsCount, fields.length + ' · ' + T.fields.required.toLowerCase() + ': ' + fields.filter(f => f.required).length)}</dl>
+  ${tabs('form', [['preview', T.tabs.preview], ['fields', T.tabs.fields, fields.length]], tab)}${body}
+  ${issues.length ? html`<h3>${T.review.title}</h3>${issueRows(issues, { object: false })}` : ''}`;
+}
+
+function viewGroup(group) {
+  const children = DATA.groups.filter(other => other.parentKey === group.key);
+  const actions = groupActions.get(group.key) || [];
+  const fallbacks = groupFallback.get(group.key) || [];
+  const grants = DATA.access.flatMap(entry => entry.grants.filter(grant => grant.kind === 'group' && grant.ref === group.key).map(grant => ({ entry, grant })));
+  const allowlists = DATA.access.flatMap(entry => entry.allowlists.filter(item => item.groups.includes(group.key)).map(item => ({ entry, item })));
+  const issues = issuesByObject.get(group.id) || [];
+  return html`${crumbs([{ label: T.nav.groups, href: '#groups' }, { label: group.name }])}<h2 id="view-title" tabindex="-1">${group.name}</h2>
+  <div class="chips">${kindChip('group')}${group.kind ? chip(T.enums.groupKind[group.kind] || group.kind) : ''}${group.area ? chip(T.fields.area + ': ' + group.area) : ''}${receiptChip(group.receipt)}${list(group.flags).map(flag => chip(T.enums.flag[flag.code] || flag.code, 'warn'))}</div>
+  ${group.purpose ? html`<p class="lead">${group.purpose}</p>` : ''}
+  <div class="two"><div>
+  <dl class="props">${prop(T.fields.key, copyChip(group.key))}${prop(T.fields.name, copyChip(group.name))}${prop(T.fields.parent, group.parentKey ? link('group/' + group.parentKey) : null)}${prop(T.fields.children, children.map(child => link(child.id)))}${prop(T.fields.sources, sourceLinks(group.sourceRefs))}</dl>
+  <h3>${T.fields.members} <span class="chip">${list(group.members).length}</span>${group.membersComplete === true ? html` ${chip('completo', 'ok')}` : ''}</h3>${list(group.members).length ? html`<div class="scroll-x"><table><thead><tr><th>${T.fields.role}</th><th>${T.fields.email}</th><th>${T.fields.verified}</th><th>${T.fields.source}</th></tr></thead><tbody>${group.members.map(member => html`<tr><td>${member.role || ''}</td><td>${member.email || ''}</td><td>${member.email ? (member.verified === true ? chip(T.fields.verified, 'ok') : chip(T.fields.unverified, 'warn')) : ''}</td><td>${member.source || ''}</td></tr>`)}</tbody></table></div>` : html`<p class="muted">${T.fields.none}</p>`}
+  ${list(group.flags).length ? html`<h3>${T.fields.flags}</h3><ul>${group.flags.map(flag => html`<li><strong>${T.enums.flag[flag.code] || flag.code}</strong>${flag.detail ? ': ' + flag.detail : ''}</li>`)}</ul>` : ''}
+  </div><div>
+  <h3>${T.fields.responsibilities}</h3>
+  <h4>${T.fields.assignedActions} <span class="chip">${actions.length + fallbacks.length}</span></h4>${actions.length || fallbacks.length ? html`<ul class="plain">${actions.map(id => html`<li>${link(id)} <span class="small muted">· ${OBJ.get(id).workflow.name}</span></li>`)}${fallbacks.map(id => html`<li>${link(id)} <span class="small muted">· ${OBJ.get(id).workflow.name} · ${T.fields.fallback}</span></li>`)}</ul>` : html`<p class="muted">${T.fields.none}</p>`}
+  <h4>${T.fields.heldGrants}</h4>${grants.length ? html`<ul class="plain">${grants.map(({ entry, grant }) => html`<li>${link('workflow/' + entry.workflow)} → ${enumLabel('level', grant.level)} ${grant.applied ? chip(T.access.applied, 'ok') : chip(T.access.toApply, '')}${grant.reason ? html`<br><span class="small muted">${grant.reason}</span>` : ''}</li>`)}</ul>` : html`<p class="muted">${T.fields.none}</p>`}
+  ${allowlists.length ? html`<h4>${T.fields.allowlists}</h4><ul class="plain">${allowlists.map(({ entry, item }) => html`<li>${link('workflow/' + entry.workflow)} · ${item.label} ${chip(item.state, item.state === 'applied' ? 'ok' : 'bad')}</li>`)}</ul>` : ''}
+  </div></div>
+  ${issues.length ? html`<h3>${T.review.title}</h3>${issueRows(issues, { object: false })}` : ''}`;
+}
+
+function viewSource(source, section) {
+  const refsOf = id => (refsBySource.get(id) || []).filter((v, i, a) => a.indexOf(v) === i);
+  const refList = ids => ids.length ? html`<ul class="plain">${ids.map(id => html`<li>${kindChip(OBJ.get(id) ? OBJ.get(id).kind : 'issue')} ${link(id)}${OBJ.get(id) && OBJ.get(id).kind === 'action' ? html` <span class="small muted">· ${OBJ.get(id).workflow.name}</span>` : ''}</li>`)}</ul>` : html`<p class="muted">${T.fields.none}</p>`;
+  if (section) return html`${crumbs([{ label: T.nav.sources, href: '#sources' }, { label: source.title, href: '#' + source.id }, { label: '§' + section.anchor }])}<h2 id="view-title" tabindex="-1">§${section.anchor} ${section.title || ''}</h2><div class="chips">${kindChip('section')}</div><h3>${T.fields.referencedBy}</h3>${refList(refsOf(section.id))}`;
+  const direct = refsOf(source.id);
+  return html`${crumbs([{ label: T.nav.sources, href: '#sources' }, { label: source.title }])}<h2 id="view-title" tabindex="-1">${source.title}</h2>
+  <div class="chips">${kindChip('source')}${chip(T.enums.sourceKind[source.kind] || source.kind)}${source.version ? chip(T.fields.version + ' ' + source.version) : ''}${source.effectiveDate ? chip(source.effectiveDate) : ''}</div>
+  <dl class="props">${prop(T.fields.code, copyChip(source.code))}${prop(T.fields.emails, list(source.emails))}</dl>
+  <h3>${T.fields.sections} <span class="chip">${source.sections.length}</span></h3>${source.sections.length ? html`<div class="scroll-x"><table><thead><tr><th>§</th><th>${T.fields.title}</th><th>${T.fields.referencedBy}</th></tr></thead><tbody>${source.sections.map(section => { const refs = refsOf(section.id); return html`<tr><td><a href="#${section.id}">§${section.anchor}</a></td><td>${section.title || ''}</td><td>${refs.slice(0, 8).map((id, i) => html`${i ? ', ' : ''}${link(id)}`)}${refs.length > 8 ? html` <a href="#${section.id}">+${refs.length - 8} ${T.misc.more}</a>` : ''}</td></tr>`; })}</tbody></table></div>` : html`<p class="muted">${T.fields.none}</p>`}
+  <h3>${T.fields.referencedBy}</h3>${refList(direct)}`;
+}
+
+function viewProfile(profile) {
+  const actions = profileActions.get(profile.key) || [];
+  const issues = issuesByObject.get(profile.id) || [];
+  const { id, ...rest } = profile;
+  return html`${crumbs([{ label: T.nav.profiles, href: '#profiles' }, { label: profile.name }])}<h2 id="view-title" tabindex="-1">${profile.name}</h2><div class="chips">${kindChip('ai')}</div>
+  <dl class="props">${prop(T.fields.key, copyChip(profile.key))}${prop(T.fields.purpose, profile.purpose)}${prop(T.fields.workflow, profile.workflowRef ? link('workflow/' + profile.workflowRef) : null)}${prop(T.fields.action, profile.workflowRef && profile.actionRef ? link('workflow/' + profile.workflowRef + '/action/' + profile.actionRef) : null)}${prop(T.fields.assignedActions, actions.map(x => link(x)))}</dl>
+  <details class="tech"><summary>${T.fields.jsonOf}</summary><pre>${JSON.stringify(rest, null, 2)}</pre></details>
+  ${issues.length ? html`<h3>${T.review.title}</h3>${issueRows(issues, { object: false })}` : ''}`;
+}
+
+function viewDecision(decision) {
+  const issues = issuesByObject.get(decision.id) || [];
+  return html`${crumbs([{ label: T.nav.decisions, href: '#decisions' }, { label: decision.code }])}<h2 id="view-title" tabindex="-1">${decision.code}: ${decision.question}</h2>
+  <div class="chips">${kindChip('decision')}${chip(decision.status === 'open' ? T.status.open : T.status.resolved, decision.status === 'open' ? 'warn' : 'ok')}</div>
+  <dl class="props">${prop(T.fields.owner, decision.owner)}${prop(T.fields.raisedBy, decision.raisedBy)}${prop(T.fields.resolution, decision.resolution)}${prop(T.fields.sources, sourceLinks(decision.sourceRefs))}${prop(T.fields.related, decision.related.map(key => link('workflow/' + key)))}</dl>
+  ${issues.length ? issueRows(issues, { object: false }) : ''}`;
+}
+
+function accessTable(entries) {
+  const rows = [];
+  for (const entry of entries) {
+    const cell = (grantee, level, reason, sources, status) => rows.push(html`<tr><td>${link('workflow/' + entry.workflow)}</td><td>${entry.ownerArea || '—'}</td><td>${entry.sensitivity ? enumLabel('sensitivity', entry.sensitivity) : '—'}</td><td>${grantee}</td><td>${level}</td><td>${reason}</td><td>${sources}</td><td>${status}</td></tr>`);
+    const grants = entry.grants.filter(grant => grant.kind !== 'creator');
+    if (!entry.declared) cell('—', '—', html`<span class="red">${T.access.notDeclared}</span>`, '—', '—');
+    else if (!grants.length) cell(T.access.creatorOnly, '—', entry.note || '—', '—', '—');
+    for (const grant of grants) cell(grant.kind === 'group' ? link('group/' + grant.ref, grant.name || grant.ref) : grant.kind === 'organization' ? T.enums.organization : grant.grantee, enumLabel('level', grant.level), grant.reason || '—', grant.sourceRefs.length ? sourceLinks(grant.sourceRefs).map((x, i) => html`${i ? ', ' : ''}${x}`) : '—', grant.applied ? chip(T.access.applied, 'ok') : chip(T.access.toApply, ''));
+    for (const key of entry.assigned) cell(link('group/' + key), '—', T.access.seesOwn, '—', '—');
+    for (const trigger of entry.allowlists) cell(html`${T.access.allowlist} ${trigger.groups.map((key, i) => html`${i ? ', ' : ''}${link('group/' + key)}`)}${trigger.users.map(u => html`, ${u}`)}`, T.access.start, trigger.label, '—', trigger.state === 'applied' ? chip(T.access.applied, 'ok') : html`${chip(T.access.blocked, 'bad')} <span class="small">${trigger.state}</span>`);
+  }
+  const retained = entries.filter(entry => entry.retainedExcess.length);
+  return html`<div class="scroll-x"><table><thead><tr>${T.access.columns.map(c => html`<th>${c}</th>`)}</tr></thead><tbody>${rows}</tbody></table></div>
+  ${retained.length ? html`<h3>${T.access.retained}</h3><ul>${retained.flatMap(entry => entry.retainedExcess.map(held => html`<li>${link('workflow/' + entry.workflow)}: ${held.granteeType}:${held.granteeRef} → ${enumLabel('level', held.level)}${held.approvedLevel ? html` (${T.access.approved} ${enumLabel('level', held.approvedLevel)})` : html` (${T.access.notInManifest})`}${held.block ? html` — ${chip(T.access.blocked, 'bad')} ${held.block}` : ''}</li>`))}</ul>` : ''}
+  ${entries.length ? html`<h3>${T.access.readiness}</h3><ul class="plain">${entries.map(entry => { const item = DATA.readiness.find(r => r.workflow === entry.workflow); return html`<li>${link('workflow/' + entry.workflow)}: ${item && item.blocked ? html`${chip(T.access.blocked, 'bad')} ${item.reasons.join('; ')}` : chip(T.access.ready, 'ok')}</li>`; })}</ul>` : ''}`;
+}
+const viewAccess = () => html`${crumbs([{ label: T.access.title }])}<h2 id="view-title" tabindex="-1">${T.access.title}</h2><p class="lead">${T.access.intro}</p>${accessTable(DATA.access)}`;
+
+function viewReview() {
+  const { params } = parseHash();
+  const cat = params.get('cat') || '', wf = params.get('wf') || '', area = params.get('area') || '', kind = params.get('kind') || '', q = norm(params.get('q') || '');
+  const counts = { design: 0, validation: 0, setup: 0, blocker: 0 };
+  for (const issue of DATA.issues) counts[issue.category] += 1;
+  const areas = [...new Set(DATA.workflows.map(areaOf))].sort();
+  const kinds = [...new Set(DATA.issues.map(issue => issue.objectId ? (OBJ.get(issue.objectId) || {}).kind : null).filter(Boolean))].sort();
+  const shown = DATA.issues.filter(issue => (!cat || issue.category === cat) && (!wf || issueWorkflows(issue).includes(wf)) && (!area || issueWorkflows(issue).some(key => areaOf(workflowsByKey.get(key) || {}) === area)) && (!kind || (issue.objectId && (OBJ.get(issue.objectId) || {}).kind === kind)) && (!q || norm([issue.name || '', issue.text, issue.ref, issue.detail, issue.path, issue.objectId && OBJ.get(issue.objectId) ? OBJ.get(issue.objectId).label : ''].join(' ')).includes(q)));
+  const order = { blocker: 0, design: 1, validation: 2, setup: 3 };
+  shown.sort((a, b) => (b.blocking - a.blocking) || (order[a.category] - order[b.category]) || String(issueWorkflows(a)[0] || '').localeCompare(String(issueWorkflows(b)[0] || '')) || String(a.objectId || '').localeCompare(String(b.objectId || '')));
+  const select = (name, label, options, value) => html`<label for="review-${name}">${label}</label><select id="review-${name}" data-param="${name}"><option value="">${T.search.all}</option>${options.map(([v, l]) => html`<option value="${v}" ${v === value ? 'selected' : ''}>${l}</option>`)}</select>`;
+  return html`${crumbs([{ label: T.review.title }])}<h2 id="view-title" tabindex="-1">${T.review.title}</h2><p class="lead">${T.review.intro}</p>
+  <div class="queue-tabs">${[['', T.review.all, DATA.issues.length], ['blocker', T.enums.category.blocker, counts.blocker], ['design', T.enums.category.design, counts.design], ['validation', T.enums.category.validation, counts.validation], ['setup', T.enums.category.setup, counts.setup]].map(([key, label, n]) => html`<a href="${href('review', Object.assign(Object.fromEntries(params.entries()), { cat: key }))}" aria-current="${key === cat}">${label} <span class="chip">${n}</span></a>`)}</div>
+  <div class="toolbar">${select('wf', T.review.workflow, DATA.workflows.map(w => [w.key, w.name]), wf)}${select('area', T.search.area, areas.map(a => [a, a || T.nav.noArea]), area)}${select('kind', T.search.type, kinds.map(k => [k, T.kinds[k] || k]), kind)}<label for="review-q">${T.nav.search}</label><input id="review-q" type="search" data-param="q" value="${params.get('q') || ''}"><a href="#review">${T.search.clear}</a><span class="small muted">${fmt(T.review.filtered, { n: shown.length, m: DATA.issues.length })}</span></div>
+  ${issueRows(shown)}
+  <h3>${T.review.notes}</h3><p class="lead">${T.review.notesIntro} ${T.review.notIncorporated}</p>
+  <div class="toolbar"><button type="button" data-notes="export">${T.review.export}</button><button type="button" data-notes="markdown">${T.review.exportMd}</button><label for="notes-import"><span class="sr">${T.review.importNotes}</span></label><input id="notes-import" type="file" accept="application/json" data-notes="import"><button type="button" data-notes="clear">${T.review.clearNotes}</button></div>`;
+}
+
+/* ---------- Search ---------- */
+let searchIndex = null;
+function indexText(o) {
+  const d = o.data;
+  switch (o.kind) {
+    case 'workflow': return [d.name, d.key, d.prefix, d.ownerArea, d.yaml && d.yaml.metadata && d.yaml.metadata.description, list(d.setupNotes).join(' ')].join(' ');
+    case 'action': return [d.name, d.localId, d.type, d.description, d.yaml && d.yaml.description, list(d.evidence).join(' '), d.assigneeRef].join(' ');
+    case 'entity': return [d.name, d.key, d.description, d.purpose, list(d.fields).map(f => f.key + ' ' + f.label + ' ' + (f.helpText || '')).join(' ')].join(' ');
+    case 'form': return [d.title, d.key, list(d.fields).map(f => (typeof f === 'string' ? f : (f.key || f.name || '') + ' ' + (f.label || '') + ' ' + (f.helpText || f.help || ''))).join(' ')].join(' ');
+    case 'group': return [d.name, d.key, d.purpose, d.area, list(d.members).map(m => (m.role || '') + ' ' + (m.email || '')).join(' ')].join(' ');
+    case 'source': return [d.title, d.code, d.kind].join(' ');
+    case 'section': return [d.anchor, d.title].join(' ');
+    case 'ai': return [d.name, d.key, d.purpose].join(' ');
+    case 'decision': return [d.code, d.question, d.owner, d.resolution].join(' ');
+    default: return o.label;
+  }
+}
+function snippet(text, q) { const n = norm(text); const at = n.indexOf(q); if (at === -1) return text.slice(0, 140); const start = Math.max(0, at - 60); return (start ? '…' : '') + text.slice(start, at) + '\u0001' + text.slice(at, at + q.length) + '\u0002' + text.slice(at + q.length, at + q.length + 80); }
+function viewSearch() {
+  const { params } = parseHash();
+  const q = norm(params.get('q') || '').trim();
+  const kind = params.get('kind') || '', area = params.get('area') || '', wf = params.get('wf') || '', status = params.get('status') || '';
+  if (!searchIndex) searchIndex = [...OBJ.values()].map(o => ({ o, text: indexText(o), n: norm(indexText(o)) }));
+  const areaOfObject = o => o.kind === 'workflow' ? areaOf(o.data) : o.kind === 'action' ? areaOf(o.workflow) : o.kind === 'group' ? (o.data.area || '') : o.kind === 'form' ? areaOf(workflowsByKey.get(o.data.workflowRef) || {}) : null;
+  const workflowOfObject = o => o.kind === 'workflow' ? o.data.key : o.kind === 'action' ? o.workflow.key : o.kind === 'form' ? o.data.workflowRef : o.kind === 'ai' ? o.data.workflowRef : null;
+  const statusOfObject = o => o.kind === 'workflow' ? o.data.status : o.kind === 'form' ? o.data.status : o.kind === 'decision' ? o.data.status : null;
+  const hits = q ? searchIndex.filter(({ o, n }) => n.includes(q) && (!kind || o.kind === kind) && (!area || areaOfObject(o) === area) && (!wf || workflowOfObject(o) === wf) && (!status || statusOfObject(o) === status)) : [];
+  const select = (name, label, options, value) => html`<label for="search-${name}">${label}</label><select id="search-${name}" data-param="${name}"><option value="">${T.search.all}</option>${options.map(([v, l]) => html`<option value="${v}" ${v === value ? 'selected' : ''}>${l}</option>`)}</select>`;
+  const byKind = new Map();
+  for (const hit of hits) push(byKind, hit.o.kind, hit);
+  return html`${crumbs([{ label: T.nav.search }])}<h2 id="view-title" tabindex="-1">${T.nav.search}</h2><p class="lead">${T.search.hint}</p>
+  <div class="toolbar">${select('kind', T.search.type, Object.entries(T.kinds).filter(([k]) => k !== 'issue').map(([k, l]) => [k, l]), kind)}${select('area', T.search.area, [...new Set(DATA.workflows.map(areaOf).concat(DATA.groups.map(g => g.area || '')))].filter(Boolean).sort().map(a => [a, a]), area)}${select('wf', T.search.workflow, DATA.workflows.map(w => [w.key, w.name]), wf)}${select('status', T.search.status, [['design', T.status.workflow.design], ['packaged', T.status.workflow.packaged], ['validated', T.status.workflow.validated], ['imported', T.status.workflow.imported], ['change_planned', T.status.workflow.change_planned], ['designed', T.status.form.designed], ['created', T.status.form.created], ['linked', T.status.form.linked], ['open', T.status.open], ['resolved', T.status.resolved]], status)}</div>
+  ${!q ? html`<p class="empty">${T.search.empty}</p>` : hits.length ? html`<p role="status">${fmt(T.search.results, { n: hits.length, q: params.get('q') })}</p>${[...byKind.entries()].map(([k, items]) => html`<h3>${T.kindsPlural[k] || k} <span class="chip">${items.length}</span></h3>${items.slice(0, 200).map(({ o, text }) => html`<div class="result"><a href="${href(o.id)}">${o.label}</a> ${kindChip(o.kind)}<div class="where">${o.kind === 'action' ? html`${T.search.in} ${o.workflow.name}` : o.kind === 'section' ? html`${T.search.in} ${OBJ.get(o.parent).label}` : html`<code>${o.id}</code>`}</div><div class="small">${raw(esc(snippet(text, q)).replace('\u0001', '<mark>').replace('\u0002', '</mark>'))}</div></div>`)}${items.length > 200 ? html`<p class="muted">+${items.length - 200}</p>` : ''}`)}` : html`<p class="empty" role="status">${fmt(T.search.none, { q: params.get('q') })}</p>`}`;
+}
+
+/* ---------- Diagrams ---------- */
+function wrap(text, max, lines) { const words = String(text).split(/\s+/); const out = []; let line = ''; for (const word of words) { if ((line + ' ' + word).trim().length > max && line) { out.push(line); line = word; } else line = (line + ' ' + word).trim(); } if (line) out.push(line); if (out.length > lines) { out.length = lines; out[lines - 1] = out[lines - 1].slice(0, max - 1) + '…'; } return out; }
+const svgText = (x, y, lines, cls, size) => lines.map((line, i) => `<text x="${x}" y="${y + i * (size || 14)}" class="${cls || ''}">${esc(line)}</text>`).join('');
+const FILL = { standard: '#ffffff', decision: '#fef3c7', sub_workflow: '#ede9fe', notification: '#e0f2fe', wait: '#e0f2fe', http_request: '#e0f2fe', form_fill: '#dcfce7', terminal: '#f2f4f7', start: '#e0e7ff' };
+function flowSvg(workflow) {
+  const W = 220, COLW = 250, GAP = 56, LEFT = 60, TOP = 20;
+  const lineCount = Math.max(1, ...workflow.actions.map(action => wrap(action.name, 32, 3).length));
+  const H = 32 + 14 * lineCount;
+  const rows = [];
+  for (const action of workflow.actions) {
+    const parallel = action.yaml && action.yaml.executionMode === 'parallel';
+    const last = rows[rows.length - 1];
+    if (parallel && last && last.parallel) last.actions.push(action); else rows.push({ parallel, actions: [action] });
+  }
+  const maxCols = Math.max(1, ...rows.map(row => row.actions.length));
+  const pos = new Map();
+  let y = TOP;
+  pos.set('start', { x: LEFT, y, w: W, h: 36 }); y += 36 + GAP;
+  for (const row of rows) { row.actions.forEach((action, i) => pos.set(action.id, { x: LEFT + i * COLW, y, w: W, h: H })); y += H + GAP; }
+  pos.set('end', { x: LEFT, y, w: W, h: 36 });
+  const termX = LEFT + maxCols * COLW + 60;
+  let termBottom = 0, terminals = [], edges = [], backCount = 0;
+  const arrow = (a, b, label, dashed) => { const x1 = a.x + a.w / 2, y1 = a.y + a.h, x2 = b.x + b.w / 2, y2 = b.y; const mid = (y1 + y2) / 2; edges.push({ d: x1 === x2 ? `M${x1},${y1} L${x2},${y2}` : `M${x1},${y1} C${x1},${mid} ${x2},${mid} ${x2},${y2}`, label, lx: (x1 + x2) / 2 + 6, ly: mid, dashed }); };
+  const side = (a, b, label) => { const x1 = a.x + a.w, y1 = a.y + a.h / 2, x2 = b.x, y2 = b.y + b.h / 2; edges.push({ d: `M${x1},${y1} C${x1 + 40},${y1} ${x2 - 40},${y2} ${x2},${y2}`, label, lx: x1 + 6, ly: y1 - 8 }); };
+  const back = (a, b, label) => { backCount += 1; const gx = LEFT - 20 - backCount * 12; const x1 = a.x, y1 = a.y + a.h / 2, x2 = b.x, y2 = b.y + b.h / 2; edges.push({ d: `M${x1},${y1} C${gx},${y1} ${gx},${y2} ${x2},${y2}`, label, lx: gx + 4, ly: (y1 + y2) / 2, dashed: true, back: true }); };
+  const terminal = (from, label, kind, target) => { const p = pos.get(from.id); const ty = Math.max(p.y, termBottom + 10); const node = { x: termX, y: ty, w: W, h: 36, label, kind, target }; termBottom = ty + 36; terminals.push(node); return node; };
+  rows.forEach((row, r) => {
+    const nextRow = rows[r + 1];
+    const targets = nextRow ? nextRow.actions.map(a => pos.get(a.id)) : [pos.get('end')];
+    for (const action of row.actions) {
+      const p = pos.get(action.id);
+      const branches = action.type === 'decision' && action.yaml && action.yaml.config ? list(action.yaml.config.branches) : [];
+      if (!branches.length) { for (const t of targets) arrow(p, t, null); continue; }
+      const continues = branches.filter(b => !b.outcome || b.outcome === 'continue' || b.outcome === 'trigger_workflow').map(b => b.label);
+      if (continues.length) for (const t of targets) arrow(p, t, continues.join(' / '));
+      for (const branch of branches) {
+        if (branch.outcome === 'return_to_action' && branch.target) { const t = pos.get(workflow.id + '/action/' + branch.target); if (t) back(p, t, branch.label); else side(p, terminal(action, branch.label + ' → ' + branch.target, 'terminal'), branch.label); }
+        else if (branch.outcome === 'cancel_incident') side(p, terminal(action, T.flow.cancelled, 'terminal'), branch.label);
+        else if (branch.outcome === 'trigger_workflow') { const target = branch.workflow && workflowsByKey.get(branch.workflow); side(p, terminal(action, T.flow.triggerWorkflow + ' ' + (target ? target.name : branch.workflow || '?'), 'sub_workflow', target ? target.id : null), branch.label + ' (+)'); }
+      }
+      if (!continues.length && branches.length) { const t = pos.get('end'); edges.push({ d: `M${p.x + p.w / 2},${p.y + p.h} L${p.x + p.w / 2},${p.y + p.h + 8}`, label: T.flow.decisionNoContinue, lx: p.x + p.w / 2 + 6, ly: p.y + p.h + 14 }); void t; }
+    }
+  });
+  for (const t of rows.length ? rows[0].actions.map(a => pos.get(a.id)) : [pos.get('end')]) arrow(pos.get('start'), t, null);
+  const width = termX + (terminals.length ? W + 20 : 0), height = Math.max(pos.get('end').y + 36, termBottom) + 20;
+  const parts = [`<svg class="flow" viewBox="0 0 ${width} ${height}" width="${width}" height="${height}" role="img" aria-label="${esc(T.flow.title)}"><defs><marker id="flow-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#667085"/></marker></defs>`];
+  for (const e of edges) parts.push(`<path d="${e.d}" fill="none" stroke="${e.back ? '#b91c1c' : '#667085'}" stroke-width="1.6" ${e.dashed ? 'stroke-dasharray="5 4"' : ''} marker-end="url(#flow-arrow)"/>` + (e.label ? `<text x="${e.lx}" y="${e.ly}" class="edge-label" paint-order="stroke" stroke="#fff" stroke-width="4">${esc(e.label)}</text>` : ''));
+  const box = (p, fill, lines, meta, id, stroke) => `<g class="node" ${id ? `tabindex="0" role="link" data-href="#${esc(id)}"` : ''} transform="translate(${p.x},${p.y})"><rect width="${p.w}" height="${p.h}" rx="8" fill="${fill}" stroke="${stroke || '#98a2b3'}" stroke-width="1.2"/>${svgText(10, meta ? 18 : Math.round(p.h / 2 + 4 - 7 * (lines.length - 1)), lines)}${meta ? `<text x="10" y="${p.h - 10}" class="edge-label">${esc(meta)}</text>` : ''}</g>`;
+  const triggers = list(workflow.triggers).length ? workflow.triggers : (workflow.yaml && workflow.yaml.triggers) || [];
+  parts.push(box(pos.get('start'), FILL.start, [T.flow.start + (triggers.length ? ': ' + triggers.map(t => t.label || enumLabel('triggerType', t.type)).join(', ') : '')].map(s => s.length > 30 ? s.slice(0, 29) + '…' : s), null));
+  for (const row of rows) for (const action of row.actions) { const owner = action.assigneeRef ? (action.assigneeRef.startsWith('ai:') ? (profilesByKey.get(action.assigneeRef.slice(3)) || {}).name || action.assigneeRef : action.assigneeRef === 'creator' ? T.enums.creator : action.assigneeRef === 'previous' ? T.enums.previous : action.assigneeRef.startsWith('field:') ? action.assigneeRef : (groupsByKey.get(action.assigneeRef) || {}).name || action.assigneeRef) : '—'; parts.push(box(pos.get(action.id), FILL[action.type] || '#fff', wrap(action.name, 32, 3), (enumLabel('actionType', action.type) + ' · ' + owner).slice(0, 40), action.id, action.type === 'decision' ? '#b45309' : null)); }
+  parts.push(box(pos.get('end'), FILL.terminal, [T.flow.end], null));
+  for (const t of terminals) parts.push(box(t, FILL[t.kind] || FILL.terminal, wrap(t.label, 30, 2), null, t.target, t.kind === 'terminal' ? '#b91c1c' : null));
+  parts.push('</svg>');
+  return parts.join('');
+}
+
+function graphSvg(scopeKey) {
+  const KIND_COL = { source: 0, section: 0, workflow: 1, action: 1, group: 2, ai: 2, form: 3, entity: 4 };
+  let edges, nodeIds;
+  if (scopeKey) {
+    const workflow = workflowsByKey.get(scopeKey);
+    if (!workflow) return '';
+    const own = new Set([workflow.id, ...workflow.actions.map(a => a.id)]);
+    edges = DATA.edges.filter(e => own.has(e.from) || own.has(e.to));
+    nodeIds = new Set([...own]); for (const e of edges) { nodeIds.add(e.from); nodeIds.add(e.to); }
+    for (const id of [...nodeIds]) { const o = OBJ.get(id); if (o && o.kind === 'section') nodeIds.add(o.parent); }
+  } else {
+    const lift = id => { const o = OBJ.get(id); return !o ? null : o.kind === 'action' ? o.parent : o.kind === 'section' ? o.parent : id; };
+    const seen = new Set(); edges = [];
+    for (const e of DATA.edges) { const from = lift(e.from), to = lift(e.to); if (!from || !to || from === to) continue; const key = from + '>' + to + '>' + e.kind; if (seen.has(key)) continue; seen.add(key); edges.push({ from, to, kind: e.kind, status: e.status }); }
+    nodeIds = new Set(); for (const e of edges) { nodeIds.add(e.from); nodeIds.add(e.to); } for (const w of DATA.workflows) nodeIds.add(w.id);
+  }
+  const nodes = [...nodeIds].map(id => OBJ.get(id)).filter(Boolean);
+  const columns = [[], [], [], [], []];
+  const order = { source: 0, section: 1, workflow: 0, action: 1, group: 0, ai: 1, form: 0, entity: 0 };
+  for (const o of nodes) columns[KIND_COL[o.kind] ?? 4].push(o);
+  const W = 220, GAP = 12, COL = 330, TOP = 20, LEFT = 20, INDENT = 18;
+  const H = 20 + 13 * Math.max(1, ...nodes.map(o => wrap(o.label, 30, 3).length));
+  const pos = new Map(); let height = 0, colIndex = 0;
+  for (const column of columns) {
+    if (!column.length) continue;
+    column.sort((a, b) => (a.parent || a.id).localeCompare(b.parent || b.id, undefined, { numeric: true }) || order[a.kind] - order[b.kind] || a.id.localeCompare(b.id, undefined, { numeric: true }));
+    let y = TOP;
+    for (const o of column) { const indent = o.kind === 'action' || o.kind === 'section' || (o.kind === 'group' && o.data.parentKey) || o.kind === 'ai' ? INDENT : 0; pos.set(o.id, { x: LEFT + colIndex * COL + indent, y, w: W - indent, h: H }); y += H + GAP; }
+    height = Math.max(height, y); colIndex += 1;
+  }
+  const width = LEFT * 2 + Math.max(colIndex - 1, 0) * COL + W, total = height + TOP;
+  const stroke = { resolved: '#15803d', unresolved: '#b91c1c', neutral: '#98a2b3' };
+  const fill = { source: '#eef2f7', section: '#f8fafc', workflow: '#e0e7ff', action: '#ffffff', group: '#fef3c7', ai: '#ede9fe', form: '#dcfce7', entity: '#ffe4e6' };
+  const parts = [`<svg class="graph" viewBox="0 0 ${width} ${total}" width="${width}" height="${total}" role="img" aria-label="${esc(T.graph.title)}"><defs><marker id="dep-arrow" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0,0 L10,5 L0,10 z" fill="#667085"/></marker></defs>`];
+  for (const e of edges) {
+    if (['contains', 'parent'].includes(e.kind)) continue;
+    const a = pos.get(e.from), b = pos.get(e.to); if (!a || !b) continue;
+    let d;
+    if (Math.abs(a.x - b.x) < COL / 2) { const x1 = a.x + a.w, y1 = a.y + a.h / 2, y2 = b.y + b.h / 2, x2 = b.x + b.w; d = `M${x1},${y1} C${x1 + 60},${y1} ${x2 + 60},${y2} ${x2},${y2}`; }
+    else { const forward = a.x < b.x; const x1 = forward ? a.x + a.w : a.x, y1 = a.y + a.h / 2, x2 = forward ? b.x : b.x + b.w, y2 = b.y + b.h / 2, c = (x2 - x1) / 2; d = `M${x1},${y1} C${x1 + c},${y1} ${x2 - c},${y2} ${x2},${y2}`; }
+    parts.push(`<path d="${d}" fill="none" stroke="${stroke[e.status] || stroke.neutral}" stroke-width="${e.status === 'neutral' ? 1.2 : 1.8}" marker-end="url(#dep-arrow)"><title>${esc(OBJ.get(e.from).label + ' — ' + enumLabel('edge', e.kind) + ' — ' + OBJ.get(e.to).label)}</title></path>`);
+  }
+  for (const o of nodes) { const p = pos.get(o.id); if (!p) continue; const lines = wrap(o.label, 30, 3); parts.push(`<g class="node" tabindex="0" role="link" data-href="#${esc(o.id)}" transform="translate(${p.x},${p.y})"><title>${esc(o.label)}</title><rect width="${p.w}" height="${p.h}" rx="8" fill="${fill[o.kind] || '#fff'}" stroke="#98a2b3" stroke-width="1"/><text x="8" y="13" class="edge-label">${esc(T.kinds[o.kind] || o.kind)}</text>${svgText(8, 28, lines, '', 13)}</g>`); }
+  parts.push('</svg>');
+  return parts.join('');
+}
+function viewGraph() {
+  const { params } = parseHash();
+  const wf = params.get('wf') || '';
+  const projectNodes = new Set(); for (const e of DATA.edges) { const lift = id => { const o = OBJ.get(id); return o && (o.kind === 'action' || o.kind === 'section') ? o.parent : id; }; projectNodes.add(lift(e.from)); projectNodes.add(lift(e.to)); }
+  const large = !wf && projectNodes.size > 400 && params.get('force') !== '1';
+  return html`${crumbs([{ label: T.graph.title }])}<h2 id="view-title" tabindex="-1">${T.graph.title}</h2><p class="lead">${T.graph.intro}</p>
+  <div class="toolbar"><label for="graph-scope">${T.graph.scope}</label><select id="graph-scope" data-param="wf"><option value="">${T.graph.project}</option>${DATA.workflows.map(w => html`<option value="${w.key}" ${w.key === wf ? 'selected' : ''}>${w.name}</option>`)}</select></div>
+  ${large ? html`<p class="empty">${fmt(T.graph.tooLarge, { n: projectNodes.size })} <a href="${href('graph', { force: '1' })}">${T.graph.render}</a></p>` : html`<div class="graph-wrap">${raw(graphSvg(wf || null))}</div>`}`;
+}
+
+/* ---------- Render ---------- */
+const ROUTES = { '': viewOverview, workflows: viewWorkflows, entities: viewEntities, forms: viewForms, groups: viewGroups, sources: viewSources, profiles: viewProfiles, decisions: viewDecisions, review: viewReview, access: viewAccess, graph: viewGraph, search: viewSearch };
+function viewFor(path) {
+  if (Object.hasOwn(ROUTES, path)) return ROUTES[path]();
+  const o = OBJ.get(path);
+  if (!o) return html`<h2 id="view-title" tabindex="-1">${fmt(T.misc.notFound, { id: path })}</h2><p><a href="#">${T.nav.overview}</a></p>`;
+  switch (o.kind) {
+    case 'workflow': return viewWorkflow(o.data);
+    case 'action': return viewAction(o.data, o.workflow);
+    case 'entity': return viewEntity(o.data);
+    case 'form': return viewForm(o.data);
+    case 'group': return viewGroup(o.data);
+    case 'source': return viewSource(o.data, null);
+    case 'section': return viewSource(OBJ.get(o.parent).data, o.data);
+    case 'ai': return viewProfile(o.data);
+    case 'decision': return viewDecision(o.data);
+    default: return html`<p>${o.label}</p>`;
+  }
+}
+function render(options) {
+  options = options || {};
+  const { path, params } = parseHash();
+  const hash = location.hash;
+  const focusId = options.keepFocus && document.activeElement && document.activeElement.id;
+  const caret = focusId && typeof document.activeElement.selectionStart === 'number' ? document.activeElement.selectionStart : null;
+  if (currentHash != null && !options.keepScroll) scrollMemory.set(currentHash, main.scrollTop);
+  main.innerHTML = String(viewFor(path));
+  const o = OBJ.get(path);
+  document.title = (o ? o.label : (T.nav[path] || T.overview.title)) + ' · ' + DATA.project.title;
+  markNav(path, params);
+  const focusField = params.get('field') && document.getElementById('field-' + params.get('field'));
+  if (path === 'search' && document.activeElement !== navSearch) navSearch.value = params.get('q') || '';
+  if (options.keepScroll) { /* filters and tabs keep the reading position */ }
+  else if (focusField) main.scrollTop = Math.max(0, focusField.getBoundingClientRect().top - main.getBoundingClientRect().top + main.scrollTop - 12);
+  else main.scrollTop = scrollMemory.get(hash) || 0;
+  if (focusId) { const el = document.getElementById(focusId); if (el) { el.focus({ preventScroll: true }); if (caret != null && typeof el.setSelectionRange === 'function') try { el.setSelectionRange(caret, caret); } catch {} } }
+  else if (!options.keepScroll) { const title = document.getElementById('view-title'); if (title && currentHash != null) title.focus({ preventScroll: true }); }
+  if (window.innerWidth <= 900 && !options.keepScroll) nav.classList.remove('open');
+  currentHash = hash;
+}
+
+/* ---------- Navigation rail ---------- */
+const navSearch = document.getElementById('nav-search');
+function buildNav() {
+  const areas = new Map();
+  for (const workflow of DATA.workflows) push(areas, areaOf(workflow), workflow);
+  const counts = { design: 0, validation: 0, setup: 0, blocker: 0 };
+  for (const issue of DATA.issues) counts[issue.category] += 1;
+  const item = (path, label, count, tone) => html`<li><a href="#${path}" data-nav="${path}">${label}${count != null ? html` <span class="count ${tone || ''}">${count}</span>` : ''}</a></li>`;
+  const list = html`<ul>${item('', T.nav.overview)}</ul>
+  <div class="section">${T.nav.workflows}</div>
+  ${[...areas.entries()].sort((a, b) => a[0].localeCompare(b[0])).map(([area, workflows]) => html`<details ${areas.size <= 6 ? 'open' : ''}><summary>${area || T.nav.noArea} <span class="count">${workflows.length}</span></summary><ul>${workflows.map(workflow => html`<li><a href="#${workflow.id}" data-nav="${workflow.id}">${workflow.name}</a></li>`)}</ul></details>`)}
+  <ul>${item('workflows', T.nav.directory)}</ul>
+  <div class="section">${T.overview.directories}</div>
+  <ul>${item('entities', T.nav.entities, DATA.entityTypes.length)}${item('forms', T.nav.forms, DATA.forms.length)}${item('groups', T.nav.groups, DATA.groups.length)}${item('sources', T.nav.sources, DATA.sources.length)}${item('profiles', T.nav.profiles, DATA.aiProfiles.length)}${item('decisions', T.nav.decisions, DATA.decisions.length)}</ul>
+  <div class="section">${T.nav.review}</div>
+  <ul>${item('review', T.nav.review, DATA.issues.length)}${item('review?cat=blocker', T.enums.category.blocker, counts.blocker, counts.blocker ? 'red' : '')}${item('review?cat=design', T.enums.category.design, counts.design)}${item('review?cat=validation', T.enums.category.validation, counts.validation)}${item('review?cat=setup', T.enums.category.setup, counts.setup)}${item('access', T.nav.access)}${item('graph', T.nav.graph)}</ul>`;
+  document.getElementById('nav-tree').innerHTML = String(list);
+}
+function markNav(path, params) {
+  const o = OBJ.get(path);
+  const target = o ? (o.kind === 'action' ? o.parent : o.kind === 'section' ? o.parent : o.kind === 'workflow' ? o.id : { entity: 'entities', form: 'forms', group: 'groups', source: 'sources', ai: 'profiles', decision: 'decisions' }[o.kind]) : path === 'review' && params.get('cat') ? 'review?cat=' + params.get('cat') : path;
+  for (const a of nav.querySelectorAll('a[data-nav]')) { if (a.dataset.nav === target) { a.setAttribute('aria-current', 'page'); const details = a.closest('details'); if (details) details.open = true; } else a.removeAttribute('aria-current'); }
+}
+
+/* ---------- Events (delegated) ---------- */
+let searchTimer = null;
+navSearch.addEventListener('input', () => { clearTimeout(searchTimer); searchTimer = setTimeout(() => { const { path, params } = parseHash(); const next = path === 'search' ? Object.fromEntries(params.entries()) : {}; next.q = navSearch.value; if (path === 'search') history.replaceState(null, '', hashFor('search', next)); else { scrollMemory.set(location.hash, main.scrollTop); history.pushState(null, '', hashFor('search', next)); } render({ keepScroll: true, keepFocus: true }); }, 120); });
+navSearch.addEventListener('keydown', e => { if (e.key === 'Enter') { e.preventDefault(); const first = main.querySelector('.result a'); if (first) first.focus(); } });
+document.getElementById('menu').addEventListener('click', () => { nav.classList.toggle('open'); document.getElementById('menu').setAttribute('aria-expanded', nav.classList.contains('open')); });
+document.getElementById('back').addEventListener('click', () => history.back());
+document.getElementById('forward').addEventListener('click', () => history.forward());
+document.getElementById('print').addEventListener('click', () => window.print());
+main.addEventListener('click', e => {
+  const copy = e.target.closest('[data-copy]');
+  if (copy) { copyText(copy.dataset.value); return; }
+  const dl = e.target.closest('[data-download]');
+  if (dl) { download(dl.dataset.download, dl.dataset.value); return; }
+  const tab = e.target.closest('.tabs [data-tab]');
+  if (tab) { replaceParams({ tab: tab.dataset.tab }); const el = document.getElementById('tab-' + tab.dataset.tab); if (el) el.focus({ preventScroll: true }); return; }
+  const node = e.target.closest('[data-href]');
+  if (node) { location.hash = node.dataset.href; return; }
+  const notes = e.target.closest('[data-notes]');
+  if (notes && notes.dataset.notes === 'export') exportNotes(false);
+  else if (notes && notes.dataset.notes === 'markdown') exportNotes(true);
+  else if (notes && notes.dataset.notes === 'clear') { toast(saveNotes({}) ? T.review.cleared : T.review.saveFailed); render({ keepScroll: true }); }
+});
+main.addEventListener('keydown', e => {
+  const tab = e.target.closest && e.target.closest('.tabs [role=tab]');
+  if (tab && ['ArrowRight', 'ArrowLeft', 'Home', 'End'].includes(e.key)) {
+    const all = [...tab.parentElement.querySelectorAll('[role=tab]')]; let i = all.indexOf(tab);
+    i = e.key === 'ArrowRight' ? (i + 1) % all.length : e.key === 'ArrowLeft' ? (i - 1 + all.length) % all.length : e.key === 'Home' ? 0 : all.length - 1;
+    e.preventDefault(); replaceParams({ tab: all[i].dataset.tab }); const el = document.getElementById('tab-' + all[i].dataset.tab); if (el) el.focus({ preventScroll: true }); return;
+  }
+  const node = e.target.closest && e.target.closest('[data-href]');
+  if (node && (e.key === 'Enter' || e.key === ' ')) { e.preventDefault(); location.hash = node.dataset.href; }
+});
+let paramTimer = null;
+main.addEventListener('input', e => {
+  const param = e.target.closest('[data-param]');
+  if (param) { clearTimeout(paramTimer); const name = param.dataset.param, value = param.value; paramTimer = setTimeout(() => replaceParams({ [name]: value }, true), param.tagName === 'SELECT' ? 0 : 150); return; }
+  const note = e.target.closest('[data-note-key]');
+  if (note) { const notes = loadNotes(); notes[note.dataset.noteKey] = note.value; toast(saveNotes(notes) ? T.review.savedLocally : T.review.saveFailed); }
+});
+main.addEventListener('change', e => { const input = e.target.closest('[data-notes=import]'); if (input && input.files && input.files[0]) importNotes(input.files[0]); });
+async function copyText(text) {
+  try { if (!navigator.clipboard || !window.isSecureContext) throw new Error('fallback'); await navigator.clipboard.writeText(text); toast(T.fields.copied); }
+  catch { const area = document.createElement('textarea'); area.value = text; area.setAttribute('readonly', ''); area.style.position = 'fixed'; area.style.left = '-9999px'; document.body.appendChild(area); area.select(); let ok = false; try { ok = document.execCommand('copy'); } catch {} area.remove(); toast(ok ? T.fields.copied : T.fields.copyFallback); }
+}
+window.addEventListener('hashchange', () => render());
+buildNav();
+render();
+window.__provia = { OBJ, DATA, render, parseHash };
+})();
 </script></body></html>

@@ -1,0 +1,75 @@
+{
+  "$comment": "Especificação do formulário de entrada do workflow «Pedido de despesa». Não é um formato de importação do Provia: o contrato provia.ao/v1 não transporta formulários nem gatilhos de formulário. Criar o formulário manualmente no Provia (ou por form_upsert em modo ligado) e ligá-lo ao workflow depois da importação do YAML. A mesma especificação está em provia-project.json → forms[formulario-pedido].",
+  "generator": "provia-skills/1.2.0",
+  "formKey": "formulario-pedido",
+  "title": "Formulário de pedido de despesa",
+  "kind": "trigger",
+  "workflowRef": "pedido-despesa",
+  "workflowPrefix": "PED",
+  "language": "pt-AO",
+  "purpose": "Cria um caso do workflow «Pedido de despesa» com os dados que a chefia precisa para decidir. Substitui, quando ligado, o gatilho manual «Iniciar pedido» (decisão D4 no manifesto).",
+  "access": {
+    "who": "Colaboradores autenticados da organização (pressuposto; ver decisão D4)",
+    "anonymous": false
+  },
+  "mappingPolicy": "Resposta única por caso; cada resposta cria um caso novo. As respostas mapeiam para os campos do workflow abaixo.",
+  "fields": [
+    {
+      "key": "titulo",
+      "label": "Título do pedido",
+      "type": "text",
+      "required": true,
+      "helpText": "O bem ou serviço e a quantidade. Exemplo: «10 cadeiras de escritório».",
+      "mapsTo": "incident.title"
+    },
+    {
+      "key": "justificacao",
+      "label": "Justificação",
+      "type": "rich_text",
+      "required": true,
+      "helpText": "A necessidade, a alternativa considerada e a consequência de não comprar.",
+      "mapsTo": "fields.justificacao"
+    },
+    {
+      "key": "montante",
+      "label": "Montante estimado (Kz, sem IVA)",
+      "type": "currency",
+      "required": true,
+      "config": { "currency": "AOA", "decimals": 2 },
+      "helpText": "Valor total estimado. Se ainda não for conhecido, pedir uma estimativa antes de submeter.",
+      "mapsTo": "fields.montante"
+    },
+    {
+      "key": "centro_custo",
+      "label": "Centro de custo",
+      "type": "text",
+      "required": true,
+      "helpText": "O centro de custo que suportará a despesa.",
+      "mapsTo": "fields.centro_custo"
+    },
+    {
+      "key": "data_necessidade",
+      "label": "Data em que a despesa é necessária",
+      "type": "date",
+      "required": false,
+      "mapsTo": "fields.data_necessidade"
+    },
+    {
+      "key": "proposta",
+      "label": "Proposta ou orçamento do fornecedor",
+      "type": "file",
+      "required": false,
+      "helpText": "Anexar se já existir.",
+      "mapsTo": "incident.attachments"
+    }
+  ],
+  "notCollected": [
+    { "field": "referencia_cabimento", "reason": "Preenchido pelas Finanças na acção confirmar_financas, não pelo requerente." }
+  ],
+  "setup": [
+    "Criar o formulário no Provia com os campos acima e as etiquetas em português.",
+    "Ligar o formulário ao workflow «Pedido de despesa» como gatilho de entrada e confirmar os mapeamentos para os campos montante, centro_custo, justificacao e data_necessidade.",
+    "Decidir (D4) se o gatilho manual «Iniciar pedido» se mantém activo depois de o formulário existir.",
+    "Testar com um caso de ensaio: submeter o formulário e confirmar que a acção «Registar o pedido de despesa» abre com os campos já preenchidos."
+  ]
+}

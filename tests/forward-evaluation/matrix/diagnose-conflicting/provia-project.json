@@ -1,68 +1,196 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
     "key": "compras",
-    "title": "Diagnóstico do processo de compras",
+    "title": "Pedido de compra — diagnóstico da exportação de Setembro de 2026",
     "language": "pt-AO",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
+    "name": null,
+    "sector": null,
     "mode": "disconnected",
     "tenantId": null,
-    "productRevision": null
+    "productRevision": null,
+    "language": "pt-AO",
+    "timezone": "Africa/Luanda"
   },
   "sources": [
     {
-      "id": "workflow-publicado",
-      "title": "Desenho do workflow publicado, descrito pelo utilizador (não fornecido como workflow.yaml): acções «Registar», «Decidir» e «Encomendar», atribuídas a Compras e Finanças",
-      "kind": "other"
+      "id": "wf-compras-publicado",
+      "title": "Workflow publicado «Pedido de compra» (descrição fornecida pelo utilizador em 2026-09-21)",
+      "kind": "other",
+      "version": null,
+      "effectiveDate": null,
+      "summary": "Descrição verbal do desenho publicado: três acções («Registar», «Decidir», «Encomendar») atribuídas aos grupos Compras e Finanças. Não foi fornecido o YAML exportado nem o identificador da versão activa; a distribuição exacta das acções pelos dois grupos é uma suposição registada em D4.",
+      "sections": [
+        { "anchor": "accoes", "title": "Acções publicadas", "summary": "Registar, Decidir, Encomendar" },
+        { "anchor": "grupos", "title": "Grupos atribuídos", "summary": "Compras e Finanças; nenhum grupo «Auditoria»" }
+      ]
     },
     {
-      "id": "export-casos-20260918",
-      "title": "Excerto de exportação de casos citado pelo utilizador (2 registos): COMP-88 e COMP-90",
-      "kind": "export"
+      "id": "exp-compras-2026-09",
+      "title": "Exportação de casos COMP (excerto descrito pelo utilizador em 2026-09-21)",
+      "kind": "export",
+      "version": null,
+      "effectiveDate": "2026-09-21",
+      "summary": "Nenhum ficheiro foi entregue; apenas dois registos foram descritos em prosa. Sem período de exportação, hora de observação, fuso horário, datas-limite nem identificador da versão do workflow. COMP-88: estado «Aguardar auditoria», atribuído ao grupo «Auditoria». COMP-90: criado 2026-09-10, concluído 2026-09-08.",
+      "sections": [
+        { "anchor": "COMP-88", "title": "Caso COMP-88", "summary": "Estado «Aguardar auditoria»; grupo «Auditoria», inexistente no desenho" },
+        { "anchor": "COMP-90", "title": "Caso COMP-90", "summary": "Data de conclusão (2026-09-08) anterior à data de criação (2026-09-10)" }
+      ]
     }
   ],
   "entityTypes": [],
-  "groups": [],
-  "workflows": [],
+  "groups": [
+    {
+      "key": "compras",
+      "name": "Compras",
+      "kind": "team",
+      "area": "compras",
+      "parentKey": null,
+      "purpose": "Regista o pedido e executa a encomenda após decisão favorável (conforme descrição do workflow publicado).",
+      "members": [],
+      "sourceRefs": [ { "source": "wf-compras-publicado", "section": "grupos" } ],
+      "flags": []
+    },
+    {
+      "key": "financas",
+      "name": "Finanças",
+      "kind": "team",
+      "area": "financas",
+      "parentKey": null,
+      "purpose": "Decide sobre o pedido de compra (conforme descrição do workflow publicado).",
+      "members": [],
+      "sourceRefs": [ { "source": "wf-compras-publicado", "section": "grupos" } ],
+      "flags": []
+    }
+  ],
+  "workflows": [
+    {
+      "key": "compras",
+      "name": "Pedido de compra",
+      "prefix": "COMP",
+      "file": null,
+      "status": "imported",
+      "ownerArea": "compras",
+      "sourceRefs": [ { "source": "wf-compras-publicado" } ],
+      "access": {
+        "default": "creator_only",
+        "sensitivity": "internal",
+        "note": "Provisório: as permissões reais do workflow publicado não foram fornecidas nem lidas do tenant. Declarado apenas para o manifesto passar a verificação estrutural; confirmar em D5 antes de qualquer reutilização."
+      },
+      "triggers": [],
+      "templates": [],
+      "unresolvedActors": [
+        {
+          "key": "auditoria",
+          "name": "Auditoria",
+          "detail": "Grupo que aparece como responsável do caso COMP-88 na exportação (estado «Aguardar auditoria») mas não existe no desenho publicado descrito. Não foi criado no manifesto; a sua origem é a decisão D1."
+        }
+      ],
+      "unresolvedEntityTypes": [],
+      "actions": [
+        {
+          "localId": "registar",
+          "name": "Registar",
+          "type": "standard",
+          "sourceRefs": [ { "source": "wf-compras-publicado", "section": "accoes" } ],
+          "assigneeRef": "compras",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "decidir",
+          "name": "Decidir",
+          "type": "decision",
+          "sourceRefs": [ { "source": "wf-compras-publicado", "section": "accoes" } ],
+          "assigneeRef": "financas",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [],
+          "due": null,
+          "folded": []
+        },
+        {
+          "localId": "encomendar",
+          "name": "Encomendar",
+          "type": "standard",
+          "sourceRefs": [ { "source": "wf-compras-publicado", "section": "accoes" } ],
+          "assigneeRef": "compras",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [],
+          "due": null,
+          "folded": []
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "Diagnóstico de 2026-09-21 (diagnostico-compras.md): a exportação contradiz o desenho publicado (grupo «Auditoria» e estado «Aguardar auditoria» em COMP-88; datas invertidas em COMP-90). Não interpretar indicadores de desempenho desta exportação até as decisões D1–D3 estarem resolvidas.",
+        "Antes do próximo diagnóstico, exportar directamente do Provia com: identificador da versão do workflow, hora de observação e fuso horário, datas de criação/conclusão em UTC, datas-limite e responsável por acção.",
+        "Os nomes das acções («Registar», «Decidir», «Encomendar») foram mantidos tal como publicados; a reescrita para o brief de cinco partes fica para provia-workflow-change quando D3 for decidida."
+      ]
+    }
+  ],
   "forms": [],
   "aiProfiles": [],
   "decisions": [
     {
       "id": "D1",
-      "question": "O caso COMP-88 está atribuído ao grupo «Auditoria», que não existe no desenho publicado (só Compras e Finanças estão descritas). «Auditoria» é um responsável real que falta modelar como grupo e acção no workflow, ou é um erro de atribuição/dados no caso?",
-      "owner": "Dono do processo de Compras",
+      "question": "Que versão do workflow (ou que outro workflow com prefixo COMP) gerou o caso COMP-88 no estado «Aguardar auditoria» atribuído ao grupo «Auditoria»? O desenho publicado descrito só tem «Registar», «Decidir» e «Encomendar» com Compras e Finanças. Confirmar no Provia o histórico do caso e a versão activa (Workflows › versões; ou, em modo ligado, workflow_get / workflow_export_yaml).",
+      "owner": "Administrador da organização Provia",
       "status": "open",
-      "raisedBy": "provia-operations-triage",
-      "sourceRefs": [ { "source": "export-casos-20260918" }, { "source": "workflow-publicado" } ]
+      "raisedBy": "provia-diagnose",
+      "sourceRefs": [ { "source": "exp-compras-2026-09", "section": "COMP-88" }, { "source": "wf-compras-publicado", "section": "accoes" } ]
     },
     {
       "id": "D2",
-      "question": "O caso COMP-90 aparece concluído em 2026-09-08, dois dias antes de ter sido criado em 2026-09-10. Investigar a origem do defeito (exportação, fuso horário, migração de dados ou introdução manual) antes de qualquer cálculo de duração que use este caso.",
-      "owner": "Responsável pela exportação/integração de casos",
+      "question": "Porque é que COMP-90 aparece concluído (2026-09-08) antes de ser criado (2026-09-10)? Verificar no histórico do caso no Provia as duas datas reais; confirmar se a exportação foi editada, se as colunas foram trocadas ou se o caso foi migrado com datas retroactivas. Até lá, a exportação não serve para medir tempo de ciclo.",
+      "owner": "Quem produziu a exportação (a identificar) e Administrador da organização Provia",
       "status": "open",
-      "raisedBy": "provia-operations-triage",
-      "sourceRefs": [ { "source": "export-casos-20260918" } ]
+      "raisedBy": "provia-diagnose",
+      "sourceRefs": [ { "source": "exp-compras-2026-09", "section": "COMP-90" } ]
     },
     {
       "id": "D3",
-      "question": "Para avaliar desempenho (tempo de ciclo, tempo de espera) é preciso um período comparável: exportação completa de casos com datas de criação e conclusão em ISO 8601 e fuso horário, momento de observação e versão do workflow em vigor. Só dois casos isolados e conflituosos foram fornecidos — produzir essa exportação.",
-      "owner": "Dono do processo de Compras",
+      "question": "A etapa de auditoria faz parte do processo pretendido? Se sim, o desenho publicado tem de ser alterado (nova versão com a acção de auditoria, o seu responsável e prazo) via provia-workflow-change; se não, COMP-88 tem de ser devolvido a um responsável do desenho (Compras ou Finanças) e o grupo «Auditoria» deixa de ser usado neste workflow.",
+      "owner": "Dono do processo de compras (Compras)",
       "status": "open",
-      "raisedBy": "provia-process-improvement",
-      "sourceRefs": [ { "source": "export-casos-20260918" } ]
+      "raisedBy": "provia-diagnose",
+      "sourceRefs": [ { "source": "exp-compras-2026-09", "section": "COMP-88" } ]
     },
     {
       "id": "D4",
-      "question": "O desenho publicado atribui as três acções a Compras e Finanças em conjunto, sem indicar qual grupo fica com cada acção (Registar / Decidir / Encomendar). Confirmar a atribuição exacta por acção antes de qualquer revisão ou alteração do workflow.",
-      "owner": "Dono do processo de Compras",
+      "question": "Confirmar a distribuição das acções publicadas pelos grupos. Suposição registada: «Registar» e «Encomendar» → Compras; «Decidir» → Finanças. O utilizador indicou apenas que as três acções estão atribuídas a Compras e Finanças.",
+      "owner": "Dono do processo de compras (Compras)",
       "status": "open",
-      "raisedBy": "provia-operations-triage",
-      "sourceRefs": [ { "source": "workflow-publicado" } ]
+      "raisedBy": "provia-diagnose",
+      "sourceRefs": [ { "source": "wf-compras-publicado", "section": "accoes" } ]
+    },
+    {
+      "id": "D5",
+      "question": "Quais são as permissões reais do workflow publicado (quem vê, quem abre, quem edita)? O manifesto declara «creator_only» apenas como valor provisório para a verificação estrutural; não representa o tenant.",
+      "owner": "Administrador da organização Provia",
+      "status": "open",
+      "raisedBy": "provia-diagnose",
+      "sourceRefs": [ { "source": "wf-compras-publicado" } ]
+    },
+    {
+      "id": "D6",
+      "question": "Mudança proposta e mensurável: adoptar uma exportação de referência produzida directamente do Provia (versão do workflow, hora de observação, fuso horário, datas UTC, datas-limite, responsável) e reconciliá-la com o desenho publicado antes de cada diagnóstico. Medidas: (a) percentagem de casos cujo estado e responsável correspondem ao desenho publicado — alvo 100%; (b) número de casos com data de conclusão anterior à de criação — alvo 0; (c) só depois: tempo de ciclo mediano de «Registar» a «Encomendar» com dois períodos comparáveis. Aceitar, atribuir e datar a primeira medição.",
+      "owner": "Dono do processo de compras (Compras), com o Administrador da organização Provia",
+      "status": "open",
+      "raisedBy": "provia-diagnose",
+      "sourceRefs": [ { "source": "exp-compras-2026-09" } ]
     }
   ],
   "receipts": []

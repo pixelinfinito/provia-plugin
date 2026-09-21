@@ -1,262 +1,192 @@
-# provia-skills 1.1.0
+# provia-skills 1.2.0 — design skeleton built on an ASSUMED onboarding outline (the customer's SOP was not supplied). Confirm every section in provia-project.json (source sop-onboarding-assumed) before packaging. Not yet validated.
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
-  name: Employee onboarding
+  name: "Employee onboarding"
   prefix: ONB
-  description: >-
-    Admission decision, contract, IT/Facilities provisioning, Day 1 orientation
-    and 30-day confirmation for a new hire. Skeleton built from a reconstructed
-    generic onboarding SOP because no customer document was supplied; replace
-    every step and rule with the organization's actual procedure before packaging.
-  targetDurationDays: 44
-  targetDurationType: calendar
-  agentMemoryEnabled: false
-
+  description: "Onboarding of a new employee from confirmed hire to the end of the probation period. Design skeleton on an assumed outline; deadlines, approvers and actor names are open decisions."
 triggers:
   - type: manual
-    label: Submit new-hire request
+    label: Start onboarding
     enabled: true
     config: {}
-
 fields:
-  - name: new_hire_name
-    label: New hire name
+  - name: employee_name
+    label: New employee
     type: text
     required: true
-    width: half
-  - name: role
-    label: Role
+  - name: job_title
+    label: Job title
     type: text
     required: true
-    width: half
   - name: department
     label: Department
     type: text
     required: true
-    width: half
   - name: start_date
     label: Start date
     type: date
     required: true
-    width: half
-  - name: reporting_line
-    label: Reporting line
-    type: text
+  - name: hiring_manager
+    label: Hiring manager
+    type: user
     required: true
-    width: half
-  - name: budget_reference
-    label: Budget / headcount reference
-    type: text
+  - name: probation_end_date
+    label: Probation end date
+    type: date
     required: false
-    width: full
-
+access:
+  grants:
+    - grantee: "group:Human Resources"
+      level: create_incident
+    - grantee: "group:HR Management"
+      level: edit
 actions:
-  - id: decidir_admissao
-    type: decision
-    name: Decide on the admission request
+  - id: register_hire
+    name: Register the hire and confirm the start details
+    type: standard
+    description: |
+      Task: Confirm that the hire is approved and that the details needed to prepare the first day are complete.
+      How: 1. Attach the hiring approval (accepted offer or approved hiring request) to the case, or reference it in the opening comment. 2. Confirm `Start date`, `Job title` and `Department` with the person named in `Hiring manager`. 3. Correct any field that the hiring manager changes and note the change in a comment.
+      Evidence: The hiring approval attached to the case and a comment confirming the three fields with the hiring manager.
+      Done when: The approval is in the case and the start details are confirmed.
+      Exceptions: If there is no hiring approval, do not complete: comment what is missing and ask the hiring manager to obtain it. If the start date is less than the time needed to prepare the contract and accesses, comment the risk and agree a new date with the hiring manager before completing.
     executionMode: sequential
     required: true
-    priority: normal
-    description: >-
-      Task: Decide whether the new-hire request proceeds, checking headcount
-      and role justification.
-      How: 1. Read the role, department, start date and reporting line
-      submitted in the request. 2. Confirm the position is within the
-      approved headcount and budget for the department, using
-      `budget_reference` when supplied. 3. Choose "Approve" or "Reject".
-      Evidence: A comment naming the headcount/budget reference checked is
-      required on both outcomes.
+    assignee:
+      type: creator
+  - id: prepare_contract
+    name: Prepare the employment contract and collect the new hire's documents
+    type: standard
+    description: |
+      Task: Produce the draft employment contract and collect the personal documents the organization requires for admission.
+      How: 1. Request from the new hire the identification, tax, social-security and bank documents listed in the organization's admission checklist. 2. Prepare the draft contract from the organization's contract template with the job title, department, start date and probation period. 3. Fill `Probation end date` from the probation period written in the draft. 4. Attach the draft contract and the collected documents to the case.
+      Evidence: The draft contract and the collected documents attached to the case; `Probation end date` filled.
+      Done when: The draft and the documents are in the case and the probation end date is filled.
+      Exceptions: If a required document is missing, do not complete: comment which document is missing and the date agreed with the new hire to provide it. If the terms differ from the hiring approval, comment the difference and ask the hiring manager to confirm before preparing the draft.
+    executionMode: sequential
+    required: true
+  - id: approve_contract
+    name: Decide on the employment contract
+    type: decision
+    description: |
+      Task: Decide whether the draft employment contract may be signed.
+      How: 1. Read the draft contract and compare it with the hiring approval attached in the case. 2. Confirm that the collected documents are complete. 3. Choose «Approve», «Return for correction» or «Cancel the onboarding».
+      Evidence: A comment with the reason is mandatory on «Return for correction» and «Cancel the onboarding».
       Done when: The decision is recorded with the required comment.
-      Exceptions: If the position is not within the approved headcount, do
-      not approve: reject with a comment naming the shortfall so the hiring
-      manager can revise and submit a new request.
+      Exceptions: If the contract terms exceed what you are authorized to approve, do not decide: comment who must approve and return the draft for correction so that the authorization is attached.
+    executionMode: sequential
+    required: true
     config:
       branches:
         - label: Approve
           outcome: continue
+          requiresComment: false
+        - label: Return for correction
+          outcome: return_to_action
+          target: prepare_contract
           requiresComment: true
-        - label: Reject
+        - label: Cancel the onboarding
           outcome: cancel_incident
           requiresComment: true
-
-  - id: preparar_contrato
-    type: standard
-    name: Prepare the employment contract
+  - id: record_signature
+    name: Record the outcome of the contract signing
+    type: decision
+    description: |
+      Task: Record whether the new hire signed the approved contract.
+      How: 1. Arrange the signing with the new hire before `Start date`. 2. Attach the signed contract to the case. 3. Choose «Signed», «Postponed» or «Withdrawn».
+      Evidence: The signed contract attached on «Signed»; a comment with the reason and, when known, the new date on «Postponed»; a comment with the reason on «Withdrawn».
+      Done when: The outcome is recorded with its evidence.
+      Exceptions: If the new hire asks for changes to the approved contract, do not record «Signed»: choose «Postponed», comment the requested changes and the case returns to the start details for a new date and a corrected draft.
     executionMode: sequential
     required: true
-    priority: normal
-    description: >-
-      Task: Prepare the employment contract for the approved candidate and
-      send it for signature.
-      How: 1. Use the approved role, start date and reporting line from the
-      request. 2. Generate the contract from the standard template. 3. Send
-      it to the candidate for signature.
-      Evidence: Attach the sent contract document.
-      Done when: The contract has been sent to the candidate.
-      Exceptions: If the approved terms differ from what was requested, do
-      not send: comment with the discrepancy and correct the request before
-      proceeding.
-
-  - id: confirmar_assinatura_contrato
-    type: standard
-    name: Confirm the signed contract
-    executionMode: sequential
-    required: true
-    priority: normal
-    description: >-
-      Task: Confirm that the candidate has signed and returned the
-      employment contract.
-      How: 1. Follow up with the candidate until the signed contract is
-      received. 2. Check the signature and date. 3. File the signed copy in
-      the candidate's record.
-      Evidence: Attach the signed contract.
-      Done when: The signed contract is attached and filed.
-      Exceptions: If the candidate does not return the signed contract, do
-      not complete: comment with the delay and escalate to the hiring
-      manager for a decision on whether to continue.
-
-  - id: notificar_ti_instalacoes
-    type: notification
-    name: Notify IT and Facilities of the confirmed hire
-    executionMode: sequential
-    required: true
-    priority: normal
-    description: >-
-      Automatically notifies the IT and Facilities groups that a new hire
-      has been approved, sharing role, department and start date, so account
-      and workspace preparation can begin.
     config:
-      recipientType: groups
-      recipientIds: []
-      channels: [in_app]
-      messageTemplate: >-
-        A new hire has been approved: {{role}} in {{department}}, starting
-        {{start_date}}. Please prepare accounts, equipment, workspace and
-        badge before the start date.
-
-  - id: provisionar_contas_ti
+      branches:
+        - label: Signed
+          outcome: continue
+          requiresComment: false
+        - label: Postponed
+          outcome: return_to_action
+          target: register_hire
+          requiresComment: true
+        - label: Withdrawn
+          outcome: cancel_incident
+          requiresComment: true
+  - id: provision_access
+    name: Provision the accounts and equipment
     type: standard
-    name: Provision IT accounts and equipment
+    description: |
+      Task: Have the accounts and the equipment ready before the first day.
+      How: 1. Create the e-mail account and the accesses to the applications used by the `Department`, according to the `Job title`. 2. Prepare the computer, phone and any other equipment assigned to the position. 3. Record in a comment the list of accesses created and the serial numbers of the equipment.
+      Evidence: A comment with the list of accesses and the equipment assigned.
+      Done when: The accesses and the equipment are ready and listed in the case before `Start date`.
+      Exceptions: If equipment is missing, do not complete: comment what is missing and the expected date, and inform the hiring manager and Human Resources.
     executionMode: parallel
     required: true
-    priority: normal
-    description: >-
-      Task: Create the new hire's system accounts and order their
-      equipment.
-      How: 1. Create the email and system accounts for the role in
-      `department`. 2. Order the standard equipment for the role. 3. Confirm
-      both are ready before `start_date`.
-      Evidence: Attach the account list and the equipment order
-      confirmation.
-      Done when: Accounts are active and equipment is ordered.
-      Exceptions: If standard equipment cannot be ready before the start
-      date, do not complete: comment with the delay and notify the hiring
-      manager.
-
-  - id: preparar_espaco_e_cartao
+  - id: register_payroll
+    name: Register the employee in payroll and social security
     type: standard
-    name: Prepare workspace and access badge
+    description: |
+      Task: Register the new employee in the payroll system and with the social-security and tax registrations the organization is obliged to make.
+      How: 1. Open the signed contract and the collected documents in the case. 2. Create the employee in the payroll system with the contract terms. 3. Submit the registrations the organization's obligations require and keep the submission receipts. 4. Record in a comment each registration made and its date.
+      Evidence: The registration receipts attached and a comment with each registration and its date.
+      Done when: The employee exists in payroll and each required registration has its receipt in the case.
+      Exceptions: If a registration cannot be submitted, do not complete: comment the reason, the missing item and who is resolving it, and keep the action open until the receipt is in the case.
     executionMode: parallel
     required: true
-    priority: normal
-    description: >-
-      Task: Prepare the new hire's workspace and access badge.
-      How: 1. Assign a workspace for `department`. 2. Prepare the access
-      badge for `start_date`. 3. Confirm both are ready.
-      Evidence: Attach the badge/workspace confirmation.
-      Done when: Workspace and badge are ready.
-      Exceptions: If the badge cannot be issued before the start date, do
-      not complete: comment with the delay and notify the hiring manager.
-
-  - id: agendar_orientacao
+  - id: induct_employee
+    name: Conduct the first-day welcome and induction
     type: standard
-    name: Schedule the Day 1 orientation
+    description: |
+      Task: Receive the new employee on the first day and complete the induction.
+      How: 1. Hand over the equipment and confirm that the accesses listed in the case work. 2. Introduce the team, the working hours, the safety rules and the contact person for questions. 3. Go through the organization's induction checklist with the employee and collect their signature on it.
+      Evidence: The signed induction checklist attached to the case.
+      Done when: The signed checklist is in the case.
+      Exceptions: If the employee does not show up, do not complete: comment it and inform Human Resources on the same day. If an access does not work, comment it and inform IT Support; complete only when the checklist is signed.
     executionMode: sequential
     required: true
-    priority: normal
-    description: >-
-      Task: Schedule the Day 1 orientation session and assign a buddy.
-      How: 1. Confirm accounts, equipment and workspace are ready. 2.
-      Schedule the orientation session for `start_date`. 3. Assign a buddy
-      from `department` and record their name.
-      Evidence: Attach the orientation invite and the buddy's name.
-      Done when: The orientation is scheduled and the buddy is assigned.
-      Exceptions: If accounts, equipment or workspace are not ready, do not
-      schedule: comment with what is missing and follow up with IT or
-      Facilities before scheduling.
-
-  - id: realizar_orientacao_dia1
+  - id: prepare_probation_review
+    name: Prepare the probation review
     type: standard
-    name: Deliver the Day 1 welcome and first-week review
+    description: |
+      Task: Prepare the end-of-probation review so the hiring manager can decide before `Probation end date`.
+      How: 1. Confirm `Probation end date` against the signed contract; update the field if a previous decision extended the probation. 2. Send the organization's evaluation template to the hiring manager with the date by which the decision is needed. 3. Record in a comment the date the template was sent.
+      Evidence: A comment with the date the evaluation template was sent to the hiring manager.
+      Done when: The template is with the hiring manager and `Probation end date` is correct.
+      Exceptions: If the probation end date has already passed, do not complete: comment it and inform HR Management the same day.
     executionMode: sequential
     required: true
-    priority: normal
-    assignee:
-      type: creator
-    description: >-
-      Task: Welcome the new hire on their first day and review the
-      first-week plan with them.
-      How: 1. Meet the new hire on `start_date`. 2. Introduce them to the
-      team and the assigned buddy. 3. Review the first-week plan together.
-      Evidence: A comment confirming the first-week plan was reviewed.
-      Done when: The first-week plan has been reviewed with the new hire.
-      Exceptions: If the new hire cannot start on the scheduled date, do not
-      complete: comment with the new date and coordinate with HR to adjust
-      downstream steps.
-
-  - id: confirmar_formacao_obrigatoria
-    type: standard
-    name: Confirm mandatory compliance training
+  - id: review_probation
+    name: Decide on the end of the probation period
+    type: decision
+    description: |
+      Task: Decide whether the employee's probation period is confirmed, extended or ended.
+      How: 1. Complete the evaluation template received from Human Resources. 2. Attach the completed evaluation to the case. 3. Choose «Confirm», «Extend» or «End during probation».
+      Evidence: The completed evaluation attached; a comment with the reason is mandatory on «Extend» and «End during probation».
+      Done when: The decision is recorded with the evaluation attached and the required comment.
+      Exceptions: If you cannot evaluate because you have not managed the employee for most of the period, do not decide: comment who did and ask Human Resources to reassign the review.
     executionMode: sequential
     required: true
-    priority: normal
-    description: >-
-      Task: Confirm that the new hire has completed the mandatory
-      compliance training.
-      How: 1. Check the training system or certificate for completion. 2.
-      Record the completion date.
-      Evidence: Attach the completion certificate or record.
-      Done when: Completion is confirmed and recorded.
-      Exceptions: If training is not completed within the expected period,
-      do not complete: comment with the delay and follow up with the new
-      hire and their manager.
-
-  - id: confirmar_checklist_30_dias
+    config:
+      branches:
+        - label: Confirm
+          outcome: continue
+          requiresComment: false
+        - label: Extend
+          outcome: return_to_action
+          target: prepare_probation_review
+          requiresComment: true
+        - label: End during probation
+          outcome: continue
+          requiresComment: true
+  - id: close_onboarding
+    name: Close the onboarding record
     type: standard
-    name: Confirm the 30-day onboarding checklist
+    description: |
+      Task: Confirm that the onboarding file is complete and record its final status.
+      How: 1. Verify that the signed contract, the collected documents, the registration receipts, the induction checklist and the completed evaluation are in the case. 2. Record in a comment the outcome of the probation decision and the date. 3. File the case documents in the employee's personnel file according to the organization's rules.
+      Evidence: A comment with the final status and the date of the filing.
+      Done when: All the documents are in the case and the final status is recorded.
+      Exceptions: If a document is missing, do not complete: comment which one and who provides it. If the probation decision was «End during probation», record it and open the organization's separation process; that process is outside this workflow.
     executionMode: sequential
     required: true
-    priority: normal
-    assignee:
-      type: creator
-    due:
-      offsetDays: 30
-      offsetType: calendar
-      basis: activation
-    description: >-
-      Task: Confirm the onboarding checklist is complete 30 days after the
-      new hire's start.
-      How: 1. Review completed steps: contract, accounts, workspace,
-      orientation and training. 2. Discuss with the new hire whether
-      onboarding met expectations.
-      Evidence: A comment confirming the checklist review and any
-      outstanding items.
-      Done when: The checklist is reviewed and recorded as complete.
-      Exceptions: If items remain outstanding, do not complete: comment with
-      what remains and the owner responsible for closing it.
-
-  - id: arquivar_registo_admissao
-    type: standard
-    name: Archive the onboarding record
-    executionMode: sequential
-    required: true
-    priority: normal
-    description: >-
-      Task: Close and archive the onboarding record.
-      How: 1. Confirm the 30-day checklist is complete. 2. Archive the case
-      record per the standard retention practice.
-      Evidence: A comment confirming archiving.
-      Done when: The record is archived.
-      Exceptions: If required records are missing, do not archive: comment
-      with what is missing and return to the 30-day checklist confirmation.

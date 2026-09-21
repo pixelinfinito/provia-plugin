@@ -1,16 +1,14 @@
 {
-  "at": "2026-09-18T18:37:43.544Z",
-  "model": "sonnet",
+  "at": "2026-09-21T10:46:00.701Z",
+  "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "The run correctly identified missing denominator (case records) and sample period (start/end timestamps) and labeled the calculation as incomplete rather than estimating or inventing numbers",
-    "Explicitly separated confirmed facts (empty directory, no data supplied) from unresolved decisions (D1-D3 recorded as open questions) and recommendations (instrument waiting-vs-active split)",
-    "No organization IDs, thresholds, or validation results were invented — organization fields explicitly marked 'Not supplied' and tenantId/productRevision null",
-    "Claims about tool execution match the transcript: build-project-map.mjs --check was actually run and its real output (0 workflows, 3 pending items) is accurately summarized as 'Manifest validates cleanly'",
-    "Report explicitly states waiting time and active work time will be kept separate, addressing the core requirement not to mix them",
-    "Response ends with a concrete, actionable next-step recommendation with a copyable invocation, consistent with next-step.md convention",
-    "Angola disclosed as provisional context per country-context.md convention, appropriately caveated as not implying any legal/workflow claim"
+    "The run explicitly labelled the calculation as incomplete: the report header states 'incomplete — no execution records were supplied', the availability table lists periods, workflow scope, records and denominators as absent, and no cycle-time, waiting or active-work figure was produced for either period.",
+    "Missing context was turned into explicit requests: decisions D1–D5 in provia-project.json and setup.md ask for the periods, workflow/version scope, the started_at event definition and the process owner, and the copyable next-step invocation carries placeholders for the missing dates and workflow name.",
+    "Every claim of a check or write is backed by a tool call: build-project-map.mjs --check (call 28), setup.md/project.html generation (call 29), the smoke test and deletion of the synthetic fixture (calls 22, 24), and all six listed files were written (calls 20, 25–27, 29).",
+    "No organization IDs, thresholds or validation results were invented: tenantId and productRevision are null, contractRevision and generator version were read from contract-lock.json and plugin.json, the MCP server was deliberately left unqueried, and the smoke-test output was explicitly disclaimed as not evidence about any process.",
+    "The response separates verified facts, not-done items, stated assumptions (Angola/Africa/Luanda disclosed as provisional per conventions) and open decisions, and ends with a next-step recommendation naming the skill and giving a copyable invocation."
   ],
   "violations": []
 }

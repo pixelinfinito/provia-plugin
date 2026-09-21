@@ -1,19 +1,19 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "process-comparison",
-    "title": "Two-period process performance comparison",
+    "key": "period-comparison",
+    "title": "Period comparison: waiting time vs active work (workflow not yet named)",
     "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
-    "name": "Not supplied",
-    "sector": "Not supplied",
+    "name": null,
+    "sector": null,
     "mode": "disconnected",
     "tenantId": null,
     "productRevision": null
@@ -27,27 +27,38 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "Which workflow and version(s) are in scope, and what are the exact boundaries (start/end timestamps, timezone) of the two periods being compared?",
-      "owner": "Process owner (unassigned)",
+      "question": "Which workflow, which two reporting periods (start and end dates) and what business question motivate the comparison? No export, period or workflow scope was supplied on 2026-09-21.",
+      "owner": "Requester",
       "status": "open",
-      "raisedBy": "provia-process-improvement",
-      "sourceRefs": []
+      "raisedBy": "provia-process-improvement"
     },
     {
       "id": "D2",
-      "question": "What raw case-level records are available for both periods (case id, activation timestamp, completion timestamp, status/queue transitions with timestamps) and how are cancelled, draft or duplicate cases identified for exclusion?",
-      "owner": "Process owner (unassigned)",
+      "question": "Who is the process owner accountable for producing the two exports and for the follow-up measure (section 5 of process-improvement-report.md)?",
+      "owner": "Requester / management",
       "status": "open",
-      "raisedBy": "provia-process-improvement",
-      "sourceRefs": []
+      "raisedBy": "provia-process-improvement"
     },
     {
       "id": "D3",
-      "question": "How should active work vs. waiting time be defined for this workflow: which statuses/transitions count as waiting (e.g. queued, pending approval, unassigned) versus active work, and is this split already captured anywhere, or does it need to be instrumented first?",
-      "owner": "Process owner (unassigned)",
+      "question": "Which Provia event marks the start of active work on an action (assignment/claim, first comment, first field edit or an explicit start step)? Without it waiting and active work cannot be separated and only cycle time and unclassified duration can be reported.",
+      "owner": "Process owner with the Provia administrator",
       "status": "open",
-      "raisedBy": "provia-process-improvement",
-      "sourceRefs": []
+      "raisedBy": "provia-process-improvement"
+    },
+    {
+      "id": "D4",
+      "question": "Did both periods run on the same workflow version? If not, how do action ids map between versions so that per-action waiting and active figures are comparable?",
+      "owner": "Provia administrator",
+      "status": "open",
+      "raisedBy": "provia-process-improvement"
+    },
+    {
+      "id": "D5",
+      "question": "Confirm country, timezone and response language. Angola, Africa/Luanda and English were assumed provisionally; the workday figures assume a Monday–Friday week and do not skip public holidays.",
+      "owner": "Requester",
+      "status": "open",
+      "raisedBy": "provia-process-improvement"
     }
   ],
   "receipts": []

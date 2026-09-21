@@ -1,0 +1,20 @@
+{
+  "at": "2026-09-21T10:58:27.809Z",
+  "exitCode": 0,
+  "model": [
+    "claude-opus-5[1m]"
+  ],
+  "verdict": "pass",
+  "reasons": [
+    "provia-project.json (provia-project/v1.1) exists with two sources (proc-viaturas-v2 with five anchored sections, organigrama), one entity type, three groups, one workflow with access, one form and seven decisions.",
+    "Workflow actions carry five-part descriptions (Tarefa/Como/Evidência/Concluído quando/Excepções), confirmed by the real review-actions.mjs output (4/4 complete, 0 leaks) saved to review-actions.json; owners are referenced by group key (secretariado, field:chefia_colaborador with fallback chefias).",
+    "Groups are derived from the org chart with member counts matching the source (2/5/1), sourceRefs, and flags (segregation on chefias, single_person on direccao_geral); no emails or IDs invented.",
+    "workflow.yaml was validated with the bundled validator (call 56/57); validation.json matches the recorded tool output exactly (valid: true, 0 errors, 4 assignment_missing). build-project-map --check, --output project.html and --setup setup.md were all executed with recorded output; setup.md content is the generated file. Directory listing (call 71) confirms all claimed files exist.",
+    "Open decisions D1–D7 cover only what the procedure does not state (Secretariado deadlines, no-vehicle path, process owner, self-approval/absence, vehicle map migration, damage follow-up, return-for-correction); the only concrete threshold used (1 working day) comes from the source.",
+    "Facts, proposals and decisions are separated explicitly (design.md legend, catalogue notes marked as recommendations, synthetic example flagged); conflicts such as a chefia requesting for themselves are preserved as a flag and decision rather than resolved.",
+    "Disconnected mode is disclosed honestly after the MCP org_get_context call was not authorized; no tenant data claimed. Final response is in pt-AO and ends with a concrete next-step recommendation (provia-workflow-review) with a copyable invocation.",
+    "Bash calls denied for multi-operation approval (9, 11, 12, 41, 45, 55) were each followed by successful alternative or retried calls; the skill never paused to ask the user for permission between steps and worked end-to-end as requested."
+  ],
+  "violations": [],
+  "evidence": "Complete preserved tools.md, response.md and non-HTML output files; no 20000-character tool-log truncation."
+}

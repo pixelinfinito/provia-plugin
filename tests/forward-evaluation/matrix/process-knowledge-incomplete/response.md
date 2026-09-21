@@ -1,16 +1,29 @@
-I produced four artefacts in the working directory, all explicitly marked as drafts because no actual approved procedure, workflow export, or policy document was supplied to this task:
+Done. The working directory had no procedure, manifest, workflow or policy, and the Provia connector call (`org_get_context`) was not permitted, so I worked in disconnected mode and labelled both deliverables **draft**, as the skill requires when the approved version is unknown.
 
-- **`provia-project.json`** — manifest recording the gap: a placeholder `sources[]` entry for the unsupplied procedure, and four open `decisions[]` (D1: missing procedure/workflow content, D2: missing policy for conflict reconciliation, D3: missing update owner, D4: missing administrator sign-off criteria for memory).
-- **`runbook.md`** — a structural runbook template with every field bracketed as `[not supplied]`, so it can't be mistaken for sourced content, plus a five-part-brief table shape ready to fill in once real steps exist.
-- **`memory-glossary.md`** — a proposed Agent Memory glossary shell distinguishing stable org-wide terms from case-only facts, with a placeholder row rather than invented terms, and an explicit note that entries need administrator review before activation.
-- **`setup.md`** — generated handover listing the four open decisions for the process owner/administrator.
+## What I wrote (all in the working directory)
 
-`node scripts/build-project-map.mjs provia-project.json --check` passed (0 warnings, 4 pending items expected).
+| File | What it is |
+| --- | --- |
+| `runbook.md` | Concise runbook structure — purpose/trigger, roles, five-part step blocks (Task/How/Evidence/Done when/Exceptions), exceptions, evidence, escalation, maintenance, proposed changes. Provia mechanics are filled in; every procedure-specific slot is marked `[FROM PROCEDURE]` / `[FROM WORKFLOW]` / `[FROM POLICY]`. Nothing was invented. |
+| `memory-glossary.md` | Proposed Agent Memory glossary, pending administrator review. Part A: 18 Provia product terms confirmed from the plugin's references. Part B (organization terms): deliberately empty, with the categories to extract when the procedure arrives. Includes the memory-vs-incident boundary. |
+| `provia-project.json` | New manifest (`provia-project/v1.1`, project `unnamed-procedure`), disconnected, one placeholder source, five open decisions with owners. |
+| `setup.md`, `project.html` | Generated from the manifest. |
+| `report.md` | What was supplied, assumptions, confirmed facts vs recommendations vs unresolved decisions, checks run. |
 
-Nothing here should be treated as a real runbook or glossary — no terms, owners, or steps were invented.
+## Checks
 
-**Recommended next step:** once you have the actual approved procedure (and any governing policy), run `provia-process-knowledge` again — or `provia-workflow-designer` if it hasn't been modeled as a workflow yet — pointing at `provia-project.json` so it resolves D1–D4 and fills in the real steps and glossary terms:
+- `build-project-map.mjs --check` on `provia-project.json`: 0 errors, 0 warnings, 5 pending items (the decisions). That validates structure only, and it does not cover the Markdown files.
+- `review-actions.mjs` was not run — there is no workflow YAML to review.
+
+## Assumptions and open decisions
+
+- Angola / English / AOA / Africa/Luanda are provisional starting values (D5), not facts.
+- D1 which document and version is the approved procedure · D2 which workflow version implements it · D3 organization-specific terms for the glossary · D4 update owner and memory reviewer.
+
+Note on the environment: several MCP connectors in this session (Cloudflare, Figma, Notion, Slack, etc.) need authorization via your claude.ai connector settings before they can be used; none was needed for this task.
+
+**Recommended next step:** rerun `provia-process-knowledge` once the procedure and its workflow reference are available — the drafts are ready to be filled, and no other skill adds value until the source exists.
 
 ```text
-Use provia-process-knowledge with provia-project.json in this directory. The approved procedure is: [paste text or attach workflow.yaml]. Resolve decisions D1–D4 and complete runbook.md and memory-glossary.md from this content.
+Use provia-process-knowledge with provia-project.json, runbook.md and memory-glossary.md in this directory. Here is the approved procedure (attached) and the workflow key/version that implements it. Fill the [FROM PROCEDURE] slots with five-part action briefs, write Part B of the glossary from the procedure's terms, resolve decisions D1–D5, and keep any pilot workarounds as exceptions to review. Country and language: confirm before relying on Angola / English.
 ```

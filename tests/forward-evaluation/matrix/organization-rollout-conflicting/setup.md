@@ -1,10 +1,10 @@
-# Pilot rollout readiness (process not named in sources): Setup handover
+# Company-wide Provia rollout after the pilot: Setup handover
 
-Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.1.0, 2026-09-18).
+Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
 
 ## Status
 
-Mode: no Provia connection (manual configuration).
+Mode: manual configuration (no receipts recorded).
 
 ## Pending configuration
 
@@ -12,16 +12,25 @@ Nothing pending.
 
 ## Groups to create
 
-- `dono_processo` Process owner (to be named): Accountable for the piloted process end to end: resolves blocked cases, approves scope changes, decides go/no-go for wider rollout, and is the escalation point during adoption. No source names this actor; the request states explicitly that no process owner exists yet.. Proposed members: To be named by an executive sponsor
+- `process_owner` Process owner (pilot workflow) [role]: Placeholder for the person who owns the pilot process: answers the open decisions, accepts the workflow design, decides on blocked cases and signs off each rollout wave. The source says nobody holds this role today. Proposed members: Process owner
+- `pilot_team` Pilot team [team]: The people who executed the pilot cases (2 completed, 8 blocked). They own the pilot workflow's actions until the workflow is registered in this manifest and its assignees are confirmed, and they act as reference users for the first expansion wave. Proposed members: Pilot participant
+- `rollout_support` Provia rollout support [team]: First-line support during the rollout: answers how-to questions, unblocks cases that are stuck for tooling reasons, keeps the blocked-case log and reports adoption measures to the process owner. Proposed by this plan, not named in the source. Proposed members: Support contact
 
 ## Group flags
 
-- `dono_processo`: Owner unnamed in the sources. The rollout request confirms no process owner is currently named. Do not proceed to company-wide rollout with this open.
+- `process_owner`: Owner unnamed in the sources. The request states there is no named process owner. Decision D1 must name one before the rollout is treated as ready.
+- `process_owner`: Single-person actor: name a delegate. Ownership will sit with one person; a delegate for absences is part of decision D1.
+- `pilot_team`: Owner unnamed in the sources. The request does not name the pilot participants. Decision D5 asks for the list; no email was supplied, so none is proposed.
+- `rollout_support`: Owner unnamed in the sources. The source names nobody for support. Decision D5 asks who provides it; until then this group has no members.
 
 ## Open decisions
 
-- **D1** Who is the named process owner accountable for this pilot and its company-wide rollout? (Owner: Executive sponsor)
-- **D2** What is the root cause behind 8 of 10 pilot cases being blocked (80%), and is each one resolved, reassigned or cancelled before scope expands? (Owner: dono_processo (once named))
-- **D3** Given only 2 completed and 8 blocked pilot cases and no named owner, does the organization accept delaying the company-wide date beyond next week in favor of a remediation phase and a second, larger pilot cohort, or proceed on the original date at reduced scope? (Owner: Executive sponsor)
+- **D1** Who is the process owner of the pilot workflow, and who is the delegate during absences? Without an owner nobody can accept the design, decide on the 8 blocked cases, own the access grants or sign off an expansion wave. (Owner: Rollout sponsor (the manager requesting the company-wide rollout))
+- **D2** Supply the pilot workflow (YAML export or action list with assignees) and the case export of the 10 pilot cases, so the workflow can be registered in this manifest, ownership coverage checked and the 8 blocked cases triaged by cause. (Owner: Process owner (D1); until named, the rollout sponsor)
+- **D3** Accept the staged rollout (gate-based waves) instead of a company-wide switch next week? The pilot shows 2 completed and 8 blocked cases and no owner, which fails the expansion criteria of this plan. If the sponsor keeps the company-wide date, record that as an accepted risk with a named owner. (Owner: Rollout sponsor)
+- **D4** Confirm country, jurisdiction, language, timezone and currency. Angola / Africa/Luanda / AOA are a provisional starting context, not supplied by the source. (Owner: Rollout sponsor)
+- **D5** Name the pilot participants (group pilot_team), the support contacts (group rollout_support) and the departments and order of the expansion waves. Emails are needed before groups_apply_plan or manual group creation; none was supplied. (Owner: Process owner (D1))
+- **D6** Who holds organization Owner/Admin in Provia and who administers group membership? These are organization roles, not workflow groups; the plan assumes they are not the same people as the workflow deciders. (Owner: Rollout sponsor)
+- **D7** Access matrix for the pilot workflow: who may open a case (organization-wide create_incident or a starter group), who holds edit on the design (proposed: process_owner) and whether any team needs view of every case. Cannot be written as data until the workflow is registered (D2). (Owner: Process owner (D1))
 
 This file is generated by the project map; regenerate it after every manifest change. It does not replace the process owner review or the Provia import preview.

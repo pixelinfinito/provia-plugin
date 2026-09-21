@@ -1,0 +1,154 @@
+# provia-skills 1.2.0
+# Access section from provia-project.json (supplier-selection): 1 grant(s), default creator_only.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: Supplier quotation comparison and award
+  prefix: SUPQ
+  description: "AI compares the supplier quotations attached to the case and prepares a ranked recommendation. The award is a separate Decision action taken by an authorized person; the AI never approves its own recommendation."
+  agentMemoryEnabled: false
+triggers:
+  - type: manual
+    label: Start supplier selection
+    enabled: true
+    config: {}
+fields:
+  - name: purchase_description
+    label: What is being purchased
+    type: text
+    required: true
+    group: Request
+    width: full
+  - name: evaluation_criteria
+    label: Evaluation criteria and weights
+    type: rich_text
+    required: false
+    group: Request
+    width: full
+  - name: quotation_files
+    label: Supplier quotations
+    type: file
+    required: true
+    group: Quotations
+    width: full
+  - name: quotation_comparison
+    label: Quotation comparison and recommendation
+    type: rich_text
+    required: false
+    group: Comparison
+    width: full
+  - name: recommended_supplier
+    label: Recommended supplier
+    type: text
+    required: false
+    group: Comparison
+    width: half
+  - name: comparison_outcome
+    label: Comparison outcome
+    type: select
+    required: false
+    group: Comparison
+    width: half
+    config:
+      options:
+        - value: recommendation_ready
+          label: Recommendation ready
+        - value: incomplete_evidence
+          label: Incomplete evidence
+        - value: contradictory_evidence
+          label: Contradictory evidence
+  - name: awarded_supplier
+    label: Awarded supplier
+    type: text
+    required: false
+    group: Award
+    width: half
+  - name: award_rationale
+    label: Award rationale
+    type: rich_text
+    required: false
+    group: Award
+    width: full
+access:
+  default: creator_only
+  grants:
+    - grantee: "group:Purchasing"
+      level: edit
+actions:
+  - id: register_request
+    type: standard
+    name: Register the purchase need and attach the quotations
+    description: |
+      Task: Record what is being purchased and attach every supplier quotation received, so the comparison can start from complete evidence.
+      How: 1. Fill `purchase_description` with the item or service, quantity and any specification the quotations must meet. 2. If the purchasing team gave you criteria or weights (price, delivery, payment terms, warranty), copy them into `evaluation_criteria`. 3. Attach each quotation as a separate PDF in `quotation_files`, one file per supplier, using the version the supplier signed or sent last.
+      Evidence: `purchase_description` filled and at least two quotation files attached in `quotation_files`.
+      Done when: Every quotation received is attached and the description lets a reader tell whether a quotation answers the need.
+      Exceptions: If you received fewer than two quotations, do not complete: comment which suppliers were asked and which did not answer, and ask the purchasing team whether to proceed or request more quotations.
+    executionMode: sequential
+    required: true
+    priority: normal
+    assignee:
+      type: creator
+  - id: compare_quotations
+    type: standard
+    name: Compare the supplier quotations and prepare a recommendation
+    description: |
+      Task: Review the comparison and ranked recommendation the AI prepared from the quotations in `quotation_files`, before the case moves to the award decision.
+      How: 1. Open `quotation_comparison` and the original files in `quotation_files`. 2. Check that every attached quotation appears in the table with supplier, total price, currency, delivery time, payment terms, validity date and exclusions, and that each value matches the document. 3. Check that the ranking follows `evaluation_criteria` when it is filled, or price-then-delivery when it is empty, and that the rationale cites the figures it relies on. 4. Read `comparison_outcome`: «Recommendation ready» means a ranking was produced; «Incomplete evidence» or «Contradictory evidence» means the AI stopped and listed what is missing or conflicting.
+      Evidence: A correct comparison is completed without changes. A wrong or missing value is corrected directly in `quotation_comparison` and `recommended_supplier`, with a comment naming the correction.
+      Done when: `quotation_comparison` matches the attached documents and `recommended_supplier` and `comparison_outcome` are consistent with it.
+      Exceptions: If a quotation is unreadable, missing or contradicts another, do not complete: comment what is wrong and ask the requester to attach a legible or corrected quotation, then let the comparison run again. Never fill `awarded_supplier` here; the award is decided in the next action.
+    executionMode: sequential
+    required: true
+    priority: normal
+    aiWorker:
+      instructions: |
+        Objective: Compare the supplier quotations attached in `quotation_files` for the need described in `purchase_description` and prepare a ranked recommendation that a person will review and decide on. You prepare the comparison; you do not award, approve or select the supplier.
+        Inputs: `purchase_description`, `evaluation_criteria` (may be empty) and the files in `quotation_files`. Read nothing else: no other cases, entities, history or external sources.
+        Rules: 1. Treat each file as one quotation from one supplier. If two files come from the same supplier, use the one with the latest date and say so; never count them as two offers. 2. For each quotation extract: supplier name, total price, currency, unit prices when itemised, delivery time, payment terms, validity date and any exclusion or condition. Copy figures exactly as written; write "Not stated" when a value is absent. Never estimate or invent a value. 3. Check that itemised lines add up to the stated total; report any difference instead of correcting it. 4. Check that each quotation answers `purchase_description` (same item, quantity and specification); mark a quotation that offers something different as "does not match the need" and exclude it from the ranking, saying why. 5. Rank the matching quotations by `evaluation_criteria` when it is filled. When it is empty, rank by lowest total price, then shortest delivery time, and state that this default order was used. 6. If quotations use different currencies, do not convert; present them as stated, do not rank across currencies, and set `comparison_outcome` to "incomplete_evidence". 7. Write the result in `quotation_comparison`: a table with one row per quotation (Supplier | Total | Currency | Delivery | Payment terms | Valid until | Exclusions | Matches need), then the ranking with a two-sentence rationale per supplier citing the figures, then a "Checks and issues" list. 8. Write the top-ranked supplier name in `recommended_supplier` and set `comparison_outcome` to "recommendation_ready".
+        Missing evidence: If fewer than two readable matching quotations exist, or a quotation is missing total price or delivery time, still fill the table with what was read, leave `recommended_supplier` empty, set `comparison_outcome` to "incomplete_evidence" and list what is missing per supplier.
+        Contradictory evidence: If a quotation's total does not equal its lines, its validity date is already past, two versions of the same quotation disagree, or a quotation contradicts `purchase_description`, leave `recommended_supplier` empty, set `comparison_outcome` to "contradictory_evidence" and describe each contradiction with the file name and the values that conflict.
+        Prohibited: Do not write `awarded_supplier` or `award_rationale`. Do not complete or route any decision. Do not contact suppliers or look up prices elsewhere. Do not apply an approval threshold, policy or law unless it is written in `evaluation_criteria`.
+      readableFields:
+        - purchase_description
+        - evaluation_criteria
+        - quotation_files
+      writableFields:
+        - quotation_comparison
+        - recommended_supplier
+        - comparison_outcome
+      requiredArtifacts:
+        - filenamePattern: "*.pdf"
+          mime: application/pdf
+          maxBytes: 20971520
+          description: "Supplier quotation in PDF, one file per supplier"
+      mode: safe
+      reviewRequired: true
+      confidenceThreshold: 0.7
+  - id: decide_award
+    type: decision
+    name: Decide the supplier award
+    description: |
+      Task: Decide which supplier is awarded the purchase, using the reviewed comparison in `quotation_comparison` and the original quotations.
+      How: 1. Read `quotation_comparison`, `recommended_supplier` and `comparison_outcome`; open `quotation_files` whenever a figure matters to the choice. 2. Confirm the recommended supplier meets the need, the criteria and any condition of your own authority. 3. Fill `awarded_supplier` with the supplier chosen and `award_rationale` with the reasons, citing the figures from the comparison. 4. Choose «Award recommended supplier» when you follow the recommendation, «Award another supplier» when you choose a different quotation, «Request new quotations» when the evidence is not enough, or «Cancel purchase» when the need no longer exists.
+      Evidence: `awarded_supplier` and `award_rationale` filled before any award outcome; a comment is mandatory on «Award another supplier», «Request new quotations» and «Cancel purchase».
+      Done when: The outcome is recorded with the awarded supplier and the rationale, or the case is returned or cancelled with a comment.
+      Exceptions: If `comparison_outcome` is not «Recommendation ready», do not award: choose «Request new quotations» and say what must be supplied. If the amount exceeds your award authority, do not decide: comment and hand the case to the authorized approver.
+    executionMode: sequential
+    required: true
+    priority: normal
+    config:
+      branches:
+        - label: Award recommended supplier
+          outcome: continue
+          requiresComment: false
+        - label: Award another supplier
+          outcome: continue
+          requiresComment: true
+        - label: Request new quotations
+          outcome: return_to_action
+          target: register_request
+          requiresComment: true
+        - label: Cancel purchase
+          outcome: cancel_incident
+          requiresComment: true

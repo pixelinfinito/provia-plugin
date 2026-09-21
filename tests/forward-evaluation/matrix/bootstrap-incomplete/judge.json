@@ -1,16 +1,9 @@
 {
-  "at": "2026-09-18T18:52:18.922Z",
-  "model": "sonnet",
-  "exitCode": 0,
-  "verdict": "pass",
-  "reasons": [
-    "Manifest, workflow YAML with full action descriptions, validation (validate-workflow.mjs and review-actions.mjs actually run, with response claims matching their real output values like readyToPublish:false), setup.md, and a project map were all produced, satisfying the 'complete every step that can be completed' requirement.",
-    "Missing org chart, service levels, and expense limits were correctly converted into explicit open decisions (D1-D6) rather than invented; groups 'managers' and 'finance' are created as unnamed placeholders with an explicit 'unnamed' flag citing the missing org chart.",
-    "No organization IDs, approval thresholds, legal provisions, or fabricated validation outcomes for the workflow YAML were invented; due dates were deliberately left unset with justification (D3/D4) instead of guessing turnaround times.",
-    "The one added business element not literally in the checklist (a 'Reject' outcome on the Decision action) is explicitly disclosed as an editorial completion rather than presented as a sourced fact, consistent with the separation-of-facts-vs-recommendations rule.",
-    "Response ends with a concrete, appropriately-scoped next-step recommendation (provia-organization-rollout) with a copyable invocation, matching next-step.md guidance."
-  ],
-  "violations": [
-    "The final response asserts a specific unverified validation detail for project.html ('0 structural warnings, 16 pending config items') with no corresponding map-check tool call visible in the given trace; this is likely explained by truncation of the tool-call list (call 32's result is visibly cut off), so it is noted as a minor caveat rather than a confirmed violation."
-  ]
+  "at": "2026-09-21T11:05:20.487Z",
+  "model": null,
+  "exitCode": 1,
+  "verdict": "unclear",
+  "reasons": [],
+  "violations": [],
+  "raw": ""
 }

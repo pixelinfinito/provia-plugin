@@ -1,0 +1,99 @@
+# provia-skills 1.2.0 — workflow as submitted for review (reconstructed from the request; see review-findings.md §0 for the assumptions). Do not import before the sequencing finding is resolved.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: "Purchase request"
+  prefix: PUR
+  description: "Purchase request from need to supplier order. Draft under review; owners and approval sequence still to be confirmed."
+triggers:
+  - type: manual
+    label: Start purchase request
+    enabled: true
+    config: {}
+fields:
+  - name: purchase_amount
+    label: Requested amount
+    type: currency
+    required: true
+    config:
+      currency: AOA
+      decimals: 2
+  - name: cost_centre
+    label: Cost centre
+    type: text
+    required: true
+  - name: supplier_name
+    label: Supplier
+    type: text
+    required: false
+  - name: order_reference
+    label: Order reference
+    type: text
+    required: false
+access:
+  grants:
+    - grantee: organization
+      level: create_incident
+actions:
+  - id: request
+    name: Register the purchase request
+    type: standard
+    description: |
+      Task: Describe the purchase need so that the manager can decide without asking for more information.
+      How: 1. Fill in "Requested amount" with the total estimated value, excluding tax. 2. Fill in "Cost centre" with the department that will bear the cost. 3. Write the good or service and the quantity in the case title. 4. If a supplier quotation already exists, attach it and fill in "Supplier".
+      Evidence: Title, amount and cost centre filled in; the quotation attached when one exists.
+      Done when: The case has a title, an amount and a cost centre.
+      Exceptions: If the amount is not yet known, do not complete: ask the requesting unit or the supplier for an estimate and record it first.
+    executionMode: parallel
+    required: true
+    due:
+      offsetDays: 1
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+  - id: order
+    name: Place the order with the supplier
+    type: standard
+    description: |
+      Task: Issue the purchase order to the supplier and record its reference in the case.
+      How: 1. Check that the supplier exists in the supplier register and that its details are current. 2. Issue the purchase order for the requested amount and cost centre. 3. Send the order to the supplier through the agreed channel. 4. Fill in "Order reference".
+      Evidence: The purchase order attached and "Order reference" filled in.
+      Done when: The supplier has received the order and its reference is recorded in the case.
+      Exceptions: If the supplier is not in the register or its details are out of date, do not complete: request the register update and comment on the case.
+    executionMode: parallel
+    required: true
+    due:
+      offsetDays: 3
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+  - id: approve
+    name: Decide on the purchase request
+    type: decision
+    description: |
+      Task: Decide whether the purchase request goes ahead, based on the need described and the department budget.
+      How: 1. Read the justification in the title and the quotation, if attached. 2. Confirm that the purchase is planned for the department and that the cost centre is correct. 3. Choose "Approve" to continue, "Return" to ask the requester for corrections, or "Reject" to close the case.
+      Evidence: A comment with the reason is mandatory on "Return" and "Reject".
+      Done when: The decision is recorded with the required comment.
+      Exceptions: If the amount exceeds your approval authority, do not decide: comment on the limit and return the request so that it can be routed to the competent authority.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 2
+      offsetType: workdays
+      basis: activation
+    assignee:
+      type: creator
+    config:
+      branches:
+        - label: Approve
+          outcome: continue
+        - label: Return
+          outcome: return_to_action
+          target: request
+          requiresComment: true
+        - label: Reject
+          outcome: cancel_incident
+          requiresComment: true

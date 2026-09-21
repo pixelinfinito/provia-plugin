@@ -1,25 +1,23 @@
 {
   "id": "process-knowledge-normal",
   "skill": "provia-process-knowledge",
-  "pluginVersion": "1.1.0",
-  "at": "2026-09-18T18:45:07.165Z",
-  "model": "sonnet",
+  "pluginVersion": "1.2.0",
+  "at": "2026-09-21T10:46:28.713Z",
+  "model": "claude-opus-5[1m]",
   "exitCode": 0,
-  "durationMs": 300104,
-  "costUsd": 0.9372034,
-  "numTurns": 35,
-  "sessionId": "88e3bf94-b6fd-4897-858f-0c9be4c9f487",
+  "durationMs": 181801,
+  "costUsd": 1.5808739999999994,
+  "numTurns": 26,
+  "sessionId": "43fc3a22-d577-47b7-ad75-6c057c8777e9",
   "stopReason": "end_turn",
-  "toolCalls": 33,
+  "toolCalls": 24,
+  "skillLoaded": true,
   "files": [
-    "licoes-piloto.md",
     "memoria-agente-proposta.md",
-    "procedimento-pedido-compra.md",
+    "procedimento-actualizado.md",
     "project.html",
     "provia-project.json",
-    "setup.md",
-    "workflow.yaml"
+    "setup.md"
   ],
-  "output": "tests/forward-evaluation/matrix/process-knowledge-normal/",
-  "skillLoaded": true
+  "output": "tests/forward-evaluation/matrix/process-knowledge-normal/"
 }

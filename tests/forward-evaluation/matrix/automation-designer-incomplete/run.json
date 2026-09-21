@@ -1,23 +1,25 @@
 {
   "id": "automation-designer-incomplete",
   "skill": "provia-automation-designer",
-  "pluginVersion": "1.1.0",
-  "at": "2026-09-18T18:28:49.916Z",
-  "model": "sonnet",
+  "pluginVersion": "1.2.0",
+  "at": "2026-09-21T10:38:12.551Z",
+  "model": "claude-opus-5[1m]",
   "exitCode": 0,
-  "durationMs": 189260,
-  "costUsd": 1.0843154000000002,
-  "numTurns": 52,
-  "sessionId": "28564320-6e24-434b-a867-6c1576f5321c",
+  "durationMs": 331473,
+  "costUsd": 2.966664,
+  "numTurns": 53,
+  "sessionId": "56b7ad4e-706a-4518-969b-fba41976df4e",
   "stopReason": "end_turn",
-  "toolCalls": 50,
+  "toolCalls": 51,
+  "skillLoaded": true,
   "files": [
+    "monthly-review-trigger-spec.md",
     "project.html",
     "provia-project.json",
+    "review-actions.json",
     "setup.md",
     "validation.json",
     "workflow.yaml"
   ],
-  "output": "tests/forward-evaluation/matrix/automation-designer-incomplete/",
-  "skillLoaded": true
+  "output": "tests/forward-evaluation/matrix/automation-designer-incomplete/"
 }

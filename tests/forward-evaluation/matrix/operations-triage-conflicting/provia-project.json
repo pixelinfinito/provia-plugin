@@ -1,0 +1,67 @@
+{
+  "schemaVersion": "provia-project/v1.1",
+  "project": {
+    "key": "triage-p1-p2",
+    "title": "Operational triage — P1 / P2 export",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills",
+    "contractRevision": null,
+    "updatedAt": "2026-09-21"
+  },
+  "organization": {
+    "name": null,
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [
+    {
+      "id": "export-p1-p2",
+      "title": "Incident export described in the triage request (file not supplied)",
+      "kind": "export",
+      "version": null,
+      "effectiveDate": null,
+      "sections": [
+        { "anchor": "p1", "title": "P1 — two rows at the same observation time: completed / blocked" },
+        { "anchor": "p2", "title": "P2 — open, no due date" }
+      ],
+      "emails": []
+    }
+  ],
+  "entityTypes": [],
+  "groups": [],
+  "workflows": [],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "Which of the two P1 rows reflects the real status at the observation time (completed or blocked), and why did the export produce both rows?",
+      "owner": "Workflow owner (group not yet defined in the manifest)",
+      "status": "open",
+      "raisedBy": "provia-operations-triage",
+      "sourceRefs": [ { "source": "export-p1-p2", "section": "p1" } ]
+    },
+    {
+      "id": "D2",
+      "question": "Should the current action of P2 carry a due-date rule (offset and basis)? Without one, P2 can never be classified as overdue.",
+      "owner": "Workflow owner (group not yet defined in the manifest)",
+      "status": "open",
+      "raisedBy": "provia-operations-triage",
+      "sourceRefs": [ { "source": "export-p1-p2", "section": "p2" } ]
+    },
+    {
+      "id": "D3",
+      "question": "Who owns triage of this workflow's records? The supplied data names no assignee for P1 or P2 and the manifest has no groups.",
+      "owner": "Organization administrator",
+      "status": "open",
+      "raisedBy": "provia-operations-triage",
+      "sourceRefs": [ { "source": "export-p1-p2" } ]
+    }
+  ],
+  "receipts": []
+}

@@ -1,22 +1,22 @@
 {
   "id": "workflow-change-conflicting",
   "skill": "provia-workflow-change",
-  "pluginVersion": "1.1.0",
-  "at": "2026-09-18T18:47:44.745Z",
-  "model": "sonnet",
+  "pluginVersion": "1.2.0",
+  "at": "2026-09-21T10:50:48.652Z",
+  "model": "claude-opus-5[1m]",
   "exitCode": 0,
-  "durationMs": 142390,
-  "costUsd": 0.5412602000000001,
-  "numTurns": 18,
-  "sessionId": "611701b9-f765-4434-8b31-f0e2f1dcfddd",
+  "durationMs": 262483,
+  "costUsd": 2.049064,
+  "numTurns": 31,
+  "sessionId": "134944db-dac6-4adf-9ee4-da5ef3fed6fd",
   "stopReason": "end_turn",
-  "toolCalls": 16,
+  "toolCalls": 29,
+  "skillLoaded": true,
   "files": [
+    "change-plan.md",
     "project.html",
     "provia-project.json",
-    "setup.md",
-    "workflow-change-plan.md"
+    "setup.md"
   ],
-  "output": "tests/forward-evaluation/matrix/workflow-change-conflicting/",
-  "skillLoaded": true
+  "output": "tests/forward-evaluation/matrix/workflow-change-conflicting/"
 }

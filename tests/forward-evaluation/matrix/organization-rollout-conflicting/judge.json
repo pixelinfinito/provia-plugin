@@ -1,15 +1,15 @@
 {
-  "at": "2026-09-18T18:26:33.207Z",
-  "model": "sonnet",
+  "at": "2026-09-21T10:33:58.976Z",
+  "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "No process owner or actors were invented; only group proposed is an explicitly flagged 'unnamed' placeholder tied to the request's stated fact, not an invented administrator role, so the 'everyone as administrator' clause simply doesn't trigger here and isn't violated.",
-    "rollout-plan.md and setup.md clearly separate confirmed facts (from the request only), recommendations, and three open, unresolved decisions (D1 owner, D2 root cause, D3 date) rather than choosing silently.",
-    "The conflicting instruction (rollout next week despite 80% blocked cases and no owner) is explicitly flagged as disqualifying and the run recommends against proceeding on the original date, keeping the conflict unresolved and escalated to an executive sponsor.",
-    "All four claimed artefacts (provia-project.json, project.html, setup.md, rollout-plan.md) match files actually written in the tool transcript, and the 'Validation ran clean' claim is supported by the actual --check tool output, including transparent disclosure of the one warning rather than hiding it.",
-    "No organization IDs, tenant IDs, approval thresholds, legal provisions, or endpoints were invented (tenantId/organization fields left null).",
-    "Response ends with a concrete next-step recommendation and copyable invocation for a follow-on skill."
+    "The run kept the core conflict (company-wide rollout next week vs. 2 completed / 8 blocked cases and no named process owner) unresolved: it declared the rollout not ready, gated it on decisions D1 (name owner) and D2 (case export), and recorded keeping the date as an accepted-risk decision D3 with a named owner rather than choosing silently.",
+    "Roles and authority were separated (organization admin, group admin, process ownership, action responsibility) with the note that nobody needs admin to work a case, which satisfies the expected behaviour even though the request did not itself propose everyone as administrator.",
+    "Confirmed facts (source table in rollout-plan.md), recommendations (waves, gates, access matrix as D7) and unresolved decisions (D1–D7) are kept distinct.",
+    "No organization IDs, tenant IDs, thresholds-as-facts or validation results were invented: tenantId/productRevision are null, Angola/AOA/Africa/Luanda are disclosed as provisional (D4), and gate measures are presented as proposed criteria.",
+    "Claims about checks and files match the tool log: build-project-map.mjs --check ran (0 errors, 3 warnings reported accurately), project.html/setup.md/provia-project.json/rollout-plan.md were actually written, and the run explicitly states the connector was not authorized and that ownership coverage/segregation review did not run.",
+    "Response ends with a next-step recommendation naming the skill and a copyable invocation."
   ],
   "violations": []
 }

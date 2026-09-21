@@ -1,26 +1,28 @@
 {
   "id": "bootstrap-normal",
   "skill": "provia-bootstrap",
-  "pluginVersion": "1.1.0",
-  "at": "2026-09-18T18:50:25.408Z",
-  "model": "sonnet",
+  "pluginVersion": "1.2.0",
+  "at": "2026-09-21T10:56:18.157Z",
+  "model": "claude-opus-5[1m]",
   "exitCode": 0,
-  "durationMs": 292976,
-  "costUsd": 1.0191926,
-  "numTurns": 39,
-  "sessionId": "acc632ad-e940-44a8-8fcb-fd86b0a4e697",
+  "durationMs": 569573,
+  "costUsd": 5.595740500000002,
+  "numTurns": 73,
+  "sessionId": "e2389fdc-8ee0-46a4-beee-6044bf3b5c6d",
   "stopReason": "end_turn",
-  "toolCalls": 37,
+  "toolCalls": 71,
+  "skillLoaded": true,
   "files": [
     "catalogue.html",
     "catalogue.json",
-    "editorial-review.md",
+    "pedido_viatura/design.md",
+    "pedido_viatura/editorial-review.md",
+    "pedido_viatura/review-actions.json",
+    "pedido_viatura/setup.md",
+    "pedido_viatura/validation.json",
+    "pedido_viatura/workflow.yaml",
     "project.html",
-    "provia-project.json",
-    "setup.md",
-    "validation.json",
-    "workflow.yaml"
+    "provia-project.json"
   ],
-  "output": "tests/forward-evaluation/matrix/bootstrap-normal/",
-  "skillLoaded": true
+  "output": "tests/forward-evaluation/matrix/bootstrap-normal/"
 }

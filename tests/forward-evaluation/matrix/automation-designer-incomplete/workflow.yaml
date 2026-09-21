@@ -1,27 +1,65 @@
-# provia-skills 1.1.0 — trigger-only draft; the review workflow's own actions are not yet designed. See setup.md and provia-project.json before importing.
+# provia-skills 1.2.0
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
-  name: "Revisão mensal — arranque"
+  name: Monthly review
   prefix: REVM
-  description: "Especificação do disparo (trigger) da revisão mensal. As acções da revisão em si (o que é revisto, por quem) ainda não foram definidas — ver decisão D1 em provia-project.json."
+  description: >-
+    Opens one review case every month from a schedule in Africa/Luanda
+    (08:00 on the 1st, 07:00 UTC). A missed schedule slot is caught up
+    once when the scheduler is back; an out-of-cycle review can be opened
+    manually. The scope of the review and the reviewing team are still to
+    be confirmed by the process owner.
+  targetDurationDays: 5
+  targetDurationType: workdays
 triggers:
   - type: schedule
-    label: Início da revisão mensal
+    label: Monthly review (automatic)
     enabled: true
     config:
-      # Assunção (não confirmada): dia 1 de cada mês às 09:00, hora de Luanda.
-      # O dia/hora reais (ex.: primeiro dia útil, último dia do mês) não foram fornecidos.
-      cronExpression: "0 9 1 * *"
+      cronExpression: "0 8 1 * *"
       timezone: Africa/Luanda
-      # Política de execução perdida (missed-run), assumida por não ter sido indicada:
-      #   skip           — não recupera; a revisão do mês fica por fazer até ao próximo ciclo.
-      #   catch-up-one   — dispara um único incidente de recuperação assim que o sistema volta a estar disponível.
-      #   catch-up-all   — dispara um incidente por cada ocorrência mensal perdida (risco de acumular revisões atrasadas).
-      # Escolhido catch-up-one: numa cadência mensal, perder um ciclo é significativo (skip poderia saltar
-      # um mês inteiro de revisão), mas catch-up-all pode gerar vários incidentes atrasados de uma só vez
-      # se o sistema ficar indisponível por mais de um mês. catch-up-one garante que a revisão do mês em
-      # falta acontece, sem acumular um historial de incidentes tardios.
       missedBehavior: catch-up-one
-fields: []
-actions: []
+      incidentDefaults:
+        title: Monthly review
+        priority: normal
+  - type: manual
+    label: Open an out-of-cycle review
+    enabled: true
+    config: {}
+fields:
+  - name: review_period
+    label: Period covered
+    type: text
+    required: false
+    width: half
+  - name: review_outcome
+    label: Outcome
+    type: select
+    required: false
+    width: half
+    config:
+      options:
+        - value: no_findings
+          label: No findings
+        - value: findings_recorded
+          label: Findings recorded
+access:
+  default: creator_only
+actions:
+  - id: conduct-review
+    type: standard
+    name: Conduct the monthly review
+    description: |-
+      Task: Complete the monthly review for the period this case covers and record its outcome.
+      How: 1. Confirm which month this case covers: the month that ended before the case was opened. If an earlier month has no completed review case, include it in this review and say so in `review_period`. 2. Check the open cases of this workflow to make sure no other review is running for the same period. 3. Carry out the review with the agreed monthly review checklist. 4. Fill `review_period` with the month or months covered (for example 2026-08) and `review_outcome` with the result.
+      Evidence: Attach the completed checklist or review report as a file; fill `review_period` and `review_outcome`; when there are findings, list each one in a comment with the person responsible for it.
+      Done when: The checklist or report is attached, both fields are filled and every finding has a named owner.
+      Exceptions: If material needed for the review is not available, do not complete the action: comment what is missing and who holds it, and keep the case open until it arrives. If a review case for the same period already exists, comment the reference of that case and ask the workflow owner to cancel the duplicate.
+    executionMode: sequential
+    required: true
+    priority: normal
+    due:
+      offsetDays: 5
+      offsetType: workdays
+      basis: activation

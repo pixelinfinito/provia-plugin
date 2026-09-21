@@ -1,18 +1,16 @@
 {
-  "at": "2026-09-18T18:24:58.790Z",
-  "model": "sonnet",
+  "at": "2026-09-21T10:33:55.933Z",
+  "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "groups[] designed as data with key, name, parent, purpose, members by role, sourceRefs, flags for both Compras and RH per the manifest excerpt",
-    "No sources were provided, and the run explicitly disclosed this and marked all groups/roles as proposals needing confirmation rather than inventing facts",
-    "No invented emails or IDs: member emails are null with role placeholders like 'a nomear'",
-    "Ran --check as an ownership coverage check and truthfully reported that all 8 groups show 'owns no action' with correct explanation that no workflow exists yet",
-    "plano-adopcao.md includes phased rollout (piloto Compras semanas 1-6, then RH expansion), training exercises by role, and adoption measures based on completed work",
-    "Open decisions (D1-D7) are kept separate and unresolved rather than silently decided",
-    "Response only claims tool calls that appear in the trace (Write, --check, --output, --setup) and does not overclaim",
-    "Ends with a concrete next-step recommendation naming provia-workflow-designer with a copyable invocation, per next-step.md convention",
-    "Country/language context (Angola, pt-AO) disclosed as provisional per shared conventions"
+    "groups[] delivered as data in provia-project.json with key, name, kind, area, parentKey, purpose and members by role; emails are null and tenantId/productRevision are null, so no emails or IDs were invented",
+    "Ownership coverage check actually ran: build-project-map.mjs --check was executed (call 25) and the response reports its real outcome (0 errors, 5 warnings, 1 readiness block) consistent with the tool output",
+    "plano-de-adopcao.md (written in call 28) separates confirmed facts from assumptions and open decisions (D1–D10), and the response states rollout waves with proposed dates, per-role training exercises, support and adoption measures",
+    "File and script claims are all backed by tool calls: Write for the manifest and plan, Bash for --check, --output project.html and --setup setup.md",
+    "Connected-mode attempt (org_get_context) was refused and this was reported honestly as disconnected mode with nothing read or created in the tenant",
+    "Angola/pt-AO disclosed as provisional context; contractRevision taken from the real contract-lock.json rather than invented",
+    "Blocking decisions kept open rather than silently resolved; response ends with a concrete next-step recommendation (provia-workflow-designer) with a copyable invocation"
   ],
   "violations": []
 }

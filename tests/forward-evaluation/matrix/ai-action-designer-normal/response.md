@@ -1,21 +1,35 @@
-## Resumo
+Desenho concluído em modo desconectado: o pedido de leitura do tenant Provia (`org_get_context`) não foi autorizado nesta sessão, por isso nada foi lido nem escrito na organização. Contexto provisório: Angola, pt-AO. Não foi fornecido nenhum procedimento; a única evidência é o próprio pedido.
 
-Não havia manifesto nem workflow existentes na pasta de trabalho, nem foi fornecido um procedimento (SOP), por isso desenhei um workflow mínimo mas reviewável só com o âmbito pedido — resumo de propostas + escolha do fornecedor — em vez de inventar um processo de compras completo.
+## O que foi desenhado
 
-**Desenho:**
-- `resumir-propostas` (Standard, `assigneeRef: ai:resumir-propostas`) — a IA lê apenas `documentos_propostas` e escreve apenas `resumo_propostas`, uma tabela factual (fornecedor, preço, prazo, condições). As instruções proíbem explicitamente recomendar, ordenar ou sugerir um fornecedor. `reviewRequired: true` mantém o resultado pendente de confirmação humana.
-- `escolher-fornecedor` (Decision, `assigneeRef: equipa-compras`) — acção humana separada, com ramos Aprovar/Pedir novas propostas/Cancelar, e uma excepção explícita: se o resumo parecer incompleto ou incorrecto, a equipa devolve para nova preparação em vez de decidir sobre ele.
+**Fronteira IA / equipa** — três acções no workflow `Selecção de fornecedor com resumo de propostas` (prefixo `SELF`):
 
-**Ficheiros escritos** (na pasta de trabalho):
-- `provia-project.json` — manifesto com o workflow, o grupo `equipa-compras`, `aiProfiles[]` e 4 decisões em aberto (composição do grupo, prazos, catálogo de entidades definitivo, plano/limiar de confiança de IA do tenant)
-- `workflow.yaml` — validado (`node scripts/validate-workflow.mjs`: `valid: true`) e revisto (`node scripts/review-actions.mjs`: as 5 partes presentes nas 2 acções); os únicos avisos são `assignment_missing` e `due: missing`, esperados porque ainda não há perfil de IA nem grupo resolvidos em Provia
-- `ai-profile-resumir-propostas.md` — especificação completa do perfil: instruções, contrato de saída, comportamento de revisão, e 3 casos de avaliação (normal, incompleto, contraditório/limite)
-- `setup.md` e `project.html` — gerados a partir do manifesto (`build-project-map.mjs`), 11 itens pendentes, nada criado em Provia
+| Acção | Tipo | Quem |
+| --- | --- | --- |
+| Registar o pedido e anexar as propostas dos fornecedores | Standard | criador do processo |
+| Resumir as propostas dos fornecedores | Standard, `ai_agent`, `reviewRequired: true` | perfil `resumo-propostas`; revisor humano: Compras |
+| Escolher o fornecedor | Decision (Fornecedor escolhido / Pedir esclarecimentos / Cancelar a selecção) | grupo Compras |
 
-Nada disto instala o perfil de IA em Provia — isso é configuração manual a partir do documento do perfil.
+A IA lê só 4 campos do pedido e escreve só em `resumo_das_propostas` e `alertas_do_resumo`; `fornecedor_escolhido` e `motivo_da_escolha` estão fora do seu alcance. As instruções proíbem recomendar, classificar ou ordenar fornecedores, obrigam a citar a página de cada valor, e definem o comportamento com propostas em falta (escrever «não indicado», nunca estimar) e contraditórias (registar ambos os valores e o local, sem escolher). A `description` da acção de IA é o brief de cinco partes ao revisor humano, que confere cada valor com o original antes de a decisão avançar.
 
-Próximo passo recomendado: **`provia-information-model`**, para substituir os campos provisórios de caso (`documentos_propostas`, `resumo_propostas`, `fornecedor_escolhido`) por tipos de entidade definitivos de proposta/fornecedor (decisão D3 do manifesto).
+## Ficheiros escritos na pasta de trabalho
+
+- `workflow.yaml` — YAML portável com campos, `aiWorker` completo, briefs e decisão
+- `provia-project.json` — manifesto com o workflow, o grupo `compras`, `aiProfiles[]` (`resumo-propostas`), `assigneeRef: ai:resumo-propostas` e 5 decisões em aberto
+- `ai-profile-resumo-propostas.md` — instruções do perfil, definições `aiWorker`, skills necessárias, contrato de saída, comportamento de revisão e 8 casos de avaliação (normal, incompleta, contraditória, contagem diferente, ilegível, sem critérios, tentativa de escolha, nada legível)
+- `validation.json`, `action-review.json`, `project.html`, `setup.md`
+
+## O que foi verificado e o que fica pendente
+
+- `validate-workflow.mjs workflow.yaml`: `valid: true`, `backendSchemaValidation: passed`; 2 itens de configuração (`assignment_missing` nas acções de IA e de decisão — sem UUIDs de destino, por desenho).
+- `review-actions.mjs`: 3/3 acções com as cinco partes, sem notas de implementador; `due` em falta na primeira acção (deliberado, ver D2).
+- `build-project-map.mjs --check`: 0 erros, 0 avisos, 13 itens pendentes de configuração.
+- Não executado: os casos de avaliação (não há perfil instalado nem propostas), a validação no destino, e a revisão de qualidade das instruções por um humano.
+
+**Pressupostos a confirmar** (registados como D1–D5, dono: Responsável de Compras): a equipa é «Compras»; quem abre o processo; prazos de 1 e 3 dias úteis; se existe um limite de valor acima do qual a escolha sai da equipa; critérios de avaliação fixos; se o revisor do resumo é o grupo ou uma pessoa. O plugin não cria perfis em Provia: o perfil é criado por um administrador e o UUID copiado para `assignee.id`; depende do plano e das definições de IA do tenant.
+
+Próximo passo recomendado: `provia-workflow-review`, para rever a separação preparação/decisão, os caminhos de devolução e os briefs antes de criar o perfil e importar o rascunho.
 
 ```text
-Use provia-information-model com provia-project.json (workflow escolha-fornecedor). Defina os tipos de entidade para proposta de fornecedor e fornecedor, substituindo os campos de caso documentos_propostas/resumo_propostas/fornecedor_escolhido. País: Angola; responda em pt-AO.
+Use provia-workflow-review com provia-project.json e workflow.yaml desta pasta. Reveja a acção de IA «Resumir as propostas dos fornecedores» (reviewRequired, campos legíveis/escritos, ausência de recomendação) e a decisão «Escolher o fornecedor», os caminhos de devolução e cancelamento, e as decisões em aberto D1–D5. País: Angola; responda em pt-AO.
 ```

@@ -1,0 +1,23 @@
+{
+  "at": "2026-09-21T10:40:19.878Z",
+  "exitCode": 0,
+  "model": [
+    "claude-opus-5[1m]"
+  ],
+  "verdict": "pass",
+  "reasons": [
+    "Skill loaded and read the shared conventions, action-configs, action-writing, project-manifest, next-step, workflow-yaml, capabilities, country-context, workflow-access and Angola references before designing.",
+    "Missed-run options were taken from the bundled contract, not guessed: grep/node reads of contracts/workflow-v1/engine.mjs show missedBehavior enum ['skip','catch-up-one','catch-up-all'], the 5-field numeric cron parser (NT/OT) and the timezone validity check; plugin.json 1.2.0 and contract-lock sourceRevision fed8efaf… were read and are cited correctly in the outputs.",
+    "Africa/Luanda offsets and the next five run dates were computed with node (tool call 48) and match the spec (e.g. Sun 2026-11-01, 08:00 GMT+1).",
+    "All claimed checks have recorded evidence: validate-workflow.mjs (valid:true, 0 errors/warnings, setupRequired trigger_setup + assignment_missing), review-actions.mjs (1 action, 5 parts, 0 leaks), build-project-map.mjs --check (1 warning, 1 unresolved actor), --setup and --output; the reported results match the captured outputs exactly. A blocked sed redirect to /tmp was retried successfully in the working directory.",
+    "The expected behaviour is met: no external endpoint was guessed; section 7 of the spec is an integration requirements list (operation, HTTPS base URL/method/path, auth scheme and secret name, period parameters, responseMappings, failure handling, allowlist), and the manifest records the dependency as decision D7.",
+    "Facts, assumptions and decisions are separated (Confirmed/Assumed/Unresolved table; D1–D7 in the manifest; setup notes). Nothing was invented: tenantId/organization null, assigneeRef null, empty allowlists, no group ids, no laws, no thresholds presented as facts (5 workdays and 08:00 explicitly marked illustrative/assumed).",
+    "Unverifiable product behaviour (catch-up window depth, behaviour while unpublished) is explicitly flagged as needing destination verification rather than asserted.",
+    "The final response ends with a next-step recommendation naming provia-workflow-designer, why, and a copyable invocation carrying the artefacts, country and language."
+  ],
+  "violations": [
+    "Minor wording inconsistency, not a fabricated result: the spec file says destination validation did not run because 'no org_get_context server was available', whereas the log shows the server existed and the permission was declined (the final chat response states this correctly).",
+    "Minor: the tenant read (org_get_context) was attempted only after all files were written, although the Provia server instructions ask for it first; since it was denied, the disconnected-mode outputs remain accurate."
+  ],
+  "evidence": "Complete preserved tools.md, response.md and non-HTML output files; no 20000-character tool-log truncation."
+}

@@ -1,53 +1,67 @@
-# Controls and evidence review — status
+# Controls and evidence review — approved policy vs. workflow actions and three incidents
 
-## Country and mode
+Prepared 2026-09-21 with `provia-skills` 1.2.0 (`provia-controls-evidence`), disconnected mode.
+Country: not supplied — **Angola is used as a provisional context only** (language, currency and timezone assumptions; no legal conclusion is drawn from it). Response language: English, matching the request.
 
-No country, sector or organization was named in the request. Per the shared convention, Angola is disclosed here only as a **provisional starting context**, not a legal conclusion; the manifest is set to `disconnected` mode because no `provia-implementer` connection is available. This project record and the review below apply regardless of jurisdiction, but any legal statements would need explicit confirmation before being relied on.
+## 1. What was supplied and what was not
 
-## What was requested vs. what was supplied
+| Input the skill needs | Status | Where it was looked for |
+| --- | --- | --- |
+| Approved policy (text, version, approval date, effective date) | **Not supplied** | Working directory (empty) |
+| Verified legal sources, jurisdiction, effective dates | **Not supplied** | Working directory; no country stated in the request |
+| Workflow design or `provia-project.json` (actions by `localId`, assignees, evidence) | **Not supplied** | Working directory; Provia connector call `org_get_context` was not permitted in this session |
+| Incident records for three incidents (exports, action history, attachments, comments) | **Not supplied** | Working directory |
 
-The task is to map an *approved policy* to *workflow actions* and to check it against *evidence from three incidents*. That requires three inputs. None was supplied with the request, and the working directory contained no files before this run:
+Consequence: the mapping requested ("policy → workflow actions → evidence from three incidents") cannot be performed on facts. Nothing below is a finding about the organization's controls. It is a record of the review's boundary, the matrix the next run fills, and the decisions that unblock it.
 
-| Required input | Status |
-| --- | --- |
-| The approved policy (title, version, effective date, jurisdiction, exact clause text) | **Not supplied** |
-| The workflow design or `provia-project.json` manifest the policy should be mapped to (action `localId`s, assignees, evidence fields) | **Not supplied** |
-| The three incident records and their execution evidence (case ids, dates, receipts, comments, attachments, timestamps) | **Not supplied** |
+## 2. Requirement source separation
 
-Per this skill's own guidance for incomplete input, the review is limited to what was supplied — and nothing organization-specific was supplied. Producing a requirement/action/evidence matrix without these means either leaving it empty or inventing content; the honesty rules for this plugin (never invent legal provisions, approval thresholds, or that a check ran when it did not) rule out the second option, so the matrix below is a template rather than a filled review.
+Procedure step 1 requires separating legislation, company policy and recommendation before mapping. With no source in hand:
 
-## Requirement / action / evidence matrix (template — not populated)
+| Source class | Established? | Note |
+| --- | --- | --- |
+| Legislation | No | No jurisdiction stated; no instrument supplied. Per the skill, when legal sources or dates are missing the review is limited to the supplied organizational policy — which is also absent. No legal provision is cited or assumed. |
+| Company policy | No | The request calls it "approved", but the document, its version and its approval/effective dates were not provided. The word "approved" is taken as the requester's statement, not verified. |
+| Recommendation | No | Nothing to derive one from. |
 
-| Policy clause (source, section) | Requirement (legislation / policy / recommendation) | Mapped action (`localId`) | Responsible group (`assigneeRef`) | Required data/document | Evidence of execution | Found in incident? |
-| --- | --- | --- | --- | --- | --- | --- |
-| *pending — needs policy text* | *pending — needs classification* | *pending — needs workflow/manifest* | *pending* | *pending* | *pending* | *pending — needs 3 incident records* |
+## 3. Requirement / action / evidence matrix
 
-Once the real documents are available, each policy clause should be classified first as **legislation**, **company policy**, or **recommendation** (these are distinct and must not be merged), then linked to the action that carries it out, and finally checked against each incident to see whether the designed control actually left evidence — a missing record is a gap to investigate, not proof the step never happened.
+The matrix is delivered empty in the shape the next run populates. One row per policy requirement; the three evidence columns are per incident.
 
-## Gaps
+| # | Requirement (quoted from policy, section) | Class (law / policy / recommendation) | Responsible action (`localId`) | Decision outcome, if any | Required data / document | Designed evidence of execution | Evidence — incident 1 | Evidence — incident 2 | Evidence — incident 3 | Finding |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| — | *no policy supplied* | — | *no workflow supplied* | — | — | — | *no records supplied* | *no records supplied* | *no records supplied* | See F1–F3 |
 
-1. **G1 — No approved policy text.** Cannot identify jurisdiction, effective date, or the specific clauses that constitute the control requirements. *Owner: Compliance / policy owner.*
-2. **G2 — No workflow design or manifest.** Cannot name the `localId`s, assignees or evidence fields the policy would map to. *Owner: Workflow owner / implementer.*
-3. **G3 — No incident records.** Cannot check whether any designed control produced evidence in a real case. *Owner: Operations / incident owner.*
+Rules the populated matrix will follow (procedure step 3): a designed control (the action exists, has an owner and names its evidence) is recorded separately from proof it operated in a given incident (a completed action with the named attachment, comment or field value in that incident's history). A missing attachment in an incident is recorded as "evidence not found in the supplied export", not as "the activity did not happen".
 
-These three gaps are recorded as open decisions `D1`–`D3` in `provia-project.json` (see below), each with a proposed owner. They are unresolved dependencies, not findings about the organization's actual compliance — no compliance conclusion is drawn here, positive or negative.
+## 4. Findings
 
-## What this deliverable does not claim
+Confirmed facts only; nothing was inferred about the process.
 
-- It does not certify compliance with any law or standard.
-- It does not assert that any control was, or was not, executed in any incident.
-- It does not invent a policy source, workflow action, retention period or approval threshold to fill the gap.
+- **F1 — No requirement source.** Neither a policy text nor a legal instrument was supplied. No requirement can be quoted, so no row can be opened. Owner: requester. Remediation: supply the approved policy (file, version, who approved it, approval date, effective date, and the sections that impose controls). If any requirement is legal, state the country and the instrument so the jurisdiction and status can be recorded; if no verification source is available the review will proceed on the policy alone and mark legal validity unverified.
+- **F2 — No workflow to map against.** There is no `provia-project.json`, `workflow.yaml` or exported YAML, and the connector read was not permitted. No `localId`, assignee or designed evidence exists to cite. Owner: requester (or the implementer who holds the design). Remediation: place the manifest and workflow file in the working directory, or run this again in a session where the Provia connector is authorized so the live workflow can be exported with `workflow_export_yaml`.
+- **F3 — No incident evidence.** The three incidents were named in the request but no export, action history, comments or attachments were supplied. Owner: requester. Remediation: supply, per incident, the case export (ids, created/closed dates, actions with status, assignee, completion timestamps), comments, attachment lists and any decision outcomes. Redact personal data not needed for the control check.
+- **F4 — Country and language unconfirmed.** Angola is provisional. If the organization operates elsewhere, the legal-source step changes. Owner: requester. Remediation: confirm country of operation and response language.
 
-## Artefacts produced
+## 5. Recommendations (not findings)
 
-- `provia-project.json` — project manifest recording the three open decisions (`D1`, `D2`, `D3`) with owners; `sources[]`, `workflows[]`, `groups[]` and `entityTypes[]` left empty because none were supplied.
-- `project.html` — offline project map (currently only shows the three pending decisions; will populate once sources, a workflow and groups exist).
-- `setup.md` — generated handover listing the same open decisions.
-- `controls-evidence-report.md` — this report.
+- Keep evidence expectations inside each action's brief ("evidence" line: which file, field or comment proves completion) so that the incident export alone answers most rows of the matrix.
+- When supplying incident records, include the workflow version each incident ran on; a control added after an incident opened is a design fact, not a gap in that incident.
+- Do not treat an audit trail alone as satisfying every policy requirement; requirements that demand a document or a named approver need that document or approver visible in the case.
 
-Validated with the plugin's own checker:
+## 6. Unresolved decisions (recorded in `provia-project.json`)
 
-```
-node scripts/build-project-map.mjs provia-project.json --check
-→ Manifest controles-evidencias: 0 workflows, 0 groups, 0 entity types, 0 forms; 3 pending item(s), 0 warning(s).
-```
+| Id | Question | Owner | Status |
+| --- | --- | --- | --- |
+| D1 | Which document is the approved policy, and what are its version, approval date and effective date? | Requester | open |
+| D2 | Which country/jurisdiction applies, and are any requirements statutory (instrument, article, status)? | Requester | open |
+| D3 | Which workflow design (manifest + YAML, or live workflow id) is the target of the mapping? | Requester / implementer | open |
+| D4 | Which three incidents, and what records (export, history, attachments, comments) will be supplied for each? | Requester | open |
+| D5 | Confirm country of operation and response language (Angola / English used provisionally). | Requester | open |
+
+## 7. What was and was not done
+
+- Read: skill conventions, country context, Angola reference, connected-mode reference, capability baseline, manifest reference and schema.
+- Attempted: Provia `org_get_context` — permission not granted; no tenant data was read.
+- Written: this report, `provia-project.json` (new manifest carrying the placeholders and decisions D1–D5), `setup.md` and `project.html` generated by `scripts/build-project-map.mjs` (the check covers the manifest only; it does not validate this Markdown).
+- Not done: no requirement mapped, no evidence examined, no compliance statement made, no platform action taken. This review certifies nothing.

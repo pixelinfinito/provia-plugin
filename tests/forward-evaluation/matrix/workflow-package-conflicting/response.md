@@ -1,13 +1,22 @@
-Two parts of the request conflict with the `provia.ao/v1` contract, so I adapted rather than forcing them:
+Package built in the working directory. Two parts of the request conflict with the `provia.ao/v1` contract, so I kept the contract shape and preserved what you asked for where the contract allows it:
 
-- **Portuguese property names**: the YAML's top-level keys (`metadata`, `triggers`, `fields`, `actions`) and their sub-keys (`name`, `label`, `type`, `assignee`, `config`...) are fixed by the product schema — unknown/translated keys aren't extensions and would be rejected or silently dropped on import. I kept the keys in English and put all Portuguese where it actually belongs: workflow name, action names/descriptions, field labels.
-- **Embedded intake form**: forms, form triggers and Form Fill links are explicitly excluded from portable workflow YAML. I modelled the request step as a `form_fill` action (`submeter_pedido`) and delivered the actual field spec separately in `intake-form-pedido-compra.md`, to be built and linked in Provia after import.
+**Contract boundary (not silently dropped)**
+- **Portuguese property names**: the YAML keys (`metadata`, `fields`, `actions`, `assignee`, …) are fixed by the contract; a translated key fails import with `schema.unknown_key`. Everything the contract leaves free is Portuguese: workflow name, field labels, action names/descriptions, decision labels, and the local identifiers (`montante`, `centro_custo`, `registar_pedido`, `decidir_chefia`, `confirmar_financas`).
+- **Embedded intake form**: forms and form triggers are not portable in YAML. The form definition lives in `form-pedido.json` and in `provia-project.json → forms[formulario-pedido]` (6 fields with mappings to the workflow fields); `setup.md` carries the create-and-link step. The YAML keeps a manual trigger so the workflow is usable before the form exists.
 
-Delivered in the working directory:
-- `workflow.yaml` — 3 actions (Submeter o pedido de compra → form_fill, Decidir sobre o pedido de compra → decision with Aprovar/Rejeitar, Confirmar a disponibilidade orçamental → standard), each with a complete five-part description
-- `review-actions.json` — all 3 actions complete, no implementer-note leaks
-- `validation.json` — `valid: true`, `readyToPublish: false` (form-link + 3 assignees still need resolving in Provia)
-- `intake-form-pedido-compra.md` — the form specification kept out of the YAML
-- `editorial-review.md`, `setup.md` — findings and unresolved owner/due/branch decisions (no manifest was supplied, so `setup.md` was written by hand)
+**Files**
+- `workflow.yaml` — 3 actions: register (creator) → decision Aprovar/Devolver/Rejeitar (explicit outcomes, comment required on return/reject) → finance confirmation; `access: organization → create_incident`.
+- `validation.json` — exact validator output: `valid: true`, backend schema passed, 0 errors/warnings, 2 `assignment_missing` setup items (manager and finance actions have no `assignee` because the groups don't exist yet — I did not substitute the creator as approver).
+- `review-actions.json` / `.md` — 3/3 actions have all five brief parts, no leaked implementer notes, `due` unset on all three (intentional: no SLA was supplied).
+- `provia-project.json`, `setup.md`, `project.html` — manifest check: 0 errors, 0 warnings, 2 infos (assigned groups get no `view`), 15 pending items.
+- `editorial-review.md` — names, briefs, branches, and the contract-boundary table.
 
-Next step: **provia-form-designer** to turn `intake-form-pedido-compra.md` into a full Provia form design (access, mappings) bound to `submeter_pedido` — e.g. *"Desenha o formulário de admissão para submeter_pedido em workflow.yaml, usando os campos de intake-form-pedido-compra.md."*
+**Assumptions stated**: Angola / pt-AO / AOA as provisional context; "request" modelled as an expense request (`Pedido de despesa`, prefix `PED`); any employee may open a case. Open decisions D1–D4 (deadlines, self-approval/thresholds, route when finance finds no budget, whether the manual trigger stays after the form is linked) are in the manifest with owners.
+
+Not done: Provia import preview, group creation, form creation, publication review — those remain destination steps.
+
+Next step recommended: `provia-form-designer`, to turn the preserved form spec into a reviewed intake form with access and mapping rules before the groups and form are created in Provia.
+
+```text
+Use provia-form-designer with provia-project.json and form-pedido.json in this directory. Finalize the intake form «Formulário de pedido de despesa» for workflow pedido-despesa: confirm fields, required flags, access (who may submit) and mappings to montante, centro_custo, justificacao and data_necessidade. Resolve decision D4 on the manual trigger. Country: Angola (provisional); reply in pt-AO.
+```

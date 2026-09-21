@@ -1,22 +1,21 @@
-# Expense reimbursement — editorial review
+# Editorial review — Expense reimbursement (`workflow.yaml`)
 
-Scope: both actions in `workflow.yaml` (`decide`, `pay`). Reviewed against `references/action-writing.md`.
+Reviewed on 2026-09-21 against `references/action-writing.md`. Scope: all 3 actions of `expense-reimbursement/workflow.yaml` (names, five-part descriptions, branches). Deterministic gate: `scripts/review-actions.mjs` → `review-actions.json` (3 applicable, 3 complete, 0 missing parts, 0 leaked implementer notes, 0 near the 5000-character limit, `due` missing on 3).
 
-## Deterministic check
+## Findings
 
-`node scripts/review-actions.mjs expense-reimbursement/workflow.yaml` — see `validation.json`'s sibling report reproduced below.
+| Action | Observed name | Check | Finding | Outcome |
+| --- | --- | --- | --- | --- |
+| `submit_claim` | Submit the expense receipts | Verb-led, names the work of §a; no actor prefix | The name keeps the checklist's noun ("receipts") so the employee recognises the step; the description covers the fields the claim also needs. | No change |
+| `submit_claim` | — | Five parts | Task, How (7 numbered steps), Evidence, Done when, Exceptions present. Step 7 covers the return-for-correction path so the same brief serves both the first pass and the rework. | No change |
+| `approve_claim` | Decide on the expense claim | Verb matches a Decision (decide, not approve) | The source says "approves"; the action name says "Decide" because the assignee chooses between three outcomes. Outcome labels stay short ("Approve", "Return for correction", "Reject"). | No change |
+| `approve_claim` | — | Criteria and authority | The brief tells the manager to apply "the expense policy in force" and to return the claim when the amount exceeds their authority or no policy covers it. No threshold is stated because none exists (decision D9); the brief does not invent one. | Unresolved question D9 |
+| `approve_claim` | — | Segregation | The Exceptions part instructs a claimant-manager not to decide their own claim. This is a brief instruction, not an enforced control; the routing rule is decision D3. | Unresolved question D3 |
+| `pay_claim` | Pay the approved reimbursement | Verb names execution, not confirmation | The source says "finance pays"; the action is payment execution plus recording, so "Pay" is the right verb. It is not a "Confirm payment" step. | No change |
+| `pay_claim` | — | Evidence | Three case fields plus the proof-of-payment file; the source names no evidence, so this is a recommendation. | Recommendation, flagged |
+| all | — | Implementer notes in descriptions | None. Notes about missing owners, ids, deadlines and forms are in `setupNotes` and `setup.md` only. | No change |
+| all | — | `due` | Unset on every action: no service level was supplied and "within the month" cannot be expressed as an offset (`dueInSource` on `pay_claim`). | Unresolved questions D4, D5 |
 
-- 2 actions reviewed, both complete: all five description parts present (Task, How, Evidence, Done when, Exceptions), no implementer-note leaks, no length violations.
-- `dueMissing: 2` — expected: neither action has a `due` because the checklist gives no approval turnaround (see decision D3) and "pays within the month" is not representable as the fixed day/workday offset the field supports (see decision D4).
+## What was not checked
 
-## Semantic review
-
-- **`decide` (Decision, type `decision`)**: Name is verb-led and describes the actual authority (deciding on the claim), not the approver's job title. Branches are `Approve` → `continue` and `Reject` → `cancel_incident` with a required comment. The checklist only says "manager approves"; a Reject outcome was added because a Decision action requires named outcomes to be meaningful — this is disclosed as an editorial completion in `setupNotes`, not a business rule invented from the source. No "return for correction" branch exists because there is no prior workflow action to return to (submission is modelled as an intake form, not an action); flagged as decision D6.
-- **`pay` (Standard, type `standard`)**: Name distinguishes "pay" from "approve"; it does not collapse decision and payment into one act. Evidence is proof of payment plus a filled `payment_reference` field, matching the "finance pays" checklist line. The exception path acknowledges the case where payment cannot happen within the month, since no policy defines what happens then.
-- No approval-amount language, threshold, or statutory reference was introduced anywhere in the two descriptions, consistent with there being no policy on limits and no verified legal source for Angola in this task.
-- Assignments in the YAML are `type: creator` for both actions as a training placeholder (see `setupNotes` in the manifest); the intended owners are the `managers` and `finance` groups recorded in `provia-project.json`.
-
-## Not checked
-
-- Business correctness of the two-outcome Decision design, the omission of a correction/return path, and the omission of `due` are all recorded as open decisions (D1–D6) for the process owner and Finance director, not resolved here.
-- No destination environment exists to validate group, form or import behavior; `destinationValidation` in `validation.json` is `not_run`.
+Business correctness of the criteria (no policy exists), the customer's terminology (the deliverable is in English; D10 asks whether pt-AO is wanted before publication), and the behaviour of the destination tenant (no tenant was read).

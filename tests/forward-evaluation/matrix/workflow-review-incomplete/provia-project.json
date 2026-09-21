@@ -1,15 +1,15 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "workflow-review-incomplete",
-    "title": "Workflow review — incomplete context",
+    "key": "workflow-review",
+    "title": "Workflow review: parallel actions before budget approval",
     "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
+    "generator": "provia-skills/provia-workflow-review",
     "contractRevision": null,
-    "updatedAt": "2026-09-18"
+    "updatedAt": "2026-09-21"
   },
   "organization": {
     "name": null,
@@ -27,16 +27,40 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "Which specific actions run in parallel with budget approval, and do any of them commit spend, notify an external party, or otherwise create an obligation that would be hard to undo?",
-      "owner": "Process owner (unspecified — no organization or SOP supplied)",
+      "question": "Which actions are the 'parallel actions' in question, and which action is the budget approval Decision? Supply the workflow YAML (or export) so the review can trace action ids, order and executionMode.",
+      "owner": "Process owner (not yet identified)",
       "status": "open",
       "raisedBy": "provia-workflow-review",
       "sourceRefs": []
     },
     {
       "id": "D2",
-      "question": "If budget approval is rejected after those parallel actions have started, what happens to them — automatic cancellation, manual rollback, or are they allowed to complete regardless?",
-      "owner": "Process owner (unspecified — no organization or SOP supplied)",
+      "question": "Does the procedure allow any work on the request to begin before budget approval is recorded? If yes, which tasks exactly, and what happens to them when the approval is rejected or the request is returned for rework?",
+      "owner": "Process owner (not yet identified)",
+      "status": "open",
+      "raisedBy": "provia-workflow-review",
+      "sourceRefs": []
+    },
+    {
+      "id": "D3",
+      "question": "Do any of the candidate parallel actions commit the organization (order a supplier, sign a contract, make a payment, reserve funds) or only prepare (collect quotations, draft a specification)? Committing work must not start before approval unless the procedure says so explicitly.",
+      "owner": "Finance / budget authority (not yet identified)",
+      "status": "open",
+      "raisedBy": "provia-workflow-review",
+      "sourceRefs": []
+    },
+    {
+      "id": "D4",
+      "question": "Who holds budget approval authority, and is there a threshold above which a second authority decides? Needed to check owner, segregation between requester/preparer and approver, and the Decision's rejection and return outcomes.",
+      "owner": "Finance / budget authority (not yet identified)",
+      "status": "open",
+      "raisedBy": "provia-workflow-review",
+      "sourceRefs": []
+    },
+    {
+      "id": "D5",
+      "question": "What is the service level for the budget approval Decision and for each parallel action (basis: activation or creation; calendar or workdays)? Without it, due stays unset.",
+      "owner": "Process owner (not yet identified)",
       "status": "open",
       "raisedBy": "provia-workflow-review",
       "sourceRefs": []

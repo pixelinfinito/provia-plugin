@@ -1,118 +1,184 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "purchase-request",
-    "title": "Purchase request — supplier quotations",
+    "key": "compras",
+    "title": "Purchase request with three supplier quotations",
     "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
-    "name": "Demonstration company",
-    "sector": "Services",
+    "name": null,
+    "sector": null,
     "mode": "disconnected",
     "tenantId": null,
     "productRevision": null
   },
   "sources": [
     {
-      "id": "req-quotations",
-      "title": "User request: collect three supplier quotations as multiple Form Fill responses",
-      "kind": "other",
-      "version": "1",
-      "effectiveDate": "2026-09-18",
+      "id": "request-2026-09-21",
+      "title": "Chat request: collect three supplier quotations as multiple Form Fill responses and map each response amount to the same incident amount field",
+      "kind": "interview",
+      "version": null,
+      "effectiveDate": "2026-09-21",
+      "summary": "Single-sentence request received in chat on 2026-09-21. No procedure, export or organization context was supplied. Country (Angola) and currency (AOA) are provisional starting context, not a customer statement.",
       "sections": [
-        { "anchor": "1", "title": "Request text" }
+        { "anchor": "req", "title": "Request text", "summary": "Three quotations as multiple Form Fill responses; each response amount mapped to the same incident amount field." }
       ]
     }
   ],
   "entityTypes": [],
-  "groups": [],
+  "groups": [
+    {
+      "key": "compras",
+      "name": "Purchasing",
+      "kind": "team",
+      "area": "compras",
+      "parentKey": null,
+      "purpose": "Requests and registers supplier quotations and selects the winning quotation. Proposed by provia-form-designer; the request names no team.",
+      "members": [
+        { "role": "Purchasing officer", "email": null, "verified": false }
+      ],
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "req" } ],
+      "flags": [
+        { "code": "unnamed", "detail": "The request does not name who collects quotations; Purchasing is assumed." }
+      ]
+    }
+  ],
   "workflows": [
     {
-      "key": "purchase-request",
+      "key": "compras",
       "name": "Purchase request",
-      "prefix": "PUR",
+      "prefix": "COMP",
       "file": "workflow.yaml",
-      "status": "validated",
-      "sourceRefs": [ { "source": "req-quotations", "section": "1" } ],
+      "status": "design",
+      "ownerArea": "compras",
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "req" } ],
+      "access": {
+        "default": "creator_only",
+        "grants": [],
+        "sensitivity": "internal",
+        "note": "No source states who may open a purchase request, so the workflow is declared creator-only until decision D3 is resolved. Purchasing sees the cases that carry its actions without a grant."
+      },
+      "triggers": [
+        { "type": "manual", "label": "Start purchase request", "enabled": true, "manual": { "allowedGroups": [], "allowedUsers": [] } }
+      ],
+      "templates": [],
+      "unresolvedActors": [],
+      "unresolvedEntityTypes": [],
       "actions": [
-        { "localId": "registar", "name": "Register the purchase need", "type": "standard", "sourceRefs": [], "assigneeRef": "creator", "formRef": null, "entityRefs": [], "evidence": [ "Title, estimated amount and cost centre completed" ], "due": { "offsetDays": 1, "offsetType": "workdays", "basis": "activation" }, "folded": [] },
-        { "localId": "decidir", "name": "Decide on the request", "type": "decision", "sourceRefs": [], "assigneeRef": "creator", "formRef": null, "entityRefs": [], "evidence": [ "Comment mandatory on Return and Reject" ], "due": { "offsetDays": 2, "offsetType": "workdays", "basis": "activation" }, "folded": [] },
-        { "localId": "cotacao_1", "name": "Record supplier quotation 1", "type": "form_fill", "sourceRefs": [ { "source": "req-quotations", "section": "1" } ], "assigneeRef": "creator", "formRef": "cotacao-1", "entityRefs": [], "evidence": [ "quote_1_supplier and quote_1_amount completed", "Quotation document attached to the response" ], "due": { "offsetDays": 3, "offsetType": "workdays", "basis": "activation" }, "folded": [] },
-        { "localId": "cotacao_2", "name": "Record supplier quotation 2", "type": "form_fill", "sourceRefs": [ { "source": "req-quotations", "section": "1" } ], "assigneeRef": "creator", "formRef": "cotacao-2", "entityRefs": [], "evidence": [ "quote_2_supplier and quote_2_amount completed", "Quotation document attached to the response" ], "due": { "offsetDays": 3, "offsetType": "workdays", "basis": "activation" }, "folded": [] },
-        { "localId": "cotacao_3", "name": "Record supplier quotation 3", "type": "form_fill", "sourceRefs": [ { "source": "req-quotations", "section": "1" } ], "assigneeRef": "creator", "formRef": "cotacao-3", "entityRefs": [], "evidence": [ "quote_3_supplier and quote_3_amount completed", "Quotation document attached to the response" ], "due": { "offsetDays": 3, "offsetType": "workdays", "basis": "activation" }, "folded": [] },
-        { "localId": "selecionar_proposta", "name": "Select the winning quotation", "type": "standard", "sourceRefs": [ { "source": "req-quotations", "section": "1" } ], "assigneeRef": "creator", "formRef": null, "entityRefs": [], "evidence": [ "purchase_amount and selected_supplier set to match one recorded quotation", "Comment naming the reason for the choice" ], "due": { "offsetDays": 1, "offsetType": "workdays", "basis": "activation" }, "folded": [] },
-        { "localId": "confirmar_cabimento", "name": "Confirm budget availability", "type": "standard", "sourceRefs": [], "assigneeRef": "creator", "formRef": null, "entityRefs": [], "evidence": [ "Dated balance screenshot attached", "budget_reference completed" ], "due": { "offsetDays": 2, "offsetType": "workdays", "basis": "activation" }, "folded": [] },
-        { "localId": "encomendar", "name": "Register the purchase order", "type": "standard", "sourceRefs": [], "assigneeRef": "creator", "formRef": null, "entityRefs": [], "evidence": [ "Purchase order attached", "order_reference completed" ], "due": { "offsetDays": 3, "offsetType": "workdays", "basis": "activation" }, "folded": [] }
+        {
+          "localId": "register-quotation",
+          "name": "Register the supplier quotations received",
+          "type": "form_fill",
+          "sourceRefs": [ { "source": "request-2026-09-21", "section": "req" } ],
+          "assigneeRef": "compras",
+          "formRef": "cotacao-fornecedor",
+          "entityRefs": [],
+          "evidence": [ "Three submitted responses of the form \"Supplier quotation\", each with its quotation document attached" ],
+          "due": null,
+          "folded": [
+            { "section": "req", "summary": "Requesting written quotations from at least three suppliers is step 1 of How; it is not a separate action." }
+          ]
+        },
+        {
+          "localId": "select-quotation",
+          "name": "Select the winning quotation",
+          "type": "standard",
+          "sourceRefs": [ { "source": "request-2026-09-21", "section": "req" } ],
+          "assigneeRef": "compras",
+          "formRef": null,
+          "entityRefs": [],
+          "setsFields": [ "purchase_amount", "selected_supplier", "selected_quotation_reference", "quotations_received", "selection_rationale" ],
+          "evidence": [ "purchase_amount, selected_supplier, selected_quotation_reference and quotations_received filled from one existing response; selection_rationale written" ],
+          "due": null,
+          "folded": []
+        }
       ],
       "subWorkflowRefs": [],
       "setupNotes": [
-        "assignee.type: creator on every action is a training placeholder so the draft can be trialled without inventing IDs. Intended owners: Purchasing for cotacao_1/2/3, selecionar_proposta and encomendar; department managers for decidir; Finance for confirmar_cabimento. Design these groups with provia-organization-rollout before publication.",
-        "cotacao_1, cotacao_2 and cotacao_3 each need a form created and linked in Provia after import; see forms.md for the shared field specification (one form used three times, once per supplier slot).",
-        "Country (Angola), currency (AOA) and language (English) are provisional defaults — none was stated in the request; confirm before packaging.",
-        "Due dates and the 3-workday quotation deadline are illustrative, not an approved service level."
+        "The form \"Supplier quotation\" (forms[].key cotacao-fornecedor) must be created in Provia and linked to action register-quotation after import; forms are not carried by the YAML.",
+        "Configure the Form Fill link to accept multiple responses (one per quotation). Verify in the Provia form settings that multiple responses are allowed on this link and that the action can be completed after three responses; the plugin cannot read those settings offline.",
+        "Do not map quotation_amount (or any form field) to incident metadata on this link: the response policy is multiple responses, and multiple responses cannot map competing values to the incident (references/provia-capabilities.md). purchase_amount is filled by action select-quotation.",
+        "Assign register-quotation and select-quotation to the Purchasing group once the group exists; the YAML carries no assignee.",
+        "Both actions have no due offset: no service level was supplied (decision D2).",
+        "Respondents are assumed internal (Purchasing staff signed in to Provia). If suppliers are meant to submit the form themselves, confirm the external access model in the Provia form settings before promising a link (decision D1).",
+        "File upload limits on the form field quotation_file must be confirmed in the Provia form settings; the 10 MB per file value in quotation-form.md is a recommendation, not a product limit."
       ]
     }
   ],
   "forms": [
-    { "key": "cotacao-1", "title": "Supplier quotation — slot 1", "kind": "action", "workflowRef": "purchase-request", "actionRef": "cotacao_1", "status": "designed", "fields": [
-        { "key": "supplier_name", "label": "Supplier name", "type": "text", "required": true, "mapsTo": "quote_1_supplier" },
-        { "key": "quoted_amount", "label": "Quoted amount", "type": "currency", "required": true, "mapsTo": "quote_1_amount" },
-        { "key": "document", "label": "Quotation document", "type": "file", "required": false, "mapsTo": null, "accept": ["pdf", "jpg", "png"], "maxSizeMb": 10 },
-        { "key": "notes", "label": "Notes", "type": "text", "required": false, "mapsTo": null }
-      ] },
-    { "key": "cotacao-2", "title": "Supplier quotation — slot 2", "kind": "action", "workflowRef": "purchase-request", "actionRef": "cotacao_2", "status": "designed", "fields": [
-        { "key": "supplier_name", "label": "Supplier name", "type": "text", "required": true, "mapsTo": "quote_2_supplier" },
-        { "key": "quoted_amount", "label": "Quoted amount", "type": "currency", "required": true, "mapsTo": "quote_2_amount" },
-        { "key": "document", "label": "Quotation document", "type": "file", "required": false, "mapsTo": null, "accept": ["pdf", "jpg", "png"], "maxSizeMb": 10 },
-        { "key": "notes", "label": "Notes", "type": "text", "required": false, "mapsTo": null }
-      ] },
-    { "key": "cotacao-3", "title": "Supplier quotation — slot 3", "kind": "action", "workflowRef": "purchase-request", "actionRef": "cotacao_3", "status": "designed", "fields": [
-        { "key": "supplier_name", "label": "Supplier name", "type": "text", "required": true, "mapsTo": "quote_3_supplier" },
-        { "key": "quoted_amount", "label": "Quoted amount", "type": "currency", "required": true, "mapsTo": "quote_3_amount" },
-        { "key": "document", "label": "Quotation document", "type": "file", "required": false, "mapsTo": null, "accept": ["pdf", "jpg", "png"], "maxSizeMb": 10 },
-        { "key": "notes", "label": "Notes", "type": "text", "required": false, "mapsTo": null }
-      ] }
+    {
+      "key": "cotacao-fornecedor",
+      "title": "Supplier quotation",
+      "kind": "action",
+      "workflowRef": "compras",
+      "actionRef": "register-quotation",
+      "status": "designed",
+      "specification": "quotation-form.md",
+      "responsePolicy": "multiple",
+      "respondents": "internal (Purchasing group, signed in); external supplier access is decision D1",
+      "mappings": [],
+      "mappingNote": "None by design. Multiple responses cannot map competing values to the incident; purchase_amount is set by action select-quotation from the chosen response.",
+      "fields": [
+        { "key": "supplier_name", "label": "Supplier name", "type": "text", "required": true },
+        { "key": "supplier_tax_number", "label": "Supplier tax number (NIF)", "type": "text", "required": false },
+        { "key": "quotation_reference", "label": "Quotation reference", "type": "text", "required": true },
+        { "key": "quotation_date", "label": "Quotation date", "type": "date", "required": true },
+        { "key": "quotation_amount", "label": "Quotation amount (Kz)", "type": "currency", "required": true, "config": { "currency": "AOA", "min": 0 } },
+        { "key": "amount_includes_tax", "label": "Amount includes tax", "type": "boolean", "required": false },
+        { "key": "validity_date", "label": "Valid until", "type": "date", "required": true },
+        { "key": "delivery_days", "label": "Delivery time (calendar days)", "type": "number", "required": false, "config": { "min": 0 } },
+        { "key": "quotation_file", "label": "Quotation document", "type": "file", "required": true, "accept": [ "application/pdf", "image/jpeg", "image/png" ], "maxSizeMbRecommended": 10 },
+        { "key": "notes", "label": "Notes", "type": "rich_text", "required": false }
+      ]
+    }
   ],
   "aiProfiles": [],
   "decisions": [
     {
       "id": "D1",
-      "question": "No source SOP or purchasing policy document was supplied for this workflow. The actions, thresholds and due dates in workflow.yaml are illustrative, built directly from the request, not an approved procedure.",
-      "owner": "Process owner",
+      "question": "Who submits each quotation response: Purchasing staff signed in to Provia (assumed), or the suppliers themselves through an external link? External access depends on the configured form behaviour and has not been checked.",
+      "owner": "Purchasing lead",
       "status": "open",
       "raisedBy": "provia-form-designer",
-      "sourceRefs": [ { "source": "req-quotations", "section": "1" } ]
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "req" } ]
     },
     {
       "id": "D2",
-      "question": "The request asked to map three supplier-quotation Form Fill responses into the same incident amount field. Provia does not allow mapping any value from a multi-response Form Fill into incident metadata, and mapping three single-response actions onto one shared field would let each submission silently overwrite the previous one, losing two of the three quotations.",
-      "owner": "Process owner",
-      "status": "resolved",
-      "resolution": "Each quotation gets its own case field (quote_1_amount, quote_2_amount, quote_3_amount) from its own single-response Form Fill action. A new Standard action, selecionar_proposta, is where a person compares the three and manually sets purchase_amount (and selected_supplier) once, with a mandatory comment. See forms.md for the full explanation and a documented alternative.",
+      "question": "What is the deadline for collecting the three quotations and for selecting one? No service level was supplied, so both actions have no due offset.",
+      "owner": "Purchasing lead",
+      "status": "open",
       "raisedBy": "provia-form-designer",
-      "sourceRefs": [ { "source": "req-quotations", "section": "1" } ]
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "req" } ]
     },
     {
       "id": "D3",
-      "question": "Should suppliers submit their own quotation through an external form link, instead of a Purchasing team member entering it on the supplier's behalf? This needs the respondent-access model confirmed in a connected Provia organization before it can be designed.",
-      "owner": "Purchasing lead",
+      "question": "Who may open a purchase request (any employee, or only Purchasing)? The workflow is declared creator-only until this is answered.",
+      "owner": "Process owner",
       "status": "open",
       "raisedBy": "provia-form-designer",
-      "sourceRefs": [ { "source": "req-quotations", "section": "1" } ]
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "req" } ]
     },
     {
       "id": "D4",
-      "question": "What happens if a supplier does not respond within the 3-workday due date on a quotation action: proceed with two quotations, extend the deadline, or require a documented sole-source justification?",
+      "question": "The request asked for each response amount to be mapped to the same incident field purchase_amount. Multiple responses cannot map competing values, and even if they could, the last submission would silently overwrite the others. The design records the amount through the review action select-quotation instead. Confirm this, or choose the alternative of three single-response Form Fill actions mapping to quotation_1_amount, quotation_2_amount and quotation_3_amount plus the same review step.",
       "owner": "Purchasing lead",
       "status": "open",
       "raisedBy": "provia-form-designer",
-      "sourceRefs": [ { "source": "req-quotations", "section": "1" } ]
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "req" } ]
+    },
+    {
+      "id": "D5",
+      "question": "May the case continue with fewer than three quotations when suppliers do not answer, and who authorizes that exception? The action brief currently sends the question to the Purchasing lead by comment.",
+      "owner": "Purchasing lead",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "req" } ]
     }
   ],
   "receipts": []

@@ -1,0 +1,34 @@
+{
+  "valid": true,
+  "apiVersion": "provia.ao/v1",
+  "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+  "destinationValidation": "not_run",
+  "backendSchemaValidation": "passed",
+  "readyToPublish": false,
+  "errors": [],
+  "warnings": [
+    {
+      "code": "product_warning",
+      "path": "workflow.actions.form_fill.link",
+      "message": "Form must be re-linked after import",
+      "line": 81
+    }
+  ],
+  "setupRequired": [
+    {
+      "code": "assignment_missing",
+      "path": "actions[0].assignee",
+      "message": "Set the intended owner before publication; import defaults do not establish approval authority."
+    },
+    {
+      "code": "form_fill_link",
+      "path": "actions[0]",
+      "message": "Create or link the form in Provia before publication."
+    },
+    {
+      "code": "assignment_missing",
+      "path": "actions[1].assignee",
+      "message": "Set the intended owner before publication; import defaults do not establish approval authority."
+    }
+  ]
+}

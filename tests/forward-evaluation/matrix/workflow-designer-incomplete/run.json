@@ -1,22 +1,23 @@
 {
   "id": "workflow-designer-incomplete",
   "skill": "provia-workflow-designer",
-  "pluginVersion": "1.1.0",
-  "at": "2026-09-18T18:10:45.943Z",
-  "model": "sonnet",
+  "pluginVersion": "1.2.0",
+  "at": "2026-09-21T10:24:01.874Z",
+  "model": "claude-opus-5[1m]",
   "exitCode": 0,
-  "durationMs": 327833,
-  "costUsd": 0.8732742000000001,
-  "numTurns": 26,
-  "sessionId": "5af146ee-1464-4173-8a8d-e223654312e7",
+  "durationMs": 390967,
+  "costUsd": 3.1605309999999998,
+  "numTurns": 37,
+  "sessionId": "e2a5e532-f738-48a2-a3db-2c09caa06a1b",
   "stopReason": "end_turn",
-  "toolCalls": 24,
+  "toolCalls": 35,
+  "skillLoaded": true,
   "files": [
     "project.html",
     "provia-project.json",
     "setup.md",
+    "workflow-design.md",
     "workflow.yaml"
   ],
-  "output": "tests/forward-evaluation/matrix/workflow-designer-incomplete/",
-  "skillLoaded": true
+  "output": "tests/forward-evaluation/matrix/workflow-designer-incomplete/"
 }

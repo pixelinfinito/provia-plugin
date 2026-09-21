@@ -1,36 +1,64 @@
-# IT request classification (AI proposal, human review): Setup handover
+# IT request classification with human review: Setup handover
 
-Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.1.0, 2026-09-18).
+Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
 
 ## Status
 
-Mode: no Provia connection (manual configuration).
+Mode: manual configuration (no receipts recorded).
 
 ## Pending configuration
 
 | Where | Item | What to do |
 | --- | --- | --- |
-| it-request-classification | IT request classification | Import the YAML as a draft and review the preview (`workflow.yaml`) |
-| it-request-classification / classify_request | Classify the IT request | Assign the AI profile to the action (`ai:classify_it_requests`) |
-| it-request-classification / classify_request | Classify the IT request | Set the deadline; the design proposes no `due` |
+| it-requests | IT request | Import the YAML as a draft and review the preview (`workflow.yaml`) |
+| it-requests | IT request | Apply the access grants (`workflow_access_apply`, dry run first) or confirm the `access` section in the import preview. organization → create_incident |
+| it-requests / classify | Classify the IT request | Assign the AI profile to the action (`ai:classify-it-requests`) |
+| it-requests / classify | Classify the IT request | Set the deadline; the design proposes no `due` |
+| it-requests / review-classification | Confirm the classification of the IT request | Assign the group to the action once the group exists (`service-desk`) |
+| it-requests / review-classification | Confirm the classification of the IT request | Set the deadline; the design proposes no `due` |
+| it-requests / fulfil | Fulfil the IT request | Assign the group to the action once the group exists (`service-desk`) |
+| it-requests / fulfil | Fulfil the IT request | Set the deadline; the design proposes no `due` |
+
+## Workflow access
+
+Who may see and open each workflow. `view` on a workflow shows every case; whoever executes an action sees their own cases without a grant. Grants are created with `workflow_access_apply` in connected mode or through the `access` section of the YAML imported in the browser.
+
+| Workflow | Sensitivity | Grantee | Level | Reason | Status |
+| --- | --- | --- | --- | --- | --- |
+| `it-requests` | internal | `organization` | create_incident | Assumption: any employee may open an IT request. No source confirms it; see decision D4. (request-2026-09-21 §gap) | to apply |
+| `it-requests` | internal | `group:service-desk` | — | Sees its own cases only (no grant) | — |
+
+## Groups to create
+
+- `service-desk` Service desk [team]: Reviews the AI-proposed classification of IT requests and fulfils them. Proposed by the AI action designer because no source names the reviewing team.
+
+## Group flags
+
+- `service-desk`: Owner unnamed in the sources. No source names the team or its members; confirm the real group name and membership with IT before setup.
 
 ## AI profiles to configure
 
-- `classify_it_requests` IT request classification (with human review)
+- `classify-it-requests` Classify IT requests
 
 ## Open decisions
 
-- **D1** Which person, group or role should be configured in Provia as the human reviewer for the IT request classification AI action, and does reviewRequired route to a designated reviewer role or to the action's own assignee? (Owner: IT service owner / Provia administrator)
-- **D2** Confirm the category (Access, Equipment, Software, Network, Security, Other) and urgency (Normal, High, Blocking) taxonomy against the organization's real IT ticket categories; these values were drafted from the plugin's own IT-service training example, not a supplied SOP. (Owner: IT service owner)
-- **D3** Confirm the real intake channel (manual trigger assumed) and the SLA/due target for the classification step; none was supplied. (Owner: IT service owner)
-- **D4** Confirm the confidenceThreshold starting value (0.6 proposed, untuned — no historical classification data was supplied) after real cases are available, and set the real AI profile id in place of $AI_PROFILE_ID. (Owner: IT service owner / Provia administrator)
+- **D1** Which category list does IT actually use? The profile ships a provisional list (incident, service_request, access_request, change_request, information, unclear). Replace it with the organisation's own list before the pilot, or confirm the provisional one. (Owner: IT manager)
+- **D2** Which priority scale and impact rules apply? The profile ships a provisional four-level scale (critical, high, medium, low) driven by who is blocked. Confirm the scale, the rules and any service levels per priority. (Owner: IT manager)
+- **D3** Who reviews the AI proposal? The design assumes a «Service desk» team. Confirm the real group, its members and whether a second person must confirm critical priorities. (Owner: IT manager)
+- **D4** May any employee open an IT request (organization-wide create_incident), or only some groups? The access section assumes any employee. (Owner: IT manager)
+- **D5** Does the service desk need to see every IT request (a shared queue, which requires a view grant), or only the cases assigned to its members? (Owner: IT manager)
+- **D6** What happens after classification? The fulfil action is a placeholder; the real resolution steps, routing by category and any approvals need the IT procedure. (Owner: IT manager)
+- **D7** Service levels: how soon must the AI proposal exist and how soon must the reviewer confirm it? No due is set on any action because no service level was supplied. (Owner: IT manager)
+- **D8** Confidence threshold: the profile proposes 0.7 as a starting value so that low-confidence proposals are visibly flagged to the reviewer. Confirm or adjust after the pilot evaluation cases are run. (Owner: IT manager)
+- **D9** Country and language: Angola and English were used provisionally because none was supplied. Confirm the country of operation and whether case labels and briefs should be in pt-AO. (Owner: Project sponsor)
 
 ## Setup notes
 
-- `it-request-classification`: Create the AI profile in Provia and replace the $AI_PROFILE_ID placeholder in workflow.yaml with its real id.
-- `it-request-classification`: Configure who reviews this AI action in Provia (reviewRequired: true gates completion, but the reviewing person/group/role is a product-side setting, not portable in this YAML contract) — see decision D1.
-- `it-request-classification`: Confirm the intake trigger: a manual trigger is drafted; email or webform intake likely needs provia-automation-designer / provia-form-designer.
-- `it-request-classification`: No SLA/due was supplied for the classification step; due is left unset in workflow.yaml — see decision D3.
+- `it-requests`: AI profile: create the profile «Classify IT requests» in Provia (AI settings) with the instructions in ai-profile-classify-it-requests.md, then replace the placeholder $AI_PROFILE_CLASSIFY_IT_REQUESTS in workflow.yaml (actions[0].assignee.id) with the profile id Provia shows. The plugin does not create AI profiles.
+- `it-requests`: AI availability: AI-assigned actions depend on the organisation's plan, the AI settings and the permissions of the signed-in implementer. Confirm in the Provia UI that AI agents can be assigned to Standard actions before importing.
+- `it-requests`: Agent Memory: metadata.agentMemoryEnabled is false. If IT supplies its category list and service catalogue, add them as approved memory documents in Provia and set the flag; YAML never carries memory content.
+- `it-requests`: Reviewer group: create or map the «Service desk» group and set it as owner of review-classification and fulfil; the YAML omits these assignees because no destination id exists.
+- `it-requests`: The fulfil action is a placeholder for the real resolution process; design it with provia-workflow-designer once IT supplies its procedure (decision D6).
 
 ## Validation
 

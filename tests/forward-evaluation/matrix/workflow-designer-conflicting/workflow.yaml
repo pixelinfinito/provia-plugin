@@ -1,36 +1,63 @@
-# provia-skills 1.1.0 — design skeleton, not yet validated or published.
-# See provia-project.json and setup.md before importing. Open decisions: D1-D4.
+# provia-skills 1.2.0
+# Skeleton produced by provia-workflow-designer. Not validated: provia-workflow-package runs the validator.
+# The decision action has no assignee on purpose: SOP section 2 (department manager) and section 7
+# (only the finance director) name different approvers. See decision D1 in provia-project.json.
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
-  name: "Request approval"
-  prefix: REQ
-  description: "Skeleton built from two isolated SOP fragments (sections 2 and 7). Resolve D1-D4 in setup.md before packaging."
+  name: Request approval
+  prefix: APR
+  description: Approval of a request under the supplied SOP (sections 2 and 7). The approver is unresolved until the process owner settles the conflict between the two sections.
 triggers:
   - type: manual
     label: Start request
     enabled: true
     config: {}
-fields: []
+fields:
+  - name: request_summary
+    label: Request summary
+    type: text
+    required: true
+  - name: justification
+    label: Justification
+    type: rich_text
+    required: false
+entities:
+  mode: none
 actions:
-  - id: approve_request
+  - id: prepare
+    name: Prepare the request for approval
+    type: standard
+    description: |
+      Task: Describe the request so the approver can decide on it.
+      How: 1. Fill `request_summary` with what is requested and why. 2. Add the supporting detail in `justification`. 3. Attach any document that supports the request to the case. 4. Complete the action to send the request for decision.
+      Evidence: `request_summary` filled; supporting documents attached to the case.
+      Done when: The summary and the justification are complete and the action is completed.
+      Exceptions: If the request was returned for rework, read the approver's comment, correct the request and complete the action again. If the request is no longer needed, say so in a comment so the approver can reject it.
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: decide
     name: Decide on the request
     type: decision
     description: |
-      Task: Decide whether the request is approved, based on the SOP's approval requirement.
-      How: 1. Review the request and any supporting material recorded on the case. 2. Confirm you are the approver named for this step (see the open question about who approves — SOP sections 2 and 7 name different approvers and this has not yet been resolved). 3. Choose "Approve" to let the request proceed or "Reject" to close it.
-      Evidence: A comment stating the basis for the decision is proposed but not stated in the source; confirm before publishing.
-      Done when: The decision is recorded, with a comment on "Reject".
-      Exceptions: If you are not sure you hold the approval authority for this request, do not decide: comment and escalate to the process owner instead of guessing.
+      Task: Decide whether the request described in `request_summary` may proceed.
+      How: 1. Read `request_summary`, `justification` and the attached documents. 2. Check the request against the criteria of the procedure that applies to it. 3. Choose «Approve», «Return for rework» or «Reject».
+      Evidence: A comment with the reason is mandatory on «Return for rework» and «Reject».
+      Done when: The decision is recorded with the required comment.
+      Exceptions: If the information is insufficient to decide, choose «Return for rework» and list what is missing. If the procedure designates another person to approve this request, do not decide: comment who must decide and choose «Return for rework» so the request is routed to that person.
     executionMode: sequential
     required: true
-    # due: not set — no service level was stated in the source (see decision D2)
-    # assignee: intentionally omitted — SOP §2 names the department manager, §7 names the finance
-    # director as the sole approver; the manifest keeps this action unassigned pending decision D1.
     config:
       branches:
         - label: Approve
           outcome: continue
+          requiresComment: false
+        - label: Return for rework
+          outcome: return_to_action
+          target: prepare
+          requiresComment: true
         - label: Reject
           outcome: cancel_incident
           requiresComment: true

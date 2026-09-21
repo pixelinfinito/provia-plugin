@@ -1,24 +1,42 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
     "key": "compras",
-    "title": "Pedido de compra",
+    "title": "Procedimento de compras: revisão de controlos e evidências",
     "language": "pt-AO",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": null,
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/provia-controls-evidence",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
-    "name": "Empresa exemplo",
+    "name": "Organização não identificada (a confirmar)",
     "sector": null,
     "mode": "disconnected",
     "tenantId": null,
     "productRevision": null
   },
-  "sources": [],
+  "sources": [
+    {
+      "id": "procedimento-compras",
+      "title": "Procedimento de compras (referido pelo utilizador; ficheiro não fornecido nesta sessão)",
+      "kind": "sop",
+      "version": null,
+      "effectiveDate": null,
+      "sections": [],
+      "emails": []
+    },
+    {
+      "id": "registos-compras",
+      "title": "Registos de execução de compras (referidos pelo utilizador; exportação não fornecida nesta sessão)",
+      "kind": "export",
+      "version": null,
+      "effectiveDate": null,
+      "sections": [],
+      "emails": []
+    }
+  ],
   "entityTypes": [],
   "groups": [],
   "workflows": [],
@@ -27,8 +45,32 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "O pedido refere 'o nosso procedimento de compras' e 'estes registos', mas nenhum documento (procedimento/SOP/política de compras, desenho ou export do workflow, ou registos/evidências de execução) foi encontrado na pasta de trabalho nem colado na conversa. Sem estes dois insumos não é possível construir a matriz requisito/acção/evidência nem apontar evidências em falta com rigor.",
-      "owner": "Dono do processo de compras (a designar)",
+      "question": "Fornecer o procedimento de compras em vigor (ficheiro, versão, data de entrada em vigor e secções numeradas) para que cada requisito possa ser citado e mapeado a acções.",
+      "owner": "Responsável de Compras",
+      "status": "open",
+      "raisedBy": "provia-controls-evidence",
+      "sourceRefs": [ { "source": "procedimento-compras" } ]
+    },
+    {
+      "id": "D2",
+      "question": "Fornecer os registos de execução (exportação de casos do workflow de compras com acções, responsáveis, datas, resultados das decisões, comentários, respostas a formulários e lista de ficheiros anexados) para o período a rever.",
+      "owner": "Responsável de Compras",
+      "status": "open",
+      "raisedBy": "provia-controls-evidence",
+      "sourceRefs": [ { "source": "registos-compras" } ]
+    },
+    {
+      "id": "D3",
+      "question": "Confirmar o país e a jurisdição aplicável (Angola foi assumida como contexto provisório) e indicar se algum requisito legal ou regulamentar, para além da política interna, deve entrar na revisão. Nenhuma fonte legal foi consultada nesta sessão.",
+      "owner": "Direcção Financeira",
+      "status": "open",
+      "raisedBy": "provia-controls-evidence",
+      "sourceRefs": []
+    },
+    {
+      "id": "D4",
+      "question": "Fornecer o desenho do workflow de compras em Provia (YAML exportado ou manifesto anterior) ou autorizar a leitura da organização através do conector Provia, cuja permissão não foi concedida nesta sessão.",
+      "owner": "Implementador Provia",
       "status": "open",
       "raisedBy": "provia-controls-evidence",
       "sourceRefs": []

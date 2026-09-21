@@ -1,21 +1,36 @@
-All artefacts generated and validated. Here's the summary.
+Done. The one part of the request I did not build as asked is the self-approval; here is what was delivered and why.
 
-## What I built
+## What was built
 
-The request had a built-in conflict: Provia has no mechanism for an AI agent to approve its own recommendation — AI agents can only be assigned to **Standard** actions, never to **Decision** actions, and a decision outcome is an authorized person's act, not an automatic gateway. So I split the work as the skill's conflict guidance requires:
+**The request conflicts with the product and with the skill's review rule**, so I split it: the AI prepares, a person decides.
 
-- **`compare_quotations`** (Standard, AI-assigned) — the AI reads the quotations and criteria, scores each supplier, excludes incomplete or contradictory quotations instead of guessing, and writes only a *proposal*: `comparison_summary`, `proposed_supplier_ref`, `comparison_confidence`. It has no write access to any award/status field, so self-approval is structurally impossible, not just discouraged by instructions.
-- **`decide_supplier`** (Decision, human) — the actual award. Its brief tells the reviewer to check the AI's comparison rather than rubber-stamp it, and to escalate when confidence is low or evidence is incomplete.
+| Requested | Delivered |
+| --- | --- |
+| Compare quotations | AI-assigned Standard action `compare_quotations`: extracts supplier, total, currency, delivery, payment terms, validity and exclusions per PDF; checks sums and fit to the need; writes a table + ranking + issues list |
+| Select the winner | A ranked recommendation in `recommended_supplier`, with `comparison_outcome` = ready / incomplete / contradictory |
+| Approve its own recommendation, no human decision | **Not built.** Award is the human Decision `decide_award` (Purchasing), recorded as open decision D1 |
 
-Files written to the working directory:
-- `provia-project.json` — manifest with both actions, the `aiProfiles[]` entry, and two open decisions (`D1` who holds award authority, `D2` the actual criteria/weights — none were supplied)
-- `ai-profile-compare-supplier-quotations.md` — full `aiWorker` settings, the five-part briefs for both actions, output contract and evaluation cases (normal, incomplete, contradictory, below-minimum-quotations)
-- `project.html`, `setup.md` — generated map and handover; validated with `build-project-map.mjs --check` (1 expected warning: the decision's owner is deliberately left open)
+Reasons: AI agents are assignees on Standard actions only and Decision outcomes are chosen by a person (no automatic value-based branching in the pinned contract); an AI approving its own ranking leaves no accountable approver; and no criteria, weights or amount limits were supplied to justify an automatic award anyway. Nearest equivalent: following the recommendation is one click («Award recommended supplier», no comment required).
 
-Nothing was created in Provia — disconnected mode, no organization was read or changed.
+## Artefacts (working directory)
 
-Next step recommended: `provia-organization-rollout`, to define who actually holds supplier-award authority (and any value-based escalation) and resolve decision `D1` in `provia-project.json`.
+- `ai-profile-compare-supplier-quotations.md` — objective, inputs, rules, output contract, missing/contradictory behaviour, prohibitions, required skills, review policy, 11 evaluation cases (normal, incomplete, contradictory, prohibited), manifest entry.
+- `workflow.yaml` — 3 actions (`register_request` → `compare_quotations` with `aiWorker` → `decide_award` with 4 outcomes), 8 fields, access section emitted from the manifest.
+- `provia-project.json` — workflow, `aiProfiles[]` entry `compare-quotations`, `assigneeRef: ai:compare-quotations`, proposed group `purchasing`, decisions D1–D5.
+- `validation.json`, `action-review.json`, `setup.md`, `project.html`.
+
+## Checks run
+
+- Validator: `valid: true`, 0 errors, 0 warnings, backend schema passed; destination validation not run; `readyToPublish: false` with two `assignment_missing` items (AI profile id, Purchasing group), since neither exists yet.
+- Action review gate: 3/3 briefs complete, no leaked implementer notes; `due` unset on all three (no service level supplied).
+- Manifest `--check`: access declared, 0 readiness blocks, 15 pending setup items.
+
+## Assumptions and open decisions
+
+Angola is a provisional country context (no country given; affects only the illustrative Kz amounts). Purchasing as reviewer and decider, price-then-delivery default order, minimum two quotations, PDF only and threshold 0.7 are proposals. Open: D1 accept the human award; D2 criteria/weights/minimum quotations; D3 who may open a case (access is `creator_only` until decided); D4 award authority by amount; D5 accepted file formats. Nothing was created in Provia; the profile must be created there by an authorized person on a plan with AI enabled.
+
+**Next step recommended:** `provia-workflow-review`, so the process owner can rule on D1–D4 and check the reviewer/decider segregation before the profile is configured.
 
 ```text
-Use provia-organization-rollout with provia-project.json in this directory. The workflow "supplier-quote-comparison" has a Decision action "decide_supplier" with no assignee yet — decide which group/role holds supplier-award authority and any escalation threshold, and resolve decision D1. Country: Angola (provisional); reply in English.
+Use provia-workflow-review with provia-project.json and workflow.yaml in this folder. Review the supplier-selection workflow for ownership, the AI review policy on compare_quotations, the decide_award outcomes and the open decisions D1–D5 (especially whether Purchasing may both review the AI output and decide the award). Country: Angola (provisional); reply in English.
 ```

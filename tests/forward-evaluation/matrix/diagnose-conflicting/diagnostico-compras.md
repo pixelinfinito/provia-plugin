@@ -1,128 +1,119 @@
-# Diagnóstico do processo de compras — Angola
+# Diagnóstico do processo «Pedido de compra» (prefixo COMP)
 
-**Idioma:** pt-AO. **Modo:** desligado (disconnected) — este diagnóstico não lê nem monitoriza o Provia em directo; trabalha apenas com o que foi descrito nesta conversa.
+Data do diagnóstico: 2026-09-21 · País: Angola · Fuso de referência: Africa/Luanda · Língua: pt-AO
+Gerado por `provia-skills/1.2.0` (`provia-diagnose`), em modo desligado. Nada foi lido nem alterado no Provia.
 
-## 0. O que foi fornecido
+## 1. O que foi fornecido
 
-- **Desenho do workflow publicado**, descrito em texto (não foi anexado um `workflow.yaml` nem um `provia-project.json` anterior): três acções — «Registar», «Decidir» e «Encomendar» — atribuídas a Compras e Finanças.
-- **Excerto de uma exportação de casos**, também descrito em texto e não como ficheiro completo: dois casos, COMP-88 e COMP-90, cada um com um problema específico apontado abaixo.
-
-Não foi indicado o momento de observação da exportação, o fuso horário dos registos, nem se estes dois casos são representativos de um lote maior ou os únicos casos com problemas. Trato-os como os únicos dados de execução disponíveis; não presumo volumes, prazos ou responsáveis além do que foi dito.
-
----
-
-## 1. Incompatibilidades a resolver antes de interpretar os números
-
-Os dois casos fornecidos não são, antes de mais, uma questão de desempenho — são conflitos entre a exportação e o desenho, e dentro dos próprios dados. Reporto-os primeiro, como pede o procedimento de diagnóstico, em vez de os tratar como atrasos comuns.
-
-### COMP-88 — grupo responsável inexistente no desenho
-
-| Campo | Valor |
-| --- | --- |
-| Caso | COMP-88 |
-| Estado | «Aguardar auditoria» |
-| Atribuído a | grupo «Auditoria» |
-
-O desenho publicado só descreve dois grupos com acções atribuídas — Compras e Finanças — e três acções — «Registar», «Decidir», «Encomendar». Nem o grupo «Auditoria» nem um estado ou acção de auditoria constam do desenho fornecido. Isto é uma incompatibilidade directa entre a exportação e o desenho, não uma lentidão do caso.
-
-Duas leituras possíveis, ambas em aberto (decisão **D1**):
-
-1. **«Auditoria» é um passo real do processo** que existe na operação mas nunca foi modelado no workflow — o caso está correctamente à espera de um responsável que o Provia não reconhece formalmente. Isto aponta para uma lacuna de desenho, a tratar com `provia-workflow-change` (o caso COMP-88 está activo nessa situação e teria de ser considerado no plano de migração).
-2. **É um erro de atribuição ou de dados** — por exemplo um grupo renomeado, um caso de outro workflow, ou um valor de teste — e o caso está, na prática, à espera de Compras ou Finanças.
-
-Não invento qual das duas é verdadeira. Enquanto não for esclarecido, ninguém está formalmente accionável neste caso dentro do desenho publicado: nem Compras nem Finanças reconhecem essa fila como sua.
-
-### COMP-90 — conclusão anterior à criação
-
-| Campo | Valor |
-| --- | --- |
-| Caso | COMP-90 |
-| Criado em | 2026-09-10 |
-| Concluído em | 2026-09-08 |
-
-A data de conclusão é dois dias **anterior** à data de criação. Isto é impossível na ordem natural dos acontecimentos e indica um defeito nos dados — não uma execução real do processo. Causas plausíveis incluem erro de introdução manual, problema de fuso horário na exportação, ou um campo copiado de outro caso; não posso determinar qual sem acesso à origem dos dados (decisão **D2**).
-
-**Consequência para qualquer cálculo:** não uso o COMP-90 para calcular tempo de ciclo, tempo de espera ou qualquer métrica de duração. Incluí-lo produziria uma duração negativa sem significado, o que contaminaria qualquer média ou comparação.
-
----
-
-## 2. Lista de atenção
-
-| Caso | Estado / Acção | Responsável | Classificação | Motivo |
-| --- | --- | --- | --- | --- |
-| **COMP-88** | «Aguardar auditoria» | «Auditoria» (grupo não reconhecido pelo desenho) | **Bloqueado por incompatibilidade de desenho** | Sem um grupo válido no workflow, não há dono accionável até a decisão D1 ser resolvida |
-| **COMP-90** | Concluído (nas datas fornecidas) | não indicado | **Registo suspeito, não accionável como caso aberto** | Datas de criação/conclusão invertidas; tratar como defeito de dados, não como caso a gerir operacionalmente |
-
-Não é possível dizer se COMP-88 está "atrasado" no sentido habitual (tempo na acção versus prazo definido), porque a acção/estado «Aguardar auditoria» e o seu prazo não existem no desenho publicado — não há prazo contra o qual medir o atraso. O que está confirmado é que o caso está **bloqueado por ambiguidade de responsabilidade**, o que já é, por si, motivo de atenção imediata independentemente da duração.
-
-**Próximo passo recomendado para quem pode agir:** o dono do processo de Compras deve confirmar, hoje, se «Auditoria» é um passo a formalizar ou um erro de atribuição, e reatribuir manualmente o COMP-88 a Compras ou Finanças enquanto isso não for esclarecido, para que o caso tenha um responsável reconhecido pelo sistema. Esta é uma recomendação para decisão humana autorizada; este diagnóstico não reatribui casos nem publica alterações ao workflow.
-
----
-
-## 3. Desempenho: não é possível ainda
-
-O procedimento de melhoria de desempenho precisa de registos comparáveis — idealmente dois períodos com casos individuais, datas de criação e conclusão fiáveis, e a mesma versão publicada do workflow. O que foi fornecido é:
-
-- dois casos isolados, não um período;
-- um deles (COMP-90) com datas inutilizáveis para cálculo de duração;
-- o outro (COMP-88) sem prazo definido para a acção/estado em que está.
-
-Não há, portanto, ciclo médio, tempo de espera ou qualquer métrica comparável a reportar nesta análise. Apresentar um número aqui seria inventar um resultado que os dados não sustentam.
-
-**Para tornar esta análise possível no futuro (decisão D3), a exportação a produzir precisa de:**
-
-- todos os casos do período (não apenas os que têm problemas), com identificador, acção/estado actual, data e hora de criação e de conclusão em formato ISO 8601 com fuso horário explícito;
-- o momento de observação da exportação e o fuso horário de referência;
-- a versão do workflow publicado em vigor durante o período, para confirmar que os prazos e responsáveis comparados são os mesmos;
-- validação de integridade mínima antes do envio (por exemplo, conclusão não anterior à criação), para evitar que casos como o COMP-90 cheguem a uma análise de desempenho sem serem detectados antes.
-
----
-
-## 4. Mudança proposta
-
-Dada a natureza dos dados disponíveis, a mudança mensurável mais defensável não é uma alteração ao tempo de ciclo (que não pode ser calculado agora), mas sim uma correcção de qualidade de dados e de desenho que impede que os dois problemas encontrados se repitam:
-
-**Mudança:** introduzir uma validação de integridade na origem da exportação de casos (ou no processo que a gera) que rejeite ou sinalize antes da entrega: (a) qualquer caso atribuído a um grupo que não conste do desenho publicado do workflow em causa; (b) qualquer caso com data de conclusão anterior à data de criação.
-
-**Mecanismo esperado:** os dois problemas encontrados — grupo inexistente e datas invertidas — só chegaram a este diagnóstico porque não há verificação entre a exportação e o desenho publicado, nem verificação de coerência temporal, antes de os dados saírem da origem. Uma validação nesse ponto elimina a classe de erro, em vez de depender de revisão manual caso a caso.
-
-**Dono da mudança:** responsável pela exportação/integração de casos, em conjunto com o dono do processo de Compras para validar os grupos e acções esperados (decisão D2, ligada a D1).
-
-**Medida de acompanhamento no próximo mês:**
-- número de casos exportados com um grupo responsável fora do desenho publicado (meta: zero);
-- número de casos exportados com data de conclusão anterior à de criação (meta: zero);
-- tempo até à resolução de D1 (esclarecer «Auditoria») e reatribuição do COMP-88.
-
-**Confundidor a vigiar:** se «Auditoria» for confirmado como um passo real do processo (leitura 1 da secção 1), a correcção correcta não é apenas validar a exportação — é modelar essa acção e esse grupo no workflow via `provia-workflow-change`, com atenção ao COMP-88 como caso já activo nessa situação.
-
----
-
-## 5. Decisões em aberto registadas
-
-| ID | Questão | Dono proposto |
+| Elemento | Fornecido? | Detalhe |
 | --- | --- | --- |
-| D1 | «Auditoria» (COMP-88) é um passo real a modelar no workflow ou um erro de atribuição/dados? | Dono do processo de Compras |
-| D2 | Investigar a origem das datas invertidas do COMP-90 antes de o usar em qualquer cálculo. | Responsável pela exportação/integração de casos |
-| D3 | Produzir uma exportação completa e comparável para permitir uma análise real de desempenho. | Dono do processo de Compras |
-| D4 | Confirmar qual grupo (Compras ou Finanças) fica com cada uma das três acções publicadas. | Dono do processo de Compras |
+| Ficheiro de exportação | **Não** | Não existe nenhum ficheiro no directório de trabalho. A «exportação» consiste em dois registos descritos em prosa pelo utilizador (COMP-88 e COMP-90). |
+| Período da exportação | Não | Desconhecido. |
+| Hora de observação e fuso horário | Não | Desconhecidos. As datas de COMP-90 vêm sem hora nem fuso. |
+| Versão do workflow que gerou os casos | Não | Só foi descrito o desenho publicado: acções «Registar», «Decidir», «Encomendar», grupos Compras e Finanças. Sem YAML exportado nem identificador da versão activa. |
+| Datas-limite, responsáveis por acção, comentários | Não | — |
+| Períodos comparáveis | Não | Um único excerto; não há segundo período. |
+| Manifesto do projecto | Não existia | Criado neste diagnóstico (`provia-project.json`). |
 
-Registadas em `provia-project.json` (`decisions[]`).
+Modo ligado: o anfitrião expõe o servidor MCP do Provia (`org_get_context`), mas a autorização para o chamar não foi concedida nesta sessão. O tenant **não** foi consultado; tudo o que se segue assenta apenas na descrição fornecida. Este relatório é uma leitura de um retrato parcial, não uma monitorização em tempo real.
 
----
+Suposições registadas (ver `decisions[]` no manifesto):
+- D4 — «Registar» e «Encomendar» pertencem a Compras; «Decidir» pertence a Finanças. O utilizador disse apenas que as três acções estão atribuídas aos dois grupos.
+- D5 — As permissões do workflow são desconhecidas; o manifesto declara `creator_only` como valor provisório para passar a verificação estrutural.
 
-## 6. Limitações dos dados
+## 2. Contradição entre a exportação e o desenho (a tratar antes dos números)
 
-- Nenhum ficheiro de exportação nem `workflow.yaml` foi efectivamente fornecido — ambos foram descritos em texto; não confirmei a exportação nem o desenho contra o produto Provia.
-- Não há momento de observação nem fuso horário indicados para os dois casos citados.
-- Não se sabe se COMP-88 e COMP-90 são os únicos casos com problemas ou uma amostra de um lote maior; não generalizo a partir de dois casos.
-- O desenho publicado atribui as três acções a "Compras e Finanças" em conjunto, sem indicar a atribuição exacta por acção (decisão D4); não inventei essa correspondência no manifesto.
-- Nenhuma verificação foi feita no Provia em directo; este é um diagnóstico desligado (disconnected), sobre dados fornecidos numa conversa.
+A regra do procedimento é clara: quando a exportação contradiz o desenho, o desencontro é reportado antes de interpretar qualquer indicador. Aqui há duas contradições, e ambas invalidam a exportação como base de medição.
 
----
+### 2.1 COMP-88 — estado «Aguardar auditoria», grupo «Auditoria»
 
-## Artefactos produzidos
+**Facto confirmado (pela descrição):** o caso COMP-88 aparece num estado chamado «Aguardar auditoria» e atribuído ao grupo «Auditoria». O desenho publicado descrito tem exactamente três acções («Registar», «Decidir», «Encomendar») e dois grupos (Compras, Finanças). Nenhum destes elementos pode produzir um passo ou um responsável chamado «Auditoria».
 
-- `provia-project.json` — manifesto do projecto (2 fontes descritas, 4 decisões em aberto).
-- `project.html` — mapa do projecto (offline; sem workflows, grupos ou entidades porque não foram fornecidos em forma estruturada).
-- `setup.md` — resumo das decisões em aberto gerado a partir do manifesto.
-- `diagnostico-compras.md` — este relatório.
+**Interpretação (hipóteses, por ordem de probabilidade):**
+1. **A versão activa não é a que foi descrita.** No Provia, a publicação cria uma versão activa e os novos casos usam esse desenho; os casos existentes mantêm as acções já instanciadas (referência: `provia-capabilities.md`, secção sobre publicação). Se alguém publicou uma versão com uma acção de auditoria depois do desenho ter sido descrito — ou se COMP-88 nasceu de uma versão anterior que a tinha — a exportação está certa e a descrição do desenho está desactualizada.
+2. **Outro workflow com o mesmo prefixo COMP** ou outro ambiente (teste vs. produção) contribuiu para a exportação.
+3. **Reatribuição manual do caso** a um grupo «Auditoria» criado no tenant fora do desenho, com um estado escrito à mão (comentário, etiqueta ou campo de metadados exportado como «estado»).
+4. **Exportação editada** fora do Provia (folha de cálculo).
+
+Nenhuma destas hipóteses pode ser confirmada com o que foi fornecido. O registo a inspeccionar a seguir é o **histórico do caso COMP-88 no Provia** (quem o atribuiu a «Auditoria», quando, e em que versão do workflow foi criado) e a lista de versões do workflow. Em modo ligado, com autorização, `workflow_get` com versões e `workflow_export_yaml` da versão activa responderiam a isto sem intervenção manual.
+
+### 2.2 COMP-90 — concluído antes de ser criado
+
+**Facto confirmado (pela descrição):** criado em 2026-09-10, concluído em 2026-09-08. A conclusão precede a criação em 2 dias de calendário.
+
+**Interpretação:** uma diferença de fuso horário nunca inverte datas em dois dias (o maior desvio possível é inferior a 26 horas). Restam: colunas trocadas ou desalinhadas na exportação, edição manual, um caso migrado/importado com data de conclusão retroactiva, ou um campo de metadados (por exemplo, uma «data de conclusão» pedida pelo requerente) exportado no lugar da data real de fecho. Enquanto D2 não for resolvida, **qualquer cálculo de tempo de ciclo que inclua COMP-90 é inválido** e, por arrasto, a fiabilidade das restantes datas da mesma exportação fica em dúvida.
+
+## 3. Lista de atenção (triagem)
+
+Sem hora de observação nem datas-limite, não é possível afirmar que algum caso esteja **atrasado**. A lista distingue por isso apenas o que está **bloqueado por incoerência** do que está **em espera**.
+
+| # | Registo | Classificação | Razão (evidência) | Quem pode agir | Próximo passo sugerido |
+| --- | --- | --- | --- | --- | --- |
+| 1 | COMP-88 | **Bloqueado — responsável fora do desenho** | Estado «Aguardar auditoria» e grupo «Auditoria» não existem no desenho publicado (secção 2.1). Um grupo que o desenho não conhece não tem prazo, instruções nem critério de conclusão definidos; o caso pode ficar parado sem que ninguém o veja na sua fila. | Administrador da organização Provia (histórico e versões); dono do processo em Compras (decidir se a auditoria pertence ao processo — D3) | Abrir o histórico de COMP-88; identificar a versão de origem e quem atribuiu ao grupo «Auditoria». Se a auditoria não for pretendida, devolver o caso ao responsável da acção correcta (Compras ou Finanças, conforme D4). Nenhuma acção foi executada por este diagnóstico. |
+| 2 | COMP-90 | **Dados inconsistentes — excluir das métricas** | Conclusão (2026-09-08) anterior à criação (2026-09-10) (secção 2.2). | Quem produziu a exportação; Administrador da organização Provia | Confirmar no Provia as datas reais de criação e fecho; corrigir a rotina de exportação (D2). |
+| — | Casos COMP-1…COMP-87, COMP-89 e posteriores | **Sem informação** | Não descritos. Não se sabe quantos estão abertos, em que acção, nem se há duplicados ou lacunas de numeração. | — | Entregar a exportação completa (secção 5). |
+
+Registos em falta ou duplicados: não verificável com dois registos. Ausência de datas-limite: nenhuma afirmação de atraso é feita.
+
+## 4. Desempenho (melhoria de processo)
+
+### 4.1 O que não pode ser calculado
+
+- **Tempo de ciclo** (criação → conclusão): amostra de 1 caso concluído (COMP-90) com datas invertidas. Resultado: −2 dias, o que não é um tempo de ciclo, é um erro de dados. Denominador válido: 0.
+- **Trabalho activo vs. espera por acção:** não há timestamps de activação/conclusão por acção.
+- **Comparação entre períodos:** só existe um excerto. A comparação fica marcada como **ainda não possível**.
+- **Confundidores** (volume, complexidade, alteração de versão): não avaliáveis; a própria existência de uma versão diferente (D1) é o principal confundidor por identificar.
+
+Nenhum indicador de desempenho é apresentado porque nenhum seria reproduzível.
+
+### 4.2 Uma mudança, com mecanismo e medida (D6)
+
+**Mudança proposta:** instituir uma **exportação de referência** produzida directamente do Provia — com identificador da versão do workflow, hora de observação e fuso horário, datas de criação/activação/conclusão em UTC, datas-limite e responsável por acção — e **reconciliá-la com o desenho publicado** antes de cada diagnóstico.
+
+**Mecanismo:** as duas anomalias encontradas são exactamente as que uma reconciliação automática apanha (estado/responsável fora do desenho; datas impossíveis). Sem esta base, qualquer melhoria posterior ao processo de compras seria medida contra números que não se sabe se descrevem o processo.
+
+**Dono:** dono do processo de compras (Compras), com o Administrador da organização Provia a produzir a exportação.
+
+**Medidas e alvos:**
+1. Percentagem de casos cujo estado e responsável correspondem a uma acção e a um grupo do desenho publicado — alvo 100 %.
+2. Número de casos com data de conclusão anterior à de criação — alvo 0.
+3. Só depois de (1) e (2) atingidos: tempo de ciclo mediano de «Registar» a «Encomendar», por versão do workflow, em dois períodos comparáveis (por exemplo, Setembro e Outubro de 2026), separando tempo em «Decidir» (espera pela decisão) do restante.
+
+**Fórmulas a usar quando houver dados:** tempo de ciclo = conclusão − criação, em dias de calendário, apenas para casos concluídos e criados na mesma versão; excluir casos migrados; indicar sempre o denominador. Não inferir desempenho individual a partir de durações de casos.
+
+Nota de produto: os relatórios do Provia dependem do plano e das permissões, e o envio agendado de relatórios não está implementado na base de referência; a exportação terá de ser produzida manualmente em cada medição.
+
+## 5. Ligação entre triagem e melhoria
+
+| Item | É sintoma da mudança proposta? | Precisa de… |
+| --- | --- | --- |
+| COMP-88 fora do desenho | Sim — a reconciliação detecta-o; mas a **causa** exige decisão (D1, D3). | `provia-workflow-change` se a auditoria for pretendida (nova versão com a acção «Auditar …», responsável, prazo, e plano para os casos abertos); caso contrário, apenas correcção operacional do caso e do grupo no Provia. |
+| COMP-90 datas invertidas | Sim — é a medida (2) da mudança. | Correcção da exportação (D2); nenhuma alteração ao workflow. |
+| Desenho descrito sem prazos, evidências nem briefs de cinco partes | Não visível na exportação, mas o manifesto criado mostra-o (`setup.md`, itens «Definir o prazo»). | `provia-workflow-change` / `provia-process-knowledge` quando D3 e D4 estiverem decididas. |
+
+## 6. Decisões registadas no manifesto (`provia-project.json` → `decisions[]`)
+
+| Id | Questão (resumo) | Dono | Estado |
+| --- | --- | --- | --- |
+| D1 | Que versão/workflow gerou COMP-88 com «Aguardar auditoria» e grupo «Auditoria»? | Administrador da organização Provia | aberta |
+| D2 | Porque é que COMP-90 tem conclusão anterior à criação? | Quem produziu a exportação; Administrador Provia | aberta |
+| D3 | A auditoria faz parte do processo pretendido? | Dono do processo (Compras) | aberta |
+| D4 | Distribuição das três acções por Compras e Finanças (suposição actual) | Dono do processo (Compras) | aberta |
+| D5 | Permissões reais do workflow publicado | Administrador da organização Provia | aberta |
+| D6 | Adoptar a exportação de referência e as três medidas | Dono do processo (Compras) + Administrador Provia | aberta |
+
+O grupo «Auditoria» ficou registado em `workflows[0].unresolvedActors` e **não** foi criado como grupo do manifesto: a sua existência legítima depende de D3.
+
+## 7. Limites dos dados e do que foi verificado
+
+- Verificado: `node scripts/build-project-map.mjs provia-project.json --check` correu sem erros nem avisos (2 informações da regra 4 de acesso: Compras e Finanças vêem apenas os seus casos); 1 actor não resolvido (`auditoria`); 16 itens pendentes em `setup.md`. Esta verificação valida a estrutura do manifesto, não este relatório nem a correcção do processo.
+- Gerados: `provia-project.json`, `project.html`, `setup.md`, este relatório. Os itens «Importar o YAML como rascunho» e «Grupos a criar» em `setup.md` reflectem a ausência de recibos no manifesto (modo desligado), não uma instrução para recriar o que já está publicado.
+- Não verificado: o tenant Provia, a versão activa, o histórico dos casos, as permissões, o ficheiro de exportação (inexistente).
+- Nenhuma acção foi concluída, nenhum caso reatribuído, nenhuma mensagem enviada, nada publicado.
+
+## 8. O que o cliente deve produzir para o próximo diagnóstico
+
+1. Exportação completa dos casos COMP directamente do Provia, indicando hora de observação e fuso horário, com: id do caso, versão do workflow, acção actual, responsável (grupo/utilizador), datas de criação, activação e conclusão por acção em UTC, data-limite, estado.
+2. YAML exportado da versão activa do workflow (ou autorização para leitura em modo ligado).
+3. Histórico dos casos COMP-88 e COMP-90.
+4. Um segundo período comparável (mesma versão do workflow) quando existir.

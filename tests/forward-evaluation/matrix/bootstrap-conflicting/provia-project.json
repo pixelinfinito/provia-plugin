@@ -1,179 +1,348 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
     "key": "compras",
-    "title": "Aprovação de pedidos de compra",
+    "title": "Pedido de compra — aprovação",
     "language": "pt-AO",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
-    "name": "Não indicado nas fontes fornecidas",
-    "sector": "Não indicado nas fontes fornecidas",
+    "name": null,
+    "sector": null,
     "mode": "disconnected",
     "tenantId": null,
-    "productRevision": null
+    "productRevision": null,
+    "language": "pt-AO",
+    "timezone": "Africa/Luanda"
   },
   "sources": [
     {
-      "id": "sop-compras-2024",
-      "title": "Procedimento de compras (2024)",
+      "id": "doc-a-procedimento-compras-2024",
+      "title": "Documento A — Procedimento de compras (2024)",
       "kind": "sop",
       "version": "2024",
       "effectiveDate": null,
+      "summary": "Único conteúdo fornecido: «a chefia do departamento aprova todos os pedidos».",
       "sections": [
-        { "anchor": "1", "title": "Aprovação do pedido pela chefia do departamento" }
+        {
+          "anchor": "aprovacao",
+          "title": "Aprovação dos pedidos",
+          "summary": "«a chefia do departamento aprova todos os pedidos»"
+        }
       ]
     },
     {
-      "id": "circular-direccao-2026",
-      "title": "Circular da direcção (2026)",
+      "id": "doc-b-circular-direccao-2026",
+      "title": "Documento B — Circular da direcção (2026)",
       "kind": "policy",
       "version": "2026",
-      "effectiveDate": null,
+      "effectiveDate": "2026-01-01",
+      "summary": "Único conteúdo fornecido: «a partir de Janeiro só o director financeiro aprova pedidos». A data de entrada em vigor (1 de Janeiro de 2026) é uma leitura do implementador, não uma data confirmada no texto.",
       "sections": [
-        { "anchor": "1", "title": "Aprovação do pedido pelo director financeiro" }
+        {
+          "anchor": "aprovacao",
+          "title": "Aprovação dos pedidos a partir de Janeiro",
+          "summary": "«a partir de Janeiro só o director financeiro aprova pedidos»"
+        }
       ]
     }
   ],
-  "entityTypes": [],
+  "entityTypes": [
+    {
+      "key": "departamento",
+      "name": "Departamento",
+      "description": "Departamentos da organização que apresentam pedidos de compra. Permite identificar o departamento requerente e a respectiva chefia.",
+      "icon": "Users01",
+      "namePattern": "Designação corrente do departamento (ex.: «Logística»); sigla apenas quando necessária para distinguir.",
+      "purpose": "Identificar o departamento requerente no pedido de compra e, se o Documento A se mantiver em vigor, a chefia que aprova os pedidos desse departamento.",
+      "owner": "Responsável a designar pela organização (decisão D7)",
+      "fields": [
+        {
+          "key": "department_code",
+          "label": "Sigla do departamento",
+          "type": "text",
+          "required": false,
+          "group": "Identificação",
+          "helpText": "Sigla ou código já usado na organização, se existir; não inventar um novo.",
+          "purpose": "Distinguir departamentos com designações semelhantes e conciliar com outros sistemas.",
+          "priority": "conditional",
+          "source": "Proposta do implementador; os documentos fornecidos não referem códigos.",
+          "maintainer": "Responsável pelo cadastro (D7)",
+          "sensitivity": "Interna",
+          "example": "LOG"
+        },
+        {
+          "key": "head",
+          "label": "Chefia do departamento",
+          "type": "user",
+          "required": false,
+          "group": "Responsabilidade",
+          "helpText": "Utilizador Provia que chefia o departamento. É a pessoa que o Documento A designa como aprovadora dos pedidos deste departamento.",
+          "purpose": "Identificar a chefia do departamento requerente, autoridade de aprovação segundo o Documento A (conflito com o Documento B registado em D1).",
+          "priority": "core",
+          "source": "doc-a-procedimento-compras-2024 §aprovacao",
+          "maintainer": "Responsável pelo cadastro (D7)",
+          "sensitivity": "Interna",
+          "example": { "lookupName": "Chefia de demonstração" }
+        },
+        {
+          "key": "status",
+          "label": "Situação",
+          "type": "select",
+          "required": false,
+          "group": "Ciclo de vida",
+          "helpText": "Marcar «Inactivo» quando o departamento deixa de existir, em vez de apagar o registo.",
+          "purpose": "Evitar a selecção de departamentos extintos em novos pedidos.",
+          "priority": "core",
+          "source": "Proposta do implementador.",
+          "maintainer": "Responsável pelo cadastro (D7)",
+          "sensitivity": "Interna",
+          "example": "active",
+          "options": [
+            { "value": "active", "label": "Activo" },
+            { "value": "inactive", "label": "Inactivo" }
+          ]
+        }
+      ],
+      "coverage": [
+        { "dimension": "Identificação", "decision": "included", "reason": "Nome nativo e sigla opcional." },
+        { "dimension": "Contactos e localização", "decision": "not_applicable", "reason": "O processo de aprovação não precisa de contactos do departamento." },
+        { "dimension": "Responsabilidade e estrutura", "decision": "included", "reason": "A chefia é a autoridade nomeada pelo Documento A; hierarquia entre departamentos não é referida nas fontes." },
+        { "dimension": "Estado e ciclo de vida", "decision": "included", "reason": "Situação activo/inactivo para controlar a selecção." },
+        { "dimension": "Atributos operacionais", "decision": "pending", "reason": "Centro de custo ou orçamento só se o cliente confirmar que a decisão os usa (D7)." },
+        { "dimension": "Relações", "decision": "case", "reason": "A ligação departamento → pedido vive no campo `department` de cada caso." },
+        { "dimension": "Evidência e origem", "decision": "not_applicable", "reason": "Sem sistema de origem identificado nas fontes." }
+      ],
+      "setup": [
+        "Criar o tipo «Departamento» antes de publicar o workflow e antes de criar o formulário de pedido; o campo `department` do workflow selecciona registos deste tipo.",
+        "Carregar um registo por departamento com a respectiva chefia (D7). Se o Documento B prevalecer (D1), o campo `head` mantém-se apenas informativo.",
+        "Ícone `Users01` do snapshot 36772f7ce0831f0ea6f85a0e3e7849d32e576655; confirmar disponibilidade no destino.",
+        "Name é nativo; não duplicar UUID, criador nem datas técnicas."
+      ],
+      "readiness": [
+        "Antes do piloto: lista completa de departamentos activos e chefia preenchida em cada um (D7)."
+      ]
+    }
+  ],
   "groups": [
     {
-      "key": "chefias",
+      "key": "chefias_departamento",
       "name": "Chefias de departamento",
+      "kind": "role",
+      "area": "departamentos",
       "parentKey": null,
-      "purpose": "Segundo o procedimento de compras de 2024 (Documento A), aprovavam todos os pedidos de compra do seu departamento. A circular de 2026 (Documento B) contradiz esta regra — ver decisão D1; não escolher entre as duas fontes sem confirmação da organização.",
+      "purpose": "Chefias dos departamentos requerentes; segundo o Documento A (2024) aprovam todos os pedidos de compra do seu departamento. A chefia concreta varia por caso (campo `head` do Departamento), pelo que o grupo é um papel de recurso, não uma equipa única.",
       "members": [
-        { "role": "Chefe de departamento", "email": null }
+        { "role": "Chefe de cada departamento", "email": null, "verified": false }
       ],
-      "sourceRefs": [
-        { "source": "sop-compras-2024", "section": "1" }
-      ],
+      "sourceRefs": [ { "source": "doc-a-procedimento-compras-2024", "section": "aprovacao" } ],
       "flags": [
-        {
-          "code": "segregation",
-          "detail": "Se a chefia também puder ser quem regista o pedido do seu próprio departamento, confirmar com o dono do processo se pode aprovar um pedido que ela própria iniciou."
-        }
+        { "code": "unnamed", "detail": "Os documentos não nomeiam os departamentos nem as chefias; lista a fornecer (D7)." }
       ]
     },
     {
       "key": "director_financeiro",
       "name": "Director financeiro",
+      "kind": "team",
+      "area": "financas",
       "parentKey": null,
-      "purpose": "Segundo a circular da direcção de 2026 (Documento B), passa a ser o único aprovador dos pedidos de compra a partir de Janeiro. O procedimento de 2024 (Documento A) contradiz esta regra — ver decisão D1; não escolher entre as duas fontes sem confirmação da organização.",
+      "purpose": "O director financeiro; segundo o Documento B (circular de 2026) é, a partir de Janeiro, o único aprovador dos pedidos de compra.",
       "members": [
-        { "role": "Director financeiro", "email": null }
+        { "role": "Director financeiro", "email": null, "verified": false }
       ],
-      "sourceRefs": [
-        { "source": "circular-direccao-2026", "section": "1" }
-      ],
+      "sourceRefs": [ { "source": "doc-b-circular-direccao-2026", "section": "aprovacao" } ],
       "flags": [
-        {
-          "code": "single_person",
-          "detail": "Actor de pessoa única. Nomear um substituto para ausências, para que a aprovação não fique bloqueada."
-        }
+        { "code": "single_person", "detail": "Uma só pessoa; sem delegado indicado nas fontes (D6)." }
       ]
     }
   ],
   "workflows": [
     {
       "key": "compras",
-      "name": "Aprovação de pedidos de compra",
+      "name": "Pedido de compra",
       "prefix": "COMP",
       "file": "compras/workflow.yaml",
       "status": "validated",
+      "ownerArea": "financas",
       "sourceRefs": [
-        { "source": "sop-compras-2024" },
-        { "source": "circular-direccao-2026" }
+        { "source": "doc-a-procedimento-compras-2024", "section": "aprovacao" },
+        { "source": "doc-b-circular-direccao-2026", "section": "aprovacao" }
       ],
+      "access": {
+        "grants": [
+          {
+            "grantee": "organization",
+            "level": "create_incident",
+            "reason": "O Documento A fala em «todos os pedidos» dos departamentos; presume-se que qualquer colaborador pode abrir um pedido de compra para o seu departamento. Presunção a confirmar (D5).",
+            "sourceRefs": [ { "source": "doc-a-procedimento-compras-2024", "section": "aprovacao" } ]
+          }
+        ],
+        "sensitivity": "internal",
+        "note": "Nenhuma das fontes usa termos de confidencialidade. Os aprovadores vêem os casos que lhes são atribuídos sem concessão adicional. Quem edita o desenho (nível edit) não está definido nas fontes (D4)."
+      },
+      "triggers": [
+        { "type": "manual", "label": "Iniciar pedido de compra", "enabled": true, "manual": { "allowedGroups": [] } }
+      ],
+      "templates": [],
+      "unresolvedActors": [
+        {
+          "key": "aprovador_pedido",
+          "name": "Aprovador do pedido de compra",
+          "detail": "Conflito entre fontes: Documento A (2024) — chefia do departamento do requerente; Documento B (2026) — só o director financeiro a partir de Janeiro. Ambos os grupos existem no registo (chefias_departamento, director_financeiro); a acção `decidir` fica sem `assigneeRef` até à decisão D1."
+        }
+      ],
+      "unresolvedEntityTypes": [],
+      "entityRequests": [],
       "actions": [
+        {
+          "localId": "preparar",
+          "name": "Preparar o pedido de compra",
+          "type": "standard",
+          "sourceRefs": [ { "source": "doc-a-procedimento-compras-2024", "section": "aprovacao" } ],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [ "departamento" ],
+          "evidence": [
+            "Campos `purchase_description`, `purchase_amount` e `justification` preenchidos",
+            "Proposta ou orçamento do fornecedor anexado ao caso, quando existir (recomendação; as fontes não exigem)"
+          ],
+          "due": null,
+          "folded": [
+            { "section": "aprovacao", "summary": "«pedidos» — a existência de um pedido feito pelo requerente é implícita na regra de aprovação; a preparação é o passo do requerente que antecede a decisão e recebe as devoluções." }
+          ]
+        },
         {
           "localId": "decidir",
           "name": "Decidir sobre o pedido de compra",
           "type": "decision",
           "sourceRefs": [
-            { "source": "sop-compras-2024", "section": "1" },
-            { "source": "circular-direccao-2026", "section": "1" }
+            { "source": "doc-a-procedimento-compras-2024", "section": "aprovacao" },
+            { "source": "doc-b-circular-direccao-2026", "section": "aprovacao" }
           ],
           "assigneeRef": null,
           "formRef": null,
-          "entityRefs": [],
-          "evidence": [ "Comentário obrigatório em «Rejeitar»" ],
+          "entityRefs": [ "departamento" ],
+          "evidence": [
+            "Decisão registada com um dos resultados «Aprovar», «Devolver ao requerente» ou «Rejeitar»",
+            "Comentário obrigatório em «Devolver ao requerente» e «Rejeitar» (recomendação; as fontes não o exigem)"
+          ],
           "due": null,
           "folded": []
         }
       ],
       "subWorkflowRefs": [],
       "setupNotes": [
-        "O responsável desta acção não está definido no YAML porque as duas fontes fornecidas indicam autoridades diferentes (chefia do departamento vs. director financeiro) — ver decisão D1. Não atribuir o grupo até a organização confirmar a regra em vigor.",
-        "As fontes fornecidas descrevem apenas a regra de aprovação. Não há informação sobre o registo do pedido, campos obrigatórios, cabimento orçamental, emissão de encomenda ou qualquer etapa posterior à decisão — ver decisão D4. O workflow foi mantido deliberadamente mínimo (accionador manual + uma decisão) para não inventar etapas de processo.",
-        "Nenhum campo de caso (metadata) foi definido: as fontes não indicam que dados o pedido deve conter. Confirmar os campos reais antes de usar provia-form-designer ou provia-information-model.",
-        "Prazo (due) não foi proposto por não constar de nenhuma das fontes."
+        "O responsável da acção `decidir` não está definido: as fontes divergem (D1). Não configurar a atribuição no Provia até a Direcção decidir; até lá, um caso que chegue a `decidir` fica sem responsável.",
+        "O ramo «Devolver ao requerente» regressa a `preparar`; o ramo «Rejeitar» cancela o caso. Ambos são recomendações do implementador: as fontes só falam em «aprova».",
+        "Não há prazo para a decisão nas fontes; `due` fica vazio (D2).",
+        "O YAML associa cada caso a um registo do tipo «Departamento» (secção `entities`, modo entity_type, obrigatório). O tipo tem de existir no destino antes da importação; o validador assinala `entity_reference` como configuração pendente.",
+        "Formulário de pedido (`pedido-compra`) a criar no Provia depois de importar o rascunho; formulários não viajam no YAML.",
+        "Modo ligado (servidor provia-implementer) estava disponível no anfitrião mas a leitura do tenant não foi autorizada nesta sessão; nenhum registo foi lido ou criado no Provia. Toda a configuração é manual até existir um recibo."
       ]
     }
   ],
-  "forms": [],
+  "forms": [
+    {
+      "key": "pedido-compra",
+      "title": "Pedido de compra",
+      "kind": "trigger",
+      "workflowRef": "compras",
+      "actionRef": null,
+      "status": "designed",
+      "respondents": "Colaboradores internos autenticados; sem acesso externo nem anónimo.",
+      "fields": [
+        { "key": "department", "label": "Departamento requerente", "type": "entity", "targetType": "departamento", "required": true, "mapsTo": "entidade associada ao caso (Departamento); confirmar no destino se o formulário de entrada consegue preencher a associação, senão o requerente associa-a em `preparar`", "helpText": "Seleccionar o departamento em nome do qual o pedido é feito." },
+        { "key": "purchase_description", "label": "O que se pretende comprar", "type": "text", "required": true, "mapsTo": "purchase_description", "helpText": "Bem ou serviço e quantidade." },
+        { "key": "purchase_amount", "label": "Montante estimado (Kz)", "type": "currency", "required": true, "mapsTo": "purchase_amount", "helpText": "Valor estimado em kwanzas, com base na proposta se existir." },
+        { "key": "needed_by", "label": "Data pretendida", "type": "date", "required": false, "mapsTo": "needed_by", "helpText": "Quando o bem ou serviço é necessário." },
+        { "key": "justification", "label": "Justificação", "type": "rich_text", "required": true, "mapsTo": "justification", "helpText": "Necessidade e uso previsto." },
+        { "key": "quotation", "label": "Proposta do fornecedor", "type": "file", "required": false, "mapsTo": null, "helpText": "PDF ou imagem, até 10 MB (limite a confirmar no destino). Fica anexada ao caso." }
+      ],
+      "confirmation": "O seu pedido de compra foi registado com o número do caso. Será analisado pela autoridade de aprovação em vigor; acompanhe o estado no caso.",
+      "testing": [
+        "Submeter um pedido de teste com todos os campos e confirmar que o caso COMP-… é criado com os valores mapeados.",
+        "Submeter sem montante e confirmar que o formulário bloqueia.",
+        "Confirmar que o ficheiro anexado aparece no caso."
+      ]
+    }
+  ],
   "aiProfiles": [],
   "decisions": [
     {
       "id": "D1",
-      "question": "Quem tem autoridade para aprovar os pedidos de compra: a chefia do departamento (procedimento de compras de 2024) ou o director financeiro (circular da direcção de 2026)? As duas fontes fornecidas contradizem-se e não há informação adicional para resolver o conflito.",
-      "owner": "Direcção / dono do processo de compras",
+      "question": "Quem aprova os pedidos de compra? O Documento A (2024) diz que «a chefia do departamento aprova todos os pedidos»; o Documento B (circular da direcção, 2026) diz que «a partir de Janeiro só o director financeiro aprova pedidos». As duas regras são incompatíveis e nenhuma foi escolhida no desenho. Confirmar também: (a) se a circular revoga o procedimento de 2024 na totalidade ou só a cláusula de aprovação; (b) se «Janeiro» é Janeiro de 2026; (c) se a chefia mantém alguma validação prévia. Recomendação do implementador, não adoptada: sendo o Documento B posterior e específico, o cenário mais provável é o director financeiro como aprovador único a partir de Janeiro de 2026. Resolução no manifesto: se prevalecer o Documento B, `assigneeRef: \"director_financeiro\"` na acção `decidir`; se prevalecer o Documento A, `assigneeRef: \"field:department_head\"` com `assigneeFallback: \"chefias_departamento\"` e um campo `department_head` (tipo user) preenchido a partir da chefia do Departamento; em ambos os casos remover `aprovador_pedido` de `unresolvedActors[]`.",
+      "owner": "Direcção (autora da circular de 2026)",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
       "sourceRefs": [
-        { "source": "sop-compras-2024", "section": "1" },
-        { "source": "circular-direccao-2026", "section": "1" }
+        { "source": "doc-a-procedimento-compras-2024", "section": "aprovacao" },
+        { "source": "doc-b-circular-direccao-2026", "section": "aprovacao" }
       ]
     },
     {
       "id": "D2",
-      "question": "A circular de 2026 diz que a nova regra é válida «a partir de Janeiro», sem indicar o ano. É Janeiro de 2026 (o próprio ano da circular) ou de um ano posterior?",
-      "owner": "Direcção",
+      "question": "Qual o prazo para decidir um pedido de compra? Nenhuma das fontes indica um nível de serviço; `due` fica vazio na acção `decidir` até ser definido.",
+      "owner": "Responsável do processo de compras (a nomear, D4)",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
       "sourceRefs": [
-        { "source": "circular-direccao-2026", "section": "1" }
+        { "source": "doc-a-procedimento-compras-2024", "section": "aprovacao" },
+        { "source": "doc-b-circular-direccao-2026", "section": "aprovacao" }
       ]
     },
     {
       "id": "D3",
-      "question": "A circular substitui o procedimento de 2024 para todos os pedidos, sem excepção de valor ou categoria, ou mantém-se algum papel para a chefia do departamento (por exemplo, iniciar ou visar o pedido antes da aprovação financeira)?",
-      "owner": "Direcção financeira",
+      "question": "O que acontece depois da aprovação (execução da compra, recepção, pagamento) e como é informado o requerente de uma rejeição? As fontes só descrevem a aprovação; o workflow termina na decisão. Confirmar se o âmbito do piloto se limita à aprovação ou se devem ser acrescentadas acções posteriores.",
+      "owner": "Responsável do processo de compras (a nomear, D4)",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
       "sourceRefs": [
-        { "source": "circular-direccao-2026", "section": "1" }
+        { "source": "doc-a-procedimento-compras-2024", "section": "aprovacao" }
       ]
     },
     {
       "id": "D4",
-      "question": "Que etapas existem antes da decisão (registo do pedido, dados a preencher) e depois dela (cabimento orçamental, emissão de encomenda, comunicação ao requerente)? Nenhum dos dois documentos fornecidos as descreve.",
-      "owner": "Dono do processo de compras",
-      "status": "open",
-      "raisedBy": "provia-workflow-designer",
-      "sourceRefs": []
-    },
-    {
-      "id": "D5",
-      "question": "Qual é o nome da organização e o sector de actividade, para completar o projecto?",
-      "owner": "Cliente",
-      "status": "open",
-      "raisedBy": "provia-bootstrap",
-      "sourceRefs": []
-    },
-    {
-      "id": "D6",
-      "question": "Quem substitui o director financeiro na aprovação quando este estiver ausente?",
-      "owner": "Direcção financeira",
+      "question": "Quem é o responsável do processo de compras e quem detém o nível `edit` (dono do desenho) do workflow? As fontes não o dizem; o manifesto só declara `create_incident` para a organização.",
+      "owner": "Direcção",
       "status": "open",
       "raisedBy": "provia-organization-rollout",
       "sourceRefs": [
-        { "source": "circular-direccao-2026", "section": "1" }
+        { "source": "doc-b-circular-direccao-2026", "section": "aprovacao" }
+      ]
+    },
+    {
+      "id": "D5",
+      "question": "Qualquer colaborador pode abrir um pedido de compra em nome do seu departamento? O desenho presume que sim (concessão `organization: create_incident`) a partir de «todos os pedidos» no Documento A. Se só as chefias ou um grupo de compras podem abrir, substituir a concessão e, se necessário, restringir o arranque manual.",
+      "owner": "Direcção",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": [
+        { "source": "doc-a-procedimento-compras-2024", "section": "aprovacao" }
+      ]
+    },
+    {
+      "id": "D6",
+      "question": "Quem substitui o director financeiro nas ausências, se o Documento B prevalecer (D1)? O grupo «Director financeiro» tem uma só pessoa; sem delegado, os pedidos param.",
+      "owner": "Director financeiro",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": [
+        { "source": "doc-b-circular-direccao-2026", "section": "aprovacao" }
+      ]
+    },
+    {
+      "id": "D7",
+      "question": "Lista dos departamentos e da chefia de cada um, e responsável pela manutenção do tipo de entidade «Departamento». As fontes não nomeiam departamentos nem chefias.",
+      "owner": "Direcção / Recursos Humanos (a confirmar)",
+      "status": "open",
+      "raisedBy": "provia-information-model",
+      "sourceRefs": [
+        { "source": "doc-a-procedimento-compras-2024", "section": "aprovacao" }
       ]
     }
   ],

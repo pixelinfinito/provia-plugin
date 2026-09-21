@@ -1,40 +1,105 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "workflow-em-alteracao",
-    "title": "Workflow change: revert required fields with open incidents (inputs pending)",
+    "key": "required-fields-revert",
+    "title": "Revert required fields on a live workflow (six open cases)",
     "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
-    "name": "Not identified",
-    "sector": "Not identified",
+    "name": null,
+    "sector": null,
     "mode": "disconnected",
     "tenantId": null,
-    "productRevision": null
+    "productRevision": null,
+    "language": null,
+    "timezone": null,
+    "permissionLevels": null
   },
-  "sources": [],
+  "sources": [
+    {
+      "id": "change-request-2026-09-21",
+      "title": "Change request: import the previous YAML to restore version history and revert required fields",
+      "kind": "other",
+      "version": null,
+      "effectiveDate": "2026-09-21",
+      "summary": "Verbatim request received on 2026-09-21: 'Import the previous YAML to restore version history and revert required fields. Six incidents remain open and their records are unavailable.' No workflow name, no YAML files and no incident export accompanied it.",
+      "sections": [
+        { "anchor": "restore-history", "title": "Import the previous YAML to restore version history", "summary": "Expectation that a re-import restores the earlier version lineage. Not supported by the product: an import creates a new draft lineage." },
+        { "anchor": "revert-required", "title": "Revert required fields", "summary": "The required flags of one or more case fields must return to the values of the previous version. Field list not supplied." },
+        { "anchor": "open-incidents", "title": "Six incidents remain open; records unavailable", "summary": "Six cases are running on the current version. Their ids, active actions and metadata values were not supplied, so the impact check is pending." }
+      ],
+      "emails": []
+    },
+    {
+      "id": "yaml-previous",
+      "title": "Previous workflow YAML (the version to reapply)",
+      "kind": "export",
+      "version": null,
+      "effectiveDate": null,
+      "summary": "Referenced by the change request but not supplied in this session. Needed for the semantic comparison and as the source of the reverted required flags.",
+      "sections": [],
+      "emails": []
+    },
+    {
+      "id": "yaml-current",
+      "title": "Current (live) workflow YAML export",
+      "kind": "export",
+      "version": null,
+      "effectiveDate": null,
+      "summary": "Not supplied. In connected mode this is workflow_export_yaml of the active version; the connected read was not authorized in this session, so it must be exported from the Provia UI or supplied as a file.",
+      "sections": [],
+      "emails": []
+    },
+    {
+      "id": "incidents-open",
+      "title": "Export of the six open incidents",
+      "kind": "export",
+      "version": null,
+      "effectiveDate": null,
+      "summary": "Not available. Required fields: incident id, workflow version id, current action, status, values of every field whose required flag changes, linked Form Fill responses.",
+      "sections": [],
+      "emails": []
+    }
+  ],
   "entityTypes": [],
   "groups": [],
   "workflows": [
     {
-      "key": "workflow-em-alteracao",
-      "name": "Workflow targeted by this change (real name pending)",
-      "prefix": "WF",
+      "key": "target-workflow",
+      "name": "Target workflow (name pending: not stated in the change request)",
       "file": null,
       "status": "change_planned",
-      "sourceRefs": [],
+      "ownerArea": null,
+      "sourceRefs": [
+        { "source": "change-request-2026-09-21", "section": "revert-required" },
+        { "source": "yaml-previous" },
+        { "source": "yaml-current" }
+      ],
+      "access": {
+        "default": "creator_only",
+        "sensitivity": "internal",
+        "note": "Placeholder only. The live workflow already holds its own grants; this change does not alter permissions. Replace with the grants read from the live workflow (workflow_get includeAccess or the UI) before any apply. See decision D6."
+      },
+      "triggers": [],
+      "templates": [],
+      "unresolvedActors": [],
+      "unresolvedEntityTypes": [],
       "actions": [],
       "subWorkflowRefs": [],
       "setupNotes": [
-        "No previous YAML, current live export, or provia-project.json was supplied in this session; the working directory was empty. This entry is a placeholder recording the change request, not a resolved design.",
-        "workflow-change-plan.md (next to this manifest) records the semantic conflict in the request, the pending impact assessment for the six open incidents, and the recovery plan skeleton.",
-        "Re-import of a previous YAML export creates a new draft lineage in Provia; it does not restore the original version history. See workflow-change-plan.md, section 'Re-import and version history'."
+        "Change type: field requirement revert on a live workflow. No routing, assignment, decision-branch, form, external-operation or permission change is in scope; anything else found in the YAML comparison is out of scope until the owner confirms it.",
+        "Do NOT import the previous YAML as a new workflow to 'restore history'. An import creates a new draft lineage (new workflow, version 1, new auto-number counter, no forms, no Form Fill links, creator-only access unless an access section is present) and leaves the six open cases on the old workflow. Create a new draft version of the live workflow instead and reapply the previous field requirements to it.",
+        "Before building the draft: export the active version (workflow_export_yaml in connected mode, or the UI export) to workflow.current.yaml and place the previous YAML at workflow.previous.yaml next to this manifest; the semantic comparison in change-plan.md is pending until both exist.",
+        "Impact check on the six open incidents is PENDING: their records were unavailable. Obtain the export described in source incidents-open before publication.",
+        "Form Fill definitions are frozen with the workflow publication; the trigger (intake) form publishes independently. After the new version is published, re-check every form that maps to a field whose required flag changed.",
+        "Publication, cancellation of cases and any deletion are UI actions by an authorized person; nothing in this plan is applied by the plugin.",
+        "Connected mode: the host offered org_get_context but the call was not authorized in this session; organization.mode stays disconnected and no tenant ids were read."
       ]
     }
   ],
@@ -43,27 +108,59 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "Which workflow is affected, what is its current published version, and what is the 'previous YAML' the request refers to? No workflow identity or YAML content was supplied in this session.",
-      "owner": "Process/workflow owner",
-      "status": "open"
+      "question": "Which workflow is affected? Provide its name (and id, if known) and the active version number so the live export can be pinned.",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "change-request-2026-09-21", "section": "revert-required" } ]
     },
     {
       "id": "D2",
-      "question": "What are the case IDs of the six open incidents, and what are the current values of the affected required fields on each of them? Their records are stated as unavailable.",
-      "owner": "Process owner / support",
-      "status": "open"
+      "question": "Accept that a YAML re-import cannot restore version history and approve the versioned recovery instead: a new draft version of the live workflow that reapplies the previous field requirements (roll-forward), published as the next version.",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "change-request-2026-09-21", "section": "restore-history" } ]
     },
     {
       "id": "D3",
-      "question": "Which required fields, exactly (name, type, entity or workflow schema), should be reverted, and to which prior value or prior 'required' setting?",
-      "owner": "Workflow owner",
-      "status": "open"
+      "question": "Supply the previous YAML and the current live export so the field-by-field comparison can list exactly which required flags change, and in which direction (required -> optional, or optional -> required).",
+      "owner": "Process owner / Provia administrator",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "yaml-previous" }, { "source": "yaml-current" } ]
     },
     {
       "id": "D4",
-      "question": "Confirm whether the intent is a literal restoration of version history (not supported by Provia) or acceptance of a new draft lineage that reapplies the previous field design, with the six open cases handled by a separate recovery step.",
+      "question": "Supply the export of the six open incidents (id, version, current action, status, values of the changed fields, Form Fill responses). Until then the impact check is pending and publication should wait.",
+      "owner": "Provia administrator",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "change-request-2026-09-21", "section": "open-incidents" }, { "source": "incidents-open" } ]
+    },
+    {
+      "id": "D5",
+      "question": "How should the six open cases be handled: (a) finish on their current version after the test T2/T3 result confirms they can complete; (b) have the assignee fill the now-missing values before publication; (c) cancel and recreate on the new version (last resort, loses evidence and history)?",
       "owner": "Process owner",
-      "status": "open"
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "change-request-2026-09-21", "section": "open-incidents" } ]
+    },
+    {
+      "id": "D6",
+      "question": "Confirm the live workflow's current grants and manual-trigger allowlist (workflow_get with includeAccess, or the UI) so the manifest placeholder 'creator_only' is replaced by the real access and nothing is narrowed or widened by the new version.",
+      "owner": "Provia administrator",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "yaml-current" } ]
+    },
+    {
+      "id": "D7",
+      "question": "Effective date and communication: when will the new version be published, and who informs the requesters and assignees of the six open cases and of new cases that the required fields changed back?",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "change-request-2026-09-21", "section": "revert-required" } ]
     }
   ],
   "receipts": []

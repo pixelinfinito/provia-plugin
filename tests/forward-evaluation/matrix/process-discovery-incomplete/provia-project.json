@@ -1,24 +1,37 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "pilot-selection",
-    "title": "Pilot process comparison (provisional — pending process inventory)",
+    "key": "pilot-discovery",
+    "title": "Pilot candidate (provisional): Purchase request",
     "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
-    "name": "Not specified",
-    "sector": "Not specified",
+    "name": null,
+    "sector": null,
     "mode": "disconnected",
     "tenantId": null,
     "productRevision": null
   },
-  "sources": [],
+  "sources": [
+    {
+      "id": "discovery-request-2026-09-21",
+      "title": "Discovery request: compare processes for a four-week pilot",
+      "kind": "interview",
+      "version": null,
+      "effectiveDate": "2026-09-21",
+      "summary": "The only supplied evidence. The request asks for a comparison of the organization's processes and a pilot recommendation for four weeks, and states that some required context is unavailable. No process inventory, case export, SOP, volume figure or owner list was supplied; the working directory was empty. The candidate set in the report (purchase request, employee onboarding, IT request) is an assumption to be replaced by the real inventory.",
+      "sections": [
+        { "anchor": "request", "title": "User request", "summary": "Compare our processes and explain which one fits a four-week pilot. Some required context is unavailable." },
+        { "anchor": "context-gap", "title": "Missing context", "summary": "No inventory, volumes, owners, baseline measures, constraints or country supplied. Tenant read through org_get_context was not granted in this session." }
+      ]
+    }
+  ],
   "entityTypes": [],
   "groups": [],
   "workflows": [],
@@ -27,43 +40,67 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "What are the organization's actual repeatable processes (names and a one-line description of each)? None were supplied, so this task used three illustrative placeholder processes (procurement, employee onboarding, IT support requests) only to demonstrate the comparison method.",
-      "owner": "Process owner (unassigned)",
+      "question": "Which processes are actually candidates? Supply the process inventory (name, start event, end condition, owner) so the assumed set (purchase request, employee onboarding, IT request) can be replaced or confirmed.",
+      "owner": "Project sponsor (to be named)",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": []
+      "sourceRefs": [ { "source": "discovery-request-2026-09-21", "section": "context-gap" } ]
     },
     {
       "id": "D2",
-      "question": "What is the approximate case volume/frequency for each candidate process (cases per week or month, observed rather than estimated)?",
-      "owner": "Process owner (unassigned)",
+      "question": "How many cases per month does each candidate process have? An observed count from the last three months (email folder, register, spreadsheet) is needed; no volume was assumed in the ranking.",
+      "owner": "Process owner of each candidate (to be named)",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": []
+      "sourceRefs": [ { "source": "discovery-request-2026-09-21", "section": "context-gap" } ]
     },
     {
       "id": "D3",
-      "question": "Who is the named owner for each candidate process today (person or role who would own the pilot)?",
-      "owner": "Operations lead (unassigned)",
+      "question": "Who owns the purchase request process end to end (a named person or group who can approve the workflow design and act on stalled cases)? The provisional choice depends on this ownership being confirmed.",
+      "owner": "Project sponsor (to be named)",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": []
+      "sourceRefs": [ { "source": "discovery-request-2026-09-21", "section": "request" } ]
     },
     {
       "id": "D4",
-      "question": "Confirm country/jurisdiction, response language, currency and timezone for this project. Angola / en / AOA / Africa/Luanda were used as the provisional default per plugin convention because none was supplied.",
-      "owner": "Project sponsor (unassigned)",
+      "question": "Does the IT request process have a single named owner? If it does and its monthly volume is higher than purchasing, IT requests become the stronger pilot and the ranking flips.",
+      "owner": "IT lead (to be named)",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": []
+      "sourceRefs": [ { "source": "discovery-request-2026-09-21", "section": "request" } ]
     },
     {
       "id": "D5",
-      "question": "What known pain points, handoff delays or evidence gaps exist today in each candidate process (e.g. missing approvals, lost email threads, no audit trail)?",
-      "owner": "Process owner (unassigned)",
+      "question": "What is the current baseline for the chosen pilot: median days from request to decision, and share of cases with the approval recorded in writing? Needed before the pilot starts so improvement is measured, not estimated.",
+      "owner": "Process owner of the chosen pilot (to be named)",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": []
+      "sourceRefs": [ { "source": "discovery-request-2026-09-21", "section": "context-gap" } ]
+    },
+    {
+      "id": "D6",
+      "question": "Which documents govern the chosen pilot (procedure, approval limits, templates)? Supply them so the designer can cite sections; no approval threshold or amount limit was assumed.",
+      "owner": "Process owner of the chosen pilot (to be named)",
+      "status": "open",
+      "raisedBy": "provia-process-discovery",
+      "sourceRefs": [ { "source": "discovery-request-2026-09-21", "section": "context-gap" } ]
+    },
+    {
+      "id": "D7",
+      "question": "Country of operation and response language. Angola (AOA, Africa/Luanda) was used as a provisional context because none was supplied; confirm or correct before any jurisdiction-dependent design.",
+      "owner": "Project sponsor (to be named)",
+      "status": "open",
+      "raisedBy": "provia-process-discovery",
+      "sourceRefs": [ { "source": "discovery-request-2026-09-21", "section": "context-gap" } ]
+    },
+    {
+      "id": "D8",
+      "question": "Should the plugin read the Provia organization (existing workflows, groups, entity types) before design? The org_get_context tool is offered by the host but the read was not granted in this session; granting it lets the manifest record existing configuration as sources.",
+      "owner": "Implementer (lisboa@pixel.ao)",
+      "status": "open",
+      "raisedBy": "provia-process-discovery",
+      "sourceRefs": [ { "source": "discovery-request-2026-09-21", "section": "context-gap" } ]
     }
   ],
   "receipts": []

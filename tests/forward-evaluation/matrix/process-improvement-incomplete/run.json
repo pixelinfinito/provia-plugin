@@ -1,20 +1,24 @@
 {
   "id": "process-improvement-incomplete",
   "skill": "provia-process-improvement",
-  "pluginVersion": "1.1.0",
-  "at": "2026-09-18T18:37:31.273Z",
-  "model": "sonnet",
+  "pluginVersion": "1.2.0",
+  "at": "2026-09-21T10:45:43.897Z",
+  "model": "claude-opus-5[1m]",
   "exitCode": 0,
-  "durationMs": 88107,
-  "costUsd": 0.3847814,
-  "numTurns": 15,
-  "sessionId": "e168693f-bebb-4ab7-ae86-d512b1ace1e1",
+  "durationMs": 310110,
+  "costUsd": 1.9403855,
+  "numTurns": 32,
+  "sessionId": "8133b69c-6257-4065-8b23-7f242834e94b",
   "stopReason": "end_turn",
-  "toolCalls": 13,
+  "toolCalls": 30,
+  "skillLoaded": true,
   "files": [
+    "compare-periods.mjs",
+    "process-improvement-report.md",
+    "project.html",
     "provia-project.json",
-    "report.md"
+    "records-template.csv",
+    "setup.md"
   ],
-  "output": "tests/forward-evaluation/matrix/process-improvement-incomplete/",
-  "skillLoaded": true
+  "output": "tests/forward-evaluation/matrix/process-improvement-incomplete/"
 }

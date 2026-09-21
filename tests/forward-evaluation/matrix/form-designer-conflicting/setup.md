@@ -1,35 +1,59 @@
-# Purchase request — supplier quotations: Setup handover
+# Purchase request with three supplier quotations: Setup handover
 
-Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.1.0, 2026-09-18).
+Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
 
 ## Status
 
-Mode: no Provia connection (manual configuration).
+Mode: manual configuration (no receipts recorded).
 
 ## Pending configuration
 
 | Where | Item | What to do |
 | --- | --- | --- |
-| purchase-request | Purchase request | Import the YAML as a draft and review the preview (`workflow.yaml`) |
+| compras | Purchase request | Import the YAML as a draft and review the preview (`workflow.yaml`) |
+| compras / register-quotation | Register the supplier quotations received | Assign the group to the action once the group exists (`compras`) |
+| compras / register-quotation | Register the supplier quotations received | Set the deadline; the design proposes no `due` |
+| compras / select-quotation | Select the winning quotation | Assign the group to the action once the group exists (`compras`) |
+| compras / select-quotation | Select the winning quotation | Set the deadline; the design proposes no `due` |
+
+## Workflow access
+
+Who may see and open each workflow. `view` on a workflow shows every case; whoever executes an action sees their own cases without a grant. Grants are created with `workflow_access_apply` in connected mode or through the `access` section of the YAML imported in the browser.
+
+| Workflow | Sensitivity | Grantee | Level | Reason | Status |
+| --- | --- | --- | --- | --- | --- |
+| `compras` | internal | creator and organization administrators only (`default: creator_only`) | — | No source states who may open a purchase request, so the workflow is declared creator-only until decision D3 is resolved. Purchasing sees the cases that carry its actions without a grant. | — |
+| `compras` | internal | `group:compras` | — | Sees its own cases only (no grant) | — |
+
+## Groups to create
+
+- `compras` Purchasing [team]: Requests and registers supplier quotations and selects the winning quotation. Proposed by provia-form-designer; the request names no team.. Proposed members: Purchasing officer
+
+## Group flags
+
+- `compras`: Owner unnamed in the sources. The request does not name who collects quotations; Purchasing is assumed.
 
 ## Forms to create and link
 
-- `cotacao-1` Supplier quotation — slot 1: Create the form and link it to the Form Fill action (purchase-request / cotacao-1)
-- `cotacao-2` Supplier quotation — slot 2: Create the form and link it to the Form Fill action (purchase-request / cotacao-2)
-- `cotacao-3` Supplier quotation — slot 3: Create the form and link it to the Form Fill action (purchase-request / cotacao-3)
+- `cotacao-fornecedor` Supplier quotation: Create the form and link it to the Form Fill action (compras / cotacao-fornecedor)
 
 ## Open decisions
 
-- **D1** No source SOP or purchasing policy document was supplied for this workflow. The actions, thresholds and due dates in workflow.yaml are illustrative, built directly from the request, not an approved procedure. (Owner: Process owner)
-- **D3** Should suppliers submit their own quotation through an external form link, instead of a Purchasing team member entering it on the supplier's behalf? This needs the respondent-access model confirmed in a connected Provia organization before it can be designed. (Owner: Purchasing lead)
-- **D4** What happens if a supplier does not respond within the 3-workday due date on a quotation action: proceed with two quotations, extend the deadline, or require a documented sole-source justification? (Owner: Purchasing lead)
+- **D1** Who submits each quotation response: Purchasing staff signed in to Provia (assumed), or the suppliers themselves through an external link? External access depends on the configured form behaviour and has not been checked. (Owner: Purchasing lead)
+- **D2** What is the deadline for collecting the three quotations and for selecting one? No service level was supplied, so both actions have no due offset. (Owner: Purchasing lead)
+- **D3** Who may open a purchase request (any employee, or only Purchasing)? The workflow is declared creator-only until this is answered. (Owner: Process owner)
+- **D4** The request asked for each response amount to be mapped to the same incident field purchase_amount. Multiple responses cannot map competing values, and even if they could, the last submission would silently overwrite the others. The design records the amount through the review action select-quotation instead. Confirm this, or choose the alternative of three single-response Form Fill actions mapping to quotation_1_amount, quotation_2_amount and quotation_3_amount plus the same review step. (Owner: Purchasing lead)
+- **D5** May the case continue with fewer than three quotations when suppliers do not answer, and who authorizes that exception? The action brief currently sends the question to the Purchasing lead by comment. (Owner: Purchasing lead)
 
 ## Setup notes
 
-- `purchase-request`: assignee.type: creator on every action is a training placeholder so the draft can be trialled without inventing IDs. Intended owners: Purchasing for cotacao_1/2/3, selecionar_proposta and encomendar; department managers for decidir; Finance for confirmar_cabimento. Design these groups with provia-organization-rollout before publication.
-- `purchase-request`: cotacao_1, cotacao_2 and cotacao_3 each need a form created and linked in Provia after import; see forms.md for the shared field specification (one form used three times, once per supplier slot).
-- `purchase-request`: Country (Angola), currency (AOA) and language (English) are provisional defaults — none was stated in the request; confirm before packaging.
-- `purchase-request`: Due dates and the 3-workday quotation deadline are illustrative, not an approved service level.
+- `compras`: The form "Supplier quotation" (forms[].key cotacao-fornecedor) must be created in Provia and linked to action register-quotation after import; forms are not carried by the YAML.
+- `compras`: Configure the Form Fill link to accept multiple responses (one per quotation). Verify in the Provia form settings that multiple responses are allowed on this link and that the action can be completed after three responses; the plugin cannot read those settings offline.
+- `compras`: Do not map quotation_amount (or any form field) to incident metadata on this link: the response policy is multiple responses, and multiple responses cannot map competing values to the incident (references/provia-capabilities.md). purchase_amount is filled by action select-quotation.
+- `compras`: Assign register-quotation and select-quotation to the Purchasing group once the group exists; the YAML carries no assignee.
+- `compras`: Both actions have no due offset: no service level was supplied (decision D2).
+- `compras`: Respondents are assumed internal (Purchasing staff signed in to Provia). If suppliers are meant to submit the form themselves, confirm the external access model in the Provia form settings before promising a link (decision D1).
+- `compras`: File upload limits on the form field quotation_file must be confirmed in the Provia form settings; the 10 MB per file value in quotation-form.md is a recommendation, not a product limit.
 
 ## Validation
 

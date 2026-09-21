@@ -1,13 +1,32 @@
-Review complete. Two findings, both recorded as open decisions in `provia-project.json` (with `project.html` map and `setup.md` handover regenerated):
+## Review of the evidence
 
-**D1 — Two-quotation policy breach.** P1 is 600,000 AOA, above the internal 500,000 AOA threshold that requires two quotations, but only one is on file. This is a company-policy gap, not a statutory one — I did not label it a legal requirement. Since no `workflow.yaml`/manifest was supplied, I couldn't map this to a specific action `localId`; that's flagged as a structural gap itself (no confirmed control exists in the design to enforce/evidence the threshold). Owner: Responsável de Compras / Direcção Financeira.
+**Context:** Angola, AOA. Nothing was supplied beyond three statements — no policy document, workflow, manifest, template or P1 export — and the working directory was empty. The tenant read (`org_get_context`) and web verification of Angolan legislation were both denied in this session, so the review is limited to the supplied policy statement, and the manifest is in disconnected mode.
 
-**D2 — Jurisdiction mismatch.** The consultant template cites Brazil's LGPD, which doesn't apply to an Angola-based process. I did not substitute a "corrected" Angolan citation myself — Angola's own instrument (via apd.ao) needs verification I can't perform in this disconnected session, so that's recorded as an unresolved limitation, not a completed legal check. Owner: Jurídico / Encarregado de Protecção de Dados.
+**Requirement sources, separated**
 
-Full matrix and reasoning are in `revisao-controlos-evidencias.md`.
+| Type | Content |
+| --- | --- |
+| Legislation | None verified. No legal provision is mapped. |
+| Company policy | Two quotations above 500 000 AOA — the only requirement mapped. |
+| Recommendation / template | Consultant template. Its Brazilian LGPD citation is a **jurisdiction mismatch** and is not adopted. |
 
-Próximo passo recomendado: como não existe ainda nenhum desenho de workflow para esta empresa, `provia-workflow-designer` é o que falta para poder mapear estes dois controlos (limiar de cotações, cláusula de protecção de dados) a acções concretas com evidência exigível.
+**Findings**
+
+1. **P1 gap (confirmed):** 600 000 AOA with one quotation where policy requires two. This is a missing-evidence finding, not proof the second quotation was never obtained — it may exist outside the case, or an exception may have been approved and not recorded. Owner: purchasing manager (D1).
+2. **Policy text incomplete:** no version, effective date, above/from semantics, tax basis, or exception rule. 600 000 exceeds the threshold under any reading, so F1 stands regardless; the ambiguity matters for cases near the line. Owner: finance director (D2).
+3. **Template cites Brazilian LGPD for an Angolan organization.** Language does not determine jurisdiction. What replaces it is not asserted: I could not verify the Angolan instrument against apd.ao, so the decision carries the source-record fields to fill in. Owner: legal/compliance (D3).
+4. **No designed control yet:** without a workflow, the two-quotation rule has no named action, assignee or evidence definition. The matrix proposes `recolher-cotacoes`, `verificar-cotacoes` and (if D2 confirms an exception path) `decidir-excepcao-fonte-unica`, clearly marked as proposals — not written into `workflows[]`. Owner: purchasing manager (D4).
+
+**Artefacts written to the working directory**
+
+- `controls-evidence-review.md` — requirement/action/evidence matrix, findings, remediation with owners, source references
+- `provia-project.json` — new manifest: 3 sources (policy, template, P1 record), 4 open decisions, no workflows
+- `project.html`, `setup.md` — generated from the manifest
+
+**Verified:** `build-project-map.mjs --check` → 0 errors, 0 warnings, 4 pending items (the decisions). That validates manifest shape only; it does not validate the report and is not a compliance statement. **Pending:** D1–D4; the policy document, template and P1 export are still needed to move from statements to cited sections.
+
+Next recommended step: `provia-workflow-designer`, because the control has nowhere to live until the purchasing workflow exists as named actions with evidence — once D2 confirms the threshold semantics and exception rule.
 
 ```text
-Use provia-workflow-designer com o manifesto provia-project.json (pasta controls-evidence-conflicting) como ponto de partida. Desenhe o workflow de compras incluindo uma acção que exija duas cotações anexadas quando o valor exceder 500.000 AOA (política interna, não legal), e trate as decisões D1 e D2 já registadas no manifesto como questões em aberto a resolver no desenho. País: Angola; responda em pt-AO.
+Use provia-workflow-designer with provia-project.json in this directory. Design the purchasing workflow so the two-quotation rule above 500000 AOA (source politica-compras#cotacoes) becomes named actions: recolher-cotacoes (Form Fill, multiple responses), verificar-cotacoes (Standard, brief explains the threshold to the assignee) and, if decision D2 confirms an exception path, decidir-excepcao-fonte-unica (Decision). Declare access and assignees by group key. Do not cite Brazilian LGPD (decision D3). Country: Angola; reply in English.
 ```

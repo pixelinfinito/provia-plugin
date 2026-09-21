@@ -1,19 +1,20 @@
 {
   "id": "operations-triage-conflicting",
   "skill": "provia-operations-triage",
-  "pluginVersion": "1.1.0",
-  "at": "2026-09-18T18:35:52.855Z",
-  "model": "sonnet",
+  "pluginVersion": "1.2.0",
+  "at": "2026-09-21T10:40:41.733Z",
+  "model": "claude-opus-5[1m]",
   "exitCode": 0,
-  "durationMs": 65044,
-  "costUsd": 0.25132279999999996,
-  "numTurns": 8,
-  "sessionId": "2432216d-6e5a-4b45-adac-e54021b90ad2",
+  "durationMs": 105428,
+  "costUsd": 1.0055135,
+  "numTurns": 18,
+  "sessionId": "3ddbd19c-becc-486a-92cf-d74b80a3db4f",
   "stopReason": "end_turn",
-  "toolCalls": 6,
+  "toolCalls": 16,
+  "skillLoaded": true,
   "files": [
+    "provia-project.json",
     "triage-report.md"
   ],
-  "output": "tests/forward-evaluation/matrix/operations-triage-conflicting/",
-  "skillLoaded": true
+  "output": "tests/forward-evaluation/matrix/operations-triage-conflicting/"
 }

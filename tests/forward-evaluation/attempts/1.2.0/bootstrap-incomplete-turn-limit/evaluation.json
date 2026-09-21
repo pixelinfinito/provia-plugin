@@ -1,0 +1,34 @@
+{
+  "id": "bootstrap-incomplete",
+  "skill": "provia-bootstrap",
+  "mode": "incomplete",
+  "prompt": "Bootstrap the Provia project for this customer end to end. Country: Angola, reply in English. The only source is this checklist for expense reimbursement: (a) employee submits receipts, (b) manager approves, (c) finance pays within the month. There is no org chart, no service levels and no policy on limits.",
+  "expected": "Every step that can be completed is completed (manifest, workflow with descriptions, validated YAML, setup.md, map); missing org chart, service levels and limits become open decisions with owners and unnamed placeholder groups; nothing is invented.",
+  "run": {
+    "id": "bootstrap-incomplete",
+    "skill": "provia-bootstrap",
+    "pluginVersion": "1.2.0",
+    "at": "2026-09-21T10:53:41.896Z",
+    "model": "claude-opus-5[1m]",
+    "exitCode": 1,
+    "durationMs": 385474,
+    "costUsd": 4.980330000000002,
+    "numTurns": 61,
+    "sessionId": "e3235a07-aad4-4e44-b29d-1b43c9b2b799",
+    "stopReason": "tool_use",
+    "toolCalls": 60,
+    "skillLoaded": true,
+    "files": [
+      "expense-reimbursement/design.md",
+      "expense-reimbursement/review-actions.json",
+      "expense-reimbursement/setup.md",
+      "expense-reimbursement/validation.json",
+      "expense-reimbursement/workflow.yaml",
+      "provia-project.json"
+    ],
+    "output": "tests/forward-evaluation/matrix/bootstrap-incomplete/",
+    "finished": false,
+    "note": "Run did not finish (exit 1, stop tool_use); raise --max-turns or inspect tools.md. Not judged."
+  },
+  "status": "error"
+}

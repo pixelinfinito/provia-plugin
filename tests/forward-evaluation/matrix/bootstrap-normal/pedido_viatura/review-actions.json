@@ -1,0 +1,102 @@
+{
+  "valid": true,
+  "workflow": "Pedido de viatura",
+  "reviewedActions": 4,
+  "summary": {
+    "applicable": 4,
+    "complete": 4,
+    "incomplete": 0,
+    "automatedWithoutDescription": 0,
+    "leaks": 0,
+    "dueMissing": 3,
+    "nearLimit": 0
+  },
+  "warnings": [],
+  "actions": [
+    {
+      "id": "confirmar_disponibilidade",
+      "name": "Confirmar a disponibilidade de viatura para a data pedida",
+      "type": "decision",
+      "applicable": true,
+      "complete": true,
+      "parts": {
+        "task": true,
+        "method": true,
+        "evidence": true,
+        "doneWhen": true,
+        "exceptions": true
+      },
+      "missing": [],
+      "leaks": [],
+      "length": 1165,
+      "tooLong": false,
+      "nearLimit": false,
+      "empty": false,
+      "due": "missing"
+    },
+    {
+      "id": "decidir_pedido",
+      "name": "Decidir sobre o pedido de viatura",
+      "type": "decision",
+      "applicable": true,
+      "complete": true,
+      "parts": {
+        "task": true,
+        "method": true,
+        "evidence": true,
+        "doneWhen": true,
+        "exceptions": true
+      },
+      "missing": [],
+      "leaks": [],
+      "length": 1004,
+      "tooLong": false,
+      "nearLimit": false,
+      "empty": false,
+      "due": "set"
+    },
+    {
+      "id": "entregar_viatura",
+      "name": "Entregar a viatura e registar a quilometragem de saída",
+      "type": "standard",
+      "applicable": true,
+      "complete": true,
+      "parts": {
+        "task": true,
+        "method": true,
+        "evidence": true,
+        "doneWhen": true,
+        "exceptions": true
+      },
+      "missing": [],
+      "leaks": [],
+      "length": 1097,
+      "tooLong": false,
+      "nearLimit": false,
+      "empty": false,
+      "due": "missing"
+    },
+    {
+      "id": "registar_devolucao",
+      "name": "Registar a devolução da viatura",
+      "type": "standard",
+      "applicable": true,
+      "complete": true,
+      "parts": {
+        "task": true,
+        "method": true,
+        "evidence": true,
+        "doneWhen": true,
+        "exceptions": true
+      },
+      "missing": [],
+      "leaks": [],
+      "length": 1298,
+      "tooLong": false,
+      "nearLimit": false,
+      "empty": false,
+      "due": "missing"
+    }
+  ],
+  "note": "Presence of the labelled parts (Tarefa/Task, Como/How, Evidência/Evidence, Concluído quando/Done when, Excepções/Exceptions), leaked implementer notes, length (warning from 4500 characters) and due are checked. Wording quality and business correctness are not certified; see references/action-writing.md."
+}

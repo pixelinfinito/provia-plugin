@@ -1,36 +1,53 @@
-# Revisão mensal — trigger: Entrega de configuração
+# Monthly review (scheduled trigger): Setup handover
 
-Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.1.0, 2026-09-18).
+Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
 
-## Estado
+## Status
 
-Modo: sem ligação ao Provia (configuração manual).
+Mode: manual configuration (no receipts recorded).
 
-## Configuração pendente
+## Pending configuration
 
-| Onde | Item | O que fazer |
+| Where | Item | What to do |
 | --- | --- | --- |
-| revisao-mensal | Revisão mensal — arranque | Importar o YAML como rascunho e rever a pré-visualização (`workflow.yaml`) |
+| monthly-review | Monthly review | Import the YAML as a draft and review the preview (`workflow.yaml`) |
+| monthly-review | Monthly review | Register the actor in the canonical group registry or map it to an existing key (`monthly-reviewer`) |
+| monthly-review / conduct-review | Conduct the monthly review | Set the owner; the action has none in the design |
 
-## Decisões em aberto
+## Workflow access
 
-- **D1** Qual é o dia e a hora exactos pretendidos para a revisão mensal? Assumimos dia 1 de cada mês às 09:00 (Africa/Luanda) por não ter sido indicado (ex.: podia ser o último dia útil do mês, ou outro horário). (Dono: Dono do processo de revisão mensal)
-- **D2** Quais são as acções da revisão mensal em si (o que é revisto, por quem, com que evidência de conclusão)? O pedido definiu apenas o disparo (trigger); o corpo do workflow está por desenhar. (Dono: Dono do processo de revisão mensal)
-- **D3** A política de execução perdida (missedBehavior) foi assumida como catch-up-one (um único incidente de recuperação, sem acumular revisões atrasadas). Confirmar se "skip" (não recuperar) ou "catch-up-all" (um incidente por cada mês perdido) serve melhor a política da organização. (Dono: Dono do processo de revisão mensal)
-- **D4** Qual o grupo ou pessoa responsável por executar/receber a revisão mensal, para que o workflow tenha um assignee e, se aplicável, uma notificação associada ao disparo? (Dono: Dono do processo de revisão mensal)
+Who may see and open each workflow. `view` on a workflow shows every case; whoever executes an action sees their own cases without a grant. Grants are created with `workflow_access_apply` in connected mode or through the `access` section of the YAML imported in the browser.
 
-## Notas de configuração
+| Workflow | Sensitivity | Grantee | Level | Reason | Status |
+| --- | --- | --- | --- | --- | --- |
+| `monthly-review` | internal | creator and organization administrators only (`default: creator_only`) | — | No grants proposed yet: the reviewing team is not identified (D2). Until it is, only the importer and organization administrators see the cases; the scheduled case is created without a start grant. | — |
 
-- `revisao-mensal`: Trigger de agendamento (schedule) configurado: cronExpression "0 9 1 * *", timezone Africa/Luanda, missedBehavior catch-up-one. Confirmar em Provia, após importação, que o fuso Africa/Luanda é aceite e que o disparo em falta gera exactamente um incidente de recuperação, conforme documentado no comentário do YAML.
-- `revisao-mensal`: Nenhuma acção foi definida — este ficheiro só especifica o disparo (trigger). As acções da revisão mensal em si (quem revê, o quê, com que evidência) ainda não foram desenhadas; ver decisão D2.
-- `revisao-mensal`: Nenhum grupo responsável foi identificado para receber ou executar a revisão; ver decisão D3.
+## Open decisions
 
-## Validação
+- **D1** Which process does the monthly review belong to and what exactly is reviewed (scope, source records, checklist)? The request names none. (Owner: Process owner (to be named))
+- **D2** Which group performs the review? Needed for the action assignee, the manual-trigger allowlist and the access grants. (Owner: Process owner (to be named))
+- **D3** Run on the 1st of each month at 08:00 Luanda time (proposed), or another day/hour? Numeric cron cannot express «last day of the month» or «first working day». (Owner: Process owner (to be named))
+- **D4** Confirm the missed-run policy: `catch-up-one` (proposed: one case on recovery, reviewer covers every missed month) or `catch-up-all` (one case per missed month, needed only if audit evidence must exist per month as a separate case). `skip` is not recommended because a missed month would leave no trace. (Owner: Process owner (to be named))
+- **D5** What is the service level for completing the review? 5 workdays from case creation is illustrative. (Owner: Process owner (to be named))
+- **D6** Who is informed when a review case is overdue, and through which channel (in-app, email)? (Owner: Process owner (to be named))
+- **D7** Does the review need to be linked to an entity (for example a supplier, contract or cost centre) or to read data from an external system? If so, the entity type or the API contract is required. (Owner: Process owner (to be named))
 
-Execute o validador a partir da raiz do plugin, com o caminho de cada ficheiro relativo à pasta do manifesto, e guarde a saída exacta. Um resultado sem erros deixa a validação de destino e a publicação pendentes.
+## Setup notes
+
+- `monthly-review`: Schedule trigger: cron `0 8 1 * *`, timezone Africa/Luanda (UTC+01:00, no daylight saving, so 08:00 Luanda is 07:00 UTC all year), missedBehavior `catch-up-one`. Confirm in the destination organization that the schedule shows the next run on the 1st at 08:00 Luanda time.
+- `monthly-review`: Missed-run policy: a slot missed while the scheduler was unavailable opens exactly one case on recovery (`catch-up-one`); several missed months still produce one case and the reviewer covers them all, recording the months in `review_period`. Verify in the destination product how far back the catch-up window reaches; the bundled contract fixes the option names, not the window.
+- `monthly-review`: Manual trigger «Open an out-of-cycle review» has no allowlist yet because the reviewing team is unknown (D2). Restrict it to that team in Provia once named; until then every holder of create_incident (only the importer and administrators under creator_only) can start it.
+- `monthly-review`: Assign `conduct-review` to the reviewing team in Provia before publication (validator item `assignment_missing`). No group id was invented.
+- `monthly-review`: `due` of 5 workdays from activation is an illustrative service level (D5); workdays skip Saturday and Sunday only, not Angolan public holidays.
+- `monthly-review`: No HTTP call, secret or destination allowlist is part of this design. If the review must read data from an external system, its API contract is required first (see monthly-review-trigger-spec.md, section 7).
+- `monthly-review`: Overdue escalation: once the recipient is decided (D6), add a notification action or a Provia overdue rule; none is emitted now because notification recipients need real group ids.
+
+## Validation
+
+Run the validator from the plugin root, with each file path relative to the manifest folder, and keep the exact output. A clean result still leaves destination validation and publication pending.
 
 ```sh
 node scripts/validate-workflow.mjs workflow.yaml
 ```
 
-Este ficheiro é gerado pelo mapa do projecto; volte a gerá-lo depois de cada alteração ao manifesto. Não substitui a revisão do dono do processo nem a pré-visualização de importação no Provia.
+This file is generated by the project map; regenerate it after every manifest change. It does not replace the process owner review or the Provia import preview.

@@ -1,18 +1,18 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
     "key": "compras",
-    "title": "Pedido de compra",
+    "title": "Pedido de compra — recolha de três propostas de fornecedores",
     "language": "pt-AO",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
-    "name": null,
+    "name": "Organização (não identificada)",
     "sector": null,
     "mode": "disconnected",
     "tenantId": null,
@@ -20,16 +20,77 @@
   },
   "sources": [
     {
-      "id": "pedido-utilizador",
-      "title": "Pedido do utilizador: recolher três propostas de fornecedores durante um pedido de compra",
+      "id": "pedido-2026-09-21",
+      "title": "Pedido do cliente: recolher três propostas de fornecedores durante um pedido de compra",
       "kind": "interview",
-      "version": "1",
-      "effectiveDate": "2026-09-18",
-      "sections": []
+      "version": null,
+      "effectiveDate": "2026-09-21",
+      "summary": "Uma frase do cliente: «Precisamos de recolher três propostas de fornecedores durante um pedido de compra.» Não foi fornecido procedimento, política de compras nem exportação.",
+      "sections": [
+        {
+          "anchor": "1",
+          "title": "Recolha de três propostas de fornecedores no pedido de compra"
+        }
+      ]
     }
   ],
   "entityTypes": [],
-  "groups": [],
+  "groups": [
+    {
+      "key": "compras",
+      "name": "Compras",
+      "kind": "team",
+      "area": "gestao_corporativa",
+      "parentKey": null,
+      "purpose": "Pedem e registam as propostas de fornecedores, comparam-nas e recomendam o fornecedor.",
+      "members": [
+        {
+          "role": "Técnico de compras",
+          "email": null,
+          "verified": false
+        }
+      ],
+      "sourceRefs": [
+        {
+          "source": "pedido-2026-09-21",
+          "section": "1"
+        }
+      ],
+      "flags": [
+        {
+          "code": "unnamed",
+          "detail": "Grupo proposto pelo desenho do formulário; o pedido não nomeia quem recolhe as propostas. Confirmar com o dono do processo."
+        }
+      ]
+    },
+    {
+      "key": "chefias",
+      "name": "Chefias de departamento",
+      "kind": "team",
+      "area": "gestao_corporativa",
+      "parentKey": null,
+      "purpose": "Decidem a adjudicação com base nas propostas registadas e na recomendação de Compras.",
+      "members": [
+        {
+          "role": "Chefe de departamento",
+          "email": null,
+          "verified": false
+        }
+      ],
+      "sourceRefs": [
+        {
+          "source": "pedido-2026-09-21",
+          "section": "1"
+        }
+      ],
+      "flags": [
+        {
+          "code": "unnamed",
+          "detail": "Grupo proposto; o pedido não diz quem adjudica nem até que montante. Ver decisão D5."
+        }
+      ]
+    }
+  ],
   "workflows": [
     {
       "key": "compras",
@@ -37,106 +98,286 @@
       "prefix": "COMP",
       "file": "workflow.yaml",
       "status": "design",
+      "ownerArea": "gestao_corporativa",
       "sourceRefs": [
-        { "source": "pedido-utilizador" }
+        {
+          "source": "pedido-2026-09-21",
+          "section": "1"
+        }
       ],
+      "access": {
+        "grants": [
+          {
+            "grantee": "organization",
+            "level": "create_incident",
+            "reason": "Pressuposto: qualquer colaborador pode abrir um pedido de compra para o seu departamento; o pedido do cliente não restringe quem inicia.",
+            "sourceRefs": [
+              {
+                "source": "pedido-2026-09-21",
+                "section": "1"
+              }
+            ]
+          }
+        ],
+        "sensitivity": "internal",
+        "note": "Compras e as chefias vêem os casos que lhes são atribuídos sem concessão adicional. Só propor «view» a Compras se o cliente confirmar que a equipa acompanha todos os pedidos."
+      },
+      "triggers": [
+        {
+          "type": "manual",
+          "label": "Iniciar pedido de compra",
+          "enabled": true,
+          "manual": {
+            "allowedGroups": []
+          }
+        }
+      ],
+      "templates": [],
+      "unresolvedActors": [],
+      "unresolvedEntityTypes": [],
       "actions": [
         {
           "localId": "registar",
-          "name": "Registar a necessidade",
+          "name": "Registar a necessidade de compra",
           "type": "standard",
-          "sourceRefs": [ { "source": "pedido-utilizador" } ],
+          "sourceRefs": [
+            {
+              "source": "pedido-2026-09-21",
+              "section": "1"
+            }
+          ],
           "assigneeRef": "creator",
           "formRef": null,
           "entityRefs": [],
-          "evidence": [ "Título, montante e centro de custo preenchidos" ],
-          "due": { "offsetDays": 1, "offsetType": "workdays", "basis": "activation" },
+          "setsFields": [
+            "purchase_amount",
+            "cost_centre",
+            "quotation_deadline"
+          ],
+          "evidence": [
+            "Título, «Montante estimado» e «Centro de custo» preenchidos",
+            "Especificações anexadas quando existirem"
+          ],
+          "due": null,
+          "dueInSource": null,
           "folded": []
         },
         {
           "localId": "recolher_propostas",
-          "name": "Registar as propostas dos fornecedores",
+          "name": "Recolher as propostas de fornecedores",
           "type": "form_fill",
-          "sourceRefs": [ { "source": "pedido-utilizador" } ],
-          "assigneeRef": "creator",
-          "formRef": "propostas-fornecedores",
-          "entityRefs": [],
-          "evidence": [
-            "Nome, valor, prazo e documento anexado para os três fornecedores",
-            "Justificação de dispensa quando não for possível obter três propostas"
+          "sourceRefs": [
+            {
+              "source": "pedido-2026-09-21",
+              "section": "1"
+            }
           ],
-          "due": { "offsetDays": 3, "offsetType": "workdays", "basis": "activation" },
+          "assigneeRef": "compras",
+          "formRef": "proposta-fornecedor",
+          "entityRefs": [],
+          "setsFields": [],
+          "evidence": [
+            "Pelo menos três respostas ao formulário «Proposta de fornecedor», de fornecedores distintos, cada uma com o ficheiro da proposta anexado"
+          ],
+          "due": null,
+          "dueInSource": null,
+          "folded": [
+            {
+              "section": "1",
+              "summary": "O envio da especificação aos fornecedores e o pedido de proposta são passos do método desta acção, não acções separadas."
+            }
+          ]
+        },
+        {
+          "localId": "comparar_propostas",
+          "name": "Comparar as propostas e recomendar o fornecedor",
+          "type": "standard",
+          "sourceRefs": [
+            {
+              "source": "pedido-2026-09-21",
+              "section": "1"
+            }
+          ],
+          "assigneeRef": "compras",
+          "formRef": null,
+          "entityRefs": [],
+          "setsFields": [
+            "quotation_count",
+            "selected_supplier",
+            "selected_amount",
+            "selection_rationale"
+          ],
+          "evidence": [
+            "Campos «Número de propostas recebidas», «Fornecedor recomendado», «Montante da proposta recomendada» e «Fundamentação da recomendação» preenchidos",
+            "Mapa comparativo anexado"
+          ],
+          "due": null,
+          "dueInSource": null,
           "folded": []
         },
         {
-          "localId": "decidir",
-          "name": "Decidir sobre o pedido",
+          "localId": "decidir_adjudicacao",
+          "name": "Decidir a adjudicação",
           "type": "decision",
-          "sourceRefs": [ { "source": "pedido-utilizador" } ],
-          "assigneeRef": "creator",
+          "sourceRefs": [
+            {
+              "source": "pedido-2026-09-21",
+              "section": "1"
+            }
+          ],
+          "assigneeRef": "chefias",
           "formRef": null,
           "entityRefs": [],
-          "evidence": [ "Comentário obrigatório em Devolver e Rejeitar" ],
-          "due": { "offsetDays": 2, "offsetType": "workdays", "basis": "activation" },
-          "folded": []
-        },
-        {
-          "localId": "confirmar_cabimento",
-          "name": "Confirmar disponibilidade orçamental",
-          "type": "standard",
-          "sourceRefs": [ { "source": "pedido-utilizador" } ],
-          "assigneeRef": "creator",
-          "formRef": null,
-          "entityRefs": [],
-          "evidence": [ "Captura do saldo com data; referência orçamental preenchida" ],
-          "due": { "offsetDays": 2, "offsetType": "workdays", "basis": "activation" },
-          "folded": []
-        },
-        {
-          "localId": "encomendar",
-          "name": "Registar a encomenda",
-          "type": "standard",
-          "sourceRefs": [ { "source": "pedido-utilizador" } ],
-          "assigneeRef": "creator",
-          "formRef": null,
-          "entityRefs": [],
-          "evidence": [ "Nota de encomenda anexada; referência da encomenda preenchida" ],
-          "due": { "offsetDays": 3, "offsetType": "workdays", "basis": "activation" },
+          "setsFields": [],
+          "evidence": [
+            "Comentário obrigatório em «Devolver» e «Rejeitar»"
+          ],
+          "due": null,
+          "dueInSource": null,
           "folded": []
         }
       ],
       "subWorkflowRefs": [],
       "setupNotes": [
-        "workflow.yaml foi adaptado do exemplo de compras do plugin apenas para acolher a acção Form Fill pedida nesta tarefa; as acções registar/decidir/confirmar_cabimento/encomendar não foram revistas com o processo real do cliente e devem ser confirmadas com provia-workflow-designer.",
-        "Criar e associar o formulário 'propostas-fornecedores' à acção recolher_propostas em Provia; o vínculo não é transportado pelo YAML."
+        "O workflow.yaml é um esqueleto da fase de propostas, escrito para ancorar o formulário «Proposta de fornecedor»; o desenho completo do pedido de compra (cabimento, encomenda, recepção) pertence ao provia-workflow-designer.",
+        "O YAML atribui todas as acções ao criador porque não existem identificadores do destino. Os responsáveis pretendidos são os grupos deste manifesto (assigneeRef); substituí-los com resolve-workflow-refs.mjs quando existirem recibos, ou manualmente no Provia.",
+        "A acção «Recolher as propostas de fornecedores» é do tipo Form Fill e importa sem formulário: criar o formulário «Proposta de fornecedor» no Provia, ligá-lo à acção e configurar a política de múltiplas respostas antes da publicação (form-proposta-fornecedor.md).",
+        "Nenhuma acção tem prazo (due): o pedido não indica prazos de serviço. Ver decisão D2."
       ]
     }
   ],
   "forms": [
     {
-      "key": "propostas-fornecedores",
-      "title": "Propostas de fornecedores",
+      "key": "proposta-fornecedor",
+      "title": "Proposta de fornecedor",
       "kind": "action",
       "workflowRef": "compras",
       "actionRef": "recolher_propostas",
       "status": "designed",
+      "specification": "form-proposta-fornecedor.md",
+      "respondents": {
+        "internal": "Técnico de Compras responsável pela acção (pressuposto)",
+        "external": "Fornecedor por ligação externa — não prometido; depende da decisão D1 e de teste de acesso no Provia"
+      },
+      "responsePolicy": {
+        "mode": "multiple",
+        "minimumResponses": 3,
+        "onePerSupplier": true,
+        "mapsToIncident": false,
+        "reason": "Cada proposta é uma resposta separada; várias respostas são uma colecção para revisão e não podem mapear valores concorrentes para os metadados do caso. Os valores da proposta escolhida são registados na acção «Comparar as propostas e recomendar o fornecedor»."
+      },
       "fields": [
-        { "name": "fornecedor_1_nome", "type": "text", "required": true },
-        { "name": "fornecedor_1_valor", "type": "currency", "required": true, "config": { "currency": "AOA" } },
-        { "name": "fornecedor_1_prazo_entrega_dias", "type": "number", "required": true },
-        { "name": "fornecedor_1_documento", "type": "file", "required": true },
-        { "name": "fornecedor_1_condicoes", "type": "rich_text", "required": false },
-        { "name": "fornecedor_2_nome", "type": "text", "required": true },
-        { "name": "fornecedor_2_valor", "type": "currency", "required": true, "config": { "currency": "AOA" } },
-        { "name": "fornecedor_2_prazo_entrega_dias", "type": "number", "required": true },
-        { "name": "fornecedor_2_documento", "type": "file", "required": true },
-        { "name": "fornecedor_2_condicoes", "type": "rich_text", "required": false },
-        { "name": "fornecedor_3_nome", "type": "text", "required": true },
-        { "name": "fornecedor_3_valor", "type": "currency", "required": true, "config": { "currency": "AOA" } },
-        { "name": "fornecedor_3_prazo_entrega_dias", "type": "number", "required": true },
-        { "name": "fornecedor_3_documento", "type": "file", "required": true },
-        { "name": "fornecedor_3_condicoes", "type": "rich_text", "required": false },
-        { "name": "justificativa_dispensa", "type": "rich_text", "required": false }
+        {
+          "key": "supplier_name",
+          "label": "Nome do fornecedor",
+          "type": "text",
+          "required": true,
+          "helpText": "Designação comercial tal como consta da proposta."
+        },
+        {
+          "key": "supplier_nif",
+          "label": "NIF do fornecedor",
+          "type": "text",
+          "required": false,
+          "helpText": "Número de identificação fiscal, se constar da proposta."
+        },
+        {
+          "key": "supplier_contact_email",
+          "label": "Email do contacto comercial",
+          "type": "email",
+          "required": false,
+          "helpText": "Contacto que enviou a proposta, para esclarecimentos."
+        },
+        {
+          "key": "proposal_reference",
+          "label": "Referência da proposta",
+          "type": "text",
+          "required": false,
+          "helpText": "Número ou referência atribuída pelo fornecedor."
+        },
+        {
+          "key": "proposal_date",
+          "label": "Data da proposta",
+          "type": "date",
+          "required": true
+        },
+        {
+          "key": "proposal_amount",
+          "label": "Montante total da proposta (Kz)",
+          "type": "currency",
+          "required": true,
+          "helpText": "Valor total da proposta em kwanzas, tal como escrito pelo fornecedor.",
+          "config": {
+            "currency": "AOA",
+            "decimals": 2,
+            "min": 0
+          }
+        },
+        {
+          "key": "amount_includes_tax",
+          "label": "O montante inclui impostos?",
+          "type": "boolean",
+          "required": true,
+          "helpText": "Marcar se o valor indicado já inclui os impostos aplicáveis."
+        },
+        {
+          "key": "valid_until",
+          "label": "Proposta válida até",
+          "type": "date",
+          "required": true,
+          "helpText": "Data até à qual o fornecedor mantém o preço."
+        },
+        {
+          "key": "delivery_days",
+          "label": "Prazo de entrega (dias)",
+          "type": "number",
+          "required": false,
+          "config": {
+            "min": 0,
+            "decimals": 0
+          }
+        },
+        {
+          "key": "payment_terms",
+          "label": "Condições de pagamento",
+          "type": "text",
+          "required": false,
+          "helpText": "Por exemplo: 50% na adjudicação e 50% na entrega."
+        },
+        {
+          "key": "scope_compliance",
+          "label": "Conformidade com a especificação",
+          "type": "select",
+          "required": true,
+          "options": [
+            {
+              "value": "full",
+              "label": "Cumpre integralmente"
+            },
+            {
+              "value": "partial",
+              "label": "Cumpre parcialmente"
+            },
+            {
+              "value": "alternative",
+              "label": "Propõe alternativa"
+            }
+          ]
+        },
+        {
+          "key": "proposal_file",
+          "label": "Ficheiro da proposta",
+          "type": "file",
+          "required": true,
+          "helpText": "A proposta escrita do fornecedor (PDF, JPG ou PNG)."
+        },
+        {
+          "key": "notes",
+          "label": "Observações",
+          "type": "rich_text",
+          "required": false,
+          "helpText": "Desvios à especificação, exclusões ou condições especiais."
+        }
       ]
     }
   ],
@@ -144,35 +385,81 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "Cada fornecedor deve preencher a sua própria proposta através de uma ligação externa (um formulário por fornecedor), ou o requisitante regista as três centralmente num único formulário interno?",
+      "question": "Quem submete cada proposta: o técnico de Compras regista as propostas recebidas, ou o próprio fornecedor responde por uma ligação externa? A opção externa depende do comportamento configurado dos formulários no Provia e de um teste de acesso.",
       "owner": "Dono do processo de compras",
       "status": "open",
       "raisedBy": "provia-form-designer",
-      "sourceRefs": [ { "source": "pedido-utilizador" } ]
+      "sourceRefs": [
+        {
+          "source": "pedido-2026-09-21",
+          "section": "1"
+        }
+      ]
     },
     {
       "id": "D2",
-      "question": "A acção de recolha de propostas deve ficar com o requisitante (creator) ou com uma equipa de compras dedicada, por segregação de funções entre quem pede e quem negoceia preços?",
+      "question": "Qual é o prazo para recolher as três propostas e para a comparação e decisão? Nenhuma acção tem «due» até haver um prazo de serviço confirmado.",
       "owner": "Dono do processo de compras",
       "status": "open",
       "raisedBy": "provia-form-designer",
-      "sourceRefs": [ { "source": "pedido-utilizador" } ]
+      "sourceRefs": [
+        {
+          "source": "pedido-2026-09-21",
+          "section": "1"
+        }
+      ]
     },
     {
       "id": "D3",
-      "question": "Que tipos e tamanho máximo de ficheiro são aceites para o documento de cada proposta?",
-      "owner": "Responsável de TI",
-      "status": "open",
-      "raisedBy": "provia-form-designer",
-      "sourceRefs": [ { "source": "pedido-utilizador" } ]
-    },
-    {
-      "id": "D4",
-      "question": "Quando não for possível obter três propostas, a justificação de dispensa basta para concluir a acção ou deve exigir uma aprovação adicional antes de avançar?",
+      "question": "Quando é admissível avançar com menos de três propostas (fornecedor único, urgência, montante abaixo de um limiar) e quem autoriza a excepção?",
       "owner": "Dono do processo de compras",
       "status": "open",
       "raisedBy": "provia-form-designer",
-      "sourceRefs": [ { "source": "pedido-utilizador" } ]
+      "sourceRefs": [
+        {
+          "source": "pedido-2026-09-21",
+          "section": "1"
+        }
+      ]
+    },
+    {
+      "id": "D4",
+      "question": "As propostas devem ficar associadas a registos de um tipo de entidade «Fornecedor» (com NIF e contactos reutilizáveis) em vez de texto livre no formulário?",
+      "owner": "Compras",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": [
+        {
+          "source": "pedido-2026-09-21",
+          "section": "1"
+        }
+      ]
+    },
+    {
+      "id": "D5",
+      "question": "Quem decide a adjudicação e até que montante? O desenho assume as chefias de departamento sem limite definido.",
+      "owner": "Direcção financeira",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": [
+        {
+          "source": "pedido-2026-09-21",
+          "section": "1"
+        }
+      ]
+    },
+    {
+      "id": "D6",
+      "question": "Qual é o limite de tamanho por ficheiro e os formatos aceites para a proposta? O desenho recomenda PDF/JPG/PNG até 10 MB; o limite real de carregamento do Provia tem de ser confirmado na interface.",
+      "owner": "Implementador",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": [
+        {
+          "source": "pedido-2026-09-21",
+          "section": "1"
+        }
+      ]
     }
   ],
   "receipts": []

@@ -1,15 +1,16 @@
 {
-  "at": "2026-09-18T18:46:16.999Z",
-  "model": "sonnet",
+  "at": "2026-09-21T10:51:42.422Z",
+  "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "The run transparently disclosed that no real workflow, export, or in-progress incident data was supplied, and clearly labeled the procurement training example as an illustrative substitute rather than the real workflow, satisfying the rule against inventing facts.",
-    "Validation results (validate-workflow.mjs, review-actions.mjs) shown in the response match actual tool-call outputs captured in the transcript; the response does not overstate what ran (e.g. correctly notes destinationValidation as 'not_run').",
-    "Unresolved matters (incident count, retroactive requirement scope, new field's option values, handling of in-flight cases missing new required data) are captured as explicit open decisions D1–D4 rather than being resolved by assumption.",
-    "The workflow-change-report.md is described as containing a semantic comparison, impact assessment, draft-version plan, 6 test cases, and recovery instructions, matching the expected behaviour, and the produced workflow.yaml/workflow.v2-draft.yaml files back this with a concrete required-field diff.",
-    "The final response ends with a clear, language-appropriate next-step recommendation (provia-workflow-package) with a copyable invocation, per next-step.md convention.",
-    "No organization IDs, approval thresholds, legal provisions, or endpoints were fabricated; placeholder values (e.g. 'Organização exemplo', null tenantId) are marked as unknown/illustrative rather than presented as fact."
+    "Skill was loaded and the shared references (conventions, metadata fields, workflow YAML, manifest, next-step) were read before acting.",
+    "Expected deliverables are present: a semantic comparison via workflow.current.yaml (baseline) vs workflow.yaml (v2) with the plan's field-level diff; an impact assessment per change pattern (new required, optional→required, required→optional) on open cases; a draft-version plan that explicitly uses workflow_create_draft_version rather than a fresh import and explains why (lineage, permissions, auto_number counter); 12 test cases including a T7 probe for observed behaviour on a v1 case; and recovery instructions (a v3 re-applying v1 required flags, no one-click rollback).",
+    "No organization IDs, tenant IDs or product revisions were invented: manifest records mode 'disconnected', tenantId null, productRevision null, and the refused org_get_context call is disclosed.",
+    "Validation claims are backed by real tool calls: validate-workflow.mjs ran on both YAMLs (calls 30–32) and the written validation.json / validation.current.json match those outputs, with destinationValidation 'not_run' preserved.",
+    "Facts, assumptions and open decisions are separated: baseline and change content are marked as assumptions S1–S3, decisions D1–D6 are left for the process owner, and the response has an explicit 'Verificado vs pendente' section; the unobservable metadata-validation mechanism is flagged as something the plugin cannot confirm rather than asserted.",
+    "Response ends with a concrete next-step recommendation with a copyable invocation in the user's language.",
+    "Caveat: the tool-call list is truncated at call 33, so the claims about review-actions.json and the manifest --check (0 errors, 0 warnings, 3 infos) cannot be traced to a visible call, though review-actions.json does exist among the written files with content consistent with a script run."
   ],
   "violations": []
 }

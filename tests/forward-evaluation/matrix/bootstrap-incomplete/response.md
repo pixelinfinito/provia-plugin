@@ -1,26 +1,41 @@
-All artefacts are in place and consistent with each other (manifest ↔ YAML ↔ validation ↔ setup handover ↔ map).
+The map embeds every object and loads no external assets. The bootstrap is complete. Summary of what was done, what was verified and what the customer must decide:
 
-## Summary
+## Files written (working directory)
 
-Bootstrapped the Provia project for a single-workflow scope — **Expense reimbursement** — from the three-line checklist you gave me (Angola, English, disconnected mode since no `provia-implementer` server is present).
+| File | What |
+| --- | --- |
+| `provia-project.json` | Manifest `provia-project/v1.1`: 1 source, 2 groups, 1 workflow (3 actions, access, triggers), 1 intake form, 0 entity types, 10 open decisions |
+| `project.html` | Offline project map rendered from the manifest |
+| `expense-reimbursement/workflow.yaml` | `provia.ao/v1` package with the `access` section emitted by `emit-workflow-access.mjs` |
+| `expense-reimbursement/validation.json` | Exact validator output |
+| `expense-reimbursement/review-actions.json` | Exact action review gate output |
+| `expense-reimbursement/editorial-review.md` | Semantic review of names and briefs |
+| `expense-reimbursement/design.md` | Classification table, action table, Mermaid flow, access, information-model reasoning, form and rollout notes |
+| `expense-reimbursement/setup.md` | Handover generated with `--setup` (23 pending items) |
 
-**Design decisions from the checklist:**
-- **(a) Employee submits receipts** → modelled as the workflow's intake form (`expense-claim-intake`: amount, description, receipt files), not a workflow action, since it's data collected before the case exists.
-- **(b) Manager approves** → a Decision action (`decide`), owned by a new `managers` group, with Approve/Reject outcomes (Reject added as the structurally necessary complement of a Decision gate, disclosed as an editorial completion, not sourced from the checklist).
-- **(c) Finance pays within the month** → a Standard action (`pay`), owned by a new `finance` group, with proof-of-payment + a `payment_reference` field as evidence.
+No `catalogue.json`: the process needs no entity type (the claimant is the native case creator; bank details stay in the payroll/accounting system — D6), and the catalogue format requires at least one type.
 
-**What I did not invent**, per the honesty rules, and instead recorded as open decisions in the manifest:
-- **D1** — no org chart, so which manager owns which employee's claim is unresolved.
-- **D2** — no policy on limits (maximum amount, excluded categories, extra approver above a threshold).
-- **D3** — no service level for manager approval turnaround.
-- **D4** — "pays within the month" can't be expressed as Provia's fixed day/workday `due` offset; both actions ship with `due` unset.
-- **D5** — a segregation-of-duties question: can Finance pay its own members' claims?
-- **D6** — no correction/return path exists in the checklist; flagged how to add one if wanted.
+## Design in one paragraph
 
-**Files delivered** in this directory: `provia-project.json` (manifest with sources, groups, workflow, form and all six decisions), `project.html` (offline map — 0 structural warnings, 16 pending config items all traced to the gaps above), and `expense-reimbursement/` containing `workflow.yaml`, `validation.json` (structurally valid, `readyToPublish: false`), `editorial-review.md`, and `setup.md`.
+Manual trigger (plus a recommended intake form) → `submit_claim` (creator) → `approve_claim` (Decision: Approve / Return for correction / Reject, comment required on the last two) → `pay_claim` (Finance). The approval is intended for the manager the claimant names in the `manager` user field, with a `role` group **Line managers** as fallback, because Provia cannot route to "the requester's manager". Access: `organization` → `create_incident`; no `view` grants; sensitivity `internal`.
 
-Next useful step is **`provia-organization-rollout`**, since D1 (no org chart) and D5 (segregation) block finishing the groups design — everything else in the pilot is packaged and reviewable now. Copyable request:
+## Verified
+
+- `validate-workflow.mjs`: `valid: true`, 0 errors, 0 warnings, backend schema checks passed; 2 `assignment_missing` setup items (owners of `approve_claim` and `pay_claim` — group ids unknown); `readyToPublish: false`; destination validation not run.
+- `review-actions.mjs`: 3/3 briefs complete, 0 leaked implementer notes, `due` unset on all 3 by design.
+- `build-project-map.mjs --check`: 0 errors, 0 warnings, 2 infos (rule 4: assigned groups without a grant), 0 readiness blocks, 0 unresolved actor/entity keys.
+
+## Not done, and why
+
+- **Connected mode**: the host lists a Provia implementer server, but the `org_get_context` call was not permitted in this session, so nothing was read from or applied to a tenant. The manifest is in `disconnected` mode; `receipts[]` is empty.
+- **Assignees, deadlines, form**: omitted from the YAML (no ids, no service levels, forms not portable); all listed in `setup.md`.
+
+## What the customer must provide (open decisions, owner in the manifest)
+
+D1 process owner · D2 which manager approves whom (org chart) · D3 segregation rule for managers' own claims · D4 service levels for submission and approval · D5 what "within the month" means, or an offset · D6 source of bank details and payment means · D7 whether Finance sees every claim · D8 confirm the Return/Reject branches · D9 policy on limits and categories · D10 whether the employee-facing text should be pt-AO.
+
+Recommended next step: `provia-workflow-review`, so the customer review runs against the packaged design with the ten decisions in front of the process owner, and any resolved decision (D4/D5 deadlines, D2 routing, D7 view grant) feeds back into the manifest before import.
 
 ```text
-Use provia-organization-rollout with provia-project.json in this directory (workflow "expense-reimbursement"). Resolve the `managers` and `finance` groups: propose how to identify each employee's manager without an org chart (decision D1), and confirm the segregation question for Finance paying its own members' claims (decision D5). Country: Angola; reply in English.
+Use provia-workflow-review on provia-project.json and expense-reimbursement/workflow.yaml. Review ownership, sequencing, evidence, exceptions and publication readiness, and record which of decisions D1–D10 the process owner resolved. Country: Angola; reply in English.
 ```

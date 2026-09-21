@@ -1,21 +1,25 @@
-## Como evitar repetir dados do fornecedor em cada pedido
+## Resposta
 
-Não repetir dados significa não criar dois lugares para a mesma informação. A decisão de desenho:
+**Fornecedor** é um tipo de entidade; **Pedido de compra** é um caso do workflow, não uma entidade. O caso liga-se ao registo do fornecedor (secção `entities` do workflow com `mode: entity_type`, ou um campo de caso do tipo `entity`) e lê nele nome, contacto, NIF, condições e contrato. Só os factos daquele pedido (valor, justificação, centro de custo, fornecedor adjudicado, condição acordada, cotações) se escrevem no caso. Copia-se da entidade para o caso apenas o que deve ficar congelado à data do pedido (por exemplo condições de pagamento habituais → condição acordada, editável); é um instantâneo, não sincronização.
 
-- **Fornecedor** é uma entidade Provia reutilizável (NIF, contactos, categoria de fornecimento, situação, condições comerciais, dados bancários, certidões).
-- **Pedido de compra** não é uma segunda entidade — é o *caso* do workflow de compras. Os seus dados variáveis (artigos, montante, aprovação) ficam nos metadados do caso e na evidência das acções.
-- A ligação entre os dois é um campo de caso do tipo `entity` (ex.: `fornecedor_selecionado`, alvo = Fornecedor) na acção onde o requerente escolhe a contraparte. Quem prepara o pedido **selecciona** o registo de Fornecedor em vez de reintroduzir NIF, contacto ou condições de pagamento a cada pedido.
+**Pressupostos declarados:** Angola como contexto provisório; nenhum procedimento ou catálogo foi fornecido; a permissão para `org_get_context` não foi concedida, portanto trabalhei em modo desligado sem ler a organização Provia.
 
-Entreguei o catálogo do tipo **Fornecedor** com 18 campos agrupados (Identificação, Classificação, Contactos, Responsabilidade, Situação e ciclo de vida, Condições comerciais, Evidência e conformidade), cada um com propósito, prioridade (core/conditional/optional), exemplo válido, responsável e sensibilidade. A dimensão "Relações" está marcada como `external`: o pedido referencia o fornecedor, o fornecedor não guarda lista inversa de pedidos.
+## Ficheiros escritos no directório de trabalho
 
-Sem SOP ou workflow fornecidos, este é um baseline assinalado como tal — vocabulário de categorias, exigência real de certidão fiscal e responsáveis devem ser confirmados com compras/financeira antes de configurar.
+| Ficheiro | Conteúdo |
+| --- | --- |
+| `catalogue.json` | Tipo `Fornecedor` — ícone `Truck01`, padrão de Nome, 18 campos em 6 grupos (identificação, classificação, contactos, responsabilidade, condições comerciais, ciclo de vida), cobertura, notas de configuração e prontidão |
+| `catalogue.html` | Catálogo offline com controlos de cópia, gerado do mesmo JSON |
+| `modelo-informacao.md` | A resposta desenvolvida: divisão entidade/caso, campos propostos para o caso do pedido, forma de ligação e mapeamentos, percurso sintético, alternativas rejeitadas |
+| `provia-project.json` | Manifesto com `entityTypes[]` e decisões D1–D6 |
+| `project.html`, `setup.md` | Mapa do projecto e entrega de configuração |
 
-**Ficheiros gerados** (validados com `build-entity-catalogue.mjs --check`, sem erros):
-- `catalogue.json` — fonte editorial
-- `catalogue.html` — catálogo offline navegável, com controlos de cópia (não testados em browser real aqui, apenas gerados e verificados por grep)
+**Verificado:** `build-entity-catalogue.mjs --check` (1 tipo, forma editorial válida) e `build-project-map.mjs --check` (0 avisos, 6 decisões em aberto). Os botões de cópia do HTML não foram exercidos num browser. Nada foi criado no Provia.
 
-**Próximo passo recomendado**: `provia-workflow-designer`, para desenhar o workflow de Pedido de compra e ligar a acção de selecção ao tipo Fornecedor através de `entityRefs`.
+**Fica por decidir pelo dono do processo:** D1 código de fornecedor (ERP vs `auto_number`); D2 NIF/dados bancários no Provia ou só na contabilidade; D3 vocabulários dos selects; D4 se o fornecedor é conhecido na abertura do pedido (define `optional`/`required`); D5 quem cria e edita fornecedores; D6 centro de custo como select ou entidade.
+
+Próximo passo recomendado: `provia-workflow-designer`, para desenhar o workflow «Pedido de compra» que consome este tipo — é aí que a ligação ao Fornecedor, os campos do caso e a verificação «fornecedor activo» na aprovação ganham forma.
 
 ```text
-Use provia-workflow-designer para desenhar o workflow "Pedido de compra". Use o catálogo de Fornecedor em catalogue.json: a acção onde o requerente escolhe a contraparte deve referenciar este tipo (campo de caso `entity`, alvo = fornecedor) em vez de repetir os dados do fornecedor. País: Angola; responda em pt-AO.
+Use provia-workflow-designer com provia-project.json e modelo-informacao.md neste directório. Desenhe o workflow «Pedido de compra» com ligação ao tipo de entidade Fornecedor (entities mode entity_type, requirement optional, decisão D4), os campos do caso propostos na secção 3 do relatório, e uma acção de aprovação cuja descrição inclua a verificação do registo do fornecedor (Situação = Activo, NIF confirmado). Registe as decisões D1–D6 como dependências. País: Angola; responda em pt-AO.
 ```

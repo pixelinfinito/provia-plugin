@@ -1,0 +1,141 @@
+# provia-skills 1.2.0
+# BASELINE ASSUMIDA (v1 activa). Nenhum export do workflow real foi fornecido nem lido do tenant.
+# Substituir pelo resultado de `workflow_export_yaml` da versão activa antes de aprovar o plano.
+apiVersion: provia.ao/v1
+kind: Workflow
+metadata:
+  name: Pedido de compra
+  prefix: COMP
+  description: Versão activa assumida do pedido de compra interno. Serve apenas de base de comparação para o plano de alteração dos campos obrigatórios.
+  version: 1
+triggers:
+  - type: manual
+    label: Iniciar pedido
+    enabled: true
+    config: {}
+fields:
+  - name: request_reference
+    label: Referência do pedido
+    type: auto_number
+    required: false
+    config:
+      prefix: COMP-
+      padding: 4
+      startAt: 1
+  - name: department
+    label: Departamento
+    type: select
+    required: true
+    config:
+      options:
+        - value: operations
+          label: Operações
+        - value: finance
+          label: Finanças
+        - value: it
+          label: Tecnologias de informação
+        - value: hr
+          label: Recursos humanos
+  - name: description
+    label: Descrição da necessidade
+    type: rich_text
+    required: true
+  - name: estimated_amount
+    label: Montante estimado (Kz)
+    type: currency
+    required: false
+    config:
+      currency: AOA
+  - name: cost_center
+    label: Centro de custo
+    type: text
+    required: false
+  - name: delivery_date
+    label: Data pretendida de entrega
+    type: date
+    required: true
+  - name: supplier_name
+    label: Fornecedor sugerido
+    type: text
+    required: false
+  - name: budget_reference
+    label: Referência de cabimento
+    type: text
+    required: false
+entities:
+  mode: none
+actions:
+  - id: registar
+    name: Registar o pedido de compra
+    type: standard
+    description: |-
+      Tarefa: Registar o pedido de compra com a necessidade, o departamento e a data pretendida de entrega.
+      Como: 1. Preencher `department`, `description` e `delivery_date`. 2. Indicar `estimated_amount` e `cost_center` quando conhecidos. 3. Anexar a proposta do fornecedor, se existir.
+      Evidência: Os campos `department`, `description` e `delivery_date` preenchidos; proposta anexada quando existe.
+      Concluído quando: O pedido tem a necessidade descrita e a data de entrega registada.
+      Excepções: Se a necessidade ainda não estiver definida, não concluir; comentar o que falta e manter o pedido em rascunho.
+    executionMode: sequential
+    required: true
+    assignee:
+      type: creator
+  - id: verificar_cabimento
+    name: Verificar o cabimento orçamental
+    type: standard
+    description: |-
+      Tarefa: Confirmar que existe cabimento orçamental para o montante pedido.
+      Como: 1. Ler `estimated_amount` e `cost_center`; se estiverem vazios, pedir os valores ao requerente por comentário. 2. Consultar o mapa orçamental do centro de custo no sistema de contabilidade. 3. Registar a referência em `budget_reference`.
+      Evidência: `budget_reference` preenchido e captura do saldo anexada.
+      Concluído quando: A referência de cabimento está registada e o saldo cobre o montante.
+      Excepções: Se não houver cabimento, não concluir; comentar o défice e devolver ao requerente pela decisão «Devolver» do passo seguinte.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 2
+      offsetType: workdays
+      basis: activation
+  - id: decidir
+    name: Decidir sobre o pedido de compra
+    type: decision
+    description: |-
+      Tarefa: Decidir se o pedido de compra avança, com base na necessidade descrita e no cabimento confirmado.
+      Como: 1. Ler `description`, `estimated_amount` e `budget_reference`. 2. Confirmar que a compra está prevista no plano do departamento. 3. Escolher «Aprovar», «Devolver» ou «Rejeitar».
+      Evidência: Comentário obrigatório em «Devolver» e «Rejeitar».
+      Concluído quando: A decisão fica registada com o comentário exigido.
+      Excepções: Se o montante exceder a sua autoridade, não decidir; comentar e devolver ao requerente para encaminhar à autoridade competente.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 3
+      offsetType: workdays
+      basis: activation
+    config:
+      branches:
+        - label: Aprovar
+          outcome: continue
+          requiresComment: false
+        - label: Devolver
+          outcome: return_to_action
+          target: registar
+          requiresComment: true
+        - label: Rejeitar
+          outcome: cancel_incident
+          requiresComment: true
+  - id: confirmar_encomenda
+    name: Confirmar a encomenda ao fornecedor
+    type: standard
+    description: |-
+      Tarefa: Emitir a encomenda ao fornecedor e confirmar a data de entrega acordada.
+      Como: 1. Emitir a nota de encomenda com o montante aprovado. 2. Enviar ao fornecedor indicado em `supplier_name` ou ao fornecedor seleccionado. 3. Confirmar a data de entrega face a `delivery_date`.
+      Evidência: Nota de encomenda anexada ao caso e data de entrega confirmada em comentário.
+      Concluído quando: A nota de encomenda está anexada e a entrega confirmada pelo fornecedor.
+      Excepções: Se o fornecedor não confirmar a data pretendida, comentar a nova data proposta antes de concluir.
+    executionMode: sequential
+    required: true
+    due:
+      offsetDays: 5
+      offsetType: workdays
+      basis: activation
+access:
+  grants:
+    - grantee: organization
+      level: create_incident

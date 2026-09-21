@@ -1,12 +1,19 @@
-Neither record can be confirmed overdue.
+**Answer: neither P1 nor P2 can be called overdue from this export.**
 
-- **P1**: two rows contradict each other for the same record at the same observation time (`completed` vs `blocked`). That's a data conflict, not evidence either way — I flagged it rather than picking the more convenient reading, per the honesty rule against choosing convenient records.
-- **P2**: `open` with no due date. "Overdue" requires a due date to compare against the observation time; with none present, this is a data/configuration gap (the action's due-date rule likely wasn't set), not lateness.
+Assumptions: the working directory contained no export, manifest or observation time, so I worked only from the two facts in your request. Country/timezone are provisional (Angola, `Africa/Luanda`).
 
-Full write-up with recommended next steps and two open decisions is saved to `triage-report.md` in the working directory. No `provia-project.json` was found, so owners are named generically (export owner, workflow owner) rather than by group key.
+**P1 — status conflict, not a finding.** Two rows at the same observation time say `completed` and `blocked`. That is a record conflict; picking either row would be picking the convenient one. Even the `blocked` row would only support "blocked", never "overdue", because no due date was supplied for P1 either. Next record to inspect: P1's incident timeline (last status transition, author, timestamp) and the per-action status list — most likely the two rows describe different objects (incident vs. one action) or a stale duplicate.
 
-Next recommended skill: `provia-process-improvement` isn't right yet — the real gap here is data quality, not performance. If you can supply the actual export rows (with real timestamps and the workflow's due-date configuration), re-run `provia-operations-triage` with that file plus any `provia-project.json` you have, e.g.:
+**P2 — open, undated, not overdue.** "Overdue" means past a due date; with none, P2 is *open without a deadline*. That is its own attention category (a design or intake gap), not lateness. Next record to inspect: the action's `due` rule in the workflow design and P2's activation time.
+
+Artefacts written to the working directory:
+- `triage-report.md` — findings F1/F2, what was not verified, who can act (unnamed: no groups supplied), next steps.
+- `provia-project.json` — new minimal manifest with decisions D1 (which P1 row is real), D2 (should P2's action have a due rule), D3 (who owns triage; ownership gap). `build-project-map.mjs --check` ran clean: 0 errors, 0 warnings, 3 pending items (the open decisions). That check validates the manifest only, not the report.
+
+Nothing was completed, closed, or messaged in Provia.
+
+Recommended next step: `provia-workflow-change`, once D1 is resolved from the P1 timeline — it can plan the due-date rule P2's action is missing while cases are open.
 
 ```text
-Use provia-operations-triage with the attached export (correct/deduplicated rows) and provia-project.json. Reconcile the P1 status conflict and confirm whether P2's due-date field is populated before re-assessing what's overdue.
+Use provia-workflow-change with provia-project.json in this directory. D1 has been resolved as: <state which P1 row is correct and why>. Plan adding a due-date rule to the action P2 is waiting on, assess impact on open cases, and record the change in the manifest. Country: Angola; reply in English.
 ```

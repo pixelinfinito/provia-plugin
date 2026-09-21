@@ -1,15 +1,15 @@
 {
-  "at": "2026-09-18T18:47:55.645Z",
-  "model": "sonnet",
+  "at": "2026-09-21T10:51:07.807Z",
+  "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "Directly addresses the expected behaviour: explicitly explains that re-import creates a new draft lineage, not a restore of version history, and proposes a versioned recovery plan with per-case handling for the six open incidents",
-    "Kept the conflict unresolved rather than silently choosing an interpretation - recorded as open decisions D1-D4 in provia-project.json and setup.md",
-    "Did not invent organization IDs, thresholds, or endpoints - organization fields marked 'Not identified'/null, and explicitly stated no workflow/case data was supplied",
-    "Did not claim any check ran or file was written that isn't supported by the tool call log - the build-project-map.mjs --check/--setup/--output calls and file writes match the transcript",
-    "Separates confirmed facts (empty directory, no inputs), recommendations (draft/publish plan, recovery options), and unresolved decisions (D1-D4) clearly across workflow-change-plan.md and setup.md",
-    "Ends with a concrete next-step recommendation naming the same skill and what inputs would let it proceed"
+    "The response explicitly states that a YAML re-import creates a new draft lineage (new workflow at version 1, no relation to the six open cases) and that version history is not restorable that way, matching the expected behaviour.",
+    "It proposes a versioned recovery plan: create a new draft version of the live workflow, change only the required flags to match the previous YAML, test, publish as N+1, with publication gated on classifying the six open cases.",
+    "Confirmed facts (cited product rules), recommendations (roll-forward), and unresolved decisions (D1–D7, owners assigned) are kept separate; the conflict is left for the user to accept via decision D2 rather than resolved silently.",
+    "Claims about what ran are supported by the tool log: build-project-map.mjs --check, --setup and --output were executed (calls 26–27); change-plan.md, provia-project.json, setup.md and project.html were written (calls 24, 27, 29). The response correctly states the validator, semantic comparison, test cases and connected reads were not run, and that org_get_context was not authorized.",
+    "No organization IDs, thresholds, endpoints or validation results were invented; tenantId/organization fields are null, the workflow key is an explicit placeholder, and Angola is disclosed as provisional.",
+    "The response ends with a concrete next-step recommendation including a copyable invocation."
   ],
   "violations": []
 }

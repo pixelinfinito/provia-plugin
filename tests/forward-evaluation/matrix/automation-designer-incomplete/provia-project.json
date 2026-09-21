@@ -1,40 +1,110 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "revisao-mensal",
-    "title": "Revisão mensal — trigger",
-    "language": "pt-AO",
+    "key": "monthly-review",
+    "title": "Monthly review (scheduled trigger)",
+    "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
     "name": null,
     "sector": null,
     "mode": "disconnected",
     "tenantId": null,
-    "productRevision": null
+    "productRevision": null,
+    "language": "en",
+    "timezone": "Africa/Luanda"
   },
-  "sources": [],
+  "sources": [
+    {
+      "id": "request-2026-09-21",
+      "title": "Request: monthly review trigger in Africa/Luanda with a clear missed-run policy",
+      "kind": "interview",
+      "version": "1",
+      "effectiveDate": "2026-09-21",
+      "sections": [
+        { "anchor": "cadence", "title": "Monthly cadence" },
+        { "anchor": "timezone", "title": "Timezone Africa/Luanda" },
+        { "anchor": "missed-run", "title": "Missed-run policy required" }
+      ],
+      "emails": []
+    }
+  ],
   "entityTypes": [],
   "groups": [],
   "workflows": [
     {
-      "key": "revisao-mensal",
-      "name": "Revisão mensal — arranque",
+      "key": "monthly-review",
+      "name": "Monthly review",
       "prefix": "REVM",
       "file": "workflow.yaml",
       "status": "design",
-      "sourceRefs": [],
-      "actions": [],
+      "ownerArea": null,
+      "sourceRefs": [ { "source": "request-2026-09-21" } ],
+      "access": {
+        "default": "creator_only",
+        "grants": [],
+        "sensitivity": "internal",
+        "note": "No grants proposed yet: the reviewing team is not identified (D2). Until it is, only the importer and organization administrators see the cases; the scheduled case is created without a start grant."
+      },
+      "triggers": [
+        {
+          "type": "schedule",
+          "label": "Monthly review (automatic)",
+          "enabled": true,
+          "schedule": {
+            "cronExpression": "0 8 1 * *",
+            "timezone": "Africa/Luanda",
+            "missedBehavior": "catch-up-one",
+            "reason": "Monthly cadence from the request; day and hour are assumptions (D3); catch-up-one is the proposed missed-run policy (D4)."
+          }
+        },
+        {
+          "type": "manual",
+          "label": "Open an out-of-cycle review",
+          "enabled": true,
+          "manual": { "allowedGroups": [], "allowedUsers": [] }
+        }
+      ],
+      "templates": [],
+      "unresolvedActors": [
+        { "key": "monthly-reviewer", "name": "Monthly reviewer", "detail": "The team or role that performs the review is not named in the request (D2). The action has no assignee until it is." }
+      ],
+      "unresolvedEntityTypes": [],
+      "actions": [
+        {
+          "localId": "conduct-review",
+          "name": "Conduct the monthly review",
+          "type": "standard",
+          "sourceRefs": [ { "source": "request-2026-09-21", "section": "cadence" } ],
+          "assigneeRef": null,
+          "formRef": null,
+          "entityRefs": [],
+          "setsFields": [ "review_period", "review_outcome" ],
+          "evidence": [
+            "Completed checklist or review report attached as a file (recommendation: the request names no evidence)",
+            "review_period and review_outcome filled",
+            "Each finding recorded in a comment with a named owner"
+          ],
+          "due": { "offsetDays": 5, "offsetType": "workdays", "basis": "activation" },
+          "dueInSource": null,
+          "folded": []
+        }
+      ],
       "subWorkflowRefs": [],
       "setupNotes": [
-        "Trigger de agendamento (schedule) configurado: cronExpression \"0 9 1 * *\", timezone Africa/Luanda, missedBehavior catch-up-one. Confirmar em Provia, após importação, que o fuso Africa/Luanda é aceite e que o disparo em falta gera exactamente um incidente de recuperação, conforme documentado no comentário do YAML.",
-        "Nenhuma acção foi definida — este ficheiro só especifica o disparo (trigger). As acções da revisão mensal em si (quem revê, o quê, com que evidência) ainda não foram desenhadas; ver decisão D2.",
-        "Nenhum grupo responsável foi identificado para receber ou executar a revisão; ver decisão D3."
+        "Schedule trigger: cron `0 8 1 * *`, timezone Africa/Luanda (UTC+01:00, no daylight saving, so 08:00 Luanda is 07:00 UTC all year), missedBehavior `catch-up-one`. Confirm in the destination organization that the schedule shows the next run on the 1st at 08:00 Luanda time.",
+        "Missed-run policy: a slot missed while the scheduler was unavailable opens exactly one case on recovery (`catch-up-one`); several missed months still produce one case and the reviewer covers them all, recording the months in `review_period`. Verify in the destination product how far back the catch-up window reaches; the bundled contract fixes the option names, not the window.",
+        "Manual trigger «Open an out-of-cycle review» has no allowlist yet because the reviewing team is unknown (D2). Restrict it to that team in Provia once named; until then every holder of create_incident (only the importer and administrators under creator_only) can start it.",
+        "Assign `conduct-review` to the reviewing team in Provia before publication (validator item `assignment_missing`). No group id was invented.",
+        "`due` of 5 workdays from activation is an illustrative service level (D5); workdays skip Saturday and Sunday only, not Angolan public holidays.",
+        "No HTTP call, secret or destination allowlist is part of this design. If the review must read data from an external system, its API contract is required first (see monthly-review-trigger-spec.md, section 7).",
+        "Overdue escalation: once the recipient is decided (D6), add a notification action or a Provia overdue rule; none is emitted now because notification recipients need real group ids."
       ]
     }
   ],
@@ -43,35 +113,59 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "Qual é o dia e a hora exactos pretendidos para a revisão mensal? Assumimos dia 1 de cada mês às 09:00 (Africa/Luanda) por não ter sido indicado (ex.: podia ser o último dia útil do mês, ou outro horário).",
-      "owner": "Dono do processo de revisão mensal",
+      "question": "Which process does the monthly review belong to and what exactly is reviewed (scope, source records, checklist)? The request names none.",
+      "owner": "Process owner (to be named)",
       "status": "open",
       "raisedBy": "provia-automation-designer",
-      "sourceRefs": []
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "cadence" } ]
     },
     {
       "id": "D2",
-      "question": "Quais são as acções da revisão mensal em si (o que é revisto, por quem, com que evidência de conclusão)? O pedido definiu apenas o disparo (trigger); o corpo do workflow está por desenhar.",
-      "owner": "Dono do processo de revisão mensal",
+      "question": "Which group performs the review? Needed for the action assignee, the manual-trigger allowlist and the access grants.",
+      "owner": "Process owner (to be named)",
       "status": "open",
       "raisedBy": "provia-automation-designer",
-      "sourceRefs": []
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "cadence" } ]
     },
     {
       "id": "D3",
-      "question": "A política de execução perdida (missedBehavior) foi assumida como catch-up-one (um único incidente de recuperação, sem acumular revisões atrasadas). Confirmar se \"skip\" (não recuperar) ou \"catch-up-all\" (um incidente por cada mês perdido) serve melhor a política da organização.",
-      "owner": "Dono do processo de revisão mensal",
+      "question": "Run on the 1st of each month at 08:00 Luanda time (proposed), or another day/hour? Numeric cron cannot express «last day of the month» or «first working day».",
+      "owner": "Process owner (to be named)",
       "status": "open",
       "raisedBy": "provia-automation-designer",
-      "sourceRefs": []
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "timezone" } ]
     },
     {
       "id": "D4",
-      "question": "Qual o grupo ou pessoa responsável por executar/receber a revisão mensal, para que o workflow tenha um assignee e, se aplicável, uma notificação associada ao disparo?",
-      "owner": "Dono do processo de revisão mensal",
+      "question": "Confirm the missed-run policy: `catch-up-one` (proposed: one case on recovery, reviewer covers every missed month) or `catch-up-all` (one case per missed month, needed only if audit evidence must exist per month as a separate case). `skip` is not recommended because a missed month would leave no trace.",
+      "owner": "Process owner (to be named)",
       "status": "open",
       "raisedBy": "provia-automation-designer",
-      "sourceRefs": []
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "missed-run" } ]
+    },
+    {
+      "id": "D5",
+      "question": "What is the service level for completing the review? 5 workdays from case creation is illustrative.",
+      "owner": "Process owner (to be named)",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "missed-run" } ]
+    },
+    {
+      "id": "D6",
+      "question": "Who is informed when a review case is overdue, and through which channel (in-app, email)?",
+      "owner": "Process owner (to be named)",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "missed-run" } ]
+    },
+    {
+      "id": "D7",
+      "question": "Does the review need to be linked to an entity (for example a supplier, contract or cost centre) or to read data from an external system? If so, the entity type or the API contract is required.",
+      "owner": "Process owner (to be named)",
+      "status": "open",
+      "raisedBy": "provia-automation-designer",
+      "sourceRefs": [ { "source": "request-2026-09-21", "section": "cadence" } ]
     }
   ],
   "receipts": []

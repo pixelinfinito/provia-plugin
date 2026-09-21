@@ -1,8 +1,31 @@
-Manifest validates cleanly. Both files are written to the working directory:
+## Short answer
 
-- **`workflow-review-findings.md`** — the review report
-- **`provia-project.json`** — minimal manifest recording D1/D2 (validated with `build-project-map.mjs --check`: 2 pending items, 0 warnings)
+It depends on where the parallel actions sit in the list, and I could not check that because no workflow was supplied.
 
-**Bottom line:** whether the parallel actions can start before budget approval isn't a file-validity question — it depends on the predecessor wiring, which no supplied design lets me inspect. The safe default is that any action committing spend or notifying an external party should have the approval's *approved* outcome as a predecessor; parallel branches that merely share a common predecessor with the approval (rather than depending on its outcome) will run regardless of the decision, which is only correct for non-committing prep work and only if the procedure intends it. No rollback/cancellation behavior for a rejected approval was described either. Both are recorded as open decisions (D1, D2) rather than answered, since answering would mean inventing a workflow structure that wasn't given.
+**What the product does** (confirmed from the pinned contract engine): every action has an `order` and an `executionMode` of `sequential` (default) or `parallel`. There is no separate predecessor list. Sequential actions wait for the action before them; parallel actions start together with their neighbours. So:
 
-Recommended next step: supply the actual `workflow.yaml` or export (or describe the action graph — actions, types, predecessors, `assigneeRef`s) and the SOP section on budget approval. If no workflow exists yet, `provia-workflow-designer` is the right skill to produce one from the procedure; I'd hand it this `provia-project.json` so it carries D1/D2 forward. If a design already exists elsewhere, share it and I'll continue this review against it directly.
+- Parallel actions placed **after** the budget approval Decision cannot start before it. Approval gates them.
+- Parallel actions placed **before** the Decision are active while approval is still undecided. That is the only way they "start before approval". Whether that is acceptable is a policy question I can't answer without the SOP.
+- The most common defect in this pattern is a Reject branch with no explicit `outcome`. It defaults to `continue`, so a rejected request still activates everything downstream. Reject should be `cancel_incident` with a required comment; rework should be `return_to_action`.
+
+One caveat: the engine carries schema and preview rules, not the runtime scheduler, so test a parallel action placed right after a sequential Decision in the destination before publishing.
+
+## What ran, what didn't
+
+- `review-actions.mjs workflow.yaml`: **not run**, exit 2, no file. No action names or briefs were reviewed.
+- `build-project-map.mjs --check`: ran on a minimal manifest I created; 0 errors, but it contains 0 workflows, so it says nothing about the real workflow's access or readiness.
+- Provia connector: tool present, permission not granted this session, so nothing was read from a tenant. Authorize it via your claude.ai connector settings if you want the export pulled directly.
+
+## Artefacts in the working directory
+
+- `review.md`: findings F1 to F7 (contract errors vs. policy gaps vs. improvements), the gate and access results as they actually stand, five test scenarios including one that tests the question itself.
+- `provia-project.json`: minimal manifest, disconnected mode, Angola as provisional country, five open decisions (D1 which actions / which Decision; D2 what may start before approval and its fate on rejection; D3 preparatory vs. committing work; D4 approval authority and thresholds; D5 service levels for `due`). Owners are named by role because no groups were supplied.
+- `setup.md`: generated from the manifest; lists the five decisions, nothing else pending.
+
+To finish the review, drop `workflow.yaml` (or the Provia export) and the approval paragraph of the SOP into this directory.
+
+**Next step:** rerun `provia-workflow-review` once the file exists. If the design itself is still open, `provia-workflow-designer` first, to place committing work after the Decision and preparatory work before it.
+
+```text
+Use provia-workflow-review with provia-project.json in this directory plus the attached workflow.yaml and the budget-approval section of the SOP. Resolve decisions D1–D5, run review-actions.mjs and build-project-map.mjs --check, and confirm which parallel actions sit before the approval Decision. Country: Angola (provisional); reply in English.
+```

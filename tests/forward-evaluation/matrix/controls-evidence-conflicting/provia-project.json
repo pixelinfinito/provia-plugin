@@ -1,39 +1,65 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "compras",
-    "title": "Pedido de compra — revisão de controlos e evidências",
-    "language": "pt-AO",
+    "key": "compras-controlos",
+    "title": "Purchase quotation control — evidence review",
+    "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": null,
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
-    "name": "Empresa exemplo",
-    "sector": "Serviços",
+    "name": null,
+    "sector": null,
     "mode": "disconnected",
     "tenantId": null,
     "productRevision": null
   },
   "sources": [
     {
-      "id": "politica-compras-cotacoes",
-      "title": "Política interna de compras — duas cotações acima de 500.000 AOA",
+      "id": "politica-compras",
+      "title": "Internal purchasing policy (Angola) — two-quotation rule",
       "kind": "policy",
       "version": null,
       "effectiveDate": null,
-      "sections": []
+      "sections": [
+        {
+          "anchor": "cotacoes",
+          "title": "Minimum quotations",
+          "summary": "Purchases above 500000 AOA require two quotations. Supplied as a one-line statement in chat on 2026-09-21; the policy document, its version, effective date and section numbering were not supplied."
+        }
+      ]
     },
     {
-      "id": "modelo-consultor-protecao-dados",
-      "title": "Modelo de contrato de consultoria — cláusula de protecção de dados (cita a LGPD brasileira)",
+      "id": "template-consultor",
+      "title": "Consultant template (cites Brazilian LGPD)",
       "kind": "other",
       "version": null,
       "effectiveDate": null,
-      "sections": []
+      "sections": [
+        {
+          "anchor": "base-legal",
+          "title": "Legal basis cited",
+          "summary": "The template cites Lei Geral de Proteção de Dados (LGPD, Brazil). The organization operates in Angola; the citation is a jurisdiction mismatch and is not adopted as a requirement source. The template itself was not supplied."
+        }
+      ]
+    },
+    {
+      "id": "registo-p1",
+      "title": "Purchase case P1 — 600000 AOA, one quotation",
+      "kind": "export",
+      "version": null,
+      "effectiveDate": null,
+      "sections": [
+        {
+          "anchor": "p1",
+          "title": "Case P1",
+          "summary": "Amount 600000 AOA; one quotation on record. Stated in chat on 2026-09-21; no export, case id, dates, requester, approver or attachments were supplied."
+        }
+      ]
     }
   ],
   "entityTypes": [],
@@ -44,22 +70,43 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "P1 (600.000 AOA) tem apenas uma cotação registada, acima do limiar interno de 500.000 AOA que exige duas. Regularizar o processo P1 (obter e anexar a segunda cotação ou registar e aprovar formalmente uma excepção) e, se o workflow não tiver uma acção que force o registo de duas cotações acima do limiar, adicionar essa validação.",
-      "owner": "Responsável de Compras / Direcção Financeira",
+      "question": "P1 (600000 AOA) has one quotation on record where the policy requires two. Was a second quotation obtained and not attached, or was a documented exception approved? If neither, who decides the remediation for P1 (obtain the second quotation, record a justified single-source exception, or record the deviation)?",
+      "owner": "Purchasing manager (process owner)",
       "status": "open",
       "raisedBy": "provia-controls-evidence",
       "sourceRefs": [
-        { "source": "politica-compras-cotacoes" }
+        { "source": "politica-compras", "section": "cotacoes" },
+        { "source": "registo-p1", "section": "p1" }
       ]
     },
     {
       "id": "D2",
-      "question": "O modelo de contrato de consultoria cita a LGPD (Lei n.º 13.709/2018, Brasil), que não é a lei aplicável a um processo sediado em Angola. Substituir a cláusula por texto alinhado com o instrumento angolano de protecção de dados pessoais (a verificar em https://apd.ao/ao/legislacao/, incluindo número, estado em vigor, data de publicação e data de verificação), com validação jurídica antes de reutilizar o modelo.",
-      "owner": "Jurídico / Encarregado de Protecção de Dados",
+      "question": "Confirm the policy wording, version and effective date: is the 500000 AOA threshold 'above' (strictly greater) or 'from', and is it measured on the amount with or without tax? Does the policy admit single-source exceptions and, if so, who approves them?",
+      "owner": "Finance director (policy owner)",
       "status": "open",
       "raisedBy": "provia-controls-evidence",
       "sourceRefs": [
-        { "source": "modelo-consultor-protecao-dados" }
+        { "source": "politica-compras", "section": "cotacoes" }
+      ]
+    },
+    {
+      "id": "D3",
+      "question": "The consultant template cites Brazilian LGPD for an Angolan process. Replace the citation with the applicable Angolan data-protection instrument, verified against https://apd.ao/ao/legislacao/ (instrument, article, status, verification date), or remove the legal citation from the template. Who owns the corrected template?",
+      "owner": "Legal / compliance",
+      "status": "open",
+      "raisedBy": "provia-controls-evidence",
+      "sourceRefs": [
+        { "source": "template-consultor", "section": "base-legal" }
+      ]
+    },
+    {
+      "id": "D4",
+      "question": "The two-quotation control is not yet mapped to a Provia workflow because no workflow design or manifest was supplied. Should the purchasing workflow be designed (or the existing one exported) so that the quotation check becomes a named action with evidence, and who owns that design?",
+      "owner": "Purchasing manager (process owner)",
+      "status": "open",
+      "raisedBy": "provia-controls-evidence",
+      "sourceRefs": [
+        { "source": "politica-compras", "section": "cotacoes" }
       ]
     }
   ],

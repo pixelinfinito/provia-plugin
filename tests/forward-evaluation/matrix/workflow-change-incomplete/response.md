@@ -1,16 +1,28 @@
-I've planned the change and written it to the working directory. Summary:
+Done. Here is where things stand.
 
-**Missing context**: no current workflow design, manifest, receipts, or open-incident evidence were supplied or found — that gap is exactly what the request flagged. Nothing here was invented to fill it; everything unresolved is recorded as an open decision instead.
+## What was delivered (all in the working directory)
 
-**Deliverables written**:
-- `provia-project.json` — a placeholder `target-workflow` (`status: change_planned`) with a proposed `extra-approval` Decision action and five open decisions (`D1`–`D5`: which live workflow, whether open-incident evidence can be inspected, who approves and where in the sequence, whether a new field is needed and must stay optional, effective date)
-- `workflow-change-plan.md` — the semantic-comparison framework, the explicitly **pending** open-incident impact check, the draft/publish plan, test cases, recovery instructions (no one-click rollback; re-import creates new lineage, not restored history), and the effective-date note
-- `project.html`, `setup.md` — generated and validated (`build-project-map.mjs --check`: 0 errors, 1 expected warning for the ownerless placeholder action)
+| File | Content |
+| --- | --- |
+| `workflow-change-plan.md` | The deliverable: inputs available vs. missing, confirmed product behaviour, semantic-comparison frame with the YAML/manifest fragment for the new Decision action, impact assessment (open cases, dependencies, people), 11-step draft-version plan in connected and disconnected modes, 10 test cases, recovery instructions, manifest update, state summary |
+| `provia-project.json` | New manifest (none existed): the change request as source `cr-extra-approval`, decisions D1–D8 with owners, `mode: disconnected`, no receipts |
+| `setup.md`, `project.html` | Generated from the manifest with `build-project-map.mjs --setup` / `--output` |
 
-Key point worth flagging: publishing a new version doesn't delete evidence on open incidents by itself — they keep running on their original version. The real way to lose evidence is procedural (force-restarting an open incident, or removing/renaming a field it depends on), which this plan explicitly warns against.
+`node scripts/build-project-map.mjs provia-project.json --check` ran clean: 0 workflows, 0 readiness blocks, 8 pending items (the decisions), 0 warnings. That validates the manifest shape only.
 
-Next recommended skill: `provia-workflow-designer`, once `D1` is resolved (the real workflow export/YAML) and `D3` has an answer (approver group and insertion point) — it can turn this placeholder into an actual action design against the real sequence.
+## The core answer to the request
+
+Publishing a new version does **not** lose evidence: open cases keep their instantiated actions, comments, files and field values, and finish on the old path. Evidence is lost only by avoidable moves, which the plan rules out: cancelling and re-opening cases to force them through the approval, re-importing YAML (new lineage, no history, no grants, no cases), or removing/renaming/requiring fields open cases hold. The right mechanics: a new draft **on the same workflow id** (`workflow_create_draft_version` + `workflow_update_draft_actions`, or a new draft in the UI), one inserted Decision, no field or form changes, out-of-band approval recorded on any open case the owner says must be approved. Recovery is another draft version reapplying the previous design, never a re-import.
+
+## What is unavailable or pending
+
+- **Active-incident impact check: pending.** No incident export was supplied and the Provia connector (`org_get_context`) was declined, so nothing was read from a tenant. The Provia connector needs authorizing via claude.ai connector settings before connected mode can be used.
+- **No current design**, so the before/after table is a frame to fill from the live export, and `workflows[]` in the manifest is empty — writing `status: change_planned` against an invented workflow would violate the honesty rules. The exact fragment to append is in §3/§8 of the plan.
+- `validate-workflow.mjs` and `review-actions.mjs` were not run: there is no YAML to run them on.
+- Country (Angola) and language (English) are provisional (D8).
+
+**Recommended next step:** `provia-workflow-change` again, once the live export and the incident list exist — that is what closes D1 and D6 and lets the `change_planned` entry be written. If the customer wants the design of the approval itself refined first (approver, outcomes, brief), `provia-workflow-designer` is the alternative.
 
 ```text
-Use provia-workflow-designer with provia-project.json in this directory. The workflow "target-workflow" (status: change_planned) has a placeholder Decision action "extra-approval" and open decisions D1–D5. Once the real live workflow export and the approver/position answers are available, replace the placeholder with the actual design and resolve D1 and D3. Country: Angola (provisional); reply in English.
+Use provia-workflow-change with provia-project.json and workflow-change-plan.md in this directory. Attached: the live YAML export of the workflow (workflow.current.yaml) and the export of its open incidents. Fill the semantic comparison in §3, close the active-incident impact check (D6), confirm D2–D5, append the workflow entry with status change_planned and the new decision action, and regenerate setup.md and project.html. Country: Angola (confirm); reply in English.
 ```

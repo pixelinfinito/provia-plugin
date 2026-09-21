@@ -1,20 +1,22 @@
-# provia-skills 1.1.0 — adapted from the plugin's procurement example for Angola; see setup.md and provia-project.json before importing.
+# provia-skills 1.2.0 — esqueleto da fase de recolha de propostas; ver setup.md e provia-project.json antes de importar.
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
   name: "Pedido de compra"
   prefix: COMP
-  description: "Adaptado do exemplo de compras do plugin para acolher a recolha de três propostas de fornecedores. Configurar responsáveis e regras antes da publicação."
+  description: "Pedido de compra com recolha de três propostas de fornecedores antes da adjudicação. Esqueleto de desenho: configurar responsáveis, formulário e regras antes da publicação."
 triggers:
   - type: manual
-    label: Iniciar pedido
+    label: Iniciar pedido de compra
     enabled: true
     config: {}
 fields:
   - name: purchase_amount
-    label: Montante solicitado
+    label: Montante estimado
     type: currency
     required: true
+    group: Pedido
+    width: half
     config:
       currency: AOA
       decimals: 2
@@ -22,139 +24,100 @@ fields:
     label: Centro de custo
     type: text
     required: true
-  - name: budget_reference
-    label: Referência orçamental
+    group: Pedido
+    width: half
+  - name: quotation_deadline
+    label: Data-limite para receber propostas
+    type: date
+    required: false
+    group: Pedido
+    width: half
+  - name: quotation_count
+    label: Número de propostas recebidas
+    type: number
+    required: false
+    group: Propostas
+    width: third
+    config:
+      min: 0
+      decimals: 0
+  - name: selected_supplier
+    label: Fornecedor recomendado
     type: text
     required: false
-  - name: order_reference
-    label: Referência da encomenda
-    type: text
-    required: false
-  - name: fornecedor_1_nome
-    label: "Fornecedor 1 — Nome"
-    type: text
-    required: true
-  - name: fornecedor_1_valor
-    label: "Fornecedor 1 — Valor da proposta"
+    group: Propostas
+    width: half
+  - name: selected_amount
+    label: Montante da proposta recomendada
     type: currency
-    required: true
+    required: false
+    group: Propostas
+    width: half
     config:
       currency: AOA
       decimals: 2
-  - name: fornecedor_1_prazo_entrega_dias
-    label: "Fornecedor 1 — Prazo de entrega (dias)"
-    type: number
-    required: true
-  - name: fornecedor_1_documento
-    label: "Fornecedor 1 — Documento da proposta"
-    type: file
-    required: true
-  - name: fornecedor_1_condicoes
-    label: "Fornecedor 1 — Condições / observações"
+  - name: selection_rationale
+    label: Fundamentação da recomendação
     type: rich_text
     required: false
-  - name: fornecedor_2_nome
-    label: "Fornecedor 2 — Nome"
-    type: text
-    required: true
-  - name: fornecedor_2_valor
-    label: "Fornecedor 2 — Valor da proposta"
-    type: currency
-    required: true
-    config:
-      currency: AOA
-      decimals: 2
-  - name: fornecedor_2_prazo_entrega_dias
-    label: "Fornecedor 2 — Prazo de entrega (dias)"
-    type: number
-    required: true
-  - name: fornecedor_2_documento
-    label: "Fornecedor 2 — Documento da proposta"
-    type: file
-    required: true
-  - name: fornecedor_2_condicoes
-    label: "Fornecedor 2 — Condições / observações"
-    type: rich_text
-    required: false
-  - name: fornecedor_3_nome
-    label: "Fornecedor 3 — Nome"
-    type: text
-    required: true
-  - name: fornecedor_3_valor
-    label: "Fornecedor 3 — Valor da proposta"
-    type: currency
-    required: true
-    config:
-      currency: AOA
-      decimals: 2
-  - name: fornecedor_3_prazo_entrega_dias
-    label: "Fornecedor 3 — Prazo de entrega (dias)"
-    type: number
-    required: true
-  - name: fornecedor_3_documento
-    label: "Fornecedor 3 — Documento da proposta"
-    type: file
-    required: true
-  - name: fornecedor_3_condicoes
-    label: "Fornecedor 3 — Condições / observações"
-    type: rich_text
-    required: false
-  - name: justificativa_dispensa
-    label: "Justificação de dispensa (menos de três propostas)"
-    type: rich_text
-    required: false
+    group: Propostas
+    width: full
+access:
+  grants:
+    - grantee: organization
+      level: create_incident
 actions:
   - id: registar
-    name: Registar a necessidade
+    name: Registar a necessidade de compra
     type: standard
     description: |
-      Tarefa: Descrever a necessidade de compra de forma que a chefia possa decidir sem perguntar.
-      Como: 1. Preencher o campo «Montante solicitado» com o valor total estimado em Kz, sem IVA. 2. Indicar o «Centro de custo» que suportará a despesa. 3. Escrever no título do pedido o bem ou serviço e a quantidade.
-      Evidência: O título, o montante e o centro de custo preenchidos.
-      Concluído quando: O pedido tem título, montante e centro de custo, e passa à recolha de propostas.
+      Tarefa: Descrever a necessidade de compra de forma que Compras possa pedir propostas a fornecedores sem perguntar.
+      Como: 1. Escrever no título do pedido o bem ou serviço, a quantidade e a especificação mínima. 2. Preencher «Montante estimado» com o valor total previsto em Kz. 3. Indicar o «Centro de custo» que suportará a despesa. 4. Se existir uma data até à qual as propostas têm de estar recebidas, preencher «Data-limite para receber propostas». 5. Anexar ao pedido o caderno de especificações ou a lista de requisitos, quando existir.
+      Evidência: O título, o «Montante estimado» e o «Centro de custo» preenchidos; as especificações anexadas quando existirem.
+      Concluído quando: O pedido descreve o que se compra, quanto se prevê gastar e por conta de que centro de custo, e passa a Compras para recolher propostas.
       Excepções: Se o montante ainda não for conhecido, não concluir: pedir uma estimativa ao serviço requisitante e registá-la antes de avançar.
     executionMode: sequential
     required: true
-    due:
-      offsetDays: 1
-      offsetType: workdays
-      basis: activation
     assignee:
       type: creator
   - id: recolher_propostas
-    name: Registar as propostas dos fornecedores
+    name: Recolher as propostas de fornecedores
     type: form_fill
     description: |
-      Tarefa: Registar as três propostas de fornecedores obtidas para este pedido de compra.
-      Como: 1. Contactar pelo menos três fornecedores e obter as respectivas propostas (email, telefone ou presencialmente). 2. Preencher no formulário «Propostas de fornecedores» o nome, o valor, o prazo de entrega e as condições de cada fornecedor. 3. Anexar o documento da proposta de cada fornecedor.
-      Evidência: Os campos de fornecedor, valor, prazo e o documento anexado, preenchidos para os três fornecedores.
-      Concluído quando: As três propostas estão registadas com os respectivos documentos anexados.
-      Excepções: Se não for possível obter três propostas, não concluir esta acção: preencher «Justificação de dispensa» com o motivo e comentar o pedido para que a chefia decida com a informação disponível.
+      Tarefa: Obter pelo menos três propostas de fornecedores distintos para o bem ou serviço descrito no pedido e registar cada uma no formulário «Proposta de fornecedor».
+      Como: 1. Ler o título, as especificações anexadas e a «Data-limite para receber propostas», quando preenchida. 2. Pedir uma proposta escrita a pelo menos três fornecedores distintos, enviando-lhes a mesma especificação. 3. Por cada proposta recebida, submeter uma resposta ao formulário «Proposta de fornecedor»: nome do fornecedor, data e referência da proposta, montante total, validade, prazo de entrega, condições de pagamento e o ficheiro da proposta. 4. Verificar que existem pelo menos três respostas de fornecedores distintos antes de concluir.
+      Evidência: Pelo menos três respostas submetidas ao formulário «Proposta de fornecedor», cada uma com o ficheiro da proposta anexado, de fornecedores distintos.
+      Concluído quando: O caso tem três ou mais respostas ao formulário «Proposta de fornecedor», de fornecedores distintos, cada uma com o ficheiro anexado.
+      Excepções: Se não for possível obter três propostas (fornecedor único, urgência, mercado sem alternativas), não concluir: registar as propostas obtidas, comentar no caso o motivo e os fornecedores contactados sem resposta, e pedir à chefia que autorize avançar com menos de três.
     executionMode: sequential
     required: true
-    due:
-      offsetDays: 3
-      offsetType: workdays
-      basis: activation
     assignee:
       type: creator
-    config:
-      formKey: propostas-fornecedores
-  - id: decidir
-    name: Decidir sobre o pedido
-    type: decision
+    config: {}
+  - id: comparar_propostas
+    name: Comparar as propostas e recomendar o fornecedor
+    type: standard
     description: |
-      Tarefa: Decidir se o pedido de compra avança, com base na necessidade descrita, nas três propostas registadas e no orçamento do departamento.
-      Como: 1. Ler a justificação no título e as três propostas de fornecedores registadas (valor, prazo e condições). 2. Confirmar que a compra está prevista no plano do departamento e que o «Centro de custo» está correcto. 3. Escolher «Aprovar» para avançar, «Devolver» para pedir correcções ao requerente ou «Rejeitar» para encerrar o pedido.
-      Evidência: Um comentário com o motivo é obrigatório em «Devolver» e «Rejeitar».
-      Concluído quando: A decisão está registada com o comentário exigido.
-      Excepções: Se o montante exceder a sua autoridade de aprovação, não decidir: comentar o limite e devolver ao requerente para que o pedido seja encaminhado à autoridade competente.
+      Tarefa: Comparar as propostas registadas no caso e recomendar um fornecedor, com a fundamentação necessária para a chefia decidir.
+      Como: 1. Abrir cada resposta ao formulário «Proposta de fornecedor» e o ficheiro anexado; confirmar que a proposta corresponde à especificação do pedido. 2. Comparar montante, validade, prazo de entrega e condições de pagamento num mapa comparativo. 3. Preencher «Número de propostas recebidas», «Fornecedor recomendado» e «Montante da proposta recomendada» com os valores da proposta escolhida. 4. Escrever em «Fundamentação da recomendação» por que razão essa proposta é a recomendada, em especial quando não é a de menor montante. 5. Anexar o mapa comparativo ao caso.
+      Evidência: Os campos «Número de propostas recebidas», «Fornecedor recomendado», «Montante da proposta recomendada» e «Fundamentação da recomendação» preenchidos; o mapa comparativo anexado.
+      Concluído quando: Os quatro campos estão preenchidos com valores retirados das respostas ao formulário e o mapa comparativo está anexado.
+      Excepções: Se nenhuma proposta cumprir a especificação, não concluir: comentar as desconformidades e pedir novas propostas na acção anterior. Se uma proposta tiver caducado, não a recomendar sem confirmação escrita do fornecedor anexada ao caso.
     executionMode: sequential
     required: true
-    due:
-      offsetDays: 2
-      offsetType: workdays
-      basis: activation
+    assignee:
+      type: creator
+  - id: decidir_adjudicacao
+    name: Decidir a adjudicação
+    type: decision
+    description: |
+      Tarefa: Decidir se a compra é adjudicada ao fornecedor recomendado, com base nas propostas registadas e na fundamentação de Compras.
+      Como: 1. Ler «Fornecedor recomendado», «Montante da proposta recomendada» e «Fundamentação da recomendação». 2. Confirmar que existem pelo menos três respostas ao formulário «Proposta de fornecedor» de fornecedores distintos, ou um comentário de Compras a justificar a excepção. 3. Confirmar que o montante recomendado cabe no «Montante estimado» e no centro de custo indicado, ou que o desvio está justificado. 4. Escolher «Aprovar» para adjudicar, «Devolver» para pedir novas propostas ou correcções, ou «Rejeitar» para encerrar o pedido.
+      Evidência: Um comentário com o motivo é obrigatório em «Devolver» e «Rejeitar».
+      Concluído quando: A decisão está registada com o comentário exigido.
+      Excepções: Se o montante exceder a sua autoridade de aprovação, não decidir: comentar o limite e devolver a Compras para que o pedido seja encaminhado à autoridade competente.
+    executionMode: sequential
+    required: true
     assignee:
       type: creator
     config:
@@ -163,42 +126,8 @@ actions:
           outcome: continue
         - label: Devolver
           outcome: return_to_action
-          target: registar
+          target: recolher_propostas
           requiresComment: true
         - label: Rejeitar
           outcome: cancel_incident
           requiresComment: true
-  - id: confirmar_cabimento
-    name: Confirmar disponibilidade orçamental
-    type: standard
-    description: |
-      Tarefa: Confirmar que existe cabimento orçamental para o montante pedido no centro de custo indicado.
-      Como: 1. Abrir o mapa orçamental do centro de custo no sistema de contabilidade. 2. Comparar o saldo disponível com o valor em «Montante solicitado». 3. Registar a referência do cabimento no campo «Referência orçamental».
-      Evidência: Anexar a captura do saldo com data e preencher «Referência orçamental».
-      Concluído quando: O saldo cobre o montante e a referência orçamental está registada.
-      Excepções: Se não houver cabimento, não concluir: comentar o défice e pedir à chefia que reveja o pedido ou indique outro centro de custo.
-    executionMode: sequential
-    required: true
-    due:
-      offsetDays: 2
-      offsetType: workdays
-      basis: activation
-    assignee:
-      type: creator
-  - id: encomendar
-    name: Registar a encomenda
-    type: standard
-    description: |
-      Tarefa: Emitir a encomenda ao fornecedor escolhido e registar a sua referência no pedido.
-      Como: 1. Confirmar que o fornecedor escolhido existe no registo de fornecedores e que os seus dados estão actualizados. 2. Emitir a nota de encomenda com o montante aprovado e a referência orçamental. 3. Enviar a nota ao fornecedor pelo canal acordado. 4. Preencher «Referência da encomenda».
-      Evidência: A nota de encomenda anexada e o campo «Referência da encomenda» preenchido.
-      Concluído quando: O fornecedor recebeu a nota de encomenda e a referência está registada no pedido.
-      Excepções: Se o fornecedor não existir no registo ou os dados estiverem desactualizados, não concluir: pedir a criação ou actualização do registo e comentar o pedido.
-    executionMode: sequential
-    required: true
-    due:
-      offsetDays: 3
-      offsetType: workdays
-      basis: activation
-    assignee:
-      type: creator

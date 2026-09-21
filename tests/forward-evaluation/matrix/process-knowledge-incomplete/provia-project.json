@@ -1,31 +1,34 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "process-knowledge-draft",
-    "title": "Process knowledge draft (source procedure not supplied)",
+    "key": "unnamed-procedure",
+    "title": "Runbook and memory glossary for an approved procedure (draft — source not supplied)",
     "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/process-knowledge",
-    "contractRevision": null,
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
     "name": null,
     "sector": null,
     "mode": "disconnected",
     "tenantId": null,
-    "productRevision": null
+    "productRevision": null,
+    "language": null,
+    "timezone": null
   },
   "sources": [
     {
       "id": "approved-procedure",
-      "title": "Approved procedure (content not supplied to this task)",
+      "title": "Approved procedure (referenced in the request; document not supplied)",
       "kind": "sop",
-      "version": "unknown",
+      "version": null,
       "effectiveDate": null,
-      "sections": []
+      "sections": [],
+      "emails": []
     }
   ],
   "entityTypes": [],
@@ -36,32 +39,40 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "What is the approved procedure or workflow (steps, actions, owners, versions) this runbook and memory glossary should be built from? No procedure text, workflow.yaml or export was supplied for this task.",
-      "owner": "Process owner (unspecified)",
+      "question": "Which document is the approved procedure, and what is its version and effective date? The request refers to it but no file, text or manifest was supplied in the working directory.",
+      "owner": "Process owner (name not supplied)",
       "status": "open",
       "raisedBy": "provia-process-knowledge",
-      "sourceRefs": []
+      "sourceRefs": [{ "source": "approved-procedure" }]
     },
     {
       "id": "D2",
-      "question": "Which policy documents, if any, govern this procedure? Needed to reconcile workflow vs. policy conflicts explicitly rather than leaving the reconciliation implicit.",
-      "owner": "Process owner (unspecified)",
+      "question": "Which Provia workflow version implements the procedure (workflow key, version number, published or draft)? Needed to separate published procedure from proposed changes and to write action briefs that match real action names, assignees and decision outcomes.",
+      "owner": "Provia administrator (name not supplied)",
       "status": "open",
       "raisedBy": "provia-process-knowledge",
-      "sourceRefs": []
+      "sourceRefs": [{ "source": "approved-procedure" }]
     },
     {
       "id": "D3",
-      "question": "Who is the update owner responsible for keeping the runbook and memory glossary current after each approved workflow change?",
-      "owner": "Process owner (unspecified)",
+      "question": "Which organization-specific terms, abbreviations, thresholds and roles must the memory glossary define? None can be proposed without the procedure or policy text; only Provia product terms are included in the draft.",
+      "owner": "Process owner (name not supplied)",
       "status": "open",
       "raisedBy": "provia-process-knowledge",
-      "sourceRefs": []
+      "sourceRefs": [{ "source": "approved-procedure" }]
     },
     {
       "id": "D4",
-      "question": "Which stable facts from this procedure should become proposed Agent Memory (organization-wide, administrator-reviewed), versus temporary case facts that stay in the incident? Cannot be decided without the actual procedure content.",
-      "owner": "Provia administrator",
+      "question": "Who owns runbook and memory updates (update owner), and which administrator reviews memory proposals before they are entered in Provia?",
+      "owner": "Process owner (name not supplied)",
+      "status": "open",
+      "raisedBy": "provia-process-knowledge",
+      "sourceRefs": [{ "source": "approved-procedure" }]
+    },
+    {
+      "id": "D5",
+      "question": "Country, response language, currency and timezone of the organization. Angola / en / AOA / Africa/Luanda are provisional starting values disclosed in the report, not confirmed facts.",
+      "owner": "Implementer",
       "status": "open",
       "raisedBy": "provia-process-knowledge",
       "sourceRefs": []

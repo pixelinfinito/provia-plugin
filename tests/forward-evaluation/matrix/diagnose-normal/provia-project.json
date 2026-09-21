@@ -1,73 +1,199 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
     "key": "compras",
-    "title": "Diagnóstico do processo de compras",
+    "title": "Pedido de compra — diagnóstico Junho/Agosto 2026",
     "language": "pt-AO",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
+    "name": null,
+    "sector": null,
     "mode": "disconnected",
     "tenantId": null,
-    "productRevision": null
+    "productRevision": null,
+    "language": "pt-AO",
+    "timezone": "Africa/Luanda"
   },
   "sources": [
     {
-      "id": "export-junho-2026",
-      "title": "Exportação agregada de Junho de 2026 (12 casos concluídos)",
-      "kind": "export"
+      "id": "export-jun-2026",
+      "title": "Exportação de casos concluídos — Junho 2026 (Pedido de compra)",
+      "kind": "export",
+      "version": null,
+      "effectiveDate": "2026-06-30",
+      "summary": "Agregado fornecido pelo cliente: 12 casos concluídos; tempo médio de ciclo 6,5 dias úteis; tempo médio em «Decidir sobre o pedido» 3,1 dias; 2 casos devolvidos. Sem linhas por caso.",
+      "sections": [
+        { "anchor": "resumo", "title": "Indicadores agregados de Junho 2026" }
+      ]
     },
     {
-      "id": "export-agosto-2026",
-      "title": "Exportação agregada de Agosto de 2026 (19 casos concluídos)",
-      "kind": "export"
+      "id": "export-ago-2026",
+      "title": "Exportação de casos concluídos — Agosto 2026 (Pedido de compra)",
+      "kind": "export",
+      "version": null,
+      "effectiveDate": "2026-08-31",
+      "summary": "Agregado fornecido pelo cliente: 19 casos concluídos; tempo médio de ciclo 9,8 dias úteis; tempo médio em «Decidir sobre o pedido» 6,4 dias; 7 casos devolvidos. Sem linhas por caso.",
+      "sections": [
+        { "anchor": "resumo", "title": "Indicadores agregados de Agosto 2026" }
+      ]
     },
     {
-      "id": "casos-abertos-20260918",
-      "title": "Casos abertos em 2026-09-18 09:00 (Africa/Luanda): COMP-201, COMP-204, COMP-207",
-      "kind": "export"
+      "id": "snapshot-2026-09-18",
+      "title": "Casos abertos em 2026-09-18 09:00 (Africa/Luanda)",
+      "kind": "export",
+      "version": null,
+      "effectiveDate": "2026-09-18",
+      "summary": "Instantâneo dos casos abertos fornecido pelo cliente: COMP-201, COMP-204 e COMP-207, com acção actual, dias na acção, prazo e responsável quando indicados.",
+      "sections": [
+        { "anchor": "COMP-201", "title": "COMP-201 em «Decidir sobre o pedido» há 8 dias úteis; prazo 2 dias; responsável não atribuído" },
+        { "anchor": "COMP-204", "title": "COMP-204 em «Confirmar disponibilidade orçamental» há 1 dia; prazo e responsável não indicados" },
+        { "anchor": "COMP-207", "title": "COMP-207 em «Registar a encomenda» há 4 dias; prazo 3 dias; responsável Compras" }
+      ]
     }
   ],
   "entityTypes": [],
-  "groups": [],
-  "workflows": [],
+  "groups": [
+    {
+      "key": "compras",
+      "name": "Compras",
+      "kind": "team",
+      "area": "compras",
+      "parentKey": null,
+      "purpose": "Equipa indicada como responsável por «Registar a encomenda» no instantâneo de 2026-09-18. Composição não fornecida.",
+      "members": [],
+      "membersComplete": false,
+      "sourceRefs": [ { "source": "snapshot-2026-09-18", "section": "COMP-207" } ],
+      "flags": [ { "code": "unnamed", "detail": "Nenhum membro identificado nas exportações; o grupo existe no Provia do cliente com este nome, mas a sua composição não foi fornecida." } ]
+    }
+  ],
+  "workflows": [
+    {
+      "key": "compras",
+      "name": "Pedido de compra",
+      "prefix": "COMP",
+      "file": null,
+      "status": "design",
+      "ownerArea": "compras",
+      "sourceRefs": [
+        { "source": "export-jun-2026" },
+        { "source": "export-ago-2026" },
+        { "source": "snapshot-2026-09-18" }
+      ],
+      "access": {
+        "default": "creator_only",
+        "sensitivity": "internal",
+        "note": "Valor de preenchimento para o verificador. As exportações não indicam quem vê ou abre o workflow; o acesso real do workflow publicado tem de ser lido no Provia do cliente antes de qualquer alteração (ver D6)."
+      },
+      "triggers": [],
+      "templates": [],
+      "unresolvedActors": [
+        { "key": "decisor-pedido", "name": "Responsável por «Decidir sobre o pedido»", "detail": "O instantâneo mostra COMP-201 sem responsável nesta acção; as exportações não indicam quem decide. Ver D1." },
+        { "key": "confirmador-orcamento", "name": "Responsável por «Confirmar disponibilidade orçamental»", "detail": "Não indicado nas exportações. Ver D5." }
+      ],
+      "unresolvedEntityTypes": [],
+      "actions": [
+        {
+          "localId": "confirmar-orcamento",
+          "name": "Confirmar disponibilidade orçamental",
+          "type": "standard",
+          "sourceRefs": [ { "source": "snapshot-2026-09-18", "section": "COMP-204" } ],
+          "assigneeRef": null,
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [],
+          "dueInSource": null
+        },
+        {
+          "localId": "decidir",
+          "name": "Decidir sobre o pedido",
+          "type": "decision",
+          "sourceRefs": [
+            { "source": "export-jun-2026", "section": "resumo" },
+            { "source": "export-ago-2026", "section": "resumo" },
+            { "source": "snapshot-2026-09-18", "section": "COMP-201" }
+          ],
+          "assigneeRef": null,
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [],
+          "dueInSource": { "text": "prazo 2 dias (instantâneo COMP-201; tipo de dia não indicado)", "kind": "countdown" }
+        },
+        {
+          "localId": "registar-encomenda",
+          "name": "Registar a encomenda",
+          "type": "standard",
+          "sourceRefs": [ { "source": "snapshot-2026-09-18", "section": "COMP-207" } ],
+          "assigneeRef": "compras",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [],
+          "dueInSource": { "text": "prazo 3 dias (instantâneo COMP-207; tipo de dia não indicado)", "kind": "countdown" }
+        }
+      ],
+      "subWorkflowRefs": [],
+      "setupNotes": [
+        "Esta entrada foi reconstruída a partir das exportações agregadas e do instantâneo de casos abertos; não é o desenho publicado. Só as três acções observadas estão listadas e a sua sequência real não foi fornecida (ver D4).",
+        "Não foi possível ler o Provia do cliente nesta sessão (o servidor MCP não foi autorizado); o diagnóstico usa apenas os dados fornecidos.",
+        "Proposta de mudança (D2): atribuir responsável por omissão a «Decidir sobre o pedido», com substituto nomeado, e medir em Outubro 2026. A alteração do workflow publicado com casos em curso deve ser planeada com provia-workflow-change."
+      ]
+    }
+  ],
   "forms": [],
   "aiProfiles": [],
   "decisions": [
     {
       "id": "D1",
-      "question": "Quem assume agora a decisão do caso COMP-201 («Decidir sobre o pedido»)? Está sem responsável atribuído e já leva 8 dias úteis na acção, 6 dias úteis além do prazo de 2 dias.",
-      "owner": "Chefia de Compras (a confirmar)",
+      "question": "Quem é o responsável por omissão de «Decidir sobre o pedido» e quem o substitui em ausência? COMP-201 está há 8 dias úteis nesta acção sem responsável (prazo 2 dias) e o tempo médio nesta acção passou de 3,1 para 6,4 dias entre Junho e Agosto de 2026.",
+      "owner": "Dono do processo de compras (a nomear pela Direcção)",
       "status": "open",
-      "raisedBy": "provia-operations-triage",
-      "sourceRefs": [ { "source": "casos-abertos-20260918" } ]
+      "raisedBy": "provia-diagnose",
+      "sourceRefs": [ { "source": "snapshot-2026-09-18", "section": "COMP-201" }, { "source": "export-ago-2026", "section": "resumo" } ]
     },
     {
       "id": "D2",
-      "question": "Confirmar a causa do aumento do tempo em «Decidir sobre o pedido» (3,1 → 6,4 dias úteis) e da taxa de devolução (16,7% → 36,8%) entre Junho e Agosto de 2026: falta de responsável atribuído nesta acção, aumento de volume (12 → 19 casos, +58%), ou informação insuficiente nas propostas que leva à devolução.",
-      "owner": "Dono do processo de Compras",
+      "question": "Aprovar a mudança proposta: definir responsável por omissão (grupo) e substituto para «Decidir sobre o pedido» e medir, nos casos concluídos em Outubro 2026, o tempo médio nesta acção (meta: ≤ 3,1 dias, nível de Junho) e a percentagem de casos com esta acção sem responsável no momento da activação (meta: 0%).",
+      "owner": "Dono do processo de compras (a nomear pela Direcção)",
       "status": "open",
-      "raisedBy": "provia-process-improvement",
-      "sourceRefs": [ { "source": "export-junho-2026" }, { "source": "export-agosto-2026" } ]
+      "raisedBy": "provia-diagnose",
+      "sourceRefs": [ { "source": "export-jun-2026", "section": "resumo" }, { "source": "export-ago-2026", "section": "resumo" } ]
     },
     {
       "id": "D3",
-      "question": "Definir o prazo (due) e o responsável da acção «Confirmar disponibilidade orçamental»: o caso COMP-204 está há 1 dia útil nesta acção sem prazo registado, o que impede classificar se está atrasado.",
-      "owner": "Dono do processo de Compras",
+      "question": "Qual é o motivo das 7 devoluções de Agosto de 2026 (36,8% dos casos, contra 16,7% em Junho)? As exportações não trazem o motivo nem a acção para onde o caso regressou; é necessário exportar os comentários e o resultado da decisão desses 7 casos.",
+      "owner": "Compras",
       "status": "open",
-      "raisedBy": "provia-operations-triage",
-      "sourceRefs": [ { "source": "casos-abertos-20260918" } ]
+      "raisedBy": "provia-diagnose",
+      "sourceRefs": [ { "source": "export-ago-2026", "section": "resumo" } ]
     },
     {
       "id": "D4",
-      "question": "Aprovar a atribuição de um responsável fixo (grupo, não pessoa) à acção «Decidir sobre o pedido» e um alerta de escalonamento ao fim de 1 dia útil do prazo de 2 dias, como medida para reduzir o tempo médio nesta acção e o número de casos sem dono.",
-      "owner": "Dono do processo de Compras / Direcção Financeira (a confirmar)",
+      "question": "Confirmar as definições das métricas exportadas: o «tempo médio em Decidir sobre o pedido» (3,1 e 6,4 dias) é em dias úteis como o tempo de ciclo? Junho e Agosto foram executados na mesma versão publicada do workflow? Qual é a sequência real das acções (Confirmar disponibilidade orçamental → Decidir → Registar a encomenda foi assumida)?",
+      "owner": "Administrador do Provia na organização",
       "status": "open",
-      "raisedBy": "provia-process-improvement",
-      "sourceRefs": [ { "source": "export-agosto-2026" }, { "source": "casos-abertos-20260918" } ]
+      "raisedBy": "provia-diagnose",
+      "sourceRefs": [ { "source": "export-jun-2026", "section": "resumo" }, { "source": "export-ago-2026", "section": "resumo" } ]
+    },
+    {
+      "id": "D5",
+      "question": "«Confirmar disponibilidade orçamental» tem prazo e responsável por omissão configurados? O instantâneo de COMP-204 não os indica, pelo que não é possível dizer se o caso está atrasado.",
+      "owner": "Administrador do Provia na organização",
+      "status": "open",
+      "raisedBy": "provia-diagnose",
+      "sourceRefs": [ { "source": "snapshot-2026-09-18", "section": "COMP-204" } ]
+    },
+    {
+      "id": "D6",
+      "question": "Quem vê e quem abre o workflow «Pedido de compra» no Provia do cliente? O acesso real não consta das exportações; a entrada do manifesto usa creator_only apenas como preenchimento e tem de ser substituída pelo acesso lido antes de planear qualquer alteração.",
+      "owner": "Administrador do Provia na organização",
+      "status": "open",
+      "raisedBy": "provia-diagnose",
+      "sourceRefs": [ { "source": "snapshot-2026-09-18" } ]
     }
   ],
   "receipts": []

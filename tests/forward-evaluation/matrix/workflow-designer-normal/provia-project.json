@@ -1,5 +1,5 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
     "key": "compras",
     "title": "Pedido de compra",
@@ -7,9 +7,9 @@
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
     "name": null,
@@ -20,133 +20,141 @@
   },
   "sources": [
     {
-      "id": "pedido-utilizador",
-      "title": "Pedido do utilizador sobre o procedimento de compras",
+      "id": "pedido-compras-2026-09-21",
+      "title": "Descrição verbal do procedimento de compras (pedido de desenho)",
       "kind": "interview",
-      "effectiveDate": "2026-09-18",
+      "version": null,
+      "effectiveDate": "2026-09-21",
+      "summary": "Única fonte fornecida: «Transforme o nosso procedimento de compras num workflow. A chefia aprova o pedido e as Finanças confirmam a disponibilidade orçamental.» O documento escrito do procedimento não foi entregue.",
       "sections": [
-        { "anchor": "1", "title": "Fluxo de compras descrito pelo utilizador" }
-      ]
+        { "anchor": "S1", "title": "Pedido de compra (implícito na frase «procedimento de compras»)", "summary": "Alguém apresenta um pedido de compra; a fonte não diz quem nem com que dados." },
+        { "anchor": "S2", "title": "A chefia aprova o pedido", "summary": "Aprovação hierárquica do pedido; a fonte não descreve rejeição, devolução nem limites de montante." },
+        { "anchor": "S3", "title": "As Finanças confirmam a disponibilidade orçamental", "summary": "Confirmação de cabimento pelas Finanças; a fonte não diz o que acontece sem cabimento nem o que se segue à confirmação." }
+      ],
+      "emails": []
     }
   ],
   "entityTypes": [],
   "groups": [
     {
       "key": "chefias",
-      "name": "Chefias de departamento",
+      "name": "Chefias",
+      "kind": "team",
+      "area": null,
       "parentKey": null,
-      "purpose": "Aprovar os pedidos de compra do respectivo departamento.",
+      "purpose": "Aprova os pedidos de compra da sua equipa antes da confirmação orçamental. A fonte diz «a chefia» sem identificar o nível (chefia directa, chefe de departamento ou direcção); ver decisão D2.",
       "members": [
-        { "role": "Chefe de departamento", "email": null }
+        { "role": "Chefia do requerente", "email": null, "verified": false }
       ],
-      "sourceRefs": [
-        { "source": "pedido-utilizador", "section": "1" }
-      ],
-      "flags": []
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S2" } ],
+      "flags": [
+        { "code": "unnamed", "detail": "«A chefia» não identifica o nível hierárquico nem como se escolhe a chefia certa para cada pedido; o produto atribui a um grupo, não ao superior do requerente." },
+        { "code": "segregation", "detail": "Uma chefia pode ser requerente do seu próprio pedido; a fonte não diz quem aprova nesse caso." }
+      ]
     },
     {
       "key": "financas",
       "name": "Finanças",
+      "kind": "team",
+      "area": "financas",
       "parentKey": null,
-      "purpose": "Confirmar a disponibilidade orçamental dos pedidos de compra aprovados e registar a referência orçamental.",
+      "purpose": "Confirma a disponibilidade orçamental (cabimento) dos pedidos aprovados pela chefia e regista a referência de cabimento.",
       "members": [
-        { "role": "Colaborador de Finanças", "email": null }
+        { "role": "Técnico de orçamento / Finanças", "email": null, "verified": false }
       ],
-      "sourceRefs": [
-        { "source": "pedido-utilizador", "section": "1" }
-      ],
-      "flags": [
-        { "code": "alias", "detail": "Pode ser designado «Direcção Financeira», «Contabilidade» ou «DAF» na organização; confirmar o nome usado antes da publicação." }
-      ]
-    },
-    {
-      "key": "compras",
-      "name": "Compras",
-      "parentKey": null,
-      "purpose": "Executar as compras aprovadas junto dos fornecedores. Suposição típica de PME, não mencionada pelo utilizador — confirmar se existe uma equipa dedicada ou se a tarefa cabe a Finanças ou ao requerente.",
-      "members": [],
-      "sourceRefs": [],
-      "flags": [
-        { "code": "unnamed", "detail": "Grupo proposto apenas como suposição de um procedimento de compras típico de PME; não há menção deste actor no pedido original." }
-      ]
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S3" } ],
+      "flags": []
     }
   ],
   "workflows": [
     {
-      "key": "compras",
+      "key": "pedido_compra",
       "name": "Pedido de compra",
       "prefix": "COMP",
       "file": "workflow.yaml",
       "status": "design",
-      "sourceRefs": [
-        { "source": "pedido-utilizador", "section": "1" }
+      "ownerArea": null,
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21" } ],
+      "access": {
+        "grants": [
+          {
+            "grantee": "organization",
+            "level": "create_incident",
+            "reason": "Pressuposto: qualquer colaborador pode abrir um pedido de compra; a fonte fala do «nosso procedimento de compras» sem restringir quem pede. Confirmar na decisão D6.",
+            "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S1" } ]
+          }
+        ],
+        "sensitivity": "internal",
+        "note": "A fonte não usa palavras de confidencialidade; «internal» é o pressuposto. Chefias e Finanças não recebem «view»: vêem os casos que lhes chegam pelas suas acções. Não foi atribuído «edit» porque a fonte não nomeia o dono do procedimento (decisão D8)."
+      },
+      "triggers": [
+        { "type": "manual", "label": "Iniciar pedido de compra", "enabled": true, "manual": { "allowedGroups": [], "allowedUsers": [] } }
       ],
+      "templates": [],
+      "unresolvedActors": [],
+      "unresolvedEntityTypes": [],
       "actions": [
         {
           "localId": "registar_pedido",
           "name": "Registar o pedido de compra",
           "type": "standard",
-          "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ],
+          "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S1" } ],
           "assigneeRef": "creator",
+          "setsFields": [ "purchase_description", "purchase_amount", "cost_centre", "purchase_justification", "supplier_quotation" ],
           "formRef": null,
           "entityRefs": [],
-          "evidence": [ "Descrição, montante e centro de custo preenchidos" ],
+          "evidence": [
+            "Campos purchase_description, purchase_amount, cost_centre e purchase_justification preenchidos",
+            "Proposta do fornecedor anexada em supplier_quotation quando existir (recomendação)"
+          ],
           "due": null,
-          "folded": []
+          "dueInSource": null,
+          "folded": [
+            { "section": "S2", "summary": "Devolução pela chefia: o requerente corrige o pedido nesta acção e volta a concluí-la (caminho de retorno da decisão decidir_chefia)." },
+            { "section": "S3", "summary": "Sem cabimento: o requerente revê o montante ou o centro de custo nesta acção (caminho de retorno da decisão confirmar_cabimento; recomendação, ver D3)." }
+          ]
         },
         {
           "localId": "decidir_chefia",
           "name": "Decidir sobre o pedido de compra",
           "type": "decision",
-          "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ],
+          "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S2" } ],
           "assigneeRef": "chefias",
           "formRef": null,
           "entityRefs": [],
-          "evidence": [ "Comentário obrigatório em Devolver e Rejeitar" ],
+          "evidence": [
+            "Decisão registada: Aprovar / Devolver / Rejeitar",
+            "Comentário obrigatório em Devolver e Rejeitar (recomendação: a fonte não descreve rejeição)"
+          ],
           "due": null,
+          "dueInSource": null,
           "folded": []
         },
         {
-          "localId": "confirmar_orcamento",
+          "localId": "confirmar_cabimento",
           "name": "Confirmar a disponibilidade orçamental",
           "type": "decision",
-          "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ],
+          "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S3" } ],
           "assigneeRef": "financas",
+          "setsFields": [ "budget_reference" ],
           "formRef": null,
           "entityRefs": [],
-          "evidence": [ "Referência orçamental preenchida em Confirmar disponibilidade; comentário obrigatório em Sem disponibilidade" ],
+          "evidence": [
+            "Campo budget_reference preenchido em «Cabimento confirmado»",
+            "Captura ou extracto do saldo orçamental com data anexado (recomendação)",
+            "Comentário obrigatório com o défice em «Sem cabimento»"
+          ],
           "due": null,
-          "folded": []
-        },
-        {
-          "localId": "executar_compra",
-          "name": "Executar a compra junto do fornecedor",
-          "type": "standard",
-          "sourceRefs": [],
-          "assigneeRef": "compras",
-          "formRef": null,
-          "entityRefs": [],
-          "evidence": [ "Nota de encomenda anexada; referência da encomenda preenchida" ],
-          "due": null,
-          "folded": []
-        },
-        {
-          "localId": "confirmar_recepcao",
-          "name": "Confirmar a recepção dos bens ou serviços",
-          "type": "standard",
-          "sourceRefs": [],
-          "assigneeRef": "creator",
-          "formRef": null,
-          "entityRefs": [],
-          "evidence": [ "Documento de recepção anexado" ],
-          "due": null,
+          "dueInSource": null,
           "folded": []
         }
       ],
       "subWorkflowRefs": [],
       "setupNotes": [
-        "País não indicado pelo utilizador; assumido Angola/pt-AO/AOA/Africa-Luanda a título provisório — confirmar antes de publicar.",
-        "As acções «executar_compra» e «confirmar_recepcao», e o grupo «compras», são suposições típicas de PME não mencionadas no pedido original; confirmar se pertencem a este workflow."
+        "Fonte única: uma frase do pedido de desenho. O procedimento escrito não foi fornecido; a classificação deve ser refeita quando o documento existir (decisão D8).",
+        "Os grupos chefias e financas não têm membros nem identificadores de destino; atribuir os responsáveis das acções decidir_chefia e confirmar_cabimento em Provia após criar os grupos.",
+        "O campo purchase_amount é currency em AOA; introduzir o montante como número (250000), não como texto formatado.",
+        "Nenhum prazo (due) foi definido porque a fonte não indica níveis de serviço (decisão D4)."
       ]
     }
   ],
@@ -155,59 +163,83 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "Quem integra o grupo «Chefias de departamento»: a chefia directa de cada requerente, uma chefia única, ou depende do departamento?",
-      "owner": "Dono do processo de compras",
+      "question": "A ordem é sequencial (chefia aprova, depois as Finanças confirmam o cabimento)? O desenho assume a ordem da frase; a alternativa (Finanças primeiro, ou em paralelo) muda o fluxo.",
+      "owner": "Dono do procedimento de compras",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
-      "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ]
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S2" }, { "source": "pedido-compras-2026-09-21", "section": "S3" } ]
     },
     {
       "id": "D2",
-      "question": "Existe um limiar de valor a partir do qual a aprovação sobe a uma autoridade superior à chefia (por exemplo direcção-geral)? Nenhum foi indicado; não foi codificado nenhum limiar no desenho.",
-      "owner": "Direcção",
+      "question": "Quem é «a chefia» que aprova: a chefia directa do requerente, o chefe de departamento ou a direcção? Como se escolhe a chefia certa em cada pedido (um grupo por departamento, atribuição manual dentro do grupo «Chefias», ou um campo do pedido)? Quem substitui a chefia ausente?",
+      "owner": "Dono do procedimento de compras",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
-      "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ]
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S2" } ]
     },
     {
       "id": "D3",
-      "question": "Quando as Finanças não confirmam disponibilidade orçamental, o pedido deve voltar ao requerente (comportamento assumido nesta versão) ou deve ser decidido pela chefia, por exemplo para aguardar orçamento ou cancelar?",
-      "owner": "Dono do processo de compras",
+      "question": "O que acontece quando não há cabimento? O desenho propõe devolver ao requerente com comentário (para rever montante ou centro de custo). Alternativas: devolver à chefia, ou cancelar o pedido.",
+      "owner": "Finanças",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
-      "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ]
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S3" } ]
     },
     {
       "id": "D4",
-      "question": "Quais são os prazos esperados (SLA) para cada etapa — registo do pedido, decisão da chefia, confirmação orçamental, execução da compra e confirmação de recepção? Nenhum foi indicado, pelo que «due» ficou por definir em todas as acções.",
-      "owner": "Dono do processo de compras",
+      "question": "Quais os prazos de cada passo (registo, decisão da chefia, confirmação das Finanças)? A fonte não indica níveis de serviço; nenhum due foi definido.",
+      "owner": "Dono do procedimento de compras",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
-      "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ]
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21" } ]
     },
     {
       "id": "D5",
-      "question": "As acções «Executar a compra» e «Confirmar a recepção», e o grupo «Compras», são uma suposição típica de PME, não mencionada no pedido original. Pertencem a este workflow, a um workflow separado, ou devem ser removidas nesta fase?",
-      "owner": "Dono do processo de compras",
+      "question": "O que se segue à confirmação de cabimento e o que encerra o caso? Quem executa a compra (Compras? o requerente?), há adjudicação, recepção ou pagamento dentro deste workflow? O desenho termina na confirmação de cabimento.",
+      "owner": "Dono do procedimento de compras",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
-      "sourceRefs": []
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S3" } ]
     },
     {
       "id": "D6",
-      "question": "Qual é a designação oficial usada pela organização para o grupo «Finanças» (Finanças, Direcção Financeira, Contabilidade, DAF)?",
-      "owner": "Direcção Financeira",
+      "question": "Quem pode abrir um pedido de compra? O desenho assume qualquer colaborador (organization → create_incident). Se apenas algumas equipas pedem, a concessão passa a ser por grupo.",
+      "owner": "Dono do procedimento de compras",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
-      "sourceRefs": [ { "source": "pedido-utilizador", "section": "1" } ]
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S1" } ]
     },
     {
       "id": "D7",
-      "question": "Qual é o país/jurisdição real da organização? Foi assumido Angola (pt-AO, AOA, Africa/Luanda) a título provisório, na ausência de indicação do utilizador.",
-      "owner": "Dono do projecto",
+      "question": "Segregação: quando o requerente é ele próprio uma chefia, quem aprova o pedido? A descrição da acção manda não decidir sobre o próprio pedido, mas a fonte não indica a autoridade alternativa.",
+      "owner": "Dono do procedimento de compras",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
-      "sourceRefs": []
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S2" } ]
+    },
+    {
+      "id": "D8",
+      "question": "Quem é o dono do procedimento de compras (recebe «edit» no workflow e define ownerArea) e onde está o procedimento escrito? A classificação foi feita sobre uma frase; o documento pode conter passos, limites de montante e evidências que faltam aqui.",
+      "owner": "Direcção",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21" } ]
+    },
+    {
+      "id": "D9",
+      "question": "Existem limites de montante ou categorias que exigem outra autoridade (por exemplo a Direcção acima de certo valor)? Nenhum limite foi codificado porque a fonte não o indica; a Decisão da chefia aplica a regra que a organização confirmar.",
+      "owner": "Dono do procedimento de compras",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S2" } ]
+    },
+    {
+      "id": "D10",
+      "question": "Os dados do pedido propostos (descrição, montante em Kz, centro de custo, justificação, proposta do fornecedor opcional) são os que a chefia e as Finanças precisam? O centro de custo e a proposta são recomendações do desenho, não exigências da fonte.",
+      "owner": "Finanças",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [ { "source": "pedido-compras-2026-09-21", "section": "S1" } ]
     }
   ],
   "receipts": []

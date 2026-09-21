@@ -1,15 +1,15 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "pedidos",
-    "title": "Análise de desempenho — pedidos concluídos (Ago/Set)",
+    "key": "pedidos-desempenho",
+    "title": "Request handling — August vs September performance comparison",
     "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": null,
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
     "name": null,
@@ -20,12 +20,16 @@
   },
   "sources": [
     {
-      "id": "summary-aug-sep",
-      "title": "Summary figures supplied in chat (August vs September completed requests)",
-      "kind": "other",
-      "version": "1",
-      "effectiveDate": "2026-09-18",
-      "sections": []
+      "id": "resumo-ago-set",
+      "title": "Verbal summary: August 10 completed, mean 2 days; September 30 completed, mean 4 days, cases more complex",
+      "kind": "interview",
+      "version": "2026-09-21",
+      "effectiveDate": "2026-09-21",
+      "sections": [
+        { "anchor": "agosto", "title": "August: 10 completed requests, mean 2 days" },
+        { "anchor": "setembro", "title": "September: 30 completed requests, mean 4 days, more complex" },
+        { "anchor": "pergunta", "title": "Request: prove the new manager worsened performance" }
+      ]
     }
   ],
   "entityTypes": [],
@@ -36,23 +40,27 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "No raw case-level export was supplied (only two aggregate means and counts). Can raw records (per-case created/completed timestamps, complexity tag, assignee, workflow version) be exported so cycle time can be stratified by complexity and checked for duplicates/outliers instead of compared as two bare means?",
-      "owner": "lisboa@pixel.ao",
+      "question": "Who is the process owner for the request workflow and for the October measurement (complexity tiers, waiting vs active time)?",
+      "owner": "Requester",
       "status": "open",
       "raisedBy": "provia-process-improvement",
-      "sourceRefs": [
-        { "source": "summary-aug-sep" }
-      ]
+      "sourceRefs": [ { "source": "resumo-ago-set", "section": "pergunta" } ]
     },
     {
       "id": "D2",
-      "question": "The comparison conflates a 3x volume increase (10→30 completed requests) and a reported rise in case complexity with a manager change. Attribution of the +2 day mean cycle-time increase to the new manager's performance cannot be established from these two aggregates alone — what complexity metric or tag exists (or should be introduced) to separate volume/complexity effects from manager-attributable effects?",
-      "owner": "lisboa@pixel.ao",
+      "question": "Supply case-level exports for full August and September (case id, workflow version, created/completed timestamps, action history), the manager's start date and the list of changes the manager introduced. Without them the attribution question stays open.",
+      "owner": "Requester",
       "status": "open",
       "raisedBy": "provia-process-improvement",
-      "sourceRefs": [
-        { "source": "summary-aug-sep" }
-      ]
+      "sourceRefs": [ { "source": "resumo-ago-set", "section": "setembro" } ]
+    },
+    {
+      "id": "D3",
+      "question": "Agree the complexity tier criteria (simple / standard / complex) to be recorded at intake from October; if this needs a new intake field or action, plan it with provia-workflow-change.",
+      "owner": "Process owner (D1)",
+      "status": "open",
+      "raisedBy": "provia-process-improvement",
+      "sourceRefs": [ { "source": "resumo-ago-set", "section": "setembro" } ]
     }
   ],
   "receipts": []

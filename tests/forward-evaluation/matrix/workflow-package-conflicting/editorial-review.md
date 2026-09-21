@@ -1,30 +1,63 @@
-# Editorial review — Pedido de Compra (workflow.yaml)
+# Revisão editorial — Pedido de despesa (`workflow.yaml`)
 
-Reviewed scope: all 3 actions in `workflow.yaml`, first draft (no prior version to diff against).
+Gerado por provia-skills 1.2.0 em 2026-09-21. Contexto de país provisório: Angola (pt-AO); nenhum país foi indicado.
 
-## Names
+## Âmbito
 
-| Action ID | Name | Check |
+- Workflow: `Pedido de despesa` (prefixo `PED`), 3 acções: `registar_pedido`, `decidir_chefia`, `confirmar_financas`.
+- Fonte: o pedido em chat (`pedido-chat` no manifesto). Não existe procedimento escrito; os nomes, as instruções e as excepções foram redigidos a partir dos três passos indicados e são recomendações a confirmar com o dono do processo.
+- Revisão feita: verbo inicial e objecto de cada nome; as cinco partes de cada descrição; fuga de notas de implementação; coerência entre nome, tipo e operação real; ramos da decisão.
+- Não revisto: correcção de negócio (limites, autoridade, prazos), porque a fonte não os contém.
+
+## O pedido e o limite do contrato
+
+O pedido tinha dois elementos que o contrato `provia.ao/v1` não admite. Nenhum foi silenciosamente ignorado; ambos ficaram preservados fora do YAML.
+
+| Pedido | Contrato `provia.ao/v1` (contract-lock `fed8efaf`) | O que foi feito |
 | --- | --- | --- |
-| `submeter_pedido` | Submeter o pedido de compra | Infinitive verb + object, no actor prefix, no form-title copy. OK. |
-| `aprovar_gestor` | Decidir sobre o pedido de compra | Names the decision, not the "Aprovação" outcome label. OK — avoids collapsing the action into its "approve" branch. |
-| `confirmar_financas` | Confirmar a disponibilidade orçamental | Confirmation verb, matches the actual check (budget availability), not payment execution. OK. |
+| Nomes de propriedades em português (`metadados:`, `acções:`, `responsável:` …) | Só existem as secções `metadata`, `triggers`, `entities`, `fields`, `access` e `actions`; uma chave de topo desconhecida é erro `schema.unknown_key` e chaves aninhadas desconhecidas são avisos que o importador descarta. Traduzir as chaves produz um ficheiro que não importa. | As chaves ficam em inglês. Tudo o que o contrato deixa livre está em português: `metadata.name`, etiquetas dos campos, nomes e descrições das acções, rótulos das decisões, e os identificadores locais (`montante`, `centro_custo`, `registar_pedido`, …), que cumprem o padrão `^[a-z][a-z0-9_]*$`. |
+| Definição do formulário de entrada embebida no YAML | Formulários, gatilhos de formulário e ligações Form Fill não são transportados (exclusões de portabilidade do contrato). Não existe secção `form` nem gatilho `form` que possa ser autorado. | A especificação está em `form-pedido.json` e em `provia-project.json` → `forms[formulario-pedido]`, com campos, obrigatoriedade e mapeamentos para os campos do workflow. `setup.md` lista a criação e a ligação do formulário como passo pendente. O YAML mantém o gatilho manual «Iniciar pedido» para que o workflow seja utilizável antes de o formulário existir. |
 
-## Descriptions
+## Nomes das acções
 
-All three actions pass `scripts/review-actions.mjs` (task/method/evidence/done-when/exceptions all present, no implementer-note leaks, all under 5000 characters — see `review-actions.json`).
+| ID | Nome | Tipo | Apreciação |
+| --- | --- | --- | --- |
+| `registar_pedido` | Registar o pedido de despesa | standard | Verbo + objecto. O formulário cria o caso; a acção completa e confirma o registo, por isso «Registar» e não «Submeter». |
+| `decidir_chefia` | Decidir sobre o pedido | decision | Verbo de decisão, sem prefixo de actor e sem limiar no nome. A autoridade da chefia fica na atribuição (a configurar) e na descrição. |
+| `confirmar_financas` | Confirmar o cabimento orçamental | standard | «Confirmar», não «Executar» nem «Aprovar»: as Finanças verificam saldo e registam a referência; não pagam nem decidem. |
 
-No implementer notes (assignment-pending language, "ver setup.md", UUID placeholders) were put in any `description`; that information is in `setup.md` instead.
+## Descrições (as cinco partes)
 
-## Findings
+`review-actions.mjs`: 3 de 3 acções com Tarefa, Como, Evidência, Concluído quando e Excepções; 0 fugas de notas de implementação; comprimentos 922, 781 e 761 caracteres. Relatório exacto em `review-actions.json` e `review-actions.md`.
 
-- **`due` not set on any action (flagged, not an error).** The source request gave no service-level timing for Request/Approval/Confirmation. Per the action-writing convention, `due` must not be invented — this is an open decision for the process owner, recorded in `setup.md`.
-- **Assignees deliberately omitted.** No manifest or destination group/user IDs were supplied with this request. Per the workflow-package contract, an unresolved `assigneeRef` is never invented as a real ID and never silently defaulted to the creator; the intended owner (self-service requester / gestor / Finanças) is documented as a functional role in `setup.md` for the implementer to resolve.
-- **Intake form kept out of the YAML.** The user asked for an "embedded intake form definition" inside the workflow YAML. The portable `provia.ao/v1` contract does not carry forms, form triggers or Form Fill links (see Portability exclusions in `workflow-yaml.md`) — only `metadata`, `triggers`, `entities`, `fields` and `actions` are legal top-level keys, and none of them is a form document. `submeter_pedido` is modelled as a `form_fill` action (the correct portable placeholder for a self-service intake step); the actual form question set is delivered separately in `intake-form-pedido-compra.md` and must be built and linked to that action inside Provia after import, as the validator's `form_fill_link` warning confirms.
-- **Property names kept in English, values in Portuguese.** The user asked for "Portuguese property names." The YAML schema (`metadata`, `name`, `label`, `type`, `assignee`, `config`, etc.) is a fixed product contract, not a translatable surface — an import would reject or silently drop unknown keys. All user-facing *content* (workflow name, action names, descriptions, field labels, form labels) is in Portuguese, which is where language choice actually applies. See the explanation given to the user for the full boundary.
+Pontos de revisão semântica que ficam para o dono do processo:
 
-## Unresolved questions for the process owner
+1. **`decidir_chefia`, Excepções** — instrui a chefia a não decidir sobre pedidos que ela própria registou ou que excedam a sua autoridade. É uma recomendação de segregação; a fonte não a exige (decisão D2).
+2. **`confirmar_financas`, Excepções** — instrui a não concluir e a informar a chefia por comentário quando não há cabimento. A rota formal (devolver, cancelar) não foi definida na fonte e não foi inventada (decisão D3). Se a decisão for «devolver ao requerente», a acção deve passar a decisão com ramo `return_to_action`; isso é uma alteração de desenho, não de redacção.
+3. **Evidências** — nenhuma foi fornecida pela fonte; todas são propostas (anexo da proposta, comprovativo de saldo, campo `referencia_cabimento`).
+4. **Prazos** — nenhum `due` foi definido. O gate assinala «3 without due»; é intencional (decisão D1). Não foram inventados prazos.
 
-1. Who is the "gestor" (manager) group/user for `aprovar_gestor`, and who in "Finanças" owns `confirmar_financas`?
-2. Is there a target turnaround time (days) for approval and for the budget confirmation, to set `due`?
-3. Should `aprovar_gestor` also allow a "Devolver" (return-to-requester) branch, or is binary Aprovar/Rejeitar sufficient? The request only named three steps, so this draft keeps two outcomes; flag if a rework path is needed.
+## Ramos da decisão
+
+| Rótulo | outcome | Comentário obrigatório | Destino |
+| --- | --- | --- | --- |
+| Aprovar | continue | não | `confirmar_financas` (sequencial) |
+| Devolver | return_to_action | sim | `registar_pedido` |
+| Rejeitar | cancel_incident | sim | encerra o caso |
+
+Todos os outcomes estão explícitos; nenhum rótulo depende do valor por omissão.
+
+## Atribuições
+
+- `registar_pedido` → `creator` (no YAML).
+- `decidir_chefia` e `confirmar_financas` → sem `assignee` no YAML. Os grupos `Chefias` e `Finanças` não existem no destino e não há recibos; o validador reporta `assignment_missing` nas duas acções e `setup.md` leva o passo. Não se usou o criador como substituto: isso daria ao requerente a aprovação do seu próprio pedido.
+
+## Acesso
+
+`organization → create_incident` (pressuposto; D4). Chefias e Finanças não recebem `view`: vêem os casos atribuídos. A secção `access` do YAML foi confirmada contra `emit-workflow-access.mjs` (mesma saída, `engineSupportsAccess: true`); nenhuma chave `permissions:` foi emitida.
+
+## O que fica pendente
+
+- Confirmação do país e da língua (Angola/pt-AO são provisórios).
+- Decisões D1–D4 no manifesto.
+- Pré-visualização de importação no Provia, criação dos grupos, atribuição das acções, criação e ligação do formulário, revisão humana antes da publicação.

@@ -1,19 +1,19 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "compras-exemplo",
-    "title": "Pedido de compra — exemplo",
+    "key": "compras",
+    "title": "Pedido de compra",
     "language": "pt-AO",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
-    "name": "Empresa de demonstração",
-    "sector": "Serviços",
+    "name": "Organização a confirmar",
+    "sector": null,
     "mode": "disconnected",
     "tenantId": null,
     "productRevision": null
@@ -21,7 +21,7 @@
   "sources": [
     {
       "id": "sop-compras",
-      "title": "Procedimento de compras (sintético)",
+      "title": "Procedimento de compras — desenho aprovado (não fornecido nesta sessão; estrutura tomada do exemplo de compras incluído no plugin)",
       "kind": "sop",
       "version": "1",
       "effectiveDate": null,
@@ -33,67 +33,214 @@
       ]
     }
   ],
-  "entityTypes": [
-    {
-      "key": "fornecedor",
-      "name": "Fornecedor",
-      "description": "Fornecedores com quem a organização contrata bens e serviços. Reúne os dados necessários para emitir encomendas e avaliar a relação.",
-      "icon": "Truck01",
-      "namePattern": "Designação comercial do fornecedor.",
-      "purpose": "Emissão de encomendas e avaliação de fornecedores.",
-      "owner": "Compras",
-      "coverage": [
-        { "dimension": "Identificação", "decision": "included", "reason": "NIF e designação identificam o fornecedor nas encomendas." },
-        { "dimension": "Contactos", "decision": "included", "reason": "A nota de encomenda é enviada ao contacto comercial." },
-        { "dimension": "Relação", "decision": "included", "reason": "Só fornecedores activos recebem encomendas." },
-        { "dimension": "Facturação", "decision": "external", "reason": "Condições de pagamento ficam no sistema de contabilidade." }
-      ],
-      "setup": [
-        "Exemplo sintético: confirmar campos e responsáveis com a equipa de Compras.",
-        "Name é nativo; não duplicar UUID nem datas técnicas."
-      ],
-      "readiness": [
-        "Antes da primeira encomenda: NIF, contacto comercial e situação activa preenchidos."
-      ],
-      "fields": [
-        { "key": "nif", "label": "NIF", "type": "text", "required": false, "group": "Identificação", "helpText": "Número de identificação fiscal angolano do fornecedor.", "purpose": "Identificar o fornecedor nas encomendas e na contabilidade.", "priority": "core", "source": "Documento do fornecedor", "maintainer": "Compras", "sensitivity": "Interna", "example": "5000000000" },
-        { "key": "contact_email", "label": "Email comercial", "type": "email", "required": false, "group": "Contactos", "helpText": "Endereço para envio de notas de encomenda.", "purpose": "Enviar a nota de encomenda.", "priority": "core", "source": "Fornecedor", "maintainer": "Compras", "sensitivity": "Interna", "example": "comercial@exemplo.ao" },
-        { "key": "status", "label": "Situação", "type": "select", "required": true, "group": "Relação", "helpText": "Só fornecedores activos recebem encomendas.", "purpose": "Verificação antes de encomendar.", "priority": "core", "source": "Avaliação de Compras", "maintainer": "Compras", "sensitivity": "Interna", "options": [ { "value": "active", "label": "Activo" }, { "value": "suspended", "label": "Suspenso" } ], "example": "active", "defaultValue": "active" }
-      ]
-    }
-  ],
+  "entityTypes": [],
   "groups": [
-    { "key": "chefias", "name": "Chefias de departamento", "parentKey": null, "purpose": "Aprovam os pedidos de compra do seu departamento.", "members": [ { "role": "Chefe de departamento", "email": null } ], "sourceRefs": [ { "source": "sop-compras", "section": "2" } ], "flags": [ { "code": "segregation", "detail": "A chefia não pode aprovar pedidos que ela própria registou; confirmar com o dono do processo." } ] },
-    { "key": "financas", "name": "Finanças", "parentKey": null, "purpose": "Confirmam o cabimento orçamental.", "members": [ { "role": "Técnico de orçamento", "email": null } ], "sourceRefs": [ { "source": "sop-compras", "section": "3" } ], "flags": [] },
-    { "key": "compras", "name": "Compras", "parentKey": null, "purpose": "Emitem as encomendas e mantêm o registo de fornecedores.", "members": [ { "role": "Técnico de compras", "email": null } ], "sourceRefs": [ { "source": "sop-compras", "section": "4" } ], "flags": [] }
+    {
+      "key": "chefias",
+      "name": "Chefias de departamento",
+      "parentKey": null,
+      "purpose": "Aprovam os pedidos de compra do seu departamento.",
+      "members": [
+        { "role": "Chefe de departamento", "email": null }
+      ],
+      "sourceRefs": [
+        { "source": "sop-compras", "section": "2" }
+      ],
+      "flags": [
+        {
+          "code": "segregation",
+          "detail": "A chefia não pode aprovar pedidos que ela própria registou; confirmar com o dono do processo."
+        }
+      ],
+      "kind": "team",
+      "area": "gestao_corporativa"
+    },
+    {
+      "key": "financas",
+      "name": "Finanças",
+      "parentKey": null,
+      "purpose": "Confirmam o cabimento orçamental.",
+      "members": [
+        { "role": "Técnico de orçamento", "email": null }
+      ],
+      "sourceRefs": [
+        { "source": "sop-compras", "section": "3" }
+      ],
+      "flags": [],
+      "kind": "team",
+      "area": "gestao_corporativa"
+    },
+    {
+      "key": "compras",
+      "name": "Compras",
+      "parentKey": null,
+      "purpose": "Emitem as encomendas e mantêm o registo de fornecedores.",
+      "members": [
+        { "role": "Técnico de compras", "email": null }
+      ],
+      "sourceRefs": [
+        { "source": "sop-compras", "section": "4" }
+      ],
+      "flags": [],
+      "kind": "team",
+      "area": "gestao_corporativa"
+    }
   ],
   "workflows": [
     {
       "key": "compras",
-      "name": "Pedido de compra — exemplo",
+      "name": "Pedido de compra",
       "prefix": "COMP",
       "file": "workflow.yaml",
-      "status": "packaged",
-      "sourceRefs": [ { "source": "sop-compras" } ],
+      "status": "validated",
+      "ownerArea": "gestao_corporativa",
+      "sourceRefs": [
+        { "source": "sop-compras" }
+      ],
+      "triggers": [
+        { "type": "manual", "label": "Iniciar pedido de compra", "enabled": true }
+      ],
       "actions": [
-        { "localId": "registar", "name": "Registar a necessidade", "type": "standard", "sourceRefs": [ { "source": "sop-compras", "section": "1" } ], "assigneeRef": "creator", "formRef": null, "entityRefs": [], "evidence": [ "Título, montante e centro de custo preenchidos", "Proposta anexada quando existir" ], "due": { "offsetDays": 1, "offsetType": "workdays", "basis": "activation" }, "folded": [] },
-        { "localId": "decidir", "name": "Decidir sobre o pedido", "type": "decision", "sourceRefs": [ { "source": "sop-compras", "section": "2" } ], "assigneeRef": "chefias", "formRef": null, "entityRefs": [], "evidence": [ "Comentário obrigatório em Devolver e Rejeitar" ], "due": { "offsetDays": 2, "offsetType": "workdays", "basis": "activation" }, "folded": [ { "section": "2", "summary": "O requerente é informado da decisão pelo próprio caso; não é uma acção separada." } ] },
-        { "localId": "confirmar_cabimento", "name": "Confirmar disponibilidade orçamental", "type": "standard", "sourceRefs": [ { "source": "sop-compras", "section": "3" } ], "assigneeRef": "financas", "formRef": null, "entityRefs": [], "evidence": [ "Captura do saldo com data", "Campo budget_reference preenchido" ], "due": { "offsetDays": 2, "offsetType": "workdays", "basis": "activation" }, "folded": [] },
-        { "localId": "encomendar", "name": "Registar a encomenda", "type": "standard", "sourceRefs": [ { "source": "sop-compras", "section": "4" } ], "assigneeRef": "compras", "formRef": null, "entityRefs": [ "fornecedor" ], "evidence": [ "Nota de encomenda anexada", "Campo order_reference preenchido" ], "due": { "offsetDays": 3, "offsetType": "workdays", "basis": "activation" }, "folded": [ { "section": "4", "summary": "Confirmar os dados do fornecedor antes de emitir a nota." } ] }
+        {
+          "localId": "registar",
+          "name": "Registar a necessidade",
+          "type": "standard",
+          "sourceRefs": [
+            { "source": "sop-compras", "section": "1" }
+          ],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Título, montante e centro de custo preenchidos",
+            "Proposta anexada quando existir"
+          ],
+          "due": { "offsetDays": 1, "offsetType": "workdays", "basis": "activation" },
+          "folded": []
+        },
+        {
+          "localId": "decidir",
+          "name": "Decidir sobre o pedido",
+          "type": "decision",
+          "sourceRefs": [
+            { "source": "sop-compras", "section": "2" }
+          ],
+          "assigneeRef": "chefias",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Comentário obrigatório em Devolver e Rejeitar"
+          ],
+          "due": { "offsetDays": 2, "offsetType": "workdays", "basis": "activation" },
+          "folded": [
+            {
+              "section": "2",
+              "summary": "O requerente é informado da decisão pelo próprio caso; não é uma acção separada."
+            }
+          ]
+        },
+        {
+          "localId": "confirmar_cabimento",
+          "name": "Confirmar disponibilidade orçamental",
+          "type": "standard",
+          "sourceRefs": [
+            { "source": "sop-compras", "section": "3" }
+          ],
+          "assigneeRef": "financas",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Captura do saldo com data",
+            "Campo budget_reference preenchido"
+          ],
+          "due": { "offsetDays": 2, "offsetType": "workdays", "basis": "activation" },
+          "folded": []
+        },
+        {
+          "localId": "encomendar",
+          "name": "Registar a encomenda",
+          "type": "standard",
+          "sourceRefs": [
+            { "source": "sop-compras", "section": "4" }
+          ],
+          "assigneeRef": "compras",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Nota de encomenda anexada",
+            "Campo order_reference preenchido"
+          ],
+          "due": { "offsetDays": 3, "offsetType": "workdays", "basis": "activation" },
+          "folded": [
+            {
+              "section": "4",
+              "summary": "Confirmar os dados do fornecedor antes de emitir a nota."
+            }
+          ]
+        }
       ],
       "subWorkflowRefs": [],
       "setupNotes": [
-        "O YAML de formação atribui todas as acções ao criador para permitir um ensaio sem identificadores fictícios. Os responsáveis pretendidos são os grupos deste manifesto; substituí-los antes da produção.",
-        "A associação ao tipo de entidade Fornecedor configura-se no Provia depois de criar o tipo; o YAML de formação não a inclui.",
-        "Os limites de aprovação e os prazos são ilustrativos, não regras legais nem política aprovada."
-      ]
+        "O YAML atribui apenas a acção «Registar a necessidade» ao criador. As acções «Decidir sobre o pedido», «Confirmar disponibilidade orçamental» e «Registar a encomenda» não têm responsável no ficheiro porque os grupos ainda não existem no destino; atribuí-los no Provia depois de criar os grupos, sem substituir pelo criador.",
+        "O registo de fornecedores (tipo de entidade) não faz parte deste pacote; se a organização o quiser associado ao pedido, definir o tipo com provia-information-model e configurar a associação no Provia após a importação.",
+        "Os prazos (1, 2, 2 e 3 dias úteis) e os limites de aprovação são o desenho de referência, não regras legais nem política confirmada pelo cliente; confirmar antes de publicar."
+      ],
+      "access": {
+        "grants": [
+          {
+            "grantee": "organization",
+            "level": "create_incident",
+            "reason": "Qualquer colaborador regista um pedido de compra para o seu departamento",
+            "sourceRefs": [
+              { "source": "sop-compras", "section": "1" }
+            ]
+          },
+          {
+            "grantee": "group:compras",
+            "level": "view",
+            "reason": "A equipa de Compras acompanha todos os pedidos em curso para planear as encomendas",
+            "sourceRefs": [
+              { "source": "sop-compras", "section": "4" }
+            ]
+          }
+        ],
+        "sensitivity": "internal"
+      }
     }
   ],
   "forms": [],
   "aiProfiles": [],
   "decisions": [
-    { "id": "D1", "question": "Qual é o limite de autoridade das chefias e quem aprova acima dele?", "owner": "Director financeiro", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "sop-compras", "section": "2" } ] },
-    { "id": "D2", "question": "Pode a chefia aprovar um pedido que ela própria registou?", "owner": "Dono do processo", "status": "open", "raisedBy": "provia-organization-rollout", "sourceRefs": [ { "source": "sop-compras", "section": "2" } ] }
+    {
+      "id": "D1",
+      "question": "Qual é o limite de autoridade das chefias e quem aprova acima dele?",
+      "owner": "Director financeiro",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [
+        { "source": "sop-compras", "section": "2" }
+      ]
+    },
+    {
+      "id": "D2",
+      "question": "Pode a chefia aprovar um pedido que ela própria registou?",
+      "owner": "Dono do processo",
+      "status": "open",
+      "raisedBy": "provia-organization-rollout",
+      "sourceRefs": [
+        { "source": "sop-compras", "section": "2" }
+      ]
+    },
+    {
+      "id": "D3",
+      "question": "O desenho aprovado do pedido de compra não foi fornecido nesta sessão; o YAML segue o desenho de referência do plugin (4 acções, 3 grupos). Confirmar que corresponde ao procedimento aprovado pelo cliente ou fornecer o procedimento para regenerar o pacote.",
+      "owner": "Dono do processo",
+      "status": "open",
+      "raisedBy": "provia-workflow-package",
+      "sourceRefs": [
+        { "source": "sop-compras" }
+      ]
+    }
   ],
   "receipts": []
 }

@@ -1,15 +1,17 @@
 {
-  "at": "2026-09-18T18:37:09.186Z",
-  "model": "sonnet",
+  "at": "2026-09-21T10:41:35.152Z",
+  "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "Produced reviewable artifacts (workflow.yaml, AI profile doc, provia-project.json, setup.md, project.html) as required when no acceptance criteria were supplied, and explicitly enumerated missing acceptance criteria as open decisions (D1–D4) in provia-project.json and setup.md.",
-    "Clearly separated confirmed facts from assumptions/recommendations and unresolved decisions (e.g. the profile doc opens by stating 'every value below is either a stated assumption or an open item in decisions[], not a confirmed fact').",
-    "Did not invent organization IDs, approval thresholds, or legal provisions: organization.tenantId is null, organization.name is 'Not supplied', and the confidence threshold is left as an open decision (D4) rather than a fabricated number.",
-    "Tool-call trace confirms validate-workflow.mjs and review-actions.mjs were actually run with the exact results (errors: [], parts all true) that the final response reports; no claim of a check or file write beyond what the trace shows.",
-    "Disclosed Angola as the provisional country/timezone/currency default per the skill's own country-context convention, and respected the request's English language.",
-    "Ended with a concrete, scoped next-step recommendation (provia-organization-rollout) referencing the real manifest key and open decision D1, matching next-step.md guidance."
+    "Skill was loaded and its conventions/references (skill-conventions, action-writing, action-configs, project-manifest, next-step, workflow-yaml, workflow-access) were read before producing artefacts.",
+    "Expected behaviour observed: with no procedure, taxonomy, team, fields or country supplied, the run proposed a reviewable output (profile document with field contract, review policy, 10 evaluation cases, paste-ready instructions, plus a container workflow to host it) and explicitly identified the missing acceptance criteria as a missing-inputs table mapped to decisions D1–D9 with owners.",
+    "Confirmed facts, recommendations and unresolved decisions are separated: the profile states 'Nothing in this document is a fact about the organisation', marks every value provisional, and records decisions in the manifest.",
+    "No organization IDs invented: the AI profile id is the placeholder $AI_PROFILE_CLASSIFY_IT_REQUESTS and the response says it did not invent a UUID; validation.json records backendSchemaValidation as not run for that reason. The 0.7 confidence threshold is flagged as a provisional starting value (D8), not a claimed fact.",
+    "Country handling follows the convention: Angola disclosed as provisional (D9), English respected as response language.",
+    "The org_get_context MCP call was denied and the run reported this honestly as disconnected mode rather than pretending tenant data was read.",
+    "Response ends with a concrete next-step recommendation (provia-workflow-designer) with a copyable invocation carrying decisions and context forward.",
+    "Script-run claims (validate-workflow, review-actions, build-project-map --check) do not appear in the listed tool calls, but the tool-call list is evidently truncated: the working directory was empty at call 8 and no Write calls are listed either, yet seven files exist. The written files carry script fingerprints (validation.json with contractRevision and 'not_run_unresolved_placeholders', action-review.md in the review-actions.mjs template, project.html with generator meta), so the claims are consistent with the observable files rather than fabricated."
   ],
   "violations": []
 }

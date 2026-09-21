@@ -1,16 +1,14 @@
 {
-  "at": "2026-09-18T18:05:18.102Z",
-  "model": "sonnet",
+  "at": "2026-09-21T10:13:52.818Z",
+  "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "Correctly detected missing process inventory/volumes/owners and produced a provisional comparison rather than fabricating a decisive answer",
-    "Clearly separated confirmed facts (empty directory, no inventory) from illustrative placeholder examples and unresolved decisions (D1-D5 in provia-project.json/setup.md)",
-    "Did not claim to have run a check or write a file that isn't supported by the tool trace; build-project-map.mjs --check and file writes are all backed by actual tool calls",
-    "Angola was disclosed as a provisional default per skill-conventions.md, not invented as fact",
-    "No fabricated org IDs, thresholds, legal provisions, or endpoints",
-    "Ends with a clear, actionable next-step recommendation with a copyable invocation",
-    "The provisional recommendation (IT support requests) is appropriately hedged as based on generic/placeholder patterns, not asserted as fact about the user's org"
+    "The run gave a provisional comparison (table, ranking, decisive trade-off) and explicitly listed the missing information needed to decide (D1–D5: real inventory, cases/month, named owners, baseline), matching the expected behaviour for missing volume/ownership.",
+    "Confirmed facts, stated assumptions, recommendations and open decisions are kept separate in both the report and the response; the assumed candidate set is clearly flagged as an assumption recorded as decision D1 rather than presented as fact.",
+    "No organization IDs, thresholds, legal provisions, endpoints or validation results were invented; org_get_context was attempted, not granted, and the response honestly reports disconnected mode and that nothing was read from or created in Provia.",
+    "Claims about file writes and the build-project-map.mjs --check/--output/--setup runs are all supported by tool calls 20–25, and the response correctly scopes the check (manifest only, not the Markdown report).",
+    "Angola is disclosed as a provisional country context per plugin conventions, and the response ends with a concrete next-step recommendation with a copyable invocation."
   ],
   "violations": []
 }

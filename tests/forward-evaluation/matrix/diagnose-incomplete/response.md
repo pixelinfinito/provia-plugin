@@ -1,15 +1,39 @@
-I diagnosed the IT request process from the three records supplied and wrote the artefacts to the working directory: `diagnosis-report.md`, `provia-project.json`, `project.html`, and `setup.md`.
+## Diagnosis of the IT request process (TI)
 
-**Summary of the diagnosis:**
+**What was supplied and what I assumed.** Three rows, no observation time, no timezone, no due dates, no assignees, no workflow design, no manifest in the working directory. I assumed the export reflects 2026-09-21 (today) in Africa/Luanda; ages below are upper bounds if the export is older. The host lists a Provia connector, but the read call (`org_get_context`) was not permitted in this session, so I worked in disconnected mode. Because there are no due dates, **nothing is reported as overdue**.
 
-- **Attention now:** TI-31 has been sitting in "Diagnose the problem" since 2026-09-10 — roughly as long as TI-29's *entire* closed cycle (6 days) — with no assignee named in the export. That's the record to check first. TI-32 (2 days in "Classify the request") isn't unusual yet on this sample.
-- **Important limitation:** the export states no timezone or observation time, so all elapsed-day figures are estimates, not confirmed facts — I flagged this rather than silently assuming "today" applied.
-- **Performance comparison:** not possible yet — one closed record (TI-29, 6-day total cycle, no per-step breakdown) can't establish a baseline or separate active work from waiting time.
-- **Proposed measurable change:** start recording entry time for the "Diagnose the problem" step for every request this month, and have the IT service desk supervisor review anything still in that step past a set threshold. Next month, compare average/maximum time-in-step against this baseline once it exists. Owner is assumed (IT service desk supervisor) since the export names no one — recorded as an open decision.
-- Four open decisions (missing observation time/timezone, missing ownership, missing SLA, and the change's owner/baseline) were recorded in the new `provia-project.json` rather than guessed.
+### Attention list
 
-**Next step:** the biggest gap blocking a real performance comparison is a fuller export — all IT requests opened/closed in a defined period, with per-step timestamps and timezone. Once you have that, run:
+| # | Case | State | Since | Age to 2026-09-21 | Reading |
+|---|---|---|---|---|---|
+| 1 | **TI-31** | Diagnose the problem | 2026-09-10 (Thu) | 11 calendar / **7 workdays** | Stalled, cause unknown. Older than the entire cycle of the only closed case (TI-29, 6 days). Open the case and read the last comment/activity: waiting on the requester, a vendor, or not started? |
+| 2 | **TI-32** | Classify the request | 2026-09-16 (Wed) | 5 calendar / **3 workdays** | Waiting at intake — nobody has taken it. Classify today or reassign. |
+| — | TI-29 | Closed 2026-09-12 | — | cycle 6 days (n=1) | Baseline only. |
+| — | **TI-30** | absent | — | — | Missing from the sequence 29→31→32. Ask the export producer what happened to it. |
+
+Owners cannot be named: the export has no assignee and no groups are defined (decision D3).
+
+Data-quality flags: TI-29 closed on a **Saturday** and, if "6 days" is calendar days, opened on a **Sunday** — either weekend work, or the dates are in UTC/truncated (D6). "6 days" is also undefined (calendar vs workday; 5 workdays lie between 09-06 and 09-12).
+
+### Performance findings
+Calculable: WIP = 2, closed in window = 1, cycle time = 6 days (n=1), age-in-state as above (TI-31 is 1.8× the baseline cycle). **Not calculable yet**: waiting vs active split (no action timestamps), period comparison (one period, one closed case), anything individual. The comparison is labelled *not possible yet*; the export you need to produce is specified in section 8 of the report and decision D5.
+
+### The one change to measure next month
+**Time-bound the two intake actions and review what passes the bound**: due offset of **1 workday from activation** on 'Classify the request' and **3 workdays** on 'Diagnose the problem' (offsets are proposals, not a sourced rule — D2), plus a **twice-weekly review of the overdue list** by the process owner (D1, to be confirmed), recording in each stalled case why it waits.
+
+Mechanism: age becomes visible to the assignee and the owner; "stalled, cause unknown" (TI-31 today) becomes "waiting on X since Y"; and the October export will carry due dates, closing the main gap in this diagnosis. Measures on the 2026-10-31 export: median workdays in each state (baseline ≥3 wd classify, ≥7 wd diagnose, both n=1), share completed within due, open actions past due at observation, cycle time with n. Confounders to record: October volume, request categories, IT absences, and any mid-month version change (open cases keep the old version's actions).
+
+Adding `due` to actions is a design change → `provia-workflow-change`, checking the two open cases first.
+
+### Artefacts written to the working directory
+- `diagnosis-report.md` — full report (attention list, calculations, hypotheses, change, measurement plan, limits, export spec).
+- `provia-project.json` — new manifest (`pedidos-ti`, disconnected, Angola/en/Africa/Luanda) with the export as source and decisions **D1–D6**. `workflows[]` is empty on purpose: no design was supplied and I did not invent one.
+- `project.html`, `setup.md` — generated by `build-project-map.mjs`. `--check`: 0 errors, 0 warnings, 6 pending items (the open decisions). That check validates the manifest only, not the Markdown report.
+
+Nothing was opened, moved, commented or configured in Provia.
+
+**Recommended next step:** `provia-workflow-change`, to add the due offsets to the live TI workflow as a new version with the open cases (TI-31, TI-32) assessed — but it needs the current workflow design (YAML export) which was not supplied. If you would rather confirm the diagnosis first, the concrete action is to produce the October export described in D5 and rerun `provia-diagnose` with both periods.
 
 ```text
-Use provia-process-improvement with this month's full IT request export (with per-step timestamps and timezone) as the "after" period against the baseline questions raised in provia-project.json (decisions D1–D4). Country: Angola; reply in English.
+Use provia-workflow-change with provia-project.json and diagnosis-report.md in this directory. Attach the current YAML export of the TI workflow. Plan a new version that sets due offsets of 1 workday (activation) on 'Classify the request' and 3 workdays on 'Diagnose the problem', assess impact on open cases TI-31 and TI-32, and resolve decisions D1–D3 with the owner. Country: Angola; reply in English.
 ```

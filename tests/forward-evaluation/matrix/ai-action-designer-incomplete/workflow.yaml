@@ -1,100 +1,216 @@
-# provia-skills 1.1.0 — draft for Angola (provisional, no country supplied); see setup.md and provia-project.json before importing.
-# No SOP, entity list or review policy was supplied. Fields, taxonomy and the AI profile below are recommendations
-# only, shaped after this plugin's own examples/it-service/workflow.yaml training example. Confirm against the
-# organization's real IT request categories, SLAs and reviewer group before publication. See decisions[] in
-# provia-project.json for every open item.
+# provia-skills 1.2.0
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
-  name: "IT request classification"
-  prefix: ITREQ
-  description: "Classifies an incoming IT request by category and urgency. AI proposes the classification; a human reviewer confirms or corrects it before the case continues. Draft scope: classification only — triage, diagnosis and resolution steps are out of scope pending a supplied SOP."
+  name: IT request
+  prefix: ITR
+  description: >-
+    Intake of IT requests, a classification proposed by an AI agent, confirmation of the category and
+    priority by the service desk, and fulfilment of the request.
+  agentMemoryEnabled: false
 triggers:
   - type: manual
-    label: Submit IT request
+    label: Open an IT request
     enabled: true
-    config: {}
+entities:
+  mode: none
+access:
+  grants:
+    - grantee: organization
+      level: create_incident
 fields:
-  - name: request_summary
-    label: Request summary
+  - name: request_title
+    label: Request title
     type: text
     required: true
-  - name: request_details
-    label: Request details
+    width: full
+  - name: request_description
+    label: What is happening or what do you need
     type: rich_text
     required: true
-  - name: category
-    label: Category
-    type: select
-    required: false
-    config:
-      options:
-        - value: access
-          label: Access
-        - value: equipment
-          label: Equipment
-        - value: software
-          label: Software
-        - value: network
-          label: Network
-        - value: security
-          label: Security
-        - value: other
-          label: Other
-  - name: urgency
-    label: Urgency
-    type: select
-    required: false
-    config:
-      options:
-        - value: normal
-          label: Normal
-        - value: high
-          label: High
-        - value: blocking
-          label: Blocking
-  - name: classification_confidence
-    label: Classification confidence
-    type: percentage
-    required: false
-  - name: classification_rationale
-    label: Classification rationale
+    width: full
+  - name: affected_service
+    label: Affected system or service
     type: text
     required: false
+    width: half
+  - name: reported_impact
+    label: Who is affected
+    type: select
+    required: true
+    width: half
+    config:
+      options:
+        - value: only_me
+          label: Only me
+        - value: my_team
+          label: My team
+        - value: several_teams
+          label: Several teams
+        - value: whole_organisation
+          label: The whole organisation
+        - value: unknown
+          label: I do not know
+  - name: proposed_category
+    label: Proposed category (AI)
+    type: select
+    required: false
+    width: half
+    config:
+      options:
+        - value: incident
+          label: Incident (something is broken)
+        - value: service_request
+          label: Service request (something new or changed)
+        - value: access_request
+          label: Access request (accounts, permissions, licences)
+        - value: change_request
+          label: Change request (planned change to a system)
+        - value: information
+          label: Information or how-to question
+        - value: unclear
+          label: Unclear (needs more information)
+  - name: proposed_priority
+    label: Proposed priority (AI)
+    type: select
+    required: false
+    width: half
+    config:
+      options:
+        - value: critical
+          label: Critical
+        - value: high
+          label: High
+        - value: medium
+          label: Medium
+        - value: low
+          label: Low
+        - value: undetermined
+          label: Undetermined (needs more information)
+  - name: classification_confidence
+    label: Classification confidence (AI)
+    type: percentage
+    required: false
+    width: third
+  - name: classification_rationale
+    label: Why this classification (AI)
+    type: text
+    required: false
+    width: full
+  - name: missing_information
+    label: Information the AI could not find in the request
+    type: text
+    required: false
+    width: full
+  - name: confirmed_category
+    label: Confirmed category
+    type: select
+    required: false
+    width: half
+    config:
+      options:
+        - value: incident
+          label: Incident (something is broken)
+        - value: service_request
+          label: Service request (something new or changed)
+        - value: access_request
+          label: Access request (accounts, permissions, licences)
+        - value: change_request
+          label: Change request (planned change to a system)
+        - value: information
+          label: Information or how-to question
+  - name: confirmed_priority
+    label: Confirmed priority
+    type: select
+    required: false
+    width: half
+    config:
+      options:
+        - value: critical
+          label: Critical
+        - value: high
+          label: High
+        - value: medium
+          label: Medium
+        - value: low
+          label: Low
 actions:
-  - id: classify_request
-    name: Classify the IT request
+  - id: classify
     type: standard
-    description: |
-      Task: Propose a category and urgency for the IT request from what it describes, with a confidence score and a short rationale.
-      How: 1. Read "Request summary" and "Request details". 2. Match the request against the category options (Access, Equipment, Software, Network, Security, Other) and the urgency options (Normal, High, Blocking), following the classification rules assigned to this task. 3. Write "Category", "Urgency", "Classification confidence" and "Classification rationale".
-      Evidence: "Classification rationale" names the specific words in the request that justify the category and urgency chosen; "Classification confidence" reflects how directly the request states its category and impact, not how urgent it sounds.
-      Done when: "Category", "Urgency", "Classification confidence" and "Classification rationale" are filled and a human reviewer has confirmed or corrected them; the action does not complete on the proposal alone.
-      Exceptions: If the request does not describe an IT matter, or gives too little detail to choose a category with reasonable confidence, set "Category" to Other, keep "Classification confidence" low, and state in the rationale exactly what information is missing — never guess a specific category to fill the field. If the text signals a possible security incident (suspected compromise, phishing, malware, data exposure, unauthorized access), classify Security/Blocking regardless of how the request is phrased and say so in the rationale.
+    name: Classify the IT request
+    description: |-
+      Task: Propose one category and one priority for this IT request from what the requester wrote, so that the service desk can confirm or correct it.
+      How: 1. Read `request_title`, `request_description`, `affected_service` and `reported_impact`. 2. Match the request to exactly one category: incident (something that worked has stopped or degraded), service_request (something new or changed that is not a repair), access_request (accounts, permissions, licences), change_request (a planned change to a system or configuration), information (a question with no work on a system). 3. Propose a priority from the impact stated by the requester and the words used: critical when several teams or the whole organisation cannot work, high when one team is blocked, medium when one person is blocked or a team is degraded, low when nobody is blocked. 4. Explain in two or three sentences which words in the request led to the category and the priority. 5. If the request does not say enough to choose, choose `unclear` or `undetermined` and list what is missing; never guess.
+      Evidence: Fill `proposed_category`, `proposed_priority`, `classification_confidence` and `classification_rationale`; fill `missing_information` whenever anything was assumed or could not be found. Do not change any other field and do not write comments to the requester.
+      Done when: The four proposal fields are filled and the rationale names the parts of the request that justify them.
+      Exceptions: If the description is empty, in a language you cannot read, or contradicts the reported impact, set the category to `unclear` and the priority to `undetermined`, put the contradiction or the gap in `missing_information` and leave the decision to the reviewer. If the request describes a suspected security breach, lost or stolen equipment, or a threat to people, set the priority to `critical` and say so in the rationale.
     executionMode: sequential
     required: true
+    priority: normal
     assignee:
       type: ai_agent
-      id: $AI_PROFILE_ID
+      id: $AI_PROFILE_CLASSIFY_IT_REQUESTS
     aiWorker:
-      instructions: |
-        You classify one IT request per case. Read only "Request summary" and "Request details"; do not use the requester's identity, department or history to infer category or urgency.
-        1. Category: choose exactly one of Access, Equipment, Software, Network, Security, Other, based on what the request literally describes needing. If the text names more than one category, choose the one that names the action being requested (for example, "reset my password so I can open the shared drive" is Access, not Network) and mention the secondary signal in the rationale.
-        2. Urgency: choose Blocking only when the text states the requester cannot work at all right now; High when it states a deadline or an impact on more than one person; Normal otherwise.
-        3. Security override: any signal of a possible security incident (suspected compromise, phishing, malware, data exposure, unauthorized access, unrecognized login) is always Category = Security and Urgency = Blocking, even if the request opens with an unrelated ask.
-        4. Confidence: score only how directly the request states its category and impact; a request that requires you to infer intent scores lower than one that states its need explicitly.
-        5. Rationale: quote or closely paraphrase the specific words that drove the category and urgency choice, in one to two sentences.
-        6. If "Request details" is empty, too short to identify a category, or contradicts "Request summary", set Category = Other, Urgency = Normal (unless a security signal is present), Classification confidence low, and state exactly what is missing or contradictory — do not guess.
-        7. Never mark this action complete yourself and never overwrite a human reviewer's correction; your role ends at proposing the classification.
-        8. Do not invent a requester, ticket number, deadline or system not present in "Request summary" or "Request details".
+      instructions: >-
+        Classify the IT request described in the case fields into one category and one priority.
+        Use only the readable fields of this case. Write your proposal to the proposal fields and
+        explain it in classification_rationale. When the request does not contain enough
+        information, answer unclear and undetermined and list what is missing in
+        missing_information; never invent facts or contact the requester. Do not decide the case;
+        a service desk analyst confirms or corrects your proposal.
       readableFields:
-        - request_summary
-        - request_details
-      writableFields:
-        - category
-        - urgency
+        - request_title
+        - request_description
+        - affected_service
+        - reported_impact
+        - proposed_category
+        - proposed_priority
         - classification_confidence
         - classification_rationale
+        - missing_information
+      writableFields:
+        - proposed_category
+        - proposed_priority
+        - classification_confidence
+        - classification_rationale
+        - missing_information
+      requiredArtifacts: []
+      allowedTools: []
       mode: safe
       reviewRequired: true
-      confidenceThreshold: 0.6
+      confidenceThreshold: 0.7
+  - id: review-classification
+    type: decision
+    name: Confirm the classification of the IT request
+    description: |-
+      Task: Decide whether the category and priority proposed by the AI are right for this request, and record the confirmed values.
+      How: 1. Read the request (`request_title`, `request_description`, `affected_service`, `reported_impact`). 2. Read `proposed_category`, `proposed_priority`, `classification_rationale`, `classification_confidence` and `missing_information`. 3. Check the rationale against the request text: the words it cites must be there and mean what it says. 4. Fill `confirmed_category` and `confirmed_priority` with the values you stand behind, whether or not they equal the proposal. 5. Choose «Confirm» when both confirmed values equal the proposal, «Correct» when you changed at least one of them, or «Not an IT request» when the case does not belong to IT.
+      Evidence: `confirmed_category` and `confirmed_priority` filled; a comment is required on «Correct» (say what was wrong in the proposal) and on «Not an IT request» (say where the requester should go).
+      Done when: Both confirmed fields are filled and the outcome is recorded with the comment the outcome requires.
+      Exceptions: If the proposal is `unclear` or `undetermined` and you cannot decide from the request either, do not guess: comment with the questions the requester must answer, contact the requester through the case comments, and decide only after the answer arrives. If the request describes a suspected security breach, set `confirmed_priority` to `critical` and choose «Correct» or «Confirm» without waiting.
+    executionMode: sequential
+    required: true
+    priority: normal
+    config:
+      branches:
+        - label: Confirm
+          outcome: continue
+          requiresComment: false
+        - label: Correct
+          outcome: continue
+          requiresComment: true
+        - label: Not an IT request
+          outcome: cancel_incident
+          requiresComment: true
+  - id: fulfil
+    type: standard
+    name: Fulfil the IT request
+    description: |-
+      Task: Resolve the request according to its confirmed category and priority and tell the requester what was done.
+      How: 1. Read `confirmed_category` and `confirmed_priority` and the request text. 2. Do the work the category calls for: repair or work around the incident, deliver the service or access, apply or schedule the change, or answer the question. 3. Write a closing comment addressed to the requester stating what was done and anything they must do next.
+      Evidence: A closing comment in the case naming the resolution; attach screenshots, tickets or approvals produced during the work.
+      Done when: The closing comment is in the case and the requester has what they asked for or a stated reason why not.
+      Exceptions: If the request cannot be fulfilled as classified (wrong category discovered during the work, approval needed from outside IT, or the requester cannot be reached after two attempts on different days), do not complete: comment with the blocker and its owner and leave the action open until it is removed.
+    executionMode: sequential
+    required: true
+    priority: normal

@@ -1,22 +1,22 @@
 {
   "id": "process-discovery-normal",
   "skill": "provia-process-discovery",
-  "pluginVersion": "1.1.0",
-  "at": "2026-09-18T18:05:08.351Z",
-  "model": "sonnet",
+  "pluginVersion": "1.2.0",
+  "at": "2026-09-21T10:12:59.116Z",
+  "model": "claude-opus-5[1m]",
   "exitCode": 0,
-  "durationMs": 128999,
-  "costUsd": 0.4750338,
-  "numTurns": 21,
-  "sessionId": "b41b7364-9291-41d9-ab0e-d5ad039a2e74",
+  "durationMs": 287101,
+  "costUsd": 1.4454954999999998,
+  "numTurns": 26,
+  "sessionId": "d4c2e77c-62d0-463c-b886-ed848cd92481",
   "stopReason": "end_turn",
-  "toolCalls": 19,
+  "toolCalls": 23,
+  "skillLoaded": true,
   "files": [
-    "piloto-recomendacao.md",
+    "discovery-report.md",
     "project.html",
     "provia-project.json",
     "setup.md"
   ],
-  "output": "tests/forward-evaluation/matrix/process-discovery-normal/",
-  "skillLoaded": true
+  "output": "tests/forward-evaluation/matrix/process-discovery-normal/"
 }

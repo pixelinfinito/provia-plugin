@@ -1,13 +1,42 @@
-Everything validates cleanly. All artefacts are written to the working directory:
+The design is done. Everything is in the working directory; here is what was produced, what was verified, and what remains open.
 
-- **`form-it-self-service-request.md`** — the form specification: 13 fields (respondent identity, request type, urgency, summary, rich-text description, affected system, optional attachment, preferred contact, optional needed-by date, and an acknowledgement checkbox), validation rules, access-model options, why category/sub-type isn't a dependent select (forms don't preserve that binding), proposed field mappings, a confirmation message that avoids promising an unconfirmed SLA or reference-number format, and testing steps.
-- **`provia-project.json`** — manifest with a placeholder `it-request` workflow (status `design`, no actions — since no SOP/workflow was supplied) and the `it-request-intake` trigger form bound to it, plus four open decisions (`D1` access model, `D2` workflow not yet designed, `D3` attachment limits, `D4` no source SOP).
-- **`project.html`** / **`setup.md`** — generated map and handover (`node scripts/build-project-map.mjs provia-project.json --check` passed clean).
+## What was unavailable, and the assumptions I worked under
 
-Key assumption, stated rather than guessed: with no workflow, catalogue, or SOP available, I added only a minimal placeholder workflow entry so the form has somewhere to bind — I deliberately didn't invent classification/diagnosis/resolution actions or an owning group, since that's workflow-designer's job, not this skill's.
+- **No procedure, SLA, category list or team names** were supplied; the only source is your one-line request.
+- **No existing workflow or manifest** in the working directory.
+- **Tenant read was not granted** (`org_get_context` permission denied), so this is a disconnected-mode design — nothing was read from or written to a Provia organization.
+- **Country/language not stated**: Angola, Africa/Luanda and AOA are the provisional context; the response is in English with a pt-AO label column.
 
-Next recommended step: `provia-workflow-designer`, to turn the four open decisions — especially D2 (the actual IT request process) — into real actions, owner and routing. Copyable request:
+## Artefacts (all in the working directory)
+
+| File | Content |
+| --- | --- |
+| `it-request-form.md` | The form specification: intake-vs-Form-Fill decision, respondents and access, 9 fields with validation/help/mappings, uploads, the confirmation text (en + pt-AO), an optional closing "Resolution confirmation" Form Fill with its five-part action brief, testing steps, open decisions |
+| `provia-project.json` | New manifest: source, placeholder workflow `it-request` (actions `triage`, `resolve`, `confirm-resolution`; `organization → create_incident`; sensitivity `internal`), proposed group `it-support`, `forms[]` with `workflowRef`/`actionRef`, `formRef` on the Form Fill action, decisions D1–D7 |
+| `project.html` | Offline map rendered from the manifest (form previews included) |
+| `setup.md` | Handover: 7 pending configuration items, access table, group and forms to create, the open decisions |
+
+## Key design choices
+
+- **Intake (trigger) form**, since self-service submission must create a case. A placeholder workflow was added only so the form has a destination — it is not a finished workflow design.
+- **`urgency` (requester's view) is separate from `priority` (set by IT at triage)**, so every request doesn't arrive as "high".
+- **Flat `request_type` select**, because the form schema in the pinned revision does not preserve dependent-option bindings.
+- **Confirmation promises no deadline, no direct-contact channel and no case reference** — none of those were supplied or verified. The text says what was recorded, who reviews it, how they'll be notified, and where to follow it (My cases).
+- **No file-size number** in the help text until the destination limit is verified.
+
+## What was checked and what was not
+
+- `node scripts/build-project-map.mjs provia-project.json --check`: 0 errors, 0 warnings, 1 info (IT Support intentionally holds no `view` grant), 18 pending items. This validates the manifest's shape and references only — not the Markdown specification and not business correctness.
+- No form was created, linked, previewed or tested in Provia. Access testing is pending (D1).
+
+## Open decisions (owners are functional roles until named)
+
+D1 access model (signed-in vs external link) · D2 real IT team, members, shared-queue `view`? · D3 department and request-type lists · D4 response targets · D5 confirmation-screen capabilities in the destination · D6 route when the requester answers "not solved" · D7 country/language confirmation.
+
+---
+
+**Recommended next step: `provia-workflow-designer`** — the form now has a placeholder workflow with three actions and no routing; the workflow itself (decisions, the "not solved" return path, deadlines, the real IT team) needs designing before anything can be packaged.
 
 ```text
-Use provia-workflow-designer with provia-project.json in this folder (project it-self-service). Design the IT request workflow (key it-request) that the trigger form it-request-intake feeds: classification, diagnosis, resolution and confirmation to the requester. Resolve decisions D1–D4 where you can, or carry forward the ones that need the process owner. Country: Angola (provisional); reply in English.
+Use provia-workflow-designer with provia-project.json in this directory. Complete the placeholder workflow `it-request` that the intake form `it-request-intake` feeds: keep the case fields and the three actions, add the routing for a "not solved" resolution confirmation (decision D6), and resolve decisions D2 and D4 from the IT procedure I will supply. Country: Angola (provisional, D7); reply in English.
 ```

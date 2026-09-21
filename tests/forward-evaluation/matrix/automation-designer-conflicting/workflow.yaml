@@ -1,54 +1,101 @@
-# provia-skills 1.1.0
+# provia-skills 1.2.0
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
-  name: Payment submission
+  name: Payment execution
   prefix: PAY
-  description: Submits a case's payment instruction to the provider's POST /payments endpoint. Placeholder endpoint, schema and retry policy pending the confirmations recorded in provia-project.json (D-PAY-1, D-PAY-2, D-PAY-3).
-  agentMemoryEnabled: false
+  description: >-
+    Executes one payment through the provider's POST /payments and reconciles the
+    outcome before any repeat call. The provider offers no idempotency key, so the
+    HTTP action runs once per authorization and every repeat is a human decision
+    taken after the outcome has been confirmed.
 triggers:
   - type: manual
-    label: Manual submission
+    label: Start payment
     enabled: true
     config: {}
-entities:
-  mode: none
 fields:
   - name: payment_reference
     label: Payment reference
-    type: text
+    type: auto_number
     required: false
-    group: Payment
-    width: half
+    config:
+      prefix: PAY-
+      padding: 6
+      startAt: 1
   - name: amount
     label: Amount
     type: currency
     required: true
-    group: Payment
-    width: half
-  - name: currency
-    label: Currency
+    config:
+      currency: AOA
+  - name: beneficiary_name
+    label: Beneficiary name
     type: text
     required: true
-    group: Payment
-    width: half
+  - name: beneficiary_account
+    label: Beneficiary account (IBAN or account number)
+    type: text
+    required: true
+  - name: payment_purpose
+    label: Payment purpose
+    type: text
+    required: true
+  - name: provider_payment_id
+    label: Provider payment id
+    type: text
+    required: false
+  - name: provider_status
+    label: Provider status (from response)
+    type: text
+    required: false
+  - name: payment_status
+    label: Confirmed payment status
+    type: select
+    required: false
+    config:
+      options:
+        - value: paid
+          label: Paid
+        - value: not_executed
+          label: Not executed
+        - value: unknown
+          label: Unknown
+  - name: payment_attempt_count
+    label: Payment attempts sent
+    type: number
+    required: false
+entities:
+  mode: none
+access:
+  grants:
+    - grantee: "group:Finance"
+      level: create_incident
 actions:
-  - id: submit_payment
+  - id: prepare_payment
+    name: Prepare the payment instruction
+    type: standard
+    description: |-
+      Task: Complete the payment instruction so that exactly one payment can be sent to the provider.
+      How: 1. Fill `amount`, `beneficiary_name`, `beneficiary_account` and `payment_purpose` from the authorized payment request. 2. Check the beneficiary account against the supporting document (invoice, contract or payroll list). 3. Set `payment_attempt_count` to 0. 4. Note the case reference `payment_reference`: it is the client reference the provider will receive with the payment.
+      Evidence: Attach the document that authorizes the payment (approved request, invoice or payroll list) and confirm that the amount and account match it.
+      Done when: All four payment fields are filled and match the attached authorization.
+      Exceptions: If the authorization is missing or the account does not match the document, do not complete: comment what is missing and wait for the corrected authorization.
+    executionMode: sequential
+    required: true
+    priority: normal
+    assignee:
+      type: creator
+  - id: execute_payment
+    name: Send the payment to the provider
     type: http_request
-    name: Submit payment to provider
-    description: >-
-      Calls POST /payments at the payment provider to submit this case's payment instruction
-      and records the returned reference. Configured with a single attempt and no automatic
-      retry, because this endpoint has no idempotency key: a timeout does not tell us whether
-      the payment executed, so retrying automatically risks charging the payer more than once.
-      Exceptions: on timeout, connection failure or an unexpected status code, this raises an
-      incident instead of resubmitting; finance operations must confirm the real outcome with
-      the provider before any manual resubmission.
+    description: |-
+      Automatic call to the payment provider: POST /payments with the amount, beneficiary and case reference from this case. The call is sent once per authorization and is never retried automatically, because the provider does not accept an idempotency key and a timeout does not reveal whether the payment happened. If the call fails or times out, the case continues to the confirmation step with a warning; nobody resends the payment until the confirmation step has established that it was not executed. When the provider answers, its payment id and status are recorded in `provider_payment_id` and `provider_status`.
     executionMode: sequential
     required: true
     priority: normal
     config:
-      endpoint: https://example.com/payments
+      endpoint: https://api.example.com/payments
       method: POST
       headers:
         - key: Authorization
@@ -59,14 +106,68 @@ actions:
           enabled: true
       body:
         type: json
-        content: '{"amount": "{{amount}}", "currency": "{{currency}}", "reference": "{{case.id}}"}'
+        content: |-
+          {
+            "client_reference": "{{payment_reference}}",
+            "amount": "{{amount}}",
+            "currency": "AOA",
+            "beneficiary": {
+              "name": "{{beneficiary_name}}",
+              "account": "{{beneficiary_account}}"
+            },
+            "description": "{{payment_purpose}}"
+          }
+      responseMappings:
+        - jsonPath: $.id
+          targetField: provider_payment_id
+          required: false
+        - jsonPath: $.status
+          targetField: provider_status
+          required: false
       executionTiming: automatic
-      timeoutSeconds: 30
+      timeoutSeconds: 60
       retryConfig:
         maxAttempts: 1
-        failureBehavior: block_incident
-      expectedStatusCodes: [200, 201]
-      responseMappings:
-        - jsonPath: "$.reference"
-          targetField: payment_reference
-          required: false
+        failureBehavior: continue_warning
+      expectedStatusCodes: [200, 201, 202]
+  - id: decide_payment_outcome
+    name: Decide the payment outcome
+    type: decision
+    description: |-
+      Task: Establish whether the payment sent in the previous step actually happened, and decide whether the case is complete, needs one more send, or is abandoned.
+      How: 1. Add 1 to `payment_attempt_count`. 2. If `provider_payment_id` is filled, look the payment up in the provider's portal or statement by that id. 3. If it is empty (the call failed or timed out), look for the payment in the provider's portal or bank statement by the case reference `payment_reference`, the amount and the beneficiary, covering the time of the call; wait for the provider's settlement window to close before concluding it is absent. 4. Set `payment_status` to «paid», «not_executed» or «unknown». 5. Choose the outcome: «Paid» when the provider shows the payment as executed; «Resend» only when `payment_status` is «not_executed», the provider shows no payment for this reference and `payment_attempt_count` is below 5; «Abandon» when five sends have been confirmed as not executed or the payment must not proceed.
+      Evidence: Attach the provider portal screenshot or statement line that proves the status, with its date and time. A comment is mandatory on «Resend» and «Abandon».
+      Done when: `payment_status` and `payment_attempt_count` are filled, the proof is attached and an outcome is chosen.
+      Exceptions: If the provider cannot say whether the payment happened (status «unknown»), do not choose «Resend»: comment what the provider answered, keep the action open and escalate to the finance manager. A resend with an unknown outcome can pay the beneficiary twice.
+    executionMode: sequential
+    required: true
+    priority: urgent
+    assignee:
+      type: creator
+    config:
+      branches:
+        - label: Paid
+          outcome: continue
+          requiresComment: false
+        - label: Resend
+          outcome: return_to_action
+          target: execute_payment
+          requiresComment: true
+        - label: Abandon
+          outcome: cancel_incident
+          requiresComment: true
+  - id: notify_payment_result
+    name: Notify the requester of the payment result
+    type: notification
+    description: |-
+      Automatic in-app notification to the person who opened the case once the payment has been confirmed as paid. It carries the case reference and the provider payment id so the requester can quote them.
+    executionMode: sequential
+    required: true
+    priority: normal
+    config:
+      recipientType: creator
+      channels: [in_app]
+      subject: Payment confirmed
+      messageTemplate: >-
+        The payment for this case has been confirmed as paid by the provider. Check the
+        provider payment id and the attached proof in the case before closing your request.

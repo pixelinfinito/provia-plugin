@@ -1,0 +1,2 @@
+caso_ref,workflow,estado_caso,accao_nome,accao_tipo,accao_estado,responsavel_tipo,responsavel,activada_em,data_limite,ultima_actualizacao,predecessora_pendente,exportado_em,fuso
+COMP-0001,Pedido de compra,aberto,Decidir sobre o pedido,decision,activa,grupo,chefias,2026-09-15T09:10:00Z,2026-09-17T17:00:00Z,2026-09-15T09:10:00Z,,2026-09-21T08:00:00Z,Africa/Luanda

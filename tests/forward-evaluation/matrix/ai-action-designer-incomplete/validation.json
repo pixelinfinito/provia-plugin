@@ -1,0 +1,32 @@
+{
+  "valid": true,
+  "apiVersion": "provia.ao/v1",
+  "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+  "destinationValidation": "not_run",
+  "backendSchemaValidation": "not_run_unresolved_placeholders",
+  "readyToPublish": false,
+  "errors": [],
+  "warnings": [],
+  "setupRequired": [
+    {
+      "code": "organization_reference",
+      "path": "actions[0].assignee",
+      "message": "Verify this assignee or AI profile in the destination organization."
+    },
+    {
+      "code": "assignment_missing",
+      "path": "actions[1].assignee",
+      "message": "Set the intended owner before publication; import defaults do not establish approval authority."
+    },
+    {
+      "code": "assignment_missing",
+      "path": "actions[2].assignee",
+      "message": "Set the intended owner before publication; import defaults do not establish approval authority."
+    },
+    {
+      "code": "placeholder",
+      "path": "actions.0.assignee.id",
+      "message": "Resolve this placeholder in Provia; its value is not part of this report."
+    }
+  ]
+}

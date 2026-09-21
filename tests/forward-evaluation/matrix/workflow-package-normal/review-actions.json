@@ -1,6 +1,6 @@
 {
   "valid": true,
-  "workflow": "Pedido de compra — exemplo",
+  "workflow": "Pedido de compra",
   "reviewedActions": 4,
   "summary": {
     "applicable": 4,
@@ -8,8 +8,10 @@
     "incomplete": 0,
     "automatedWithoutDescription": 0,
     "leaks": 0,
-    "dueMissing": 0
+    "dueMissing": 0,
+    "nearLimit": 0
   },
+  "warnings": [],
   "actions": [
     {
       "id": "registar",
@@ -28,6 +30,7 @@
       "leaks": [],
       "length": 724,
       "tooLong": false,
+      "nearLimit": false,
       "empty": false,
       "due": "set"
     },
@@ -48,6 +51,7 @@
       "leaks": [],
       "length": 739,
       "tooLong": false,
+      "nearLimit": false,
       "empty": false,
       "due": "set"
     },
@@ -68,6 +72,7 @@
       "leaks": [],
       "length": 631,
       "tooLong": false,
+      "nearLimit": false,
       "empty": false,
       "due": "set"
     },
@@ -88,9 +93,10 @@
       "leaks": [],
       "length": 717,
       "tooLong": false,
+      "nearLimit": false,
       "empty": false,
       "due": "set"
     }
   ],
-  "note": "Presence of the labelled parts (Tarefa/Task, Como/How, Evidência/Evidence, Concluído quando/Done when, Excepções/Exceptions), leaked implementer notes, length and due are checked. Wording quality and business correctness are not certified; see references/action-writing.md."
+  "note": "Presence of the labelled parts (Tarefa/Task, Como/How, Evidência/Evidence, Concluído quando/Done when, Excepções/Exceptions), leaked implementer notes, length (warning from 4500 characters) and due are checked. Wording quality and business correctness are not certified; see references/action-writing.md."
 }

@@ -1,13 +1,14 @@
-# provia-skills 1.1.0 — training draft for Angola; see setup.md and provia-project.json before importing.
+# provia-skills 1.2.0 — rascunho para Angola; ler setup.md e provia-project.json antes de importar.
+# Access section from provia-project.json (compras): 2 grant(s).
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
-  name: "Pedido de compra — exemplo"
+  name: Pedido de compra
   prefix: COMP
-  description: "Exemplo de formação. Configurar responsáveis e regras antes da publicação."
+  description: "Pedido de compra interno: registo da necessidade, decisão da chefia, cabimento orçamental e emissão da encomenda. Configurar responsáveis e limites de aprovação antes da publicação."
 triggers:
   - type: manual
-    label: Iniciar pedido
+    label: Iniciar pedido de compra
     enabled: true
     config: {}
 fields:
@@ -23,13 +24,19 @@ fields:
     type: text
     required: true
   - name: budget_reference
-    label: Referência orçamental
+    label: "Referência orçamental"
     type: text
     required: false
   - name: order_reference
-    label: Referência da encomenda
+    label: "Referência da encomenda"
     type: text
     required: false
+access:
+  grants:
+    - grantee: organization
+      level: create_incident
+    - grantee: "group:Compras"
+      level: view
 actions:
   - id: registar
     name: Registar a necessidade
@@ -63,8 +70,6 @@ actions:
       offsetDays: 2
       offsetType: workdays
       basis: activation
-    assignee:
-      type: creator
     config:
       branches:
         - label: Aprovar
@@ -77,7 +82,7 @@ actions:
           outcome: cancel_incident
           requiresComment: true
   - id: confirmar_cabimento
-    name: Confirmar disponibilidade orçamental
+    name: "Confirmar disponibilidade orçamental"
     type: standard
     description: |
       Tarefa: Confirmar que existe cabimento orçamental para o montante pedido no centro de custo indicado.
@@ -91,8 +96,6 @@ actions:
       offsetDays: 2
       offsetType: workdays
       basis: activation
-    assignee:
-      type: creator
   - id: encomendar
     name: Registar a encomenda
     type: standard
@@ -108,5 +111,3 @@ actions:
       offsetDays: 3
       offsetType: workdays
       basis: activation
-    assignee:
-      type: creator

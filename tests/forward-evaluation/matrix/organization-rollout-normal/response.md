@@ -1,21 +1,23 @@
-Deliverables are ready in the working directory: `provia-project.json`, `project.html`, `setup.md`, `plano-adopcao.md`.
+Plano preparado. Ficheiros no directório de trabalho:
 
-Resumo do que foi feito:
+- `provia-project.json` — manifesto novo (não existia): fonte `pedido-rollout`, 9 grupos com tipo, área, sinalizações e membros por papel (sem emails inventados), workflow `compras` provisório com 8 acções e `access`, 10 decisões abertas.
+- `plano-de-adopcao.md` — autoridades separadas, desenho dos grupos, matriz de acesso, cobertura de responsabilidade, vagas com datas propostas (Compras: 12 Out–20 Nov 2026; RH: Dez 2026–Fev 2027; alargamento: Mar 2027), exercícios de formação por papel, suporte e medidas de adopção.
+- `project.html` e `setup.md` — gerados com `build-project-map.mjs`.
 
-**Não recebi nenhum SOP, organograma ou export** — por isso `sources[]` está vazio e todos os grupos e decisões abaixo são propostas explicitamente marcadas para confirmação, não factos derivados de documentos.
+**O que verifiquei.** `--check` sobre o manifesto: 0 erros, 5 avisos, 5 informações, 1 bloqueio de prontidão. Todas as 8 acções humanas têm responsável (2 `creator`, 2 Compras, 2 Finanças, 1 Chefias, 1 Direcção Geral). Os avisos são esperados: grupos de papel/administração sem acções, RH sem workflow até à vaga 2, e ninguém com email verificado (regra 8).
 
-**Grupos propostos** (`groups[]`, 8 no total): administração da organização Provia separada da propriedade do processo, separada da responsabilidade pelas acções — `administracao_ti`, `dono_processo_compras`, `compras`, `aprovacao_financeira`, `direccao_geral` para a fase 1; `dono_processo_rh`, `recursos_humanos`, `chefias` (partilhado com Compras) para a fase 2. Segregação de funções aplicada entre `compras`/`aprovacao_financeira` e sinalizada para `recursos_humanos` (auto-aprovação).
+**Assunções que fiz, porque não recebi SOP, organigrama nem nomes:**
+- O circuito de compras é o habitual (requerente → chefia → Compras → Finanças → Direcção Geral → Compras → recepção → pagamento). É um esqueleto a substituir pelo procedimento real (D10).
+- «Alargar a RH» = RH passa a requerente de compras e depois ganha o seu próprio primeiro processo (D2).
+- Piloto restringido pela lista de arranque do gatilho manual a Compras + departamentos-piloto (D7); estado final: toda a organização abre pedidos.
+- Angola/pt-AO como contexto provisório.
 
-**7 decisões em aberto** (D1–D7): dono do processo de Compras, dono do processo de RH, limiar de aprovação, substituto da Direcção Geral, responsável pela administração TI, regra de auto-aprovação em RH, lista real de chefias.
+**Modo desligado.** O servidor Provia está exposto, mas a chamada `org_get_context` foi recusada por falta de permissão nesta sessão — nada foi lido ou criado no tenant, nenhum email está verificado. Com autorização, o passo seguinte seria ler grupos/utilizadores existentes e oferecer `groups_apply_plan` após revisão.
 
-**`--check` confirmou** a estrutura válida, mas todos os 8 grupos aparecem "sem acção atribuída" — esperado, porque nenhum workflow foi desenhado ainda; a cobertura real só se verifica depois disso.
+**Decisões que bloqueiam o arranque:** D1 (dono do processo de Compras), D7 (departamentos-piloto com emails), D8 (administradores), D10 (SOP de compras).
 
-O `plano-adopcao.md` detalha o faseamento (piloto Compras semanas 1–6, depois expansão a RH), exercícios de formação por papel, e medidas de adopção baseadas em trabalho concluído, não em contas criadas.
-
----
-
-Próximo passo recomendado: `provia-workflow-designer`, para desenhar o workflow de Compras usando as chaves de grupo já definidas (`compras`, `aprovacao_financeira`, `direccao_geral`) — só depois disso o `--check` consegue confirmar que cada grupo tem pelo menos uma acção atribuída.
+Próximo passo recomendado: `provia-workflow-designer`, assim que o procedimento de compras for entregue — o esqueleto de oito acções precisa de ser substituído pelo processo real antes de formar alguém. Se não existir procedimento escrito, entreviste primeiro o dono do processo (D1) e use as notas como fonte.
 
 ```text
-Use provia-workflow-designer com o manifesto provia-project.json (grupos compras, aprovacao_financeira, direccao_geral já definidos). Desenhe o workflow de Pedido de compra para o piloto, com as decisões D1, D3 e D4 ainda em aberto. País: Angola; responda em pt-AO.
+Use provia-workflow-designer com o manifesto provia-project.json deste directório e o procedimento de compras em anexo. Substitua o esqueleto provisório do workflow «compras» pelas acções do procedimento, mantendo as chaves de grupo já definidas (compras, chefias, financas, direccao_geral, dono_processo_compras, admin_workflows) e resolvendo as decisões D3, D4 e D10. País: Angola; responda em pt-AO.
 ```

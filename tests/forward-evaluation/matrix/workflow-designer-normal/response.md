@@ -1,65 +1,39 @@
-Tudo consistente. Aqui está o desenho completo.
+Desenho concluído. Ficheiros escritos no directório de trabalho:
 
-**Suposição declarada:** o pedido não indicou país nem documento-fonte, por isso assumi Angola/pt‑AO/AOA/Africa‑Luanda a título provisório (D7) e completei o procedimento com dois passos típicos de PME (execução da compra e confirmação de recepção) que **não** vêm do seu pedido — estão marcados como suposição em `executar_compra`, `confirmar_recepcao` e no grupo `compras` (D5). O núcleo pedido — registo, aprovação da chefia, confirmação orçamental das Finanças — está classificado directamente a partir da sua frase.
+- `workflow-design.md`: classificação dos passos, tabela de acções, fluxo Mermaid, notas de acesso e as decisões abertas.
+- `workflow.yaml`: esqueleto `provia.ao/v1` com as descrições completas em cinco partes e a secção `access`.
+- `provia-project.json`: manifesto novo (não existia) com fonte, grupos propostos, workflow, acesso, gatilho e decisões D1–D10.
+- `project.html`: mapa do projecto gerado a partir do manifesto.
 
-## 1. Classificação dos passos-fonte
+## O que a fonte dá e o que o desenho acrescenta
 
-Fonte: `pedido-utilizador`, §1 — "Transforme o nosso procedimento de compras num workflow. A chefia aprova o pedido e as Finanças confirmam a disponibilidade orçamental."
+A única fonte é a sua frase. Não recebi o procedimento escrito, por isso tudo o que vai além de «a chefia aprova, as Finanças confirmam o cabimento» está marcado como pressuposto ou recomendação, com decisão aberta. País assumido: Angola (pt-AO, Kz), por falta de indicação.
 
-| Texto | Classificação | Motivo | Acção |
-| --- | --- | --- | --- |
-| "pedido de compra" (implícito) | `intake` | Dados recolhidos antes de existir o caso | `registar_pedido` |
-| "A chefia aprova o pedido" | `decision` | Pessoa autorizada escolhe entre avançar/rejeitar/devolver | `decidir_chefia` |
-| "as Finanças confirmam a disponibilidade orçamental" | `decision` | Pessoa autorizada confirma cabimento; sem regra automática | `confirmar_orcamento` |
+Três acções, em sequência:
 
-**Recomendações (fora da frase-fonte, suposição de PME típica):** `executar_compra` e `confirmar_recepcao`, com o grupo `compras`.
+| localId | Nome | Tipo | Responsável | Ramos |
+| --- | --- | --- | --- | --- |
+| `registar_pedido` | Registar o pedido de compra | Standard | requerente (`creator`) | — |
+| `decidir_chefia` | Decidir sobre o pedido de compra | Decision | grupo `chefias` | Aprovar → continua; Devolver → volta a `registar_pedido` (comentário); Rejeitar → cancela (comentário) |
+| `confirmar_cabimento` | Confirmar a disponibilidade orçamental | Decision | grupo `financas` | Cabimento confirmado → continua; Sem cabimento → volta a `registar_pedido` (comentário) |
 
-## 2. Tabela de acções
+Modelei a confirmação das Finanças como Decisão, e não como acção Standard, porque «não há cabimento» precisa de um destino. Os ramos de devolução e rejeição não estão na fonte; são a minha proposta para o caso não ficar sem saída (D3). Nenhum prazo foi definido e nenhum limite de montante foi codificado, porque a fonte não os indica.
 
-| localId | Nome | Tipo | Responsável | Tarefa + evidência | `due` | Fonte |
-| --- | --- | --- | --- | --- | --- | --- |
-| `registar_pedido` | Registar o pedido de compra | standard | `creator` | Descrever a necessidade e submeter; evidência: descrição, montante, centro de custo | decisão aberta (D4) | §1 |
-| `decidir_chefia` | Decidir sobre o pedido de compra | decision | `chefias` | Aprovar/Devolver/Rejeitar; comentário obrigatório em Devolver/Rejeitar | decisão aberta (D4) | §1 |
-| `confirmar_orcamento` | Confirmar a disponibilidade orçamental | decision | `financas` | Confirmar disponibilidade/Sem disponibilidade; referência orçamental ou comentário | decisão aberta (D4) | §1 |
-| `executar_compra` | Executar a compra junto do fornecedor | standard | `compras` (proposto) | Emitir encomenda; evidência: nota + referência | decisão aberta (D4) | recomendação |
-| `confirmar_recepcao` | Confirmar a recepção dos bens ou serviços | standard | `creator` | Verificar conformidade; evidência: documento de recepção | decisão aberta (D4) | recomendação |
+Acesso: `organization` abre pedidos (pressuposto, D6); Chefias e Finanças não recebem `view`, vêem os casos que lhes chegam pelas acções. O dono do procedimento (`edit`, `ownerArea`) fica por nomear (D8).
 
-## 3. Fluxo
+## Verificações
 
-```mermaid
-flowchart TD
-  registar_pedido["registar_pedido: Registar o pedido de compra"] --> decidir_chefia["decidir_chefia: Decidir sobre o pedido de compra"]
-  decidir_chefia -- Aprovar --> confirmar_orcamento["confirmar_orcamento: Confirmar a disponibilidade orçamental"]
-  decidir_chefia -- Devolver --> registar_pedido
-  decidir_chefia -- Rejeitar --> fim_rejeitado(["Fim: pedido rejeitado"])
-  confirmar_orcamento -- "Confirmar disponibilidade" --> executar_compra["executar_compra: Executar a compra junto do fornecedor"]
-  confirmar_orcamento -- "Sem disponibilidade" --> registar_pedido
-  executar_compra --> confirmar_recepcao["confirmar_recepcao: Confirmar a recepção dos bens ou serviços"]
-  confirmar_recepcao --> fim(["Fim"])
-```
+- `node scripts/build-project-map.mjs provia-project.json --check`: 0 erros, 0 avisos, 2 informações (regra 4, comportamento pretendido); 0 bloqueios de prontidão; 21 itens pendentes (membros dos grupos, atribuições, decisões).
+- `emit-workflow-access.mjs` gerou a secção `access` do YAML a partir do manifesto.
+- Não corrido: `validate-workflow.mjs` e `review-actions.mjs` (pertencem ao package). O YAML é um esqueleto, não está validado.
+- Modo desligado: a leitura do tenant Provia (`org_get_context`) não foi autorizada nesta sessão; nada foi lido nem criado em Provia.
 
-## 4. YAML skeleton
+## Decisões a responder antes de empacotar
 
-Escrito em `workflow.yaml` (esqueleto para `provia-workflow-package`, que executa o validador — não afirmo que foi validado estruturalmente). Descrições completas de cinco partes em cada acção; `assignee` omitido para `chefias`/`financas`/`compras` porque são grupos ainda não resolvidos — a intenção fica no `assigneeRef` do manifesto.
+As dez estão em `provia-project.json` e no relatório. As que mais mudam o desenho: D1 (a ordem chefia → Finanças é mesmo sequencial?), D2 (quem é «a chefia» e como se escolhe a certa em cada pedido), D5 (o que acontece depois do cabimento confirmado, quem executa a compra) e D8 (onde está o procedimento escrito, para refazer a classificação sobre o documento real).
 
-## 5. Manifesto do projecto
-
-Escrito em `provia-project.json`. `node scripts/build-project-map.mjs provia-project.json --check` correu sem erros e sem avisos (`0 warnings`). Também gerei `project.html` (mapa) e `setup.md` (entrega de configuração) a partir do manifesto.
-
-## Decisões em aberto (responder antes de empacotar)
-
-- **D1** Quem integra o grupo «Chefias de departamento»?
-- **D2** Existe um limiar de valor que sobe a aprovação a uma autoridade superior à chefia?
-- **D3** Sem disponibilidade orçamental, o pedido volta ao requerente (assumido) ou é decidido pela chefia?
-- **D4** Prazos (SLA) de cada etapa — nenhum foi indicado, por isso `due` ficou em aberto em todas as acções.
-- **D5** `executar_compra`/`confirmar_recepcao`/grupo `compras` são suposição de PME — ficam neste workflow, num workflow separado, ou saem?
-- **D6** Designação oficial do grupo «Finanças» (Finanças / Direcção Financeira / Contabilidade / DAF)?
-- **D7** País/jurisdição real — foi assumido Angola a título provisório.
-
----
-
-Próximo passo recomendado: **`provia-organization-rollout`**, para transformar os grupos propostos (`chefias`, `financas`, `compras`) em donos reais, resolver as sinalizações (`alias`, `unnamed`) e responder a D1/D6 antes de avançar para YAML final.
+Próximo passo recomendado: `provia-organization-rollout`, para completar os grupos `chefias` e `financas` (membros, nível hierárquico, substitutos, segregação quando o requerente é chefia) antes de gerar o YAML final. Se o procedimento escrito existir, entregue-o primeiro e repita o `provia-workflow-designer` sobre ele.
 
 ```text
-Use provia-organization-rollout com o manifesto provia-project.json deste projecto (workflow "compras"). Complete os grupos «chefias», «financas» e «compras», resolva as sinalizações de alias e de responsável sem nome, e proponha o plano de adopção. País: Angola (provisório, confirmar); responda em pt-AO.
+Use provia-organization-rollout com o provia-project.json deste directório. Complete os grupos chefias e financas (membros, nível hierárquico da chefia que aprova, substitutos em ausência) e responda às decisões D2, D6, D7 e D8 sobre segregação e dono do procedimento. Preserve as acções e o acesso já desenhados. País: Angola; responda em pt-AO.
 ```

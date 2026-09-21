@@ -1,106 +1,109 @@
 {
-  "schemaVersion": "provia-project/v1",
+  "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "pending-extra-approval",
-    "title": "Add an extra approval to the live workflow",
+    "key": "extra-approval-change",
+    "title": "Workflow change: additional approval on a live workflow",
     "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.1.0",
-    "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118",
-    "updatedAt": "2026-09-18"
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
   },
   "organization": {
     "name": null,
     "sector": null,
     "mode": "disconnected",
     "tenantId": null,
-    "productRevision": null
+    "productRevision": null,
+    "language": null,
+    "timezone": null
   },
   "sources": [
     {
-      "id": "change-request",
-      "title": "Chat request: plan a new version with an extra approval without losing evidence from open cases",
+      "id": "cr-extra-approval",
+      "title": "Change request: add an approval to the live workflow without losing evidence from open cases (chat request, 2026-09-21)",
       "kind": "other",
-      "version": "1",
-      "effectiveDate": "2026-09-18",
-      "sections": []
+      "version": null,
+      "effectiveDate": null,
+      "summary": "One-sentence request received in chat. The affected workflow, the current design (YAML or manifest), the position and owner of the new approval, the open-incident export and the list of affected fields, forms and integrations were not supplied. Country not stated: Angola recorded as provisional starting context.",
+      "sections": [
+        { "anchor": "request", "title": "Request as received", "summary": "Plan a new version with an extra approval without losing evidence from open cases." },
+        { "anchor": "missing", "title": "Context not supplied", "summary": "Live design, open incidents, affected fields/forms/integrations, approver, position in the sequence, effective date." }
+      ],
+      "emails": []
     }
   ],
   "entityTypes": [],
   "groups": [],
-  "workflows": [
-    {
-      "key": "target-workflow",
-      "name": "Workflow to be identified (name pending)",
-      "prefix": "TBD",
-      "status": "change_planned",
-      "sourceRefs": [ { "source": "change-request" } ],
-      "actions": [
-        {
-          "localId": "extra-approval",
-          "name": "Decide on the additional approval",
-          "type": "decision",
-          "sourceRefs": [ { "source": "change-request" } ],
-          "assigneeRef": null,
-          "formRef": null,
-          "entityRefs": [],
-          "evidence": [ "Comment required on any outcome other than approve (pending confirmation)" ],
-          "due": null,
-          "folded": []
-        }
-      ],
-      "subWorkflowRefs": [],
-      "setupNotes": [
-        "Placeholder workflow. Replace key, name and prefix with the real live workflow before packaging.",
-        "Position of the new decision in the sequence (before/after the existing approval, and the criterion that routes a case to it) is not yet defined; see decisions D3.",
-        "No workflow.yaml exists yet for this key; start the real draft from workflow_export_yaml of the live version in connected mode, or from the current published YAML in disconnected mode."
-      ]
-    }
-  ],
+  "workflows": [],
   "forms": [],
   "aiProfiles": [],
   "decisions": [
     {
       "id": "D1",
-      "question": "Which live workflow (key, or its exported YAML) does this change apply to? No workflow design was supplied.",
-      "owner": "Workflow owner",
+      "question": "Which workflow is being changed? Provide its Provia name (and id if known) and the current design: the live YAML export, or the packaged workflow.yaml and provia-project.json from the original implementation.",
+      "owner": "Process owner",
       "status": "open",
       "raisedBy": "provia-workflow-change",
-      "sourceRefs": [ { "source": "change-request" } ]
+      "sourceRefs": [ { "source": "cr-extra-approval", "section": "missing" } ]
     },
     {
       "id": "D2",
-      "question": "Can the current open incidents (case list with current action, instantiated field values and evidence already attached) be exported for inspection before publishing the new version? This impact check is pending; none of that evidence was supplied.",
-      "owner": "Implementer",
+      "question": "Where does the extra approval sit: after which existing action and before which? Is it a new Decision action, or an extra outcome on an existing decision?",
+      "owner": "Process owner",
       "status": "open",
       "raisedBy": "provia-workflow-change",
-      "sourceRefs": [ { "source": "change-request" } ]
+      "sourceRefs": [ { "source": "cr-extra-approval", "section": "request" } ]
     },
     {
       "id": "D3",
-      "question": "Who is the new approving group, and at which point in the sequence does the additional approval sit (before or after the existing approval, and on what criterion or threshold)?",
+      "question": "Who approves (which group), what are the named outcomes (for example Approve / Reject / Return), where does Reject go (cancel the case or return to an action), and is a comment mandatory on Reject and Return?",
       "owner": "Process owner",
       "status": "open",
       "raisedBy": "provia-workflow-change",
-      "sourceRefs": [ { "source": "change-request" } ]
+      "sourceRefs": [ { "source": "cr-extra-approval", "section": "request" } ]
     },
     {
       "id": "D4",
-      "question": "Does the new approval need a new case field (for example, a threshold amount or justification)? If yes, will it stay optional so it cannot block an already-open incident whose current action still validates against workflow-level metadata?",
-      "owner": "Implementer",
-      "status": "open",
-      "raisedBy": "provia-workflow-change",
-      "sourceRefs": [ { "source": "change-request" } ]
-    },
-    {
-      "id": "D5",
-      "question": "What effective/publish date is intended for the new version, and how will the new approver group and existing assignees be notified before it goes live?",
+      "question": "Do open cases finish on the version they started (default, no evidence at risk) or must they also receive the extra approval? If they must, confirm the out-of-band route: the approver records the decision as a comment plus attached approval on the existing case, instead of cancelling and re-opening it.",
       "owner": "Process owner",
       "status": "open",
       "raisedBy": "provia-workflow-change",
-      "sourceRefs": [ { "source": "change-request" } ]
+      "sourceRefs": [ { "source": "cr-extra-approval", "section": "request" } ]
+    },
+    {
+      "id": "D5",
+      "question": "Does the new version add, rename, remove or make required any case field, or change a Form Fill definition or intake form? Any such change must be listed before the open-incident impact check can close.",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "cr-extra-approval", "section": "missing" } ]
+    },
+    {
+      "id": "D6",
+      "question": "Supply the open-incident evidence (Provia export of incidents not yet closed on this workflow, with their current action and the fields they hold values in) or authorize the Provia connector so it can be read. Until then the active-incident impact check is pending.",
+      "owner": "Implementer with Provia access",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "cr-extra-approval", "section": "missing" } ]
+    },
+    {
+      "id": "D7",
+      "question": "Effective date of the new version and who communicates it to requesters, current assignees and the new approver group.",
+      "owner": "Process owner",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "cr-extra-approval", "section": "request" } ]
+    },
+    {
+      "id": "D8",
+      "question": "Confirm the country of operation and the response language for the customer-facing artefacts. Angola / English are provisional.",
+      "owner": "Implementer",
+      "status": "open",
+      "raisedBy": "provia-workflow-change",
+      "sourceRefs": [ { "source": "cr-extra-approval", "section": "missing" } ]
     }
   ],
   "receipts": []

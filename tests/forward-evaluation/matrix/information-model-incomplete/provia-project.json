@@ -1,0 +1,424 @@
+{
+  "schemaVersion": "provia-project/v1.1",
+  "project": {
+    "key": "purchasing",
+    "title": "Purchasing — supplier and purchase request information model",
+    "language": "en",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
+  },
+  "organization": {
+    "name": "Organization not identified",
+    "sector": null,
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
+  "sources": [],
+  "entityTypes": [
+    {
+      "key": "supplier",
+      "name": "Supplier",
+      "description": "Suppliers from whom the organization buys goods, services or works. Selected on purchase requests and orders so the counterparty's identity, contacts and agreed terms are entered once and reused.",
+      "icon": "Truck01",
+      "namePattern": "Trading name as it appears on quotations and invoices (e.g. «Demonstration Supplies, Lda.»). Add the accounting supplier code only when two suppliers share a name.",
+      "purpose": "Purchase requests (suggested supplier), purchase orders (counterparty, terms, contact), invoice matching and supplier evaluation.",
+      "owner": "Purchasing team (assumed; confirm — see decision D2)",
+      "coverage": [
+        {
+          "dimension": "Identity and classification",
+          "decision": "included",
+          "reason": "Native Name carries the trading name; legal name, NIF, accounting code and category cover the order header, invoice matching and reporting by category."
+        },
+        {
+          "dimension": "Contacts and location",
+          "decision": "included",
+          "reason": "The commercial contact receives requests for quotation and orders; address and country are needed on the order and to recognise foreign suppliers."
+        },
+        {
+          "dimension": "Ownership and structure",
+          "decision": "included",
+          "reason": "One relationship owner in Purchasing maintains the record and answers questions about the supplier."
+        },
+        {
+          "dimension": "Status and lifecycle",
+          "decision": "included",
+          "reason": "Relationship status distinguishes prospective, active, suspended and closed suppliers before an order is placed; approval date records when qualification happened, if the organization qualifies suppliers."
+        },
+        {
+          "dimension": "Operational and commercial terms",
+          "decision": "included",
+          "reason": "Currency, payment terms, lead time and framework agreement feed the order and the budget confirmation without re-entry on each request."
+        },
+        {
+          "dimension": "Relationships",
+          "decision": "case",
+          "reason": "Purchase requests and orders reference the supplier from the case (entity field on the workflow). No inverse list is kept on the supplier; Provia shows linked cases from the record."
+        },
+        {
+          "dimension": "Evidence and source",
+          "decision": "external",
+          "reason": "Bank details, tax certificates and the signed contract stay in the accounting system and document repository; the record holds the accounting code and the agreement link only."
+        },
+        {
+          "dimension": "Performance and evaluation",
+          "decision": "pending",
+          "reason": "A rating or last-evaluation date needs a defined evaluation process; none was supplied. Added when the evaluation cycle is confirmed (decision D5)."
+        }
+      ],
+      "setup": [
+        "Sources: none supplied. All fields, options and maintainers are assumptions to confirm with Purchasing and Finance.",
+        "Native record Name, UUID, creator and timestamps are used as-is; no display-name, source-system or provenance fields are added.",
+        "If the destination already has a supplier type, reuse it and reconcile these fields against its schema instead of creating a second type. The tenant could not be read in this session.",
+        "Creation-time required is true only for Status. Everything else can be completed after registration; the readiness list below says what must exist before an order.",
+        "Configure Category and Status as select fields with the option values exactly as listed; values are stable keys, labels can be translated.",
+        "Currency has no default: the country context is provisional. Set aoa as default only after confirming most suppliers invoice in Kz.",
+        "Payment-term options are illustrative company terms, not statutory. Replace with the organization's actual agreed terms.",
+        "Supplier code is a text field for the code assigned by the accounting/ERP system. Do not add an auto_number alongside it unless the organization has no external code at all (decision D3).",
+        "Manual-entry walkthrough: create «Demonstration Supplies, Lda.» knowing only trading name, category = goods, contact name/email and Status = prospective. Later: Purchasing adds NIF and address from the supplier's registration document, Finance supplies the accounting code once the supplier is created there, and payment terms/currency are filled after the first negotiation. Status moves to active when the organization decides the supplier may receive orders. NIF is entered in Provia and in accounting; the accounting system is authoritative and Purchasing copies it once (no synchronization).",
+        "Sensitivity: for a sole trader the NIF and phone are personal data. Restrict record access to Purchasing and Finance if the organization treats them as confidential; a sensitivity label is not permission enforcement."
+      ],
+      "readiness": [
+        "Before an order is placed: Status = active, NIF, commercial email, currency and payment terms filled. The Status field does not block selection by itself; the order action's brief must instruct the assignee to check it.",
+        "Before invoice matching: accounting supplier code filled by Finance."
+      ],
+      "fields": [
+        {
+          "key": "legal_name",
+          "label": "Legal name",
+          "type": "text",
+          "required": false,
+          "group": "Identification",
+          "helpText": "Registered company name when it differs from the trading name used as the record Name.",
+          "purpose": "Identify the counterparty on orders and contracts when the trading name is not the registered name.",
+          "priority": "conditional",
+          "source": "Supplier registration document",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal",
+          "example": "Demonstration Supplies e Serviços, Lda."
+        },
+        {
+          "key": "tax_number",
+          "label": "NIF",
+          "type": "text",
+          "required": false,
+          "group": "Identification",
+          "helpText": "Tax identification number as shown on the supplier's document. Copied once from the accounting system, which stays authoritative.",
+          "purpose": "Match the supplier on orders and invoices and avoid duplicate records.",
+          "priority": "core",
+          "source": "Supplier registration document / accounting system",
+          "maintainer": "Purchasing (Finance confirms)",
+          "sensitivity": "Internal; personal data when the supplier is a sole trader",
+          "example": "NIF-DEMO-0001"
+        },
+        {
+          "key": "supplier_code",
+          "label": "Accounting supplier code",
+          "type": "text",
+          "required": false,
+          "group": "Identification",
+          "helpText": "Code assigned by the accounting/ERP system. Leave empty until Finance creates the supplier there.",
+          "purpose": "Reconcile Provia orders with accounting entries and invoices.",
+          "priority": "conditional",
+          "source": "Accounting / ERP system",
+          "maintainer": "Finance",
+          "sensitivity": "Internal",
+          "example": "FOR-DEMO-0001"
+        },
+        {
+          "key": "category",
+          "label": "Category",
+          "type": "select",
+          "required": false,
+          "group": "Classification",
+          "helpText": "What this supplier mainly provides. Used to filter suppliers when preparing a request and for spend reporting.",
+          "purpose": "Filter suppliers by what they provide and report spend by category.",
+          "priority": "core",
+          "source": "Purchasing assessment",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal",
+          "options": [
+            { "value": "goods", "label": "Goods" },
+            { "value": "services", "label": "Services" },
+            { "value": "works", "label": "Works" },
+            { "value": "goods_and_services", "label": "Goods and services" }
+          ],
+          "example": "goods"
+        },
+        {
+          "key": "contact_name",
+          "label": "Commercial contact",
+          "type": "text",
+          "required": false,
+          "group": "Contacts",
+          "helpText": "Person who answers requests for quotation and receives orders.",
+          "purpose": "Address quotations and orders to the right person.",
+          "priority": "core",
+          "source": "Supplier",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal; personal data",
+          "example": "Demonstration Contact"
+        },
+        {
+          "key": "contact_email",
+          "label": "Commercial email",
+          "type": "email",
+          "required": false,
+          "group": "Contacts",
+          "helpText": "Address to which requests for quotation and orders are sent.",
+          "purpose": "Send requests for quotation and orders.",
+          "priority": "core",
+          "source": "Supplier",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal; personal data",
+          "example": "sales@example.com"
+        },
+        {
+          "key": "contact_phone",
+          "label": "Commercial phone",
+          "type": "phone",
+          "required": false,
+          "group": "Contacts",
+          "helpText": "Phone for urgent coordination of deliveries.",
+          "purpose": "Reach the supplier when email is not enough.",
+          "priority": "optional",
+          "source": "Supplier",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal; personal data",
+          "example": "+244 900 000 000"
+        },
+        {
+          "key": "address",
+          "label": "Address",
+          "type": "text",
+          "required": false,
+          "group": "Contacts",
+          "helpText": "Address printed on the order or used for collection.",
+          "purpose": "Complete the order header and plan collections.",
+          "priority": "conditional",
+          "source": "Supplier registration document",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal",
+          "example": "Rua de Demonstração 1, Luanda"
+        },
+        {
+          "key": "country",
+          "label": "Country",
+          "type": "text",
+          "required": false,
+          "group": "Contacts",
+          "helpText": "Fill only for suppliers outside the organization's country; foreign suppliers usually change currency, lead time and payment terms.",
+          "purpose": "Recognise foreign suppliers when preparing the order and budget.",
+          "priority": "conditional",
+          "source": "Supplier registration document",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal",
+          "example": "Portugal"
+        },
+        {
+          "key": "relationship_owner",
+          "label": "Relationship owner",
+          "type": "user",
+          "required": false,
+          "group": "Ownership",
+          "helpText": "Buyer who maintains this record and answers questions about the supplier.",
+          "purpose": "Know who keeps the record current and who to ask before an order.",
+          "priority": "core",
+          "source": "Purchasing team assignment",
+          "maintainer": "Purchasing lead",
+          "sensitivity": "Internal",
+          "example": { "lookupName": "Demonstration buyer" }
+        },
+        {
+          "key": "status",
+          "label": "Status",
+          "type": "select",
+          "required": true,
+          "group": "Relationship",
+          "helpText": "Prospective: registered, not yet cleared for orders. Active: may receive orders. Suspended: no new orders until reviewed. Closed: relationship ended.",
+          "purpose": "Check before selecting the supplier on an order; filter active suppliers.",
+          "priority": "core",
+          "source": "Purchasing decision",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal",
+          "options": [
+            { "value": "prospective", "label": "Prospective" },
+            { "value": "active", "label": "Active" },
+            { "value": "suspended", "label": "Suspended" },
+            { "value": "closed", "label": "Closed" }
+          ],
+          "example": "active"
+        },
+        {
+          "key": "approved_on",
+          "label": "Approved on",
+          "type": "date",
+          "required": false,
+          "group": "Relationship",
+          "helpText": "Date the supplier was cleared to receive orders. Fill only if the organization runs a qualification step.",
+          "purpose": "Record when qualification happened for later review.",
+          "priority": "conditional",
+          "source": "Supplier qualification decision",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal",
+          "example": "2026-09-01"
+        },
+        {
+          "key": "currency",
+          "label": "Invoicing currency",
+          "type": "select",
+          "required": false,
+          "group": "Commercial terms",
+          "helpText": "Currency in which this supplier quotes and invoices. Illustrative list; extend with the currencies actually used.",
+          "purpose": "Prepare the order and budget confirmation in the right currency.",
+          "priority": "core",
+          "source": "Supplier quotation / agreement",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal",
+          "options": [
+            { "value": "aoa", "label": "Kwanza (AOA)" },
+            { "value": "usd", "label": "US dollar (USD)" },
+            { "value": "eur", "label": "Euro (EUR)" }
+          ],
+          "example": "aoa"
+        },
+        {
+          "key": "payment_terms",
+          "label": "Payment terms",
+          "type": "select",
+          "required": false,
+          "group": "Commercial terms",
+          "helpText": "Terms agreed with the supplier. Illustrative options; replace with the organization's actual terms.",
+          "purpose": "Carry agreed terms onto the order and inform Finance's budget confirmation.",
+          "priority": "core",
+          "source": "Negotiated agreement",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal",
+          "options": [
+            { "value": "prepayment", "label": "Prepayment" },
+            { "value": "on_delivery", "label": "On delivery" },
+            { "value": "net_30", "label": "30 days after invoice" },
+            { "value": "net_60", "label": "60 days after invoice" }
+          ],
+          "example": "net_30"
+        },
+        {
+          "key": "lead_time_days",
+          "label": "Typical lead time (days)",
+          "type": "number",
+          "required": false,
+          "group": "Commercial terms",
+          "helpText": "Usual calendar days from order to delivery, as quoted or observed. Guidance only.",
+          "purpose": "Check whether the supplier can meet the request's needed-by date.",
+          "priority": "optional",
+          "source": "Supplier quotation / past orders",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal",
+          "example": 15
+        },
+        {
+          "key": "agreement_url",
+          "label": "Framework agreement",
+          "type": "url",
+          "required": false,
+          "group": "Commercial terms",
+          "helpText": "Link to the signed framework contract or price list in the document repository, when one exists.",
+          "purpose": "Consult agreed prices and conditions before ordering.",
+          "priority": "conditional",
+          "source": "Document repository",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal",
+          "example": "https://example.com/contracts/demo-supplier"
+        },
+        {
+          "key": "agreement_end",
+          "label": "Agreement valid until",
+          "type": "date",
+          "required": false,
+          "group": "Commercial terms",
+          "helpText": "End date of the framework agreement. Fill only when an agreement exists.",
+          "purpose": "Avoid ordering under an expired agreement and plan renewals.",
+          "priority": "conditional",
+          "source": "Framework agreement",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal",
+          "example": "2027-08-31"
+        },
+        {
+          "key": "notes",
+          "label": "Notes",
+          "type": "rich_text",
+          "required": false,
+          "group": "Notes",
+          "helpText": "Operational remarks useful to any buyer: delivery constraints, preferred ordering channel, known issues.",
+          "purpose": "Share supplier knowledge across buyers without re-asking.",
+          "priority": "optional",
+          "source": "Purchasing experience",
+          "maintainer": "Purchasing",
+          "sensitivity": "Internal",
+          "example": "Delivers Tuesdays and Thursdays; orders by email only."
+        }
+      ]
+    }
+  ],
+  "groups": [],
+  "workflows": [],
+  "forms": [],
+  "aiProfiles": [],
+  "decisions": [
+    {
+      "id": "D1",
+      "question": "No purchasing procedure, sample supplier records or purchase-request examples were supplied. Which documents describe the current purchasing process, and which systems (accounting/ERP, document repository) hold supplier data today?",
+      "owner": "Purchasing lead",
+      "status": "open",
+      "raisedBy": "provia-information-model"
+    },
+    {
+      "id": "D2",
+      "question": "Who creates and maintains supplier records in Provia (assumed: Purchasing, with Finance filling the accounting code and confirming the NIF)?",
+      "owner": "Purchasing lead and Finance lead",
+      "status": "open",
+      "raisedBy": "provia-information-model"
+    },
+    {
+      "id": "D3",
+      "question": "Does the accounting/ERP system assign a supplier code? If yes, keep supplier_code as text; if no external code exists, replace it with a Provia auto_number (e.g. prefix SUP-).",
+      "owner": "Finance lead",
+      "status": "open",
+      "raisedBy": "provia-information-model"
+    },
+    {
+      "id": "D4",
+      "question": "Country of operation and default invoicing currency were not stated. Angola/AOA is a provisional context: confirm before setting a currency default or translating labels to pt-AO.",
+      "owner": "Project sponsor",
+      "status": "open",
+      "raisedBy": "provia-information-model"
+    },
+    {
+      "id": "D5",
+      "question": "Is there a supplier qualification or evaluation cycle? If yes, confirm the approved_on field and add rating / last-evaluation fields with the evaluation process as maintainer; if no, drop approved_on.",
+      "owner": "Purchasing lead",
+      "status": "open",
+      "raisedBy": "provia-information-model"
+    },
+    {
+      "id": "D6",
+      "question": "Is a cost centre / department list needed on purchase requests for budget confirmation and reporting? If it is reused across purchasing, expenses and budgeting, it becomes a second entity type; otherwise a select on the case is enough.",
+      "owner": "Finance lead",
+      "status": "open",
+      "raisedBy": "provia-information-model"
+    },
+    {
+      "id": "D7",
+      "question": "Which approval steps and amount thresholds apply to a purchase request, and from which amount are quotations required? Needed before the purchase-request case fields (approved_amount, quotations) are configured in a workflow.",
+      "owner": "Finance lead",
+      "status": "open",
+      "raisedBy": "provia-information-model"
+    }
+  ],
+  "receipts": []
+}

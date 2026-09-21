@@ -1,0 +1,102 @@
+{
+  "valid": true,
+  "workflow": "Pedido de compra",
+  "reviewedActions": 4,
+  "summary": {
+    "applicable": 4,
+    "complete": 4,
+    "incomplete": 0,
+    "automatedWithoutDescription": 0,
+    "leaks": 0,
+    "dueMissing": 1,
+    "nearLimit": 0
+  },
+  "warnings": [],
+  "actions": [
+    {
+      "id": "registar",
+      "name": "Registar o pedido de compra",
+      "type": "standard",
+      "applicable": true,
+      "complete": true,
+      "parts": {
+        "task": true,
+        "method": true,
+        "evidence": true,
+        "doneWhen": true,
+        "exceptions": true
+      },
+      "missing": [],
+      "leaks": [],
+      "length": 923,
+      "tooLong": false,
+      "nearLimit": false,
+      "empty": false,
+      "due": "missing"
+    },
+    {
+      "id": "verificar_cabimento",
+      "name": "Verificar o cabimento orçamental",
+      "type": "standard",
+      "applicable": true,
+      "complete": true,
+      "parts": {
+        "task": true,
+        "method": true,
+        "evidence": true,
+        "doneWhen": true,
+        "exceptions": true
+      },
+      "missing": [],
+      "leaks": [],
+      "length": 732,
+      "tooLong": false,
+      "nearLimit": false,
+      "empty": false,
+      "due": "set"
+    },
+    {
+      "id": "decidir",
+      "name": "Decidir sobre o pedido de compra",
+      "type": "decision",
+      "applicable": true,
+      "complete": true,
+      "parts": {
+        "task": true,
+        "method": true,
+        "evidence": true,
+        "doneWhen": true,
+        "exceptions": true
+      },
+      "missing": [],
+      "leaks": [],
+      "length": 559,
+      "tooLong": false,
+      "nearLimit": false,
+      "empty": false,
+      "due": "set"
+    },
+    {
+      "id": "confirmar_encomenda",
+      "name": "Confirmar a encomenda ao fornecedor",
+      "type": "standard",
+      "applicable": true,
+      "complete": true,
+      "parts": {
+        "task": true,
+        "method": true,
+        "evidence": true,
+        "doneWhen": true,
+        "exceptions": true
+      },
+      "missing": [],
+      "leaks": [],
+      "length": 650,
+      "tooLong": false,
+      "nearLimit": false,
+      "empty": false,
+      "due": "set"
+    }
+  ],
+  "note": "Presence of the labelled parts (Tarefa/Task, Como/How, Evidência/Evidence, Concluído quando/Done when, Excepções/Exceptions), leaked implementer notes, length (warning from 4500 characters) and due are checked. Wording quality and business correctness are not certified; see references/action-writing.md."
+}

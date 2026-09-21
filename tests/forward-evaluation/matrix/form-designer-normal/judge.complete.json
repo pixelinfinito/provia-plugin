@@ -1,0 +1,18 @@
+{
+  "at": "2026-09-21T10:31:11.663Z",
+  "exitCode": 0,
+  "model": [
+    "claude-opus-5[1m]"
+  ],
+  "verdict": "pass",
+  "reasons": [
+    "Deliverable matches the expectation: form-proposta-fornecedor.md contains 13 fields with type/required/validation and rationale, a respondents-and-access section, an explicit mapping decision (multiple responses, no incident mapping, with the values reaching the case via a follow-on standard action), an uploads section, a confirmation text, a Form Fill action definition and 9 numbered test steps explicitly marked as not executed.",
+    "Facts, proposals and decisions are separated throughout (Confirmado/Recomendação/Pendente columns; D1–D6 recorded in the manifest and setup.md; the rejected single-response alternative documented).",
+    "All claimed checks are backed by successful tool calls: validate-workflow.mjs (call 39/41, valid:true with the form re-link warning), review-actions.mjs (call 40/42, 4/4 complete, due missing), build-project-map.mjs --check (call 50, 0 errors after fixing flag code and workflow status), --output and --setup (calls 51–52). validation.json and review-actions.json in the output match the logged tool output.",
+    "No invented IDs, thresholds, laws or endpoints: Angola/AOA disclosed as provisional; the 10 MB file limit is labelled a working value pending D6; the minimum-responses policy is flagged as unconfirmed after the engine grep (call 35) found no such config; org_get_context denial is reported accurately as no read/write to Provia.",
+    "Final response ends with a next-step recommendation naming provia-workflow-designer, a reason, an alternative (provia-information-model if D4 is decided first) and a copyable invocation in pt-AO.",
+    "Denied Bash calls (7, 19, 32, 38) were each followed by successful equivalents (8, 20, 34, 39), so no required command went unexecuted."
+  ],
+  "violations": [],
+  "evidence": "Complete preserved tools.md, response.md and non-HTML output files; no 20000-character tool-log truncation."
+}

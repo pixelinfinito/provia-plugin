@@ -1,32 +1,61 @@
-# Self-Service IT Request: Setup handover
+# Self-service IT request: Setup handover
 
-Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.1.0, 2026-09-18).
+Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
 
 ## Status
 
-Mode: no Provia connection (manual configuration).
+Mode: manual configuration (no receipts recorded).
 
 ## Pending configuration
 
 | Where | Item | What to do |
 | --- | --- | --- |
-| it-request | Self-service IT request | Import the YAML as a draft and review the preview |
+| it-request | IT request | Import the YAML as a draft and review the preview |
+| it-request | IT request | Apply the access grants (`workflow_access_apply`, dry run first) or confirm the `access` section in the import preview. organization → create_incident |
+| it-request / triage | Triage the IT request | Assign the group to the action once the group exists (`it-support`) |
+| it-request / triage | Triage the IT request | Set the deadline; the design proposes no `due` |
+| it-request / resolve | Resolve the IT request | Assign the group to the action once the group exists (`it-support`) |
+| it-request / resolve | Resolve the IT request | Set the deadline; the design proposes no `due` |
+| it-request / confirm-resolution | Confirm the resolution | Set the deadline; the design proposes no `due` |
+
+## Workflow access
+
+Who may see and open each workflow. `view` on a workflow shows every case; whoever executes an action sees their own cases without a grant. Grants are created with `workflow_access_apply` in connected mode or through the `access` section of the YAML imported in the browser.
+
+| Workflow | Sensitivity | Grantee | Level | Reason | Status |
+| --- | --- | --- | --- | --- | --- |
+| `it-request` | internal | `organization` | create_incident | Self-service: any employee opens their own IT request. Assumption from the request wording; no source lists exceptions (decision D1). (chat-request-2026-09-21 §request) | to apply |
+| `it-request` | internal | `group:it-support` | — | Sees its own cases only (no grant) | — |
+
+## Groups to create
+
+- `it-support` IT Support [team]: Proposed team that triages and resolves self-service IT requests. Real name and members not supplied (decision D2).
+
+## Group flags
+
+- `it-support`: Owner unnamed in the sources. No source names the IT team or its members; placeholder pending D2.
 
 ## Forms to create and link
 
-- `it-request-intake` Self-Service IT Request: Create the intake form and link it to the workflow (it-request / it-request-intake)
+- `it-request-intake` Self-service IT request: Create the intake form and link it to the workflow (it-request / it-request-intake)
+- `resolution-confirmation` Resolution confirmation: Create the form and link it to the Form Fill action (it-request / resolution-confirmation)
 
 ## Open decisions
 
-- **D1** What is the respondent access model for this form: authenticated internal employees only, or an unauthenticated/external link (for example, for contractors)? (Owner: Process owner (IT))
-- **D2** The IT request workflow itself (classification, diagnosis, resolution, confirmation actions, owning group, due dates) has not been designed. Only a placeholder workflow entry exists so this form can bind to it. (Owner: IT service owner)
-- **D3** File upload type/size limits and retention for attachments (e.g. screenshots) are not confirmed for this Provia environment. (Owner: IT / Security)
-- **D4** No source procedure (SOP) was supplied for IT requests. The field list, urgency levels and confirmation wording are drafted from generic self-service ITSM practice and need validation against the actual internal process. (Owner: Process owner (IT))
+- **D1** Access model for the intake form: signed-in employees only, or an external link? Anonymous submission is not offered until the configured form behaviour is checked. If an external link is chosen, add requester_name and requester_email fields and revisit the organization grant. (Owner: IT process owner)
+- **D2** Which team handles IT requests, its real name and members; does it need to see every IT case (a view grant as a shared queue) or only its assigned ones? (Owner: IT manager)
+- **D3** Department list (to turn `department` into a select) and the final `request_type` option list. (Owner: IT manager / HR)
+- **D4** Response and resolution targets, if any, to state in the confirmation and to set as `due` on triage and resolve. None is promised until confirmed. (Owner: IT process owner)
+- **D5** Confirmation screen capabilities in the destination form configuration: custom text, display of the case reference, redirect. (Owner: Implementer (verify in Provia))
+- **D6** Route when the requester answers 'not solved' in the resolution confirmation: return to resolve, or an IT decision. (Owner: IT process owner)
+- **D7** Country, language, timezone and currency of the organization. Angola, English response with pt-AO labels, Africa/Luanda and AOA are provisional. (Owner: Customer sponsor)
 
 ## Setup notes
 
-- `it-request`: No workflow design was supplied for this process. This entry is a placeholder so the intake form below has a valid workflowRef; it does not describe classification, diagnosis, resolution or confirmation steps.
-- `it-request`: Design the actual actions, owning group and routing with provia-workflow-designer before import. The plugin's bundled examples/it-service/workflow.yaml shows one reasonable shape for this kind of process (a training draft, not an approved design for this project) and already anticipates replacing its manual trigger with a self-service form.
-- `it-request`: The prefix ITR is proposed, not confirmed; it determines the case reference shown to requesters once a workflow auto_number is configured.
+- `it-request`: Placeholder workflow created by provia-form-designer so the intake form has a destination; the action set, decisions and routing still need provia-workflow-designer. No YAML was produced.
+- `it-request`: Case metadata the intake form maps to (declare in the workflow): request_type (select), summary (text), details (rich_text), urgency (select), affected_asset (text), department (text), needed_by (date), attachment (file), contact_phone (phone); set by IT: priority (select); set by the closing form: resolution_accepted (boolean), resolution_feedback (text).
+- `it-request`: Form intake and Form Fill links are configured in Provia after the workflow draft exists; verify each field mapping there (see it-request-form.md §4 and §7).
+- `it-request`: File size limit for `attachment`: verify the destination limit before writing a number into the form help text.
+- `it-request`: Confirmation text is in it-request-form.md §6; where it is displayed (confirmation screen, notification) depends on the destination form configuration (decision D5).
 
 This file is generated by the project map; regenerate it after every manifest change. It does not replace the process owner review or the Provia import preview.

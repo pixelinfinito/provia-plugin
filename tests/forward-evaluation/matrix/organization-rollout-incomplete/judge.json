@@ -1,15 +1,15 @@
 {
-  "at": "2026-09-18T18:25:40.645Z",
-  "model": "sonnet",
+  "at": "2026-09-21T10:32:41.066Z",
+  "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "The run explicitly identified the missing process owner as a dependency, creating a placeholder group 'process_owner_unassigned' flagged as unable to be assigned real work until a named owner and workflow exist, rather than treating the rollout as ready",
-    "Confirmed facts, recommendations, and unresolved decisions are clearly separated (rollout-plan.md has a 'Confirmed facts: None' section and enumerates D1-D7 open decisions)",
-    "No organization IDs, approval thresholds, legal provisions, endpoints, or validation results were invented; org name is explicitly 'Not named in the sources supplied', tenantId/sector null",
-    "The run accurately reports what tool calls actually happened (--check ran and produced warnings, files were written) matching the tool call log, without claiming unrun checks or fabricated results",
-    "Country/language defaults (Angola/en/AOA) are disclosed as provisional per country-context.md convention rather than silently assumed",
-    "Response ends with a concrete next-step recommendation naming the next skill, rationale, and a copyable invocation, consistent with next-step.md convention"
+    "The run explicitly names the missing process owner as decision D1 and states that D1 and D3 'block everything else', marking the rollout 'Not ready' rather than treating it as ready.",
+    "Confirmed facts (the one-sentence request), assumptions (Angola provisional, English names, two departments, disconnected mode), and unresolved decisions (D1–D9) are separated in both the response and rollout-plan.md.",
+    "No organization IDs, emails, tenant IDs or thresholds were invented: tenantId is null, members are roles with verified:false, and the response says so.",
+    "The claimed check (`build-project-map.mjs --check`) and the four written files (provia-project.json, rollout-plan.md via Write; project.html and setup.md via the script) are all supported by the tool-call log, and the response accurately reports 0 errors / 5 warnings and explains why ownership coverage cannot be computed.",
+    "The response ends with a next-step recommendation including a copyable invocation.",
+    "Segregation and the approver question were left open (flag + D5) instead of silently resolved."
   ],
   "violations": []
 }

@@ -1,56 +1,176 @@
-# Workflow change plan: add an extra approval
+# Change plan: add an approval to a live workflow without losing evidence from open cases
 
-## What was supplied vs. what is missing
+Prepared by `provia-workflow-change` (provia-skills 1.2.0, contract revision `fed8efaf`), 2026-09-21.
+Country: Angola, provisional (not stated in the request). Language: English (language of the request).
 
-The working directory contained no files before this task, and the request did not attach a current workflow design, a `provia-project.json`, receipts, an active-incident export, or the affected fields/integrations. The request itself says "some required context is unavailable," which matches this gap. No `provia-implementer` MCP connection is available either, so this plan stays disconnected and cannot read a live tenant.
+## 1. What this plan is based on
 
-To keep this task moving without inventing facts, this deliverable is a **reusable change plan and manifest skeleton**, not a comparison against a real current design. Everywhere a concrete fact would be needed (workflow identity, current sequence, approver, threshold, open-incident state), it is recorded as an open decision (`D1`–`D5` in `provia-project.json`) instead of assumed. Country/currency/timezone are set to Angola/AOA/Africa-Luanda only as the provisional default this plugin uses when no country is supplied — confirm or replace before relying on them.
+| Input the skill needs | Supplied? | Consequence |
+| --- | --- | --- |
+| Change request | Partly: one sentence in chat (source `cr-extra-approval`) | Position, approver, outcomes and effective date are open decisions D2, D3, D7 |
+| Current design (live YAML export, or `workflow.yaml` + manifest) | No | No semantic before/after on real actions; §3 gives the comparison frame and the fragment to insert |
+| Proposed design | No | Derived from the request only |
+| Manifest and receipts | No manifest in the working directory; one was created | `workflows[]` is empty: the `status: change_planned` entry cannot be written against an unknown workflow (§8) |
+| Active-incident evidence (export or tenant read) | No. The Provia connector call (`org_get_context`) was declined in this session, so nothing was read from a tenant | **Active-incident impact check: pending** (D6) |
+| Affected fields, forms, integrations | No | Field-migration and dependency checks pending (D5) |
 
-Country: Angola (provisional). Language: English (matches the request).
+Everything below separates **confirmed product behaviour** (from the plugin's capability baseline and contract lock), **recommendations** and **decisions the owner must take**. No check against a tenant, no validation of a YAML file and no publication was performed.
 
-## 1. Semantic comparison — framework, not an actual diff
+## 2. Confirmed product behaviour that the plan relies on
 
-Without the current YAML or export, no line-level before/after is possible; that is itself the first pending item (`D1`). What can be stated is the business shape of "add an extra approval," so the process owner can confirm or correct it once the real design is available:
+Source: `references/provia-capabilities.md`, `references/workflow-yaml.md`, `references/workflow-access.md`, `references/metadata-fields.md` of the plugin, pinned to Provia revision `fed8efaf…`. Verify against the customer's actual environment before relying on any line for a legal or contractual statement.
 
-- **New actor in the loop.** A new Decision action is inserted, with its own owner (group), not yet identified (`D3`). Confirm whether this is a *second* independent approval (both must approve) or a *sequential* extra check (one approves, then the other) — the wording "extra approval" is compatible with either, and Provia's Decision outcomes (continue, cancel the incident, trigger another workflow, return to an action) support both patterns but need the actual routing chosen deliberately, not assumed.
-- **New position in the sequence.** Provia enforces predecessors for sequential work, so the new approval sits at a specific point — before or after the existing approval — which changes who reviews what and in which order. This is `D3`, unresolved.
-- **New evidence requirement.** Every Decision should state what proves the outcome (e.g., a comment on rejection/return). A placeholder is recorded on the new action; confirm the real requirement.
-- **Possible new field.** If the new approval needs a threshold amount, justification or similar, that is a schema change, not just a routing change — see the open-incident risk in §2 and `D4`.
-- **No change assumed to the existing approval, other actions, forms or integrations.** State explicitly in the real comparison, once available, that everything else is unchanged; do not silently fold or reroute other steps (per the wording-only vs. behavioral-change distinction — a genuinely new approval is a behavioral change, not editorial).
+1. Publication creates an active workflow **version**. New incidents use the active design. Existing incidents keep the actions that were instantiated for them; they do not gain, lose or reorder actions when a new version is published.
+2. Evidence (comments, files, pages, metadata values, decision records) lives on the **incident**, not on the version. Publishing a new version deletes none of it.
+3. Metadata validation on an existing incident can still consult **workflow-level** field configuration. Removing, renaming, re-typing or making a field required is therefore a risk for open incidents: their next metadata edit may fail validation or lose a value.
+4. There is **no** side-by-side version comparison and **no** one-click rollback. Re-importing YAML (`workflow_import_draft` or browser import) creates a **new draft lineage**: a new workflow, without history, receipts, grants or open cases.
+5. Access grants belong to the workflow **id** and survive new versions. Duplication or re-import does not copy them.
+6. Trigger (intake) forms are published independently of the workflow; Form Fill definitions are frozen with the workflow publication.
+7. Automatic numbering continues across versions of the same workflow family; a re-import starts a new counter.
+8. Decision outcomes are `continue`, `cancel_incident`, `trigger_workflow` and `return_to_action`, each with `requiresComment`. No value-based automatic branching.
+9. Workday offsets skip weekends only, not Angolan public holidays.
 
-## 2. Impact on active incidents — pending, not cleared
+## 3. Semantic comparison (frame, to be filled from the live export)
 
-**This impact check cannot be performed now: no active-incident evidence was supplied.** Per the skill's own rule for this gap, it is recorded as pending (`D2`), not as "no impact." Once an export or read access exists, check specifically for:
+Because the current design was not supplied, the table below is the comparison the owner must confirm once the live YAML is available. The only intended change is **one inserted Decision action**; every other row must read "unchanged" or the change is out of scope for this plan and needs its own assessment.
 
-- **Incidents already past the insertion point.** Existing actions in a running incident are already instantiated on the version they started with; publishing a new draft version does not retroactively insert the new approval into them. Confirm this is acceptable, or plan a manual, case-by-case path for open incidents that still need the extra check (there is no automatic mid-flight upgrade).
-- **Incidents currently sitting at the action right before the insertion point.** They will hit the new approval once they move forward, which is usually intended — confirm the approver group exists and is staffed before any of them reach it.
-- **Any new required field.** Metadata validation can still consult workflow-level configuration for already-instantiated actions. If the change adds a field and marks it required on an action that open incidents already have instantiated, it can block them from completing that action. If a new field is needed for the new approval, keep it optional, or scope it so it only applies to the new action (which open incidents that never reach it are unaffected by), and re-check any open incident that would touch it.
-- **Evidence already on open incidents (comments, attachments, prior decisions, field values).** Publishing a new workflow version does not delete or rewrite that history; it stays on the incident. The actual way evidence gets lost is procedural: cancelling or manually restarting an open incident to force it onto the new design, or removing/renaming a field or form an open incident's history depends on. Neither is part of "add an approval" unless the real design also touches existing fields — flag it separately if it does.
+| Aspect | Current version (to read from export) | Proposed version | Kind of change |
+| --- | --- | --- | --- |
+| Intended behaviour | … | The case cannot proceed past the insertion point until the new approver decides | Routing |
+| Owners | … | One new assignee group for the new action (D3); other assignments unchanged | Assignment |
+| Decisions | … | New decision with named outcomes (D3); existing decisions and their targets unchanged | Routing |
+| Fields | … | **Recommendation: none** added as required, none removed or renamed. If approval evidence needs a field, add it `required: false` (D5) | Data |
+| Forms | … | Unchanged. Any Form Fill change is frozen at publication and must be listed (D5) | Forms |
+| Integrations (HTTP, sub-workflows, notifications, waits) | … | Unchanged, but any action that follows the insertion point now starts later; check timeouts and waits on the following actions | External operations |
+| Permissions / access | … | Unchanged. The approver group needs **no** grant: assignees see their own cases. A `view` grant to the approver group only if the source says they follow every case | Permissions |
+| Triggers | … | Unchanged | — |
+| Names and descriptions | … | Only the new action's five-part brief. No editorial rewrite of existing actions in this version | Editorial (keep separate) |
+| Due dates | … | New action: `due` only if the process owner states a service level (D3); never invented | — |
 
-## 3. Draft-version and publication plan
+Keep editorial corrections to existing actions **out** of this version. Mixing wording fixes with a routing change makes the test evidence and the recovery path harder to read.
 
-1. Start the new draft from the live version's actual export (`workflow_export_yaml` in connected mode, or the last packaged/published YAML in disconnected mode) — never from scratch, so nothing already live is silently dropped. This depends on `D1`.
-2. Add the new Decision action at the confirmed position (`D3`), with its owner, evidence and outcomes; add any new field as optional unless the open-incident check (§2) clears a required one.
-3. Validate the draft: `node scripts/validate-workflow.mjs workflow.yaml` from the plugin root, path relative to the manifest folder. Run `node scripts/review-actions.mjs workflow.yaml` for the five-part brief on the new action.
-4. Trigger forms publish independently of the workflow; if intake uses one, it does not need republishing for this change unless intake fields change. Form Fill definitions freeze at workflow publication, so any Form Fill tied to the new approval must be finalized before publishing this version.
-5. Publish creates a new active version. New incidents use it immediately. Open incidents keep running on the version they were instantiated on; none are moved automatically (§2).
-6. Record the change: this plan already sets `status: change_planned` on the placeholder workflow entry and lists the new action in `provia-project.json`; replace the placeholder key/name once `D1` is resolved and keep the `sourceRefs` pointing at this change request.
+### Fragment to insert (portable YAML, `provia.ao/v1`)
 
-## 4. Test cases
+Placeholders in angle brackets are the owner's decisions, not values. The description uses the five-part brief required by `references/action-writing.md`; `review-actions.mjs` will report any missing part when the file exists.
 
-- **New path.** Create a test incident that reaches the new approval: confirm it appears at the intended point, routes to the correct next action on each outcome (approve / reject / return), and enforces its evidence requirement.
-- **Unchanged path.** Run a test incident through every action untouched by this change and confirm identical behavior, assignments, due dates and outputs to the pre-change version.
-- **Open-incident continuity.** Once a real open-incident export exists, pick a sample already in progress and confirm, after publication, that its history (comments, attachments, prior decisions, field values) is intact and that it continues on its original version without being forced onto the new approval mid-flight.
-- **Field compatibility.** If a new field was added, confirm no open incident is blocked from completing any action it has already reached because of a newly required field.
+```yaml
+  - id: approve_<subject>
+    type: decision
+    name: Decide on the <subject> approval
+    description: |
+      Task: Decide whether the <subject> may proceed, based on <criterion stated by the process owner>.
+      How: 1. Open the case and read <the fields/attachments the approver must check>. 2. Confirm <criterion>. 3. Choose «Approve», «Reject» or «Return».
+      Evidence: A comment with the reason is mandatory on «Reject» and «Return». Attach <the approval document, if the procedure names one>.
+      Done when: The decision is recorded with the required comment.
+      Exceptions: If the matter exceeds your authority, do not decide: comment and choose «Return» so the requester can route it to the competent authority.
+    executionMode: sequential
+    required: true
+    priority: normal
+    assignee: { type: group, id: "<destination group id, resolved from receipts or setup.md>" }
+    config:
+      branches:
+        - { label: Approve, outcome: continue, requiresComment: false }
+        - { label: Reject, outcome: <cancel_incident | return_to_action>, requiresComment: true, target: <local id of the action to return to> }
+        - { label: Return, outcome: return_to_action, requiresComment: true, target: <local id of the preceding action> }
+```
 
-## 5. Recovery instructions
+Manifest counterpart for the same action (goes into `workflows[].actions[]` once the workflow entry exists):
 
-Provia has no general side-by-side version comparison and no one-click rollback. To "go back," create a further new draft that reapplies the previous design (the pre-change action sequence, owners and fields) and publish it as a new version; this is a forward change, not a restoration of history. Re-importing an old exported YAML creates a new draft lineage, not the original version's history — say this explicitly if anyone expects otherwise. Incidents that already went through the extra approval before a rollback keep that history; a rollback does not erase what already happened on open or completed incidents.
+```json
+{ "localId": "approve_<subject>", "name": "Decide on the <subject> approval", "type": "decision",
+  "sourceRefs": [ { "source": "cr-extra-approval", "section": "request" } ],
+  "assigneeRef": "<group key>", "formRef": null, "entityRefs": [],
+  "evidence": [ "Mandatory comment on Reject and Return" ], "due": null, "dueInSource": null, "folded": [] }
+```
 
-## 6. Effective date
+## 4. Impact assessment
 
-Not set — this is `D5`. Communicate the publish date to the new approver group and any existing assignees before it goes live, since new incidents switch over the moment the draft is published.
+### 4.1 Open cases (the evidence question)
 
-## Manifest update
+**Confirmed:** open incidents keep their instantiated actions and all their evidence when the new version is published. They will complete **without** the extra approval. Nothing is lost by publishing.
 
-`provia-project.json` now has one workflow entry (`target-workflow`, `status: change_planned`) with a placeholder Decision action (`extra-approval`) carrying `sourceRefs` to a new `change-request` source, and five open `decisions[]` (`D1`–`D5`) covering the missing workflow identity, the pending open-incident impact check, the approver/position, the field-safety question and the effective date. Validated with `node scripts/build-project-map.mjs provia-project.json --check` (0 errors, 1 expected warning: the placeholder action has no owner yet). `project.html` and `setup.md` were regenerated from it.
+**Where evidence is actually at risk** (all avoidable):
+
+| Action someone might take | Effect on evidence | Plan |
+| --- | --- | --- |
+| Cancel open cases and re-open them on the new version so they pass the approval | Comments, files and decision history stay on the cancelled case; the new case starts empty and the audit trail is split | **Do not do this.** If open cases must be approved (D4), the approver records the decision on the existing case: a comment naming the decision and reason plus the attached approval; the process owner lists which cases this applies to |
+| Delete the workflow and re-import the edited YAML | New lineage: history, grants, numbering and open cases are not carried; open cases are orphaned or lost with the deletion | **Do not re-import.** Create a new draft version of the same workflow (§5) |
+| Remove or rename a field open cases hold values in | Values become invisible or fail validation on the next edit | No field removal or rename in this version (D5) |
+| Make an existing field required | Open cases with the field empty fail validation on the next metadata edit | No new required fields; a new field, if any, is `required: false` |
+| Change a Form Fill definition | Frozen per version; open cases keep the old definition, new ones get the new one | List any such change; test both |
+
+**Pending:** the number of open cases, which action they are at and which fields they hold values in could not be inspected (no export, connector declined). This check stays open under D6 and must close before publication.
+
+### 4.2 Dependencies
+
+- Actions after the insertion point start later. Any `wait` with a time condition, HTTP call with an execution timing, or sub-workflow with a parent timeout that follows the insertion needs its timing reviewed (list pending, D5).
+- If the workflow is a **child** of another workflow, the parent's timeout and output mapping now waits for one more step.
+- Access grants are unaffected (they belong to the workflow id). Manual-trigger allowlists unaffected.
+- Notifications that announce "approved" or "next step" must not fire before the new approval; check their position in the sequence.
+
+### 4.3 People
+
+- The new approver group gets work it did not have: it needs the five-part brief, and someone must confirm its membership in the tenant (manifest `groups[]` entry with `sourceRefs`, or `users_search` in connected mode).
+- Requesters and current assignees must be told the effective date and that cases opened before it follow the old path (D7).
+
+## 5. Draft-version plan
+
+Ordered; each step names the mode. Nothing in this list publishes anything: publication is a UI action by an authorized person.
+
+| # | Step | Connected mode (after the connector is authorized) | Disconnected mode |
+| --- | --- | --- | --- |
+| 1 | Obtain the live design | `org_get_context` once; `workflows_list` to find the workflow; `workflow_get` with `includeVersions`, `includeActionTemplates`, `includeTriggers`; `workflow_export_yaml` of the active version. Save as `workflow.current.yaml` | Export the YAML from the Provia UI, or supply the original `workflow.yaml` + `provia-project.json`. Save as `workflow.current.yaml` |
+| 2 | Read the open cases | Incident inspection is not a connector tool: export the incident list from the Provia UI (filter: this workflow, not closed) | Same export |
+| 3 | Fill §3 | Compare `workflow.current.yaml` with the proposed insertion; owner confirms every "unchanged" row | Same |
+| 4 | Write the proposed file | Copy to `workflow.proposed.yaml`; insert the §3 fragment; do not touch other actions | Same |
+| 5 | Validate offline | From the plugin root: `node scripts/validate-workflow.mjs workflow.proposed.yaml` → `validation.json`; `node scripts/review-actions.mjs workflow.proposed.yaml`; `node scripts/build-project-map.mjs provia-project.json --check` after §8 is applied | Same |
+| 6 | Create the draft **on the same workflow id** | `workflow_create_draft_version` on the existing workflow (keeps lineage, grants, counter, open cases), then `workflow_update_draft_actions` to add the action, its group as `defaultResponsible`, and the description. Do **not** use `workflow_import_draft` for this change | In the Provia UI open the workflow, create a new draft version, add the Decision action by hand from §3. Do not import the YAML as a new workflow |
+| 7 | Re-link what the draft does not carry | Form Fill links, page templates, tags, AI profile, memory documents, HTTP secrets and allowlists: confirm each is still attached to the new draft | Same |
+| 8 | Test in the draft / test tenant | §6 test cases; record results with case ids and dates | Same |
+| 9 | Communicate | Effective date, old-path rule for open cases, the approver group's brief (D7) | Same |
+| 10 | Publish | UI, by an authorized person, on the effective date | Same |
+| 11 | Verify after publication | One new case reaches the new approval; one pre-existing open case is unchanged and its evidence intact; grants read back unchanged (`workflow_get` with `includeAccess` where the server offers it; the tool schema exposed in this session lists only `includeVersions`, `includeActionTemplates`, `includeTriggers`, so the UI access tab is the fallback) | Same, via the UI |
+
+## 6. Test cases
+
+| Id | Path | Steps | Expected | Evidence to keep |
+| --- | --- | --- | --- | --- |
+| T1 | Changed: approve | Open a new case after publication; complete the actions before the insertion; approver chooses Approve | The next existing action activates; no other action changed | Case id, action timeline |
+| T2 | Changed: reject | As T1; approver chooses Reject without a comment, then with one | Refused without comment; with comment the configured outcome applies (cancel or return per D3) | Screenshot of the refusal, timeline |
+| T3 | Changed: return | Approver chooses Return with a comment | Case returns to the target action; prior comments and files remain on the case | Timeline, attachment list before/after |
+| T4 | Unchanged: open case | Take a case opened **before** publication that is before the insertion point; complete it | It finishes on the old path, no extra approval appears; all comments, files and field values intact | Case id, export of the case before and after |
+| T5 | Unchanged: open case metadata | On a pre-existing open case, edit a metadata field | Validation passes as before publication | Screenshot |
+| T6 | Access | Sign in as a member of the approver group | Sees the assigned case in "my cases" without a new grant; cannot see other cases unless previously granted | Access tab (or `workflow_get` access read-back, where offered) before/after |
+| T7 | Forms | If a Form Fill exists: complete it on a pre-existing case and on a new case | Both work with their respective frozen definitions | Responses |
+| T8 | Numbering | If an `auto_number` field exists: open a new case | Continues the family's sequence, does not restart | The two consecutive numbers |
+| T9 | Dependencies | Any wait, HTTP call, sub-workflow or notification after the insertion | Fires after the approval, not before; timeouts still adequate | Logs / timeline |
+| T10 | Diff | Compare `workflow.current.yaml` with the export of the new version | Only the inserted action and its sequencing differ | Saved diff |
+
+## 7. Recovery
+
+There is no rollback control. Two separate questions:
+
+**A. Returning the design to the previous behaviour.** Create **another** draft version of the same workflow that reapplies the previous design: in connected mode `workflow_export_yaml` with the previous `versionId` gives the reference, then `workflow_create_draft_version` + `workflow_update_draft_actions` to remove the inserted action (or in the UI: new draft, delete the action). Validate, test T4/T5/T10 against it, publish. Lineage, grants, numbering and cases are preserved because it is the same workflow id. **Do not** re-import the old YAML: that creates a new workflow without history.
+
+**B. Cases opened while the new version was active.** They keep the extra approval action; a later version does not remove it. Options, to be chosen per case by the process owner: let the approver decide (fastest, keeps evidence), or, if the approval must not happen, the approver records "Approve" with a comment explaining the reversal. Cancelling and re-opening loses the trail, as in §4.1.
+
+Record both in the manifest as a resolved decision when they happen, with the version ids.
+
+## 8. Manifest update
+
+Written to `provia-project.json` in this directory (created; none existed):
+
+- `sources[]`: `cr-extra-approval`, the request as received, with the missing context listed.
+- `decisions[]`: D1–D8, each with an owner.
+- `organization.mode: disconnected` (the connector was not authorized; nothing was read from a tenant), `receipts: []`.
+- `workflows[]`: **empty.** The `status: change_planned` entry, the changed action with `sourceRefs` to `cr-extra-approval` and the `access` section can only be written once D1 supplies the workflow key, prefix, existing actions and access. Appending an invented workflow would fail the honesty rules and mislead `--check`. When the live export arrives, append the workflow entry from it, add the §3 manifest fragment to its `actions[]`, set `"status": "change_planned"`, and regenerate.
+
+Checks run: `node scripts/build-project-map.mjs provia-project.json --check` → 0 workflows, 0 readiness blocks, 8 pending items (the decisions), 0 warnings. `--setup setup.md` and `--output project.html` were generated from the same manifest. These checks validate the manifest shape only; they say nothing about the workflow, which was not available.
+
+Not run, because the input does not exist: `validate-workflow.mjs`, `review-actions.mjs`, `emit-workflow-access.mjs`, `resolve-workflow-refs.mjs`.
+
+## 9. Summary of state
+
+- **Verified:** manifest shape and references (`--check`), the product behaviour cited in §2 against the plugin references.
+- **Pending:** active-incident impact check (D6), field/form/integration list (D5), semantic before/after on the real actions (D1), tenant read (connector authorization).
+- **Owner must decide:** D2 (position), D3 (approver, outcomes, comment rule), D4 (open cases: old path or out-of-band approval), D7 (effective date, communication), D8 (country/language).
