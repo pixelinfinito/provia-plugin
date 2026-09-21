@@ -1,24 +1,35 @@
 # Revisão de procedimento — exemplo: Entrega de configuração
 
-Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.1.1, 2026-09-19).
+Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
 
 ## Estado
 
-Modo: sem ligação ao Provia (configuração manual).
+Modo: configuração manual (sem recibos registados).
 
 ## Configuração pendente
 
 | Onde | Item | O que fazer |
 | --- | --- | --- |
 | procedimentos | Revisão de procedimento — exemplo | Importar o YAML como rascunho e rever a pré-visualização (`workflow.yaml`) |
+| procedimentos | Revisão de procedimento — exemplo | Aplicar as concessões de acesso (`workflow_access_apply`, dry run primeiro) ou confirmar a secção `access` na pré-visualização de importação. organization → create_incident, group:qualidade → edit |
 | procedimentos / preparar | Preparar a revisão | Atribuir o grupo à acção depois de o grupo existir (`qualidade`) |
 | procedimentos / aprovar | Decidir sobre a revisão | Atribuir o grupo à acção depois de o grupo existir (`donos_processo`) |
 | procedimentos / publicar | Registar a versão aprovada | Atribuir o grupo à acção depois de o grupo existir (`qualidade`) |
 
+## Acesso ao workflow
+
+Quem pode ver e abrir cada workflow. `view` num workflow mostra todos os casos; quem executa uma acção vê os seus casos sem concessão. As concessões são criadas com `workflow_access_apply` em modo ligado ou na secção `access` do YAML importado no browser.
+
+| Workflow | Sensibilidade | Destinatário | Nível | Razão | Estado |
+| --- | --- | --- | --- | --- | --- |
+| `procedimentos` | internal | `organization` | create_incident | Qualquer colaborador pode pedir a alteração de um procedimento (sop-controlo §1) | por aplicar |
+| `procedimentos` | internal | `group:qualidade` (Gestão da qualidade) | edit | A Gestão da qualidade é dona do desenho do workflow e publica as versões (sop-controlo §4) | por aplicar |
+| `procedimentos` | internal | `group:donos_processo` | — | Vê apenas os seus casos (sem concessão) | — |
+
 ## Grupos a criar
 
-- `qualidade` Gestão da qualidade: Redigem as revisões e publicam as versões aprovadas.. Membros propostos: Gestor da qualidade
-- `donos_processo` Donos de processo: Aprovam as revisões dos procedimentos que lhes pertencem.. Membros propostos: Dono do processo
+- `qualidade` Gestão da qualidade [team]: Redigem as revisões e publicam as versões aprovadas.. Membros propostos: Gestor da qualidade
+- `donos_processo` Donos de processo [team]: Aprovam as revisões dos procedimentos que lhes pertencem.. Membros propostos: Dono do processo
 
 ## Sinalizações de grupos
 

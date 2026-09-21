@@ -17,19 +17,21 @@ Workflow design or export, the project manifest, intended business outcome, proc
 
 - [action writing](../../references/action-writing.md): for names, descriptions and the review gate.
 - [project manifest](../../references/project-manifest.md): to check owners, forms and sources against the design.
+- [workflow access](../../references/workflow-access.md): for grants, sensitivity, allowlists and the --check rules.
 
 ## Procedure
 
 1. Trace each required outcome to an action and its completion evidence. Check that decisions include rejection/rework where the procedure requires them, and that every classified source step is either an action or folded into one.
 2. Run `node scripts/review-actions.mjs workflow.yaml` when a shell is available and report, per action, the missing description parts, leaked implementer notes, over-long descriptions and unset `due`. Then review every name and description semantically: verb, object, agreement with type, source and evidence. Record editorial findings separately from contract errors.
 3. Check predecessor dependencies, parallel actions, owners by group key (every action has one; every group owns something; segregation flags raised), unavailable groups, due bases and cancellation behaviour.
-4. Review data collection, form mappings (every Form Fill action has a `formRef`), entity references and secret dependencies. Use `provia-workflow-package` for executable YAML checks; do not replace those checks with visual inspection.
-5. Distinguish a product contract error, a business-policy gap and an optional improvement. Record policy gaps as `decisions[]` with an owner. Do not claim organizational or legal compliance from a structurally valid file.
-6. Return normal, rejected, incomplete and failed-integration scenarios with expected visible results. Leave destination validation and publication clearly pending.
+4. Review access with `node scripts/build-project-map.mjs provia-project.json --check`: publication readiness fails on rules 1, 3 and 5, the error branches of rules 4 and 8, an unresolved `field:` assignee without fallback, an unresolved allowlist key in connected mode, and any retained tenant grant that violates rule 5, holds `admin` outside the approved set or fails rule 4 on a restricted workflow. Report rules 6 and 7, the info and warning branches of 4 and 8, every other retained grant, and the "starters see all cases" limitation of a restricted workflow. A blocked retained grant clears only with a source-backed manifest entry (never for an organization grant on a restricted workflow) or a removal confirmed by a fresh `workflow_get.access` read.
+5. Review data collection, form mappings (every Form Fill action has a `formRef`), entity references and secret dependencies. Use `provia-workflow-package` for executable YAML checks; do not replace those checks with visual inspection.
+6. Distinguish a product contract error, a business-policy gap and an optional improvement. Record policy gaps as `decisions[]` with an owner. Do not claim organizational or legal compliance from a structurally valid file.
+7. Return normal, rejected, incomplete and failed-integration scenarios with expected visible results. Leave destination validation and publication clearly pending.
 
 ## Deliverable
 
-A prioritized findings list with evidence, the per-action review gate result, proposed corrections, new `decisions[]` and representative test scenarios. Cite supplied evidence and product references. Separate confirmed facts, recommendations and unresolved decisions. Do not invent completed checks or platform actions.
+A prioritized findings list with evidence, the per-action review gate result, the access readiness result, proposed corrections, new `decisions[]` and representative test scenarios. Cite supplied evidence and product references. Separate confirmed facts, recommendations and unresolved decisions. Do not invent completed checks or platform actions.
 
 ## Project manifest
 

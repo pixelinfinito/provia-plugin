@@ -162,7 +162,7 @@ for (const [name, mutate] of [
   ['required auto-number', f => f[2].required = true],
   ['auto-number default', f => f[2].defaultValue = 'FOR-0001'],
   ['invalid padding', f => f[2].config.padding = 0],
-  ['invalid prefix', f => f[2].config.prefix = '-FOR'],
+  ['invalid prefix', f => f[2].config.prefix = 'FO R'],
   ['invalid start', f => f[2].config.startAt = 0],
   ['missing parent', f => f[3].config.parentField = 'missing'],
   ['wrong parent type', f => f[1].type = 'multi_select'],

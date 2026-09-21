@@ -61,6 +61,14 @@ Set type to standard and assignee.type to ai_agent with the actual profile UUID 
 
 Each requiredArtifacts entry needs filenamePattern, mime and positive maxBytes; description is optional. Do not emit requiredArtifacts as a mapping or put null/scalars in the list. For a new task, reviewRequired true is a useful starting proposal. Assigning the profile or enabling memory does not install the profile or transport its memory documents.
 
+## Schedule trigger
+
+`config.missedBehavior` is one of `skip`, `catch-up-one` or `catch-up-all` (never `run_once`); `skip` is applied on import when the value is missing, with a warning. `timezone` defaults to UTC the same way. Both values are read from the bundled engine by `scripts/lib/workflow-access.mjs` (`MISSED_BEHAVIORS`) and pinned by a test, so this page cannot drift from the contract.
+
 ## Forms and decisions
 
-Form Fill uses type form_fill, but the form must be linked in Provia after import. Supply the form specification in setup.md. For decision branches and rejection/return behavior, use the exact fields in workflow-yaml.md. A human decision is not an automatic value-based gateway.
+Form Fill uses type form_fill, but the form must be linked in Provia after import. Supply the form specification in setup.md. For decision branches and rejection/return behavior, use the exact fields in workflow-yaml.md. A branch `label` has at most 50 characters (`DECISION_LABEL_MAX`, from the engine); keep the outcome words in the label and the explanation in the description. A human decision is not an automatic value-based gateway.
+
+## Description length
+
+`description` accepts up to 5000 characters. `scripts/review-actions.mjs` warns from 4500 (`description_near_limit`) so a brief can be folded or shortened before the product refuses it.

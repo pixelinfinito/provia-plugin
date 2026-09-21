@@ -1,0 +1,178 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://docs.provia.ao/schemas/provia-project-v1.1.json",
+  "title": "Provia project manifest (provia-project/v1.1)",
+  "description": "One implementation project: sources, entity types, groups, workflows with access, forms, AI profiles, decisions and connected-mode receipts. Plugin artefact; never a Provia import format. scripts/build-project-map.mjs --check is authoritative for cross-references and the access rules; this schema describes the shape. The alternate shapes it lists (section strings, source#anchor refs, folded strings, forms[].name) are accepted and normalised with a warning.",
+  "type": "object",
+  "required": ["schemaVersion", "project", "organization"],
+  "additionalProperties": false,
+  "properties": {
+    "schemaVersion": { "enum": ["provia-project/v1.1", "provia-project/v1"] },
+    "project": {
+      "type": "object",
+      "required": ["key", "title", "language", "country"],
+      "properties": {
+        "key": { "$ref": "#/$defs/key" }, "title": { "type": "string", "minLength": 1 }, "language": { "type": "string" }, "country": { "type": "string" },
+        "timezone": { "type": ["string", "null"] }, "currency": { "type": ["string", "null"] }, "generator": { "type": "string" }, "contractRevision": { "type": ["string", "null"] }, "updatedAt": { "type": ["string", "null"] }
+      }
+    },
+    "organization": {
+      "type": "object",
+      "required": ["mode"],
+      "properties": {
+        "name": { "type": ["string", "null"] }, "sector": { "type": ["string", "null"] }, "mode": { "enum": ["disconnected", "connected"] },
+        "tenantId": { "type": ["string", "null"] }, "productRevision": { "type": ["string", "null"] }, "language": { "type": ["string", "null"] }, "timezone": { "type": ["string", "null"] },
+        "permissionLevels": { "type": ["object", "null"], "description": "The data object of setup_references_list.permissionLevels (GET /permissions/levels), recorded in connected mode; --check reads resourceTypes.workflow.levels[].level" }
+      }
+    },
+    "sources": { "type": "array", "items": { "$ref": "#/$defs/source" } },
+    "entityTypes": { "type": "array", "items": { "type": "object", "description": "provia-entity-catalogue/v1 type objects, unchanged" } },
+    "groups": { "type": "array", "items": { "$ref": "#/$defs/group" } },
+    "workflows": { "type": "array", "items": { "$ref": "#/$defs/workflow" } },
+    "forms": { "type": "array", "items": { "$ref": "#/$defs/form" } },
+    "aiProfiles": { "type": "array", "items": { "$ref": "#/$defs/aiProfile" } },
+    "decisions": { "type": "array", "items": { "$ref": "#/$defs/decision" } },
+    "receipts": { "type": "array", "items": { "$ref": "#/$defs/receipt" } }
+  },
+  "$defs": {
+    "key": { "type": "string", "pattern": "^[A-Za-z0-9][A-Za-z0-9_.-]*$" },
+    "email": { "type": "string", "pattern": "^[^\\s@]+@[^\\s@]+\\.[^\\s@]+$" },
+    "sourceRef": {
+      "oneOf": [
+        { "type": "object", "required": ["source"], "properties": { "source": { "$ref": "#/$defs/key" }, "section": { "$ref": "#/$defs/key" } } },
+        { "type": "string", "description": "Alternate shape `source#anchor`, normalised with a warning" }
+      ]
+    },
+    "sourceRefs": { "type": "array", "items": { "$ref": "#/$defs/sourceRef" } },
+    "source": {
+      "type": "object",
+      "required": ["id", "title", "kind"],
+      "properties": {
+        "id": { "$ref": "#/$defs/key" }, "title": { "type": "string" }, "kind": { "enum": ["sop", "policy", "checklist", "export", "interview", "catalogue", "other"] },
+        "version": { "type": ["string", "null"] }, "effectiveDate": { "type": ["string", "null"] }, "summary": { "type": "string" },
+        "sections": { "type": "array", "items": { "oneOf": [{ "type": "object", "required": ["anchor"], "properties": { "anchor": { "$ref": "#/$defs/key" }, "title": { "type": ["string", "null"] }, "summary": { "type": "string" } } }, { "type": "string", "description": "Alternate shape: the anchor alone" }] } },
+        "emails": { "type": "array", "description": "Emails that appear in this source; verification evidence for user: grantees", "items": { "$ref": "#/$defs/email" } }
+      }
+    },
+    "member": {
+      "type": "object",
+      "anyOf": [{ "required": ["role"] }, { "required": ["email"] }],
+      "properties": {
+        "role": { "type": ["string", "null"] }, "email": { "oneOf": [{ "$ref": "#/$defs/email" }, { "type": "null" }] },
+        "verified": { "type": "boolean", "description": "true only when the email came from a declared source or users_search" },
+        "source": { "type": "string", "description": "The source id, or users_search" }
+      }
+    },
+    "group": {
+      "type": "object",
+      "required": ["key", "name"],
+      "properties": {
+        "key": { "$ref": "#/$defs/key" }, "name": { "type": "string", "description": "Unique in the tenant; the importer resolves group grantees by name" },
+        "kind": { "enum": ["team", "container", "role"] }, "area": { "oneOf": [{ "$ref": "#/$defs/key" }, { "type": "null" }] },
+        "membersComplete": { "type": "boolean", "description": "true only when members[] is the tenant group's complete list (read from the tenant); an empty proposed list proves nothing" },
+        "parentKey": { "oneOf": [{ "$ref": "#/$defs/key" }, { "type": "null" }] }, "purpose": { "type": ["string", "null"] },
+        "members": { "type": "array", "items": { "$ref": "#/$defs/member" } }, "sourceRefs": { "$ref": "#/$defs/sourceRefs" },
+        "flags": { "type": "array", "items": { "type": "object", "required": ["code"], "properties": { "code": { "enum": ["single_person", "alias", "segregation", "requester", "external", "unnamed"] }, "detail": { "type": ["string", "null"] } } } }
+      }
+    },
+    "grant": {
+      "type": "object",
+      "required": ["grantee", "level"],
+      "properties": {
+        "grantee": { "type": "string", "pattern": "^(group:.+|user:.+|organization|creator)$", "description": "group:<groups[].key>, user:<email>, organization or creator; never a UUID" },
+        "level": { "enum": ["view", "create_incident", "edit", "admin"] },
+        "reason": { "type": "string" }, "sourceRefs": { "$ref": "#/$defs/sourceRefs" }
+      }
+    },
+    "appliedGrant": {
+      "type": "object",
+      "required": ["granteeType", "granteeRef", "level"],
+      "properties": { "id": { "type": "string" }, "granteeType": { "enum": ["group", "user", "organization"] }, "granteeRef": { "type": "string" }, "granteeId": { "type": "string", "description": "When present and the group has a receipt, it must equal the receipt id; a name match never overrides conflicting ids" }, "level": { "enum": ["view", "create_incident", "edit", "admin"] } }
+    },
+    "operation": {
+      "type": "object",
+      "required": ["revision", "idempotencyKey", "hash", "payload"],
+      "properties": { "revision": { "type": "integer", "minimum": 1 }, "idempotencyKey": { "type": "string" }, "hash": { "type": "string" }, "payload": { "type": "object", "description": "The complete workflow_access_apply request the key was minted for" }, "outcome": { "type": "string" }, "at": { "type": "string" } }
+    },
+    "access": {
+      "type": "object",
+      "properties": {
+        "default": { "enum": ["creator_only"] },
+        "grants": { "type": "array", "maxItems": 200, "items": { "$ref": "#/$defs/grant" } },
+        "sensitivity": { "enum": ["open", "internal", "restricted"] },
+        "note": { "type": "string" },
+        "applied": { "type": "array", "description": "workflow_get.access read back after an apply", "items": { "$ref": "#/$defs/appliedGrant" } },
+        "appliedUnavailable": { "type": "string" },
+        "operations": { "type": "array", "items": { "$ref": "#/$defs/operation" } },
+        "appliedWorkflowId": { "type": "string", "description": "The workflow id the read-back came from; a read-back from another destination counts for nothing, neither as applied grants nor as retained ones" },
+        "startVerification": { "oneOf": [{ "$ref": "#/$defs/startVerification" }, { "type": "array", "items": { "$ref": "#/$defs/startVerification" } }] }
+      }
+    },
+    "startVerification": { "type": "object", "required": ["member", "at", "hash"], "properties": { "member": { "$ref": "#/$defs/email" }, "at": { "type": "string", "format": "date-time", "description": "ISO 8601 date-time; entries are ordered by the instant it denotes" }, "result": { "enum": ["canStart", "cannot_start"] }, "canStart": { "type": "boolean" }, "hash": { "type": "string", "description": "Fingerprint of the allowlist verified, as printed by the verify_can_start item; the latest entry per member and hash decides" } } },
+    "trigger": {
+      "type": "object",
+      "required": ["type"],
+      "properties": {
+        "type": { "enum": ["manual", "email", "webhook", "schedule", "form"] }, "label": { "type": "string" }, "enabled": { "type": "boolean" },
+        "manual": { "type": "object", "properties": { "allowedGroups": { "type": "array", "items": { "$ref": "#/$defs/key" } }, "allowedUsers": { "type": "array", "items": { "$ref": "#/$defs/email" } }, "applied": { "type": "object", "required": ["at", "hash"], "description": "Recorded after the restriction was written to the tenant (import commit or UI step); hash is the fingerprint of the allowlist contents, the resolved principal ids and the destination workflow id printed by the apply_manual_start item", "properties": { "at": { "type": "string" }, "hash": { "type": "string" }, "by": { "type": "string" } } } } }
+      }
+    },
+    "template": { "type": "object", "required": ["code", "title"], "properties": { "code": { "type": "string" }, "title": { "type": "string" }, "url": { "type": ["string", "null"] }, "scope": { "enum": ["workflow", "action"] } } },
+    "due": { "type": "object", "properties": { "offsetDays": { "type": "integer" }, "offsetHours": { "type": "integer" }, "offsetType": { "enum": ["calendar", "workdays"] }, "basis": { "enum": ["activation", "creation"] } } },
+    "action": {
+      "type": "object",
+      "required": ["localId", "name", "type"],
+      "properties": {
+        "localId": { "$ref": "#/$defs/key" }, "name": { "type": "string" }, "type": { "enum": ["standard", "decision", "sub_workflow", "notification", "wait", "http_request", "form_fill"] },
+        "description": { "type": "string" }, "sourceRefs": { "$ref": "#/$defs/sourceRefs" },
+        "assigneeRef": { "type": ["string", "null"], "description": "group key, creator, previous, ai:<profile key> or field:<field key> (design intent; needs assigneeFallback)" },
+        "assigneeFallback": { "type": "string", "description": "Group key or creator the YAML carries when assigneeRef is field:<key>" },
+        "setsFields": { "type": "array", "items": { "type": "string" } },
+        "formRef": { "oneOf": [{ "$ref": "#/$defs/key" }, { "type": "null" }] }, "entityRefs": { "type": "array", "items": { "$ref": "#/$defs/key" } },
+        "evidence": { "type": "array", "items": { "type": "string" } }, "due": { "oneOf": [{ "$ref": "#/$defs/due" }, { "type": "null" }] },
+        "dueInSource": { "type": "object", "required": ["text", "kind"], "properties": { "text": { "type": "string" }, "kind": { "enum": ["calendar_day", "countdown", "event_relative", "legal"] } } },
+        "folded": { "type": "array", "items": { "oneOf": [{ "type": "object", "required": ["summary"], "properties": { "section": { "type": "string" }, "summary": { "type": "string" } } }, { "type": "string" }] } }
+      }
+    },
+    "unresolvedKey": { "oneOf": [{ "type": "string" }, { "type": "object", "properties": { "key": { "type": "string" }, "name": { "type": "string" }, "detail": { "type": "string" } } }] },
+    "workflow": {
+      "type": "object",
+      "required": ["key", "name"],
+      "properties": {
+        "key": { "$ref": "#/$defs/key" }, "name": { "type": "string" }, "prefix": { "type": "string", "pattern": "^[A-Z0-9]{2,10}$" }, "file": { "type": ["string", "null"] },
+        "status": { "enum": ["design", "packaged", "validated", "imported", "change_planned"] }, "ownerArea": { "oneOf": [{ "$ref": "#/$defs/key" }, { "type": "null" }] },
+        "sourceRefs": { "$ref": "#/$defs/sourceRefs" }, "actions": { "type": "array", "items": { "$ref": "#/$defs/action" } },
+        "subWorkflowRefs": { "type": "array", "items": { "$ref": "#/$defs/key" } }, "setupNotes": { "type": "array", "items": { "type": "string" } },
+        "access": { "$ref": "#/$defs/access" }, "triggers": { "type": "array", "items": { "$ref": "#/$defs/trigger" } }, "templates": { "type": "array", "items": { "$ref": "#/$defs/template" } },
+        "unresolvedActors": { "type": "array", "items": { "$ref": "#/$defs/unresolvedKey" } }, "unresolvedEntityTypes": { "type": "array", "items": { "$ref": "#/$defs/unresolvedKey" } },
+        "accessReview": { "type": "array", "items": { "type": "object", "properties": { "question": { "type": "string" }, "group": { "type": ["string", "null"] }, "status": { "enum": ["open", "resolved"] } } } },
+        "entityRequests": { "type": "array", "items": { "type": "object" }, "description": "Entity types requested during parallel design, reconciled into entityTypes[] afterwards" }
+      }
+    },
+    "form": {
+      "type": "object",
+      "required": ["key", "kind", "workflowRef"],
+      "properties": {
+        "key": { "$ref": "#/$defs/key" }, "title": { "type": "string" }, "name": { "type": "string", "description": "Alternate shape for title, normalised" }, "kind": { "enum": ["trigger", "action"] },
+        "workflowRef": { "$ref": "#/$defs/key" }, "actionRef": { "oneOf": [{ "$ref": "#/$defs/key" }, { "type": "null" }] }, "status": { "enum": ["designed", "created", "linked"] },
+        "fields": { "type": "array" }
+      }
+    },
+    "aiProfile": { "type": "object", "required": ["key", "name"], "properties": { "key": { "$ref": "#/$defs/key" }, "name": { "type": "string" }, "workflowRef": { "oneOf": [{ "$ref": "#/$defs/key" }, { "type": "null" }] }, "actionRef": { "type": ["string", "null"] }, "purpose": { "type": "string" } } },
+    "decision": {
+      "type": "object",
+      "required": ["id", "question", "status"],
+      "properties": { "id": { "$ref": "#/$defs/key" }, "question": { "type": "string" }, "owner": { "type": ["string", "null"] }, "status": { "enum": ["open", "resolved"] }, "resolution": { "type": "string" }, "raisedBy": { "type": "string" }, "sourceRefs": { "$ref": "#/$defs/sourceRefs" } }
+    },
+    "receipt": {
+      "type": "object",
+      "required": ["tool", "outcome", "ref"],
+      "properties": {
+        "tool": { "type": "string" }, "idempotencyKey": { "type": "string" }, "outcome": { "enum": ["created", "updated", "no_op", "dry_run", "failed"] },
+        "resource": { "type": "object", "properties": { "kind": { "type": "string" }, "id": { "type": "string" }, "name": { "type": "string" } } },
+        "ref": { "type": "object", "required": ["kind", "key"], "properties": { "kind": { "enum": ["entity_type", "group", "workflow", "form", "tag", "access", "user"] }, "key": { "type": "string", "description": "The manifest key, or the lower-case email for a user receipt" } } },
+        "changes": { "type": "array" }, "warnings": { "type": "array" }, "unresolved": { "type": "array" }, "auditId": { "type": "string" }, "at": { "type": "string" }, "by": { "type": "object" }
+      }
+    }
+  }
+}

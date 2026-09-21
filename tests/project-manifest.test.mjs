@@ -35,20 +35,22 @@ test('bundled setup.md and project.html are generated from the manifest', () => 
   }
 });
 
-test('the map is offline, escapes data and carries the catalogue tab and pending items', () => {
+test('the map is offline, escapes data and carries the catalogue and pending items as data', () => {
   const dir = path.join(root, 'examples', 'procurement');
   const manifest = load(dir === '' ? '' : 'procurement');
   manifest.groups[0].name = '</script><img src=x onerror=alert(1)>';
   const html = renderMap(manifest, dir);
   assert.doesNotMatch(html, /<script[^>]+src=|<link[^>]+href=|fetch\(/);
   assert.doesNotMatch(html, /<img src=x/);
-  assert.ok(html.includes('&lt;img'));
-  assert.ok(html.includes('<iframe'));
+  assert.ok(html.includes('\\u003cimg'), 'data is embedded with < escaped so it can never close the script');
+  assert.ok(!html.includes('<iframe'), 'entity types are rendered on demand, not through an embedded catalogue');
   assert.ok(html.includes('Tarefa: Decidir se o pedido de compra avança'), 'action brief from the YAML is embedded');
   const data = JSON.parse(html.match(/id="project-data">([\s\S]*?)<\/script>/)[1]);
   assert.ok(data.edges.some(edge => edge.kind === 'assignee' && edge.status === 'unresolved'));
   assert.ok(data.edges.some(edge => edge.kind === 'entity'));
   assert.ok(data.edges.some(edge => edge.kind === 'source'));
+  assert.equal(data.entityTypes.length, 1, 'the catalogue travels once, as data');
+  assert.ok(data.issues.some(item => item.category === 'setup' && item.what === 'create_entity_type' && item.objectId === 'entity/fornecedor'));
 });
 
 test('a receipt resolves a group reference, colours it green and shortens the handover', () => {
@@ -65,13 +67,18 @@ test('a receipt resolves a group reference, colours it green and shortens the ha
   const yaml = fs.readFileSync(path.join(root, 'examples', 'procurement', 'workflow.yaml'), 'utf8');
   const resolved = resolveWorkflow(manifest, 'compras', yaml);
   assert.equal(resolved.applied.length, 1);
-  assert.equal(resolved.pending.length, 2);
+  assert.equal(resolved.pending.length, 3, 'two owners and the access groupRefs of compras stay pending');
+  assert.ok(resolved.pending.some(item => item.field === 'access.groupRefs' && item.ref === 'compras'));
+  assert.deepEqual(resolved.groupRefs, {}, 'no receipt for the granted group yet');
+  assert.deepEqual(resolved.access.grants, [{ granteeType: 'organization', granteeRef: 'organization', level: 'create_incident' }, { granteeType: 'group', granteeRef: 'compras', level: 'view' }]);
   const report = validateWorkflow(resolved.text);
   assert.equal(report.valid, true, JSON.stringify(report.errors));
   const original = engine.parseYamlToDraft(yaml).draft, output = engine.parseYamlToDraft(resolved.text).draft;
   assert.deepEqual(output.actions[1].assignee, { type: 'group', id: '8d3c1a2b-1111-4111-8111-111111111111' });
+  assert.deepEqual(output.access.grants[1], { grantee: 'group:compras', level: 'view' }, 'connected mode keeps the key; groupRefs carries the id');
   output.actions[1].assignee = original.actions[1].assignee;
-  assert.deepEqual(output, original, 'everything except the substituted assignee is unchanged');
+  output.access = original.access;
+  assert.deepEqual(output, original, 'everything except the substituted assignee and the access grantee form is unchanged');
 });
 
 test('a dry-run or failed receipt does not resolve anything', () => {
@@ -157,7 +164,7 @@ test('the resolver CLI refuses to overwrite the source file and needs a known wo
     assert.equal(unknown.status, 1);
     assert.match(unknown.stderr, /No workflow ghost/);
     const ok = execFileSync(process.execPath, [path.join(root, 'scripts/resolve-workflow-refs.mjs'), manifestFile, 'compras', yaml, '--output', path.join(dir, 'out.yaml')], { encoding: 'utf8' });
-    assert.equal(JSON.parse(ok).pending.length, 3);
+    assert.equal(JSON.parse(ok).pending.length, 4);
     assert.ok(fs.existsSync(path.join(dir, 'out.yaml')));
   } finally { fs.rmSync(dir, { recursive: true, force: true }); }
 });

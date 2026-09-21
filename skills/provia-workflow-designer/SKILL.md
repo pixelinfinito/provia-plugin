@@ -19,6 +19,7 @@ Procedure, start/end conditions, roles, approval rules, required evidence, servi
 - [action writing](../../references/action-writing.md): for names and the five-part description.
 - [groups design](../../references/groups-design.md): when an actor has no group key yet.
 - [metadata field rules](../../references/metadata-fields.md): when defining workflow fields.
+- [workflow access](../../references/workflow-access.md): for grants, sensitivity, allowlists and the --check rules.
 
 ## Procedure
 
@@ -26,17 +27,18 @@ Procedure, start/end conditions, roles, approval rules, required evidence, servi
 2. Choose Standard, Decision, Notification, Wait, HTTP Request, Sub-workflow or Form Fill by the required outcome. AI is an assignee on Standard actions. Do not represent a human approval as an automatic threshold engine.
 3. For each action write a verb-led name and the five-part description to the assignee: task, method with numbered steps, evidence, done-when, exceptions. Fold hand-offs and sub-steps into the method of the owning action. Propose `due` from the stated service level or record an open decision; never invent a deadline.
 4. Use sequential ordering for actual dependencies and parallel execution only for independent work. Model rework and rejection explicitly with supported decision outcomes and named return targets.
-5. Assign owners by group key: reuse `groups[]` from the manifest, use `creator` for the requester, and propose new groups with flags for actors that have none. Never invent organization IDs.
-6. Use a Form trigger for intake and Form Fill for an existing incident. Use a reusable sub-workflow only when it has its own meaningful start, completion and owner; identify mappings and cancellation behaviour.
-7. Deliver the classification table, the action table, the Mermaid flow, the YAML skeleton and the manifest entry. Write `provia-project.json` when file creation is available and run `node scripts/build-project-map.mjs provia-project.json --check` when a shell is available; report the actual result. YAML validation belongs to `provia-workflow-package`.
+5. Assign owners by group key: reuse `groups[]` from the manifest, use `creator` for the requester, and propose new groups with flags for actors that have none. When the source names "the person in field X", record `assigneeRef: field:<key>` with an `assigneeFallback` (a `role` group or `creator`); the product cannot assign from a field yet. Never invent organization IDs, and never invent a key: an actor or entity type the registry lacks goes to `unresolvedActors[]` / `unresolvedEntityTypes[]`.
+6. Propose `access.grants` from the actors of the source: who opens the case (`create_incident`; `organization` when any employee may), who owns the design (`edit`). Executing and validating teams get no grant: assignees and deciders see the cases that carry their actions. Propose `view` for such a team only when the source says it sees every case (a shared queue, «a área acompanha todos os pedidos»), always with the `reason` and `sourceRefs` rule 4 requires. Set `sensitivity` from the source's own words («confidencial», «restrito», disciplinary, payroll, whistleblowing) and record the "starters see all cases" limitation of a restricted workflow in `access.note` and `decisions[]`. Emit a manual-trigger allowlist (`triggers[].manual.allowedGroups`) only when the source restricts starts below the `create_incident` holders, and say so in its reason. Set `ownerArea`, list cited document templates in `templates[]` and keep a source deadline `due` cannot express in `dueInSource`.
+7. Use a Form trigger for intake and Form Fill for an existing incident. Use a reusable sub-workflow only when it has its own meaningful start, completion and owner; identify mappings and cancellation behaviour.
+8. Deliver the classification table, the action table, the Mermaid flow, the YAML skeleton and the manifest entry. Write `provia-project.json` when file creation is available and run `node scripts/build-project-map.mjs provia-project.json --check` when a shell is available; report the actual result. YAML validation belongs to `provia-workflow-package`.
 
 ## Deliverable
 
-A source step classification, an action table with owners by group key and evidence, a Mermaid flow, a YAML skeleton with full descriptions, the manifest `workflows[]` entry with proposed `groups[]` and `decisions[]`, and the open decisions to answer before packaging. Cite supplied evidence and product references. Separate confirmed facts, recommendations and unresolved decisions. Do not invent completed checks or platform actions.
+A source step classification, an action table with owners by group key and evidence, a Mermaid flow, a YAML skeleton with full descriptions, the manifest `workflows[]` entry with its `access` section, proposed `groups[]` and `decisions[]`, and the open decisions to answer before packaging. Cite supplied evidence and product references. Separate confirmed facts, recommendations and unresolved decisions. Do not invent completed checks or platform actions.
 
 ## Project manifest
 
-Reads: sources, groups, entityTypes, decisions. Appends: `workflows[]` with actions, `assigneeRef`, `sourceRefs`, `folded`; proposed `groups[]`; `decisions[]`. See [project manifest](../../references/project-manifest.md).
+Reads: sources, groups, entityTypes, decisions. Appends: `workflows[]` with actions, `assigneeRef`, `sourceRefs`, `folded`, `access`, `ownerArea`, `triggers[]`, `templates[]`, `unresolvedActors[]`; proposed `groups[]`; `decisions[]`. See [project manifest](../../references/project-manifest.md).
 
 ## Examples
 

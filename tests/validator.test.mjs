@@ -104,7 +104,7 @@ for (const [name, mutate] of [
   ['auto-number default', f => f[0].defaultValue = 'REQ-00010'],
   ['invalid padding', f => f[0].config.padding = 11],
   ['fractional start', f => f[0].config.startAt = 1.5],
-  ['invalid affix', f => f[0].config.prefix = '-REQ'],
+  ['invalid affix', f => f[0].config.prefix = 'RE Q'],
   ['missing parent', f => f[2].config.parentField = 'missing'],
   ['multi-select parent', f => f[1].type = 'multi_select'],
   ['unlinked child option', f => delete f[2].config.options[0].parentValue],

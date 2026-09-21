@@ -1,25 +1,35 @@
 # Acção correctiva — exemplo: Entrega de configuração
 
-Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.1.1, 2026-09-19).
+Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
 
 ## Estado
 
-Modo: sem ligação ao Provia (configuração manual).
+Modo: configuração manual (sem recibos registados).
 
 ## Configuração pendente
 
 | Onde | Item | O que fazer |
 | --- | --- | --- |
 | accao_correctiva | Acção correctiva — exemplo | Importar o YAML como rascunho e rever a pré-visualização (`workflow.yaml`) |
+| accao_correctiva | Acção correctiva — exemplo | Aplicar as concessões de acesso (`workflow_access_apply`, dry run primeiro) ou confirmar a secção `access` na pré-visualização de importação. group:qualidade → create_incident |
 | accao_correctiva / registar | Registar a constatação | Atribuir o grupo à acção depois de o grupo existir (`qualidade`) |
 | accao_correctiva / analisar | Analisar a causa | Atribuir o grupo à acção depois de o grupo existir (`donos_processo`) |
 | accao_correctiva / corrigir | Executar a correcção | Atribuir o grupo à acção depois de o grupo existir (`donos_processo`) |
 | accao_correctiva / verificar | Verificar a eficácia | Atribuir o grupo à acção depois de o grupo existir (`qualidade`) |
 
+## Acesso ao workflow
+
+Quem pode ver e abrir cada workflow. `view` num workflow mostra todos os casos; quem executa uma acção vê os seus casos sem concessão. As concessões são criadas com `workflow_access_apply` em modo ligado ou na secção `access` do YAML importado no browser.
+
+| Workflow | Sensibilidade | Destinatário | Nível | Razão | Estado |
+| --- | --- | --- | --- | --- | --- |
+| `accao_correctiva` | internal | `group:qualidade` (Gestão da qualidade) | create_incident | A Gestão da qualidade regista as não conformidades e abre o caso (sop-nc §1) | por aplicar |
+| `accao_correctiva` | internal | `group:donos_processo` | — | Vê apenas os seus casos (sem concessão) | — |
+
 ## Grupos a criar
 
-- `qualidade` Gestão da qualidade: Registam constatações e verificam a eficácia das correcções.. Membros propostos: Gestor da qualidade
-- `donos_processo` Donos de processo: Analisam a causa e executam a correcção no processo afectado.. Membros propostos: Dono do processo
+- `qualidade` Gestão da qualidade [team]: Registam constatações e verificam a eficácia das correcções.. Membros propostos: Gestor da qualidade
+- `donos_processo` Donos de processo [team]: Analisam a causa e executam a correcção no processo afectado.. Membros propostos: Dono do processo
 
 ## Sinalizações de grupos
 

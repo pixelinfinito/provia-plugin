@@ -18,7 +18,7 @@ If the host exposes a `provia-implementer` MCP server (a tool named `org_get_con
 
 ## The project manifest
 
-Work belongs to one project. Read [project manifest](project-manifest.md). When the user supplies or the working directory contains `provia-project.json`, read it before starting and treat its sources, entity types, groups, workflows, forms and open decisions as the current state. When the skill produces a design artefact, append or update the matching section and say so; when no manifest exists and the task produces a reusable artefact, create one. Reference owners by group key (`assigneeRef`), never by an invented UUID. Put implementer-only notes in the manifest and `setup.md`, never inside an action `description` that an assignee will read.
+Work belongs to one project. Read [project manifest](project-manifest.md). When the user supplies or the working directory contains `provia-project.json`, read it before starting and treat its sources, entity types, groups, workflows, forms and open decisions as the current state. When the skill produces a design artefact, append or update the matching section and say so; when no manifest exists and the task produces a reusable artefact, create one. Reference owners by group key (`assigneeRef`), never by an invented UUID. Declare who sees and opens every workflow in `workflows[].access` ([workflow access](workflow-access.md)); silence fails `--check`, and executing teams get no `view` unless the source says they see every case. Put implementer-only notes in the manifest and `setup.md`, never inside an action `description` that an assignee will read.
 
 ## Honesty rules
 

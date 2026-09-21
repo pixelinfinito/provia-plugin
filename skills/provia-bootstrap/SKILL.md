@@ -19,17 +19,19 @@ The customer's procedures, SOPs, checklists, org chart and exports; country, lan
 - [design deliverable](../../references/workflow-design-output.md): for each workflow.
 - [groups design](../../references/groups-design.md): for the groups step.
 - [connected mode](../../references/connected-mode.md): only if the `provia-implementer` server is present.
+- [workflow access](../../references/workflow-access.md): for grants, sensitivity, allowlists and the --check rules.
 
 ## Procedure
 
-1. Confirm the authorization to work end to end, the country and language, and the sources. Create `provia-project.json` with `project`, `organization` and `sources[]` (one id per document, section anchors for the sections that will be cited). In connected mode, read the tenant first.
+1. Confirm the authorization to work end to end, the country and language, and the sources. Create `provia-project.json` (`provia-project/v1.1`) with `project`, `organization` and `sources[]` (one id per document, section anchors for the sections that will be cited). In connected mode, read the tenant first and ask for `implement:permissions` in the consent when grants will be applied; it takes effect immediately.
 2. If the process is not chosen, apply `provia-process-discovery` and record the pilot. Otherwise record the scope as a decision already taken.
-3. For each workflow in scope, apply `provia-workflow-designer`: classification table, action table with five-part descriptions and owners by group key, Mermaid flow, YAML skeleton and manifest entry.
-4. Apply `provia-information-model` for the entity types the actions reference; write them to `entityTypes[]` and set `entityRefs`.
-5. Apply `provia-organization-rollout` for the groups: one `groups[]` entry per actor with flags; check that every human action resolves to a group key or `creator`.
-6. Apply `provia-form-designer` for the intake form and every Form Fill action; set `formRef`.
-7. Apply `provia-workflow-package` per workflow: emit YAML, run `review-actions.mjs` and `validate-workflow.mjs`, keep the exact outputs, generate `setup.md`.
-8. Run `node scripts/build-project-map.mjs provia-project.json --check` and `--output project.html`. Deliver the file list, the unresolved items and the open decisions. Do not stop between steps to ask permission; stop only when a decision would change the design materially, and record it in `decisions[]`.
+3. Fix the shared contracts before any parallel design: the canonical group registry (`groups[]` keys and unique names), the closed entity key list, key and prefix conventions, and the rule «never invent a key, record the gap» (`unresolvedActors[]`, `unresolvedEntityTypes[]`, `entityRequests[]`). Run an initial catalogue pass from the sources so designers reference existing keys.
+4. For each workflow in scope, apply `provia-workflow-designer`: classification table, action table with five-part descriptions and owners by group key, the `access` section, Mermaid flow, YAML skeleton and manifest entry. Record entity types it needs but the catalogue lacks in `entityRequests[]`.
+5. Apply `provia-information-model` to reconcile `entityRequests[]` into `entityTypes[]` after the designs; set `entityRefs` and empty the requests.
+6. Apply `provia-organization-rollout` for the groups and the access matrix: one `groups[]` entry per actor with kind, area and flags; check that every human action resolves to a group key, `creator` or a `field:` intent with a fallback, and that every workflow declares access.
+7. Apply `provia-form-designer` for the intake form and every Form Fill action; set `formRef`.
+8. Apply `provia-workflow-package` per workflow: emit YAML, run `review-actions.mjs` and `validate-workflow.mjs`, keep the exact outputs, generate `setup.md`.
+9. Run `node scripts/build-project-map.mjs provia-project.json --check` and `--output project.html`. In connected mode apply in order entity types → groups → workflow drafts → forms → owners → access, dry run first, receipts recorded. Deliver the file list, the unresolved items, the readiness result and the open decisions. Do not stop between steps to ask permission; stop only when a decision would change the design materially, and record it in `decisions[]`.
 
 ## Deliverable
 

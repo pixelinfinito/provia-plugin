@@ -1,4 +1,4 @@
-# provia-skills 1.1.1 — training draft for Angola; see setup.md and provia-project.json before importing.
+# provia-skills 1.2.0 — training draft for Angola; see setup.md and provia-project.json before importing.
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
@@ -33,6 +33,10 @@ fields:
     label: Causa raiz
     type: text
     required: false
+access:
+  grants:
+    - grantee: "group:Gestão da qualidade"
+      level: create_incident
 actions:
   - id: registar
     name: Registar a constatação

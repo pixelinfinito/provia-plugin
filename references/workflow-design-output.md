@@ -20,7 +20,7 @@ Format: a table with source id and section, the source text (short quote), class
 
 ## 2. Action table
 
-One row per action: `localId`, name (verb-led), type, `assigneeRef` (group key from `groups[]`, `creator`, `previous` or `ai:<profile>`), the five-part description summarized as task + evidence, `due` proposal with its basis in the source or "open decision", and the `sourceRefs`. Decisions list their branches and outcomes (`continue`, `cancel_incident`, `return_to_action` with target, `trigger_workflow`). The full five-part descriptions go into the YAML skeleton and the manifest, not into the table.
+One row per action: `localId`, name (verb-led), type, `assigneeRef` (group key from `groups[]`, `creator`, `previous`, `ai:<profile>`, or `field:<field key>` with an `assigneeFallback` when the source names "the person in field X" — a design requirement the product cannot execute yet), the five-part description summarized as task + evidence, `due` proposal with its basis in the source or "open decision" (`dueInSource` when the source fixes a deadline `due` cannot express), and the `sourceRefs`. Document templates cited in descriptions go to `workflows[].templates[]`; an actor or entity type the canonical registry lacks goes to `unresolvedActors[]` / `unresolvedEntityTypes[]`, never invented as a new key. Decisions list their branches and outcomes (`continue`, `cancel_incident`, `return_to_action` with target, `trigger_workflow`). The full five-part descriptions go into the YAML skeleton and the manifest, not into the table.
 
 Actors that have no group yet become proposed `groups[]` entries following [groups design](groups-design.md), flagged for `provia-organization-rollout` to complete.
 
@@ -34,7 +34,7 @@ A `provia.ao/v1` `Workflow` document with metadata, the trigger, the fields the 
 
 ## 5. Manifest entry
 
-The `workflows[]` object for the manifest with the actions, `sourceRefs`, `assigneeRef`, `entityRefs`, `formRef`, `evidence`, `due` and `folded`, plus any new `groups[]` and `decisions[]`. Write it to `provia-project.json` when file creation is available; otherwise include it in the response as a JSON block. Run `node scripts/build-project-map.mjs provia-project.json --check` when a shell is available and report the result.
+The `workflows[]` object for the manifest with the actions, `sourceRefs`, `assigneeRef`, `entityRefs`, `formRef`, `evidence`, `due` and `folded`, the `access` section (who opens → `create_incident`, who owns the design → `edit`, `sensitivity` from the source's words, no grant to executing teams unless the source says they see every case; see [workflow access](workflow-access.md)), `ownerArea`, `triggers[]` with a manual allowlist only when the source restricts starts below the `create_incident` holders, plus any new `groups[]` and `decisions[]` (including the "starters see all cases" limitation of a restricted workflow). Write it to `provia-project.json` when file creation is available; otherwise include it in the response as a JSON block. Run `node scripts/build-project-map.mjs provia-project.json --check` when a shell is available and report the result.
 
 ## Then
 

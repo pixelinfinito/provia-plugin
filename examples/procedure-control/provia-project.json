@@ -1,35 +1,272 @@
 {
-  "schemaVersion": "provia-project/v1",
-  "project": { "key": "procedimentos-exemplo", "title": "Revisão de procedimento — exemplo", "language": "pt-AO", "country": "Angola", "timezone": "Africa/Luanda", "currency": "AOA", "generator": "provia-skills/1.1.1", "contractRevision": "2641364d9c1aa0aa2b76aa788ef521bcb6218118", "updatedAt": "2026-09-19" },
-  "organization": { "name": "Empresa de demonstração", "sector": "Serviços", "mode": "disconnected", "tenantId": null, "productRevision": null },
+  "schemaVersion": "provia-project/v1.1",
+  "project": {
+    "key": "procedimentos-exemplo",
+    "title": "Revisão de procedimento — exemplo",
+    "language": "pt-AO",
+    "country": "Angola",
+    "timezone": "Africa/Luanda",
+    "currency": "AOA",
+    "generator": "provia-skills/1.2.0",
+    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
+    "updatedAt": "2026-09-21"
+  },
+  "organization": {
+    "name": "Empresa de demonstração",
+    "sector": "Serviços",
+    "mode": "disconnected",
+    "tenantId": null,
+    "productRevision": null
+  },
   "sources": [
-    { "id": "sop-controlo", "title": "Controlo de documentos (sintético)", "kind": "sop", "version": "1", "effectiveDate": null, "sections": [ { "anchor": "1", "title": "Pedido de alteração" }, { "anchor": "2", "title": "Redacção" }, { "anchor": "3", "title": "Aprovação" }, { "anchor": "4", "title": "Publicação" } ] }
+    {
+      "id": "sop-controlo",
+      "title": "Controlo de documentos (sintético)",
+      "kind": "sop",
+      "version": "1",
+      "effectiveDate": null,
+      "sections": [
+        {
+          "anchor": "1",
+          "title": "Pedido de alteração"
+        },
+        {
+          "anchor": "2",
+          "title": "Redacção"
+        },
+        {
+          "anchor": "3",
+          "title": "Aprovação"
+        },
+        {
+          "anchor": "4",
+          "title": "Publicação"
+        }
+      ]
+    }
   ],
   "entityTypes": [],
   "groups": [
-    { "key": "qualidade", "name": "Gestão da qualidade", "parentKey": null, "purpose": "Redigem as revisões e publicam as versões aprovadas.", "members": [ { "role": "Gestor da qualidade", "email": null } ], "sourceRefs": [ { "source": "sop-controlo", "section": "2" }, { "source": "sop-controlo", "section": "4" } ], "flags": [ { "code": "single_person", "detail": "Uma só pessoa redige e publica; definir substituto." } ] },
-    { "key": "donos_processo", "name": "Donos de processo", "parentKey": null, "purpose": "Aprovam as revisões dos procedimentos que lhes pertencem.", "members": [ { "role": "Dono do processo", "email": null } ], "sourceRefs": [ { "source": "sop-controlo", "section": "3" } ], "flags": [ { "code": "segregation", "detail": "Quem redige não aprova; confirmar que o grupo de aprovação é distinto." } ] }
+    {
+      "key": "qualidade",
+      "name": "Gestão da qualidade",
+      "parentKey": null,
+      "purpose": "Redigem as revisões e publicam as versões aprovadas.",
+      "members": [
+        {
+          "role": "Gestor da qualidade",
+          "email": null
+        }
+      ],
+      "sourceRefs": [
+        {
+          "source": "sop-controlo",
+          "section": "2"
+        },
+        {
+          "source": "sop-controlo",
+          "section": "4"
+        }
+      ],
+      "flags": [
+        {
+          "code": "single_person",
+          "detail": "Uma só pessoa redige e publica; definir substituto."
+        }
+      ],
+      "kind": "team",
+      "area": "qualidade"
+    },
+    {
+      "key": "donos_processo",
+      "name": "Donos de processo",
+      "parentKey": null,
+      "purpose": "Aprovam as revisões dos procedimentos que lhes pertencem.",
+      "members": [
+        {
+          "role": "Dono do processo",
+          "email": null
+        }
+      ],
+      "sourceRefs": [
+        {
+          "source": "sop-controlo",
+          "section": "3"
+        }
+      ],
+      "flags": [
+        {
+          "code": "segregation",
+          "detail": "Quem redige não aprova; confirmar que o grupo de aprovação é distinto."
+        }
+      ],
+      "kind": "team",
+      "area": "qualidade"
+    }
   ],
   "workflows": [
     {
-      "key": "procedimentos", "name": "Revisão de procedimento — exemplo", "prefix": "PROC", "file": "workflow.yaml", "status": "validated", "sourceRefs": [ { "source": "sop-controlo" } ],
+      "key": "procedimentos",
+      "name": "Revisão de procedimento — exemplo",
+      "prefix": "PROC",
+      "file": "workflow.yaml",
+      "status": "validated",
+      "sourceRefs": [
+        {
+          "source": "sop-controlo"
+        }
+      ],
       "actions": [
-        { "localId": "identificar", "name": "Identificar a alteração", "type": "standard", "sourceRefs": [ { "source": "sop-controlo", "section": "1" } ], "assigneeRef": "creator", "formRef": null, "entityRefs": [], "evidence": [ "Comentário com alteração, secção e motivo" ], "due": { "offsetDays": 2, "offsetType": "workdays", "basis": "activation" }, "folded": [] },
-        { "localId": "preparar", "name": "Preparar a revisão", "type": "standard", "sourceRefs": [ { "source": "sop-controlo", "section": "2" } ], "assigneeRef": "qualidade", "formRef": null, "entityRefs": [], "evidence": [ "Rascunho anexado com registo de alterações" ], "due": { "offsetDays": 5, "offsetType": "workdays", "basis": "activation" }, "folded": [] },
-        { "localId": "aprovar", "name": "Decidir sobre a revisão", "type": "decision", "sourceRefs": [ { "source": "sop-controlo", "section": "3" } ], "assigneeRef": "donos_processo", "formRef": null, "entityRefs": [], "evidence": [ "Comentário obrigatório em Devolver e Rejeitar" ], "due": { "offsetDays": 3, "offsetType": "workdays", "basis": "activation" }, "folded": [] },
-        { "localId": "publicar", "name": "Registar a versão aprovada", "type": "standard", "sourceRefs": [ { "source": "sop-controlo", "section": "4" } ], "assigneeRef": "qualidade", "formRef": null, "entityRefs": [], "evidence": [ "Campo approved_version preenchido", "Comentário com data e equipas informadas" ], "due": { "offsetDays": 2, "offsetType": "workdays", "basis": "activation" }, "folded": [ { "section": "4", "summary": "Informar as equipas afectadas faz parte da publicação; não é uma notificação separada neste exemplo." } ] }
+        {
+          "localId": "identificar",
+          "name": "Identificar a alteração",
+          "type": "standard",
+          "sourceRefs": [
+            {
+              "source": "sop-controlo",
+              "section": "1"
+            }
+          ],
+          "assigneeRef": "creator",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Comentário com alteração, secção e motivo"
+          ],
+          "due": {
+            "offsetDays": 2,
+            "offsetType": "workdays",
+            "basis": "activation"
+          },
+          "folded": []
+        },
+        {
+          "localId": "preparar",
+          "name": "Preparar a revisão",
+          "type": "standard",
+          "sourceRefs": [
+            {
+              "source": "sop-controlo",
+              "section": "2"
+            }
+          ],
+          "assigneeRef": "qualidade",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Rascunho anexado com registo de alterações"
+          ],
+          "due": {
+            "offsetDays": 5,
+            "offsetType": "workdays",
+            "basis": "activation"
+          },
+          "folded": []
+        },
+        {
+          "localId": "aprovar",
+          "name": "Decidir sobre a revisão",
+          "type": "decision",
+          "sourceRefs": [
+            {
+              "source": "sop-controlo",
+              "section": "3"
+            }
+          ],
+          "assigneeRef": "donos_processo",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Comentário obrigatório em Devolver e Rejeitar"
+          ],
+          "due": {
+            "offsetDays": 3,
+            "offsetType": "workdays",
+            "basis": "activation"
+          },
+          "folded": []
+        },
+        {
+          "localId": "publicar",
+          "name": "Registar a versão aprovada",
+          "type": "standard",
+          "sourceRefs": [
+            {
+              "source": "sop-controlo",
+              "section": "4"
+            }
+          ],
+          "assigneeRef": "qualidade",
+          "formRef": null,
+          "entityRefs": [],
+          "evidence": [
+            "Campo approved_version preenchido",
+            "Comentário com data e equipas informadas"
+          ],
+          "due": {
+            "offsetDays": 2,
+            "offsetType": "workdays",
+            "basis": "activation"
+          },
+          "folded": [
+            {
+              "section": "4",
+              "summary": "Informar as equipas afectadas faz parte da publicação; não é uma notificação separada neste exemplo."
+            }
+          ]
+        }
       ],
       "subWorkflowRefs": [],
       "setupNotes": [
         "O YAML de formação atribui todas as acções ao criador; os responsáveis pretendidos são os grupos deste manifesto.",
         "A notificação das equipas afectadas pode tornar-se uma acção Notification com provia-automation-designer."
-      ]
+      ],
+      "ownerArea": "qualidade",
+      "access": {
+        "grants": [
+          {
+            "grantee": "organization",
+            "level": "create_incident",
+            "reason": "Qualquer colaborador pode pedir a alteração de um procedimento",
+            "sourceRefs": [
+              {
+                "source": "sop-controlo",
+                "section": "1"
+              }
+            ]
+          },
+          {
+            "grantee": "group:qualidade",
+            "level": "edit",
+            "reason": "A Gestão da qualidade é dona do desenho do workflow e publica as versões",
+            "sourceRefs": [
+              {
+                "source": "sop-controlo",
+                "section": "4"
+              }
+            ]
+          }
+        ],
+        "sensitivity": "internal"
+      }
     }
   ],
   "forms": [],
   "aiProfiles": [],
   "decisions": [
-    { "id": "D1", "question": "Que revisões exigem aprovação da direcção além do dono do processo?", "owner": "Gestor da qualidade", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "sop-controlo", "section": "3" } ] }
+    {
+      "id": "D1",
+      "question": "Que revisões exigem aprovação da direcção além do dono do processo?",
+      "owner": "Gestor da qualidade",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [
+        {
+          "source": "sop-controlo",
+          "section": "3"
+        }
+      ]
+    }
   ],
   "receipts": []
 }

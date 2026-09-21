@@ -72,19 +72,21 @@
         { "path": "references/workflow-design-output.md", "label": "design deliverable", "when": "for the five parts of the output and the step classification" },
         { "path": "references/action-writing.md", "label": "action writing", "when": "for names and the five-part description" },
         { "path": "references/groups-design.md", "label": "groups design", "when": "when an actor has no group key yet" },
-        { "path": "references/metadata-fields.md", "label": "metadata field rules", "when": "when defining workflow fields" }
+        { "path": "references/metadata-fields.md", "label": "metadata field rules", "when": "when defining workflow fields" },
+        { "path": "references/workflow-access.md", "label": "workflow access", "when": "for grants, sensitivity, allowlists and the --check rules" }
       ],
       "procedure": [
         "Extract explicit requirements with references to sections of the supplied procedure. Classify every source step as action, decision, folded, automation, intake, out_of_scope or conflict, with the reason and the owning action. Nothing is dropped without a row. Mark recommendations separately from requirements.",
         "Choose Standard, Decision, Notification, Wait, HTTP Request, Sub-workflow or Form Fill by the required outcome. AI is an assignee on Standard actions. Do not represent a human approval as an automatic threshold engine.",
         "For each action write a verb-led name and the five-part description to the assignee: task, method with numbered steps, evidence, done-when, exceptions. Fold hand-offs and sub-steps into the method of the owning action. Propose `due` from the stated service level or record an open decision; never invent a deadline.",
         "Use sequential ordering for actual dependencies and parallel execution only for independent work. Model rework and rejection explicitly with supported decision outcomes and named return targets.",
-        "Assign owners by group key: reuse `groups[]` from the manifest, use `creator` for the requester, and propose new groups with flags for actors that have none. Never invent organization IDs.",
+        "Assign owners by group key: reuse `groups[]` from the manifest, use `creator` for the requester, and propose new groups with flags for actors that have none. When the source names \"the person in field X\", record `assigneeRef: field:<key>` with an `assigneeFallback` (a `role` group or `creator`); the product cannot assign from a field yet. Never invent organization IDs, and never invent a key: an actor or entity type the registry lacks goes to `unresolvedActors[]` / `unresolvedEntityTypes[]`.",
+        "Propose `access.grants` from the actors of the source: who opens the case (`create_incident`; `organization` when any employee may), who owns the design (`edit`). Executing and validating teams get no grant: assignees and deciders see the cases that carry their actions. Propose `view` for such a team only when the source says it sees every case (a shared queue, «a área acompanha todos os pedidos»), always with the `reason` and `sourceRefs` rule 4 requires. Set `sensitivity` from the source's own words («confidencial», «restrito», disciplinary, payroll, whistleblowing) and record the \"starters see all cases\" limitation of a restricted workflow in `access.note` and `decisions[]`. Emit a manual-trigger allowlist (`triggers[].manual.allowedGroups`) only when the source restricts starts below the `create_incident` holders, and say so in its reason. Set `ownerArea`, list cited document templates in `templates[]` and keep a source deadline `due` cannot express in `dueInSource`.",
         "Use a Form trigger for intake and Form Fill for an existing incident. Use a reusable sub-workflow only when it has its own meaningful start, completion and owner; identify mappings and cancellation behaviour.",
         "Deliver the classification table, the action table, the Mermaid flow, the YAML skeleton and the manifest entry. Write `provia-project.json` when file creation is available and run `node scripts/build-project-map.mjs provia-project.json --check` when a shell is available; report the actual result. YAML validation belongs to `provia-workflow-package`."
       ],
-      "deliverable": "A source step classification, an action table with owners by group key and evidence, a Mermaid flow, a YAML skeleton with full descriptions, the manifest `workflows[]` entry with proposed `groups[]` and `decisions[]`, and the open decisions to answer before packaging.",
-      "manifest": { "reads": "sources, groups, entityTypes, decisions", "appends": "`workflows[]` with actions, `assigneeRef`, `sourceRefs`, `folded`; proposed `groups[]`; `decisions[]`" },
+      "deliverable": "A source step classification, an action table with owners by group key and evidence, a Mermaid flow, a YAML skeleton with full descriptions, the manifest `workflows[]` entry with its `access` section, proposed `groups[]` and `decisions[]`, and the open decisions to answer before packaging.",
+      "manifest": { "reads": "sources, groups, entityTypes, decisions", "appends": "`workflows[]` with actions, `assigneeRef`, `sourceRefs`, `folded`, `access`, `ownerArea`, `triggers[]`, `templates[]`, `unresolvedActors[]`; proposed `groups[]`; `decisions[]`" },
       "examples": {
         "pt": "Transforme o nosso procedimento de compras num workflow. A chefia aprova o pedido e as Finanças confirmam a disponibilidade orçamental.",
         "en": "Turn this onboarding SOP into actions, approvals and exception paths."
@@ -98,9 +100,10 @@
           "Classificar cada passo da fonte como acção, decisão, passo incorporado, automatização, entrada, fora de âmbito ou conflito, com a razão e a acção que o absorve.",
           "Escrever para cada acção um nome iniciado por verbo e a instrução em cinco partes (tarefa, como, evidência, concluído quando, excepções), dirigida a quem executa.",
           "Atribuir responsáveis por chave de grupo, propor grupos para actores sem chave e modelar rejeição e correcção com desfechos suportados.",
+          "Propor o acesso ao workflow: quem abre (`create_incident`), quem é dono do desenho (`edit`), sem concessão às equipas que executam salvo quando a fonte diz que vêem todos os casos; sensibilidade segundo as palavras da fonte.",
           "Entregar a tabela de classificação, a tabela de acções, o diagrama Mermaid, o esqueleto YAML e a entrada no manifesto; a validação do YAML pertence ao pacote."
         ],
-        "output": "Classificação dos passos da fonte, tabela de acções com responsáveis por chave de grupo e evidências, diagrama, esqueleto YAML com instruções completas, entrada no manifesto e decisões em aberto.",
+        "output": "Classificação dos passos da fonte, tabela de acções com responsáveis por chave de grupo e evidências, diagrama, esqueleto YAML com instruções completas, entrada no manifesto com a secção `access` e decisões em aberto.",
         "review": "Se duas secções indicarem aprovadores diferentes, o conflito fica visível e por resolver. Um caminho de rejeição em falta é uma recomendação a confirmar, não uma regra a inventar. Sem nível de serviço, não há prazo inventado.",
         "example": "Transforme o nosso procedimento de compras num workflow. A chefia aprova o pedido e as Finanças confirmam a disponibilidade orçamental."
       }
@@ -130,9 +133,10 @@
         "Deliver the complete recommended field set, grouped for manual configuration. Classify retained fields as core, conditional or optional; distinguish these from deferred and externally held data. Core means needed by the model, not necessarily required at creation. For each retained field specify purpose and consuming process, supported type, stable ASCII snake_case key, localized label/help text, creation-time required boolean, options, example, default only when justified, maintainer and sensitivity. Validate examples against their types and select values; never invent destination IDs.",
         "Keep collection-only form answers on submissions unless routing, reporting or integration requires incident metadata. Separate controlled select values from flexible tags. Specify useful mappings and their direction; copied entity values are not continuous synchronization. Do not claim uniqueness, history, permissions or status-based blocking merely from custom fields.",
         "Walk through creating one synthetic record per proposed type using what a user actually knows. Check both missing operational information and duplicate entry; report unresolved maintenance effort. For an existing catalogue, give a before/after field disposition and assess dependent records, forms, mappings and workflows before proposing removal.",
-        "Inside a project, the types go to `entityTypes[]` of the manifest in the catalogue shape and `project.html` renders them in its catalogue tab; add `entityRefs` to the actions that use each type. Without a project, deliver `catalogue.json` and a standalone `catalogue.html` generated with the bundled script. Validate the editorial format, inspect the rendered result and test copy controls. Do not substitute a Markdown summary for the files when file creation is available. A focused question may be answered directly without regenerating an entire catalogue."
+        "Inside a project, the types go to `entityTypes[]` of the manifest in the catalogue shape and `project.html` renders each as its own page with a field table and copy controls; add `entityRefs` to the actions that use each type. Without a project, deliver `catalogue.json` and a standalone `catalogue.html` generated with the bundled script. Validate the editorial format, inspect the rendered result and test copy controls. Do not substitute a Markdown summary for the files when file creation is available. A focused question may be answered directly without regenerating an entire catalogue.",
+        "Catalogue types may carry `access.grants[]` (`group:<name>`, `user:<email>`, `organization`; levels `view`, `create`, `edit`, `admin`) when the sources restrict who sees or creates records of a type; the connected apply needs `implement:permissions` and merges on update. Propose them only from the sources, never by default."
       ],
-      "deliverable": "Matching JSON and offline HTML (or the manifest `entityTypes[]` and the map's catalogue tab), with a justification, paste-ready description, verified icon and record Name pattern for each proposed type; a complete, grouped field dictionary and functional coverage review; useful mappings/tags; a disposition of removed or deferred proposals; and a manual-entry review with unresolved setup. Keep operational setup notes separate from descriptions.",
+      "deliverable": "Matching JSON and offline HTML (or the manifest `entityTypes[]` and the map's entity type pages), with a justification, paste-ready description, verified icon and record Name pattern for each proposed type; a complete, grouped field dictionary and functional coverage review; useful mappings/tags; a disposition of removed or deferred proposals; and a manual-entry review with unresolved setup. Keep operational setup notes separate from descriptions.",
       "manifest": { "reads": "sources, workflows", "appends": "`entityTypes[]` in catalogue shape, `entityRefs` on the actions that use them" },
       "examples": {
         "pt": "Como organizar fornecedores e pedidos de compra sem repetir os dados do fornecedor em cada pedido?",
@@ -147,7 +151,8 @@
           "Justificar cada tipo pela identidade, ciclo de vida e reutilização em processos nomeados; preferir metadados do caso, respostas de formulário ou o sistema de origem quando bastam.",
           "Entregar o conjunto completo de campos, agrupado, com chave estável, rótulo, ajuda, obrigatoriedade na criação, exemplo, responsável e sensibilidade; nunca inventar identificadores de destino.",
           "Percorrer a criação de um registo sintético por tipo com o que o utilizador realmente sabe e registar o esforço de manutenção por resolver.",
-          "Num projecto, os tipos entram em `entityTypes[]` do manifesto e no separador de catálogo do mapa; sem projecto, entregar `catalogue.json` e `catalogue.html` gerados com o script incluído."
+          "Num projecto, os tipos entram em `entityTypes[]` do manifesto e no separador de catálogo do mapa; sem projecto, entregar `catalogue.json` e `catalogue.html` gerados com o script incluído.",
+          "Os tipos podem levar `access.grants[]` quando as fontes restringem quem vê ou cria registos; só a partir das fontes."
         ],
         "output": "JSON e HTML correspondentes (ou o manifesto e o separador de catálogo do mapa), com justificação, descrição pronta a colar, ícone verificado e convenção de Nome por tipo; dicionário de campos completo; mapeamentos e etiquetas úteis; disposição de propostas removidas ou adiadas.",
         "review": "Sem necessidades de reporte conhecidas, a proposta é uma base fundamentada com pressupostos assinalados. Dados pessoais sem uso são assinalados. Um catálogo existente é avaliado, não ignorado.",
@@ -218,20 +223,22 @@
         { "path": "references/workflow-yaml.md", "label": "portable workflow YAML", "when": "before emitting YAML, with `contracts/workflow-v1/contract-lock.json`" },
         { "path": "references/action-configs.md", "label": "action configuration details", "when": "for HTTP, wait, notification, sub-workflow and AI settings" },
         { "path": "references/action-writing.md", "label": "action writing", "when": "before the editorial review" },
-        { "path": "references/project-manifest.md", "label": "project manifest", "when": "for `assigneeRef` resolution and the generated `setup.md`" }
+        { "path": "references/project-manifest.md", "label": "project manifest", "when": "for `assigneeRef` resolution and the generated `setup.md`" },
+        { "path": "references/workflow-access.md", "label": "workflow access", "when": "for grants, sensitivity, allowlists and the --check rules" }
       ],
       "procedure": [
         "Read the YAML reference and the contract lock, then the manifest `workflows[]` entry or the agreed design. Start from a relevant bundled example rather than inventing property names.",
         "Emit `provia.ao/v1` and `Workflow` with the first line `# provia-skills <version>` for attribution. Preserve exact enum values, native booleans, integer offsets and stable local action IDs equal to the manifest `localId`s. Use only supported top-level sections; never add manifest keys such as `assigneeRef` to YAML.",
-        "Resolve owners from the manifest: where a receipt resolves the `assigneeRef` group key, run `node scripts/resolve-workflow-refs.mjs` to substitute the real id; otherwise omit `assignee` and let the generated handover list it. Never invent organization UUIDs and never silently replace the intended owner with the creator.",
+        "Resolve owners from the manifest: where a receipt resolves the `assigneeRef` group key, run `node scripts/resolve-workflow-refs.mjs` to substitute the real id (it also writes manual-trigger allowlists as group ids and carries the `access` grants with the `groupRefs` map); otherwise omit `assignee` and let the generated handover list it. A `field:` assignee emits its declared fallback; an allowlist whose group has no receipt is left out of the YAML and stays a blocking step in `setup.md`, never dropped silently. Never invent organization UUIDs and never silently replace the intended owner with the creator.",
+        "Emit the `access` section from the manifest with `node scripts/emit-workflow-access.mjs provia-project.json <workflow key> workflow.yaml --output …`: `group:<groups[].name>` (the importer matches names, not keys), `user:<email>`, `organization`. Against the bundled engine the section goes inside `workflow.yaml` and the validator is green without `workflow.access.not_declared`; against an engine that predates access it goes to `access.yaml` beside the YAML and `setup.md` lists it. Never emit a `permissions:` key: the engine rejects it as `schema.unknown_key`. An export from `workflow_export_yaml` that carries `access_omitted_no_admin` is not creator-only; say so.",
         "Carry every action's five-part description into the YAML and run `node scripts/review-actions.mjs workflow.yaml`. Fix missing parts and any implementer note that leaked into a description before handover.",
         "Keep credentials out of files. Use supported placeholders and secret references with named dependencies. Keep forms, tags, files, page templates, memory documents and unsupported assignment strategies in the handover.",
         "Run `node scripts/validate-workflow.mjs workflow.yaml` from the plugin root (Node 20.11+, no npm install or network). Fix errors and run again. Return the exact validator output as `validation.json`. If execution is unavailable, say validation was not run and provide the command; never simulate a report.",
-        "Update the manifest (`workflows[].file`, `status: validated` or `packaged`, `setupNotes`) and generate `setup.md` with `node scripts/build-project-map.mjs provia-project.json --setup setup.md`; regenerate `project.html`. Without a manifest, write `setup.md` by hand with the same sections.",
+        "Update the manifest (`workflows[].file`, `status: validated` or `packaged`, `setupNotes`) and generate `setup.md` with `node scripts/build-project-map.mjs provia-project.json --setup setup.md`; regenerate `project.html`. In connected mode plan the apply with `node scripts/plan-workflow-access.mjs` (dry run first, one revision per distinct request), store the receipt with `ref.kind: access`, read `workflow_get.access` back into `access.applied[]`, and surface `access_disabled` or `unresolved` grants in `setup.md` instead of reporting success. Without a manifest, write `setup.md` by hand with the same sections.",
         "Explain errors, warnings and pending destination checks separately and record the editorial review in `editorial-review.md`. Provia import preview/server dry run and a human publish review still follow. Do not call an export a full backup."
       ],
-      "deliverable": "`workflow.yaml`, the exact structural `validation.json`, the `review-actions` report, `editorial-review.md`, the generated `setup.md` and the updated manifest and map.",
-      "manifest": { "reads": "everything", "appends": "`workflows[].file`, `status`, `setupNotes`; `setup.md` generated from unresolved items" },
+      "deliverable": "`workflow.yaml` with its `access` section (or `access.yaml` beside it), the exact structural `validation.json`, the `review-actions` report, `editorial-review.md`, the generated `setup.md` and the updated manifest and map.",
+      "manifest": { "reads": "everything", "appends": "`workflows[].file`, `status`, `setupNotes`; `access.operations[]` and `access.applied[]` in connected mode; `setup.md` generated from unresolved items" },
       "examples": {
         "pt": "Gere o YAML do pedido de compra aprovado e valide o ficheiro antes de o entregar.",
         "en": "Repair this exported YAML without changing the intended approval process."
@@ -244,10 +251,11 @@
         "steps": [
           "Emitir `provia.ao/v1` e `Workflow` a partir da entrada no manifesto, com identificadores de acção estáveis e sem chaves fora do contrato.",
           "Resolver responsáveis a partir dos recibos; sem recibo, omitir `assignee` e deixar a pendência na entrega gerada, sem inventar UUIDs.",
+          "Emitir a secção `access` a partir do manifesto (grupos pelo nome), nunca uma chave `permissions:`; sem motor com `access`, escrever `access.yaml` ao lado.",
           "Executar o controlo de instruções e o validador incluído; devolver a saída exacta ou dizer que a validação não correu.",
           "Actualizar o manifesto, gerar `setup.md` e regenerar `project.html`; explicar erros, avisos e verificações pendentes separadamente."
         ],
-        "output": "`workflow.yaml`, `validation.json` exacto, relatório do controlo de instruções, `editorial-review.md`, `setup.md` gerado, manifesto e mapa actualizados.",
+        "output": "`workflow.yaml` com a secção `access`, `validation.json` exacto, relatório do controlo de instruções, `editorial-review.md`, `setup.md` gerado, manifesto e mapa actualizados.",
         "review": "Sem identificadores dos responsáveis, o rascunho entrega uma pendência explícita. Formulários e chaves traduzidas ficam fora do contrato YAML.",
         "example": "Gere o YAML do pedido de compra aprovado e valide o ficheiro antes de o entregar."
       }
@@ -267,17 +275,19 @@
       "inputs": "Workflow design or export, the project manifest, intended business outcome, procedure and known dependencies.",
       "references": [
         { "path": "references/action-writing.md", "label": "action writing", "when": "for names, descriptions and the review gate" },
-        { "path": "references/project-manifest.md", "label": "project manifest", "when": "to check owners, forms and sources against the design" }
+        { "path": "references/project-manifest.md", "label": "project manifest", "when": "to check owners, forms and sources against the design" },
+        { "path": "references/workflow-access.md", "label": "workflow access", "when": "for grants, sensitivity, allowlists and the --check rules" }
       ],
       "procedure": [
         "Trace each required outcome to an action and its completion evidence. Check that decisions include rejection/rework where the procedure requires them, and that every classified source step is either an action or folded into one.",
         "Run `node scripts/review-actions.mjs workflow.yaml` when a shell is available and report, per action, the missing description parts, leaked implementer notes, over-long descriptions and unset `due`. Then review every name and description semantically: verb, object, agreement with type, source and evidence. Record editorial findings separately from contract errors.",
         "Check predecessor dependencies, parallel actions, owners by group key (every action has one; every group owns something; segregation flags raised), unavailable groups, due bases and cancellation behaviour.",
+        "Review access with `node scripts/build-project-map.mjs provia-project.json --check`: publication readiness fails on rules 1, 3 and 5, the error branches of rules 4 and 8, an unresolved `field:` assignee without fallback, an unresolved allowlist key in connected mode, and any retained tenant grant that violates rule 5, holds `admin` outside the approved set or fails rule 4 on a restricted workflow. Report rules 6 and 7, the info and warning branches of 4 and 8, every other retained grant, and the \"starters see all cases\" limitation of a restricted workflow. A blocked retained grant clears only with a source-backed manifest entry (never for an organization grant on a restricted workflow) or a removal confirmed by a fresh `workflow_get.access` read.",
         "Review data collection, form mappings (every Form Fill action has a `formRef`), entity references and secret dependencies. Use `provia-workflow-package` for executable YAML checks; do not replace those checks with visual inspection.",
         "Distinguish a product contract error, a business-policy gap and an optional improvement. Record policy gaps as `decisions[]` with an owner. Do not claim organizational or legal compliance from a structurally valid file.",
         "Return normal, rejected, incomplete and failed-integration scenarios with expected visible results. Leave destination validation and publication clearly pending."
       ],
-      "deliverable": "A prioritized findings list with evidence, the per-action review gate result, proposed corrections, new `decisions[]` and representative test scenarios.",
+      "deliverable": "A prioritized findings list with evidence, the per-action review gate result, the access readiness result, proposed corrections, new `decisions[]` and representative test scenarios.",
       "manifest": { "reads": "everything", "appends": "`decisions[]` for policy gaps; never changes the design silently" },
       "examples": {
         "pt": "Reveja este workflow antes de publicarmos. Procure etapas sem responsável e caminhos de rejeição em falta.",
@@ -292,9 +302,10 @@
           "Ligar cada resultado exigido a uma acção e à sua evidência; confirmar rejeição e correcção onde o procedimento as exige.",
           "Executar o controlo de instruções e reportar, por acção, as partes em falta, notas do implementador e prazos por definir; rever nomes e instruções semanticamente.",
           "Verificar dependências, paralelismo, responsáveis por chave de grupo, segregação, formulários ligados e segredos.",
+          "Rever o acesso com `--check`: as regras 1, 3 e 5, os erros das regras 4 e 8 e as concessões retidas que as violam bloqueiam a prontidão; o resto é reportado.",
           "Separar erro de contrato, lacuna de política e melhoria opcional; registar lacunas como decisões e entregar cenários de teste."
         ],
-        "output": "Lista de constatações priorizada com evidência, resultado do controlo por acção, correcções propostas, novas decisões e cenários de teste.",
+        "output": "Lista de constatações priorizada com evidência, resultado do controlo por acção, prontidão do acesso, correcções propostas, novas decisões e cenários de teste.",
         "review": "Sem procedimento, a revisão limita-se à estrutura e às instruções e identifica as questões de política por adjudicar. Um ficheiro válido pode contornar uma aprovação; isso é reportado como defeito de negócio.",
         "example": "Reveja este workflow antes de publicarmos. Procure etapas sem responsável e caminhos de rejeição em falta."
       }
@@ -314,18 +325,20 @@
       "inputs": "Teams, org chart, administrators, process owners, the sources naming each actor, the manifest workflows, pilot results, existing permissions and rollout constraints.",
       "references": [
         { "path": "references/groups-design.md", "label": "groups design", "when": "for the group fields, flags and segregation rules" },
-        { "path": "references/project-manifest.md", "label": "project manifest", "when": "for `groups[]` and `assigneeRef` coverage" }
+        { "path": "references/project-manifest.md", "label": "project manifest", "when": "for `groups[]` and `assigneeRef` coverage" },
+        { "path": "references/workflow-access.md", "label": "workflow access", "when": "for grants, sensitivity, allowlists and the --check rules" }
       ],
       "procedure": [
         "Separate organization administration, group administration, process ownership and action responsibility. Explain proposed permissions without claiming to grant them.",
-        "For every actor named in the sources, produce a `groups[]` entry: key, localized name, parent (one level), purpose, proposed members by role or supplied email, the sections that justify it and flags: `single_person`, `alias`, `segregation`, `requester`, `external`, `unnamed`. Never invent emails or IDs.",
-        "Cross-check the workflows: every human action has an `assigneeRef` that resolves to a group key or `creator`; every group owns at least one action; segregation pairs and unnamed owners become `decisions[]` for the process owner.",
+        "For every actor named in the sources, produce a `groups[]` entry: key, localized name (unique in the tenant, because the importer resolves grantees by name), `kind` (`team`, `container`, `role`), `area`, parent (one level), purpose, proposed members by role or supplied email (`verified: true` only with a declared `source` or a `users_search` result), the sections that justify it and flags: `single_person`, `alias`, `segregation`, `requester`, `external`, `unnamed`. Never invent emails or IDs.",
+        "Cross-check the workflows: every human action has an `assigneeRef` that resolves to a group key, `creator` or a `field:` intent with a fallback; every `team` group owns at least one action; segregation pairs and unnamed owners become `decisions[]` for the process owner.",
+        "Own the access matrix across all workflows of the project: `workflows[].ownerArea`, the organization-wide grants, the starter groups, unique group names and the segregation review (a group holding `admin` must not also decide in the same workflow). Write it as data in `workflows[].access` and review it in the Acesso tab of `project.html` (workflow × grantee × level); explain proposed permissions without claiming to grant them, and remember that `view` on a workflow shows every case.",
         "Prefer durable team ownership when continuity matters. Explain available assignment approaches, but mark strategies absent from YAML as configuration outside the package.",
         "Use a small pilot, gather evidence from completed incidents and expand after reviewing confusion, late work and missing evidence. Create role-specific exercises: start an incident, complete an action, make a decision and review a report. Define who provides support.",
         "Measure completed useful work and ownership coverage, not only account creation or logins. Respect plan/role availability of reports and AI. In connected mode, offer `groups_apply_plan` after review."
       ],
-      "deliverable": "The `groups[]` design as data with flags and decisions, an ownership coverage check across the workflows, training exercises, rollout milestones and measurable adoption reviews.",
-      "manifest": { "reads": "sources, workflows", "appends": "`groups[]` with members, flags and `sourceRefs`; `decisions[]` for segregation and unnamed owners" },
+      "deliverable": "The `groups[]` design as data with kinds, areas, flags and decisions, the access matrix across the workflows, an ownership coverage check, training exercises, rollout milestones and measurable adoption reviews.",
+      "manifest": { "reads": "sources, workflows", "appends": "`groups[]` with `kind`, `area`, members (`verified`, `source`), flags and `sourceRefs`; `workflows[].access` and `ownerArea` across the project; `decisions[]` for segregation and unnamed owners" },
       "examples": {
         "pt": "Vamos começar com Compras e depois alargar à equipa de Recursos Humanos. Prepare um plano de adopção.",
         "en": "Design group ownership and training for a cross-department rollout."
@@ -339,9 +352,10 @@
           "Separar administração da organização, administração de grupos, propriedade do processo e responsabilidade pelas acções.",
           "Propor um grupo por actor das fontes, com chave, nome, grupo-pai, finalidade, membros por função e sinalizações (pessoa única, alias, segregação, requerente, externo, sem nome).",
           "Confirmar que cada acção humana tem responsável por chave de grupo e que cada grupo tem trabalho; registar segregações e responsáveis por nomear como decisões.",
+          "Desenhar a matriz de acesso do projecto (workflow × destinatário × nível) como dados em `workflows[].access`, com nomes de grupo únicos e revisão de segregação.",
           "Planear piloto, exercícios por função, apoio, marcos e medidas de adopção baseadas em trabalho concluído."
         ],
-        "output": "Desenho dos grupos como dados com sinalizações e decisões, verificação de cobertura de responsabilidade, exercícios de formação, marcos e revisões de adopção.",
+        "output": "Desenho dos grupos como dados com categoria, área, sinalizações e decisões, matriz de acesso dos workflows, verificação de cobertura de responsabilidade, exercícios de formação, marcos e revisões de adopção.",
         "review": "Sem dono do processo nomeado, existe um grupo provisório e uma decisão a resolver. Administrador para todos não é uma resposta; cada função tem a autoridade que precisa.",
         "example": "Vamos começar com Compras e depois alargar à equipa de Recursos Humanos. Prepare um plano de adopção."
       }
@@ -678,17 +692,19 @@
         { "path": "references/project-manifest.md", "label": "project manifest", "when": "before creating the manifest" },
         { "path": "references/workflow-design-output.md", "label": "design deliverable", "when": "for each workflow" },
         { "path": "references/groups-design.md", "label": "groups design", "when": "for the groups step" },
-        { "path": "references/connected-mode.md", "label": "connected mode", "when": "only if the `provia-implementer` server is present" }
+        { "path": "references/connected-mode.md", "label": "connected mode", "when": "only if the `provia-implementer` server is present" },
+        { "path": "references/workflow-access.md", "label": "workflow access", "when": "for grants, sensitivity, allowlists and the --check rules" }
       ],
       "procedure": [
-        "Confirm the authorization to work end to end, the country and language, and the sources. Create `provia-project.json` with `project`, `organization` and `sources[]` (one id per document, section anchors for the sections that will be cited). In connected mode, read the tenant first.",
+        "Confirm the authorization to work end to end, the country and language, and the sources. Create `provia-project.json` (`provia-project/v1.1`) with `project`, `organization` and `sources[]` (one id per document, section anchors for the sections that will be cited). In connected mode, read the tenant first and ask for `implement:permissions` in the consent when grants will be applied; it takes effect immediately.",
         "If the process is not chosen, apply `provia-process-discovery` and record the pilot. Otherwise record the scope as a decision already taken.",
-        "For each workflow in scope, apply `provia-workflow-designer`: classification table, action table with five-part descriptions and owners by group key, Mermaid flow, YAML skeleton and manifest entry.",
-        "Apply `provia-information-model` for the entity types the actions reference; write them to `entityTypes[]` and set `entityRefs`.",
-        "Apply `provia-organization-rollout` for the groups: one `groups[]` entry per actor with flags; check that every human action resolves to a group key or `creator`.",
+        "Fix the shared contracts before any parallel design: the canonical group registry (`groups[]` keys and unique names), the closed entity key list, key and prefix conventions, and the rule «never invent a key, record the gap» (`unresolvedActors[]`, `unresolvedEntityTypes[]`, `entityRequests[]`). Run an initial catalogue pass from the sources so designers reference existing keys.",
+        "For each workflow in scope, apply `provia-workflow-designer`: classification table, action table with five-part descriptions and owners by group key, the `access` section, Mermaid flow, YAML skeleton and manifest entry. Record entity types it needs but the catalogue lacks in `entityRequests[]`.",
+        "Apply `provia-information-model` to reconcile `entityRequests[]` into `entityTypes[]` after the designs; set `entityRefs` and empty the requests.",
+        "Apply `provia-organization-rollout` for the groups and the access matrix: one `groups[]` entry per actor with kind, area and flags; check that every human action resolves to a group key, `creator` or a `field:` intent with a fallback, and that every workflow declares access.",
         "Apply `provia-form-designer` for the intake form and every Form Fill action; set `formRef`.",
         "Apply `provia-workflow-package` per workflow: emit YAML, run `review-actions.mjs` and `validate-workflow.mjs`, keep the exact outputs, generate `setup.md`.",
-        "Run `node scripts/build-project-map.mjs provia-project.json --check` and `--output project.html`. Deliver the file list, the unresolved items and the open decisions. Do not stop between steps to ask permission; stop only when a decision would change the design materially, and record it in `decisions[]`."
+        "Run `node scripts/build-project-map.mjs provia-project.json --check` and `--output project.html`. In connected mode apply in order entity types → groups → workflow drafts → forms → owners → access, dry run first, receipts recorded. Deliver the file list, the unresolved items, the readiness result and the open decisions. Do not stop between steps to ask permission; stop only when a decision would change the design materially, and record it in `decisions[]`."
       ],
       "deliverable": "`provia-project.json`, `project.html`, one folder per workflow with `workflow.yaml`, `validation.json`, `editorial-review.md` and generated `setup.md`, the entity catalogue inside the manifest, and the list of open decisions for the customer review.",
       "manifest": { "reads": "creates it", "appends": "every section" },
@@ -702,10 +718,11 @@
         "description": "Levar o implementador dos documentos do cliente a um projecto Provia revisável numa única execução autorizada: manifesto, catálogo, grupos, workflows, formulários, pacotes validados e mapa do projecto.",
         "inputs": "Procedimentos, SOPs, listas de verificação, organigrama e exportações do cliente; país, língua, fuso e moeda; processos no âmbito; autorização explícita para trabalhar de fio a pavio.",
         "steps": [
-          "Criar o manifesto com projecto, organização e fontes; em modo ligado, ler primeiro a organização de destino.",
-          "Desenhar cada workflow, o modelo de informação, os grupos e os formulários, registando tudo no manifesto.",
+          "Criar o manifesto com projecto, organização e fontes; em modo ligado, ler primeiro a organização de destino e pedir o âmbito de permissões no consentimento.",
+          "Fixar os contratos partilhados (registo de grupos, chaves de entidade, convenções; nunca inventar uma chave) e fazer a passagem inicial do catálogo antes do desenho em paralelo.",
+          "Desenhar cada workflow com a sua secção de acesso, reconciliar o catálogo, os grupos e a matriz de acesso, e os formulários, registando tudo no manifesto.",
           "Gerar e validar cada pacote com o validador e o controlo de instruções; gerar `setup.md`.",
-          "Verificar o manifesto, gerar `project.html` e entregar a lista de ficheiros, pendências e decisões em aberto."
+          "Verificar o manifesto, gerar `project.html` e entregar a lista de ficheiros, pendências, prontidão e decisões em aberto."
         ],
         "output": "`provia-project.json`, `project.html`, uma pasta por workflow com YAML, validação, revisão editorial e `setup.md` gerado, o catálogo dentro do manifesto e as decisões para a revisão com o cliente.",
         "review": "Uma fonte em falta não pára o resto: a lacuna fica como decisão com dono. Fontes contraditórias ficam registadas, não escolhidas.",

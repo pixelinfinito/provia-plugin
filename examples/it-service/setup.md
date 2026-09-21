@@ -1,24 +1,34 @@
 # Pedido de assistência de TI — exemplo: Entrega de configuração
 
-Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.1.1, 2026-09-19).
+Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
 
 ## Estado
 
-Modo: sem ligação ao Provia (configuração manual).
+Modo: configuração manual (sem recibos registados).
 
 ## Configuração pendente
 
 | Onde | Item | O que fazer |
 | --- | --- | --- |
 | ti | Pedido de assistência de TI — exemplo | Importar o YAML como rascunho e rever a pré-visualização (`workflow.yaml`) |
+| ti | Pedido de assistência de TI — exemplo | Aplicar as concessões de acesso (`workflow_access_apply`, dry run primeiro) ou confirmar a secção `access` na pré-visualização de importação. organization → create_incident, group:suporte_ti → view |
 | ti / classificar | Classificar o pedido | Atribuir o grupo à acção depois de o grupo existir (`suporte_ti`) |
 | ti / diagnosticar | Diagnosticar o problema | Atribuir o grupo à acção depois de o grupo existir (`suporte_ti`) |
 | ti / resolver | Registar a resolução | Atribuir o grupo à acção depois de o grupo existir (`suporte_ti`) |
 | ti / confirmar | Confirmar com o requerente | Atribuir o grupo à acção depois de o grupo existir (`suporte_ti`) |
 
+## Acesso ao workflow
+
+Quem pode ver e abrir cada workflow. `view` num workflow mostra todos os casos; quem executa uma acção vê os seus casos sem concessão. As concessões são criadas com `workflow_access_apply` em modo ligado ou na secção `access` do YAML importado no browser.
+
+| Workflow | Sensibilidade | Destinatário | Nível | Razão | Estado |
+| --- | --- | --- | --- | --- | --- |
+| `ti` | internal | `organization` | create_incident | Qualquer colaborador abre um pedido de suporte; o gatilho manual é substituído por um formulário de auto-serviço antes da produção (sop-ti §1) | por aplicar |
+| `ti` | internal | `group:suporte_ti` (Suporte de TI) | view | O Suporte de TI trabalha a partir da fila de todos os pedidos para classificar e distribuir (sop-ti §1) | por aplicar |
+
 ## Grupos a criar
 
-- `suporte_ti` Suporte de TI: Classificam, diagnosticam e resolvem os pedidos de assistência.. Membros propostos: Técnico de suporte
+- `suporte_ti` Suporte de TI [team]: Classificam, diagnosticam e resolvem os pedidos de assistência.. Membros propostos: Técnico de suporte
 
 ## Decisões em aberto
 

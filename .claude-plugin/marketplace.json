@@ -11,7 +11,7 @@
     {
       "name": "provia-skills",
       "source": "./",
-      "description": "Sixteen country-aware skills for Provia process discovery, workflow design, validation, adoption and diagnosis, with a project manifest and map.",
+      "description": "Sixteen country-aware skills for Provia process discovery, workflow design, validation, adoption and diagnosis, with a project manifest, workflow access as data and an offline map.",
       "category": "productivity"
     }
   ]
