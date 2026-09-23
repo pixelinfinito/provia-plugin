@@ -2,7 +2,7 @@
 
 ## Publication status
 
-Publication is held pending the maintainer's decision on the incomplete evaluation gate. The release source and documentation changes are committed locally. No v1.2.1 tag or GitHub release has been published.
+On 23 September 2026, the maintainer explicitly authorized publication of 1.2.1 with the incomplete behavioral evaluation gate documented. This is an accepted release exception for this formatting-guidance patch, not a completed behavioral pass. The nine passing, one ungraded and 38 unfinished evaluation results remain unchanged.
 
 ## Completed checks
 
