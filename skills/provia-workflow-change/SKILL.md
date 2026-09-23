@@ -20,7 +20,7 @@ Current and proposed designs, the manifest and receipts, active-incident evidenc
 
 ## Procedure
 
-1. Compare intended behaviour, owners, decisions, fields, forms and integrations. Explain business effects instead of only listing YAML line changes. Keep editorial corrections separate from changes to routing, assignments, forms, external operations or permissions.
+1. Compare intended behaviour, owners, decisions, fields, forms and integrations. Explain business effects instead of only listing YAML line changes. Keep editorial corrections separate from changes to routing, assignments, forms, external operations or permissions. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.
 2. Identify active incidents that depend on changed fields. Runtime actions are instantiated, but some validation still consults workflow-level metadata.
 3. Plan a new draft and publication. Trigger forms publish independently; Form Fill definitions are frozen with workflow publication. In connected mode, start from `workflow_export_yaml` of the live version.
 4. There is no general one-click rollback control. Describe how to create a new draft that reapplies a previous design and separately address active cases.

@@ -78,7 +78,7 @@
       "procedure": [
         "Extract explicit requirements with references to sections of the supplied procedure. Classify every source step as action, decision, folded, automation, intake, out_of_scope or conflict, with the reason and the owning action. Nothing is dropped without a row. Mark recommendations separately from requirements.",
         "Choose Standard, Decision, Notification, Wait, HTTP Request, Sub-workflow or Form Fill by the required outcome. AI is an assignee on Standard actions. Do not represent a human approval as an automatic threshold engine.",
-        "For each action write a verb-led name and the five-part description to the assignee: task, method with numbered steps, evidence, done-when, exceptions. Fold hand-offs and sub-steps into the method of the owning action. Propose `due` from the stated service level or record an open decision; never invent a deadline.",
+        "For each action write a verb-led name and the five-part description to the assignee: task, method with numbered steps, evidence, done-when, exceptions. Fold hand-offs and sub-steps into the method of the owning action. Propose `due` from the stated service level or record an open decision; never invent a deadline. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.",
         "Use sequential ordering for actual dependencies and parallel execution only for independent work. Model rework and rejection explicitly with supported decision outcomes and named return targets.",
         "Assign owners by group key: reuse `groups[]` from the manifest, use `creator` for the requester, and propose new groups with flags for actors that have none. When the source names \"the person in field X\", record `assigneeRef: field:<key>` with an `assigneeFallback` (a `role` group or `creator`); the product cannot assign from a field yet. Never invent organization IDs, and never invent a key: an actor or entity type the registry lacks goes to `unresolvedActors[]` / `unresolvedEntityTypes[]`.",
         "Propose `access.grants` from the actors of the source: who opens the case (`create_incident`; `organization` when any employee may), who owns the design (`edit`). Executing and validating teams get no grant: assignees and deciders see the cases that carry their actions. Propose `view` for such a team only when the source says it sees every case (a shared queue, «a área acompanha todos os pedidos»), always with the `reason` and `sourceRefs` rule 4 requires. Set `sensitivity` from the source's own words («confidencial», «restrito», disciplinary, payroll, whistleblowing) and record the \"starters see all cases\" limitation of a restricted workflow in `access.note` and `decisions[]`. Emit a manual-trigger allowlist (`triggers[].manual.allowedGroups`) only when the source restricts starts below the `create_incident` holders, and say so in its reason. Set `ownerArea`, list cited document templates in `templates[]` and keep a source deadline `due` cannot express in `dueInSource`.",
@@ -97,7 +97,7 @@
         "description": "Converter procedimentos, SOPs e listas de verificação num desenho de workflow Provia: classificação dos passos da fonte, instruções executáveis por acção, diagrama, esqueleto YAML e entrada no manifesto.",
         "inputs": "Procedimento, condições de início e fim, responsabilidades, regras de aprovação, evidências, níveis de serviço e excepções; o manifesto do projecto quando existir.",
         "steps": [
-          "Classificar cada passo da fonte como acção, decisão, passo incorporado, automatização, entrada, fora de âmbito ou conflito, com a razão e a acção que o absorve.",
+          "Classificar cada passo da fonte como acção, decisão, passo incorporado, automatização, entrada, fora de âmbito ou conflito, com a razão e a acção que o absorve. Usar Markdown nas descrições das acções para parágrafos legíveis, passos numerados, listas de evidências, destaque pontual, chaves de campos e ligações a procedimentos fornecidas, conforme `references/action-writing.md`. Preservar os rótulos literais das secções e o Markdown em YAML/JSON; não gerar HTML nem JSON do editor.",
           "Escrever para cada acção um nome iniciado por verbo e a instrução em cinco partes (tarefa, como, evidência, concluído quando, excepções), dirigida a quem executa.",
           "Atribuir responsáveis por chave de grupo, propor grupos para actores sem chave e modelar rejeição e correcção com desfechos suportados.",
           "Propor o acesso ao workflow: quem abre (`create_incident`), quem é dono do desenho (`edit`), sem concessão às equipas que executam salvo quando a fonte diz que vêem todos os casos; sensibilidade segundo as palavras da fonte.",
@@ -181,7 +181,7 @@
         "Define internal/external respondents and the intended access path. Do not promise anonymous access or an external link without checking the configured form behaviour.",
         "Map only compatible fields needed by the incident. A single Form Fill response can map values and complete the action; multiple responses are a review collection and cannot map competing values.",
         "Specify file types/sizes and the reason each document is needed. Write a confirmation that states what happens next without promising an unconfigured deadline.",
-        "When there is a Form Fill task, specify both the form title and the action: a verb-led name and a five-part description whose evidence part names the submitted response. Keep bindings, mappings and response policy when improving wording.",
+        "When there is a Form Fill task, specify both the form title and the action: a verb-led name and a five-part description whose evidence part names the submitted response. Keep bindings, mappings and response policy when improving wording. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.",
         "Deliver the form specification separately from YAML and add it to `forms[]` of the manifest with `workflowRef` and `actionRef`; set `formRef` on the action. Forms are not packaged in the portable contract; creation, linking and preview happen in Provia or through connected mode."
       ],
       "deliverable": "A form specification with fields, validation, access, mappings, uploads, confirmation and testing steps, plus the manifest `forms[]` entry linked to its workflow action.",
@@ -198,7 +198,7 @@
         "steps": [
           "Decidir se a submissão cria um caso ou fornece evidência a um caso existente.",
           "Definir respondentes, acesso, campos compatíveis, mapeamentos, ficheiros e a mensagem de confirmação sem prometer prazos não configurados.",
-          "Especificar o título do formulário e, separadamente, o nome e a instrução da acção Form Fill.",
+          "Especificar o título do formulário e, separadamente, o nome e a instrução da acção Form Fill. Usar Markdown nas descrições das acções para parágrafos legíveis, passos numerados, listas de evidências, destaque pontual, chaves de campos e ligações a procedimentos fornecidas, conforme `references/action-writing.md`. Preservar os rótulos literais das secções e o Markdown em YAML/JSON; não gerar HTML nem JSON do editor.",
           "Entregar a especificação à parte do YAML e registá-la em `forms[]` do manifesto com a referência ao workflow e à acção."
         ],
         "output": "Especificação do formulário com campos, validação, acesso, mapeamentos, ficheiros, confirmação e passos de teste, e a entrada no manifesto ligada à acção.",
@@ -231,7 +231,7 @@
         "Emit `provia.ao/v1` and `Workflow` with the first line `# provia-skills <version>` for attribution. Preserve exact enum values, native booleans, integer offsets and stable local action IDs equal to the manifest `localId`s. Use only supported top-level sections; never add manifest keys such as `assigneeRef` to YAML.",
         "Resolve owners from the manifest: where a receipt resolves the `assigneeRef` group key, run `node scripts/resolve-workflow-refs.mjs` to substitute the real id (it also writes manual-trigger allowlists as group ids and carries the `access` grants with the `groupRefs` map); otherwise omit `assignee` and let the generated handover list it. A `field:` assignee emits its declared fallback; an allowlist whose group has no receipt is left out of the YAML and stays a blocking step in `setup.md`, never dropped silently. Never invent organization UUIDs and never silently replace the intended owner with the creator.",
         "Emit the `access` section from the manifest with `node scripts/emit-workflow-access.mjs provia-project.json <workflow key> workflow.yaml --output …`: `group:<groups[].name>` (the importer matches names, not keys), `user:<email>`, `organization`. Against the bundled engine the section goes inside `workflow.yaml` and the validator is green without `workflow.access.not_declared`; against an engine that predates access it goes to `access.yaml` beside the YAML and `setup.md` lists it. Never emit a `permissions:` key: the engine rejects it as `schema.unknown_key`. An export from `workflow_export_yaml` that carries `access_omitted_no_admin` is not creator-only; say so.",
-        "Carry every action's five-part description into the YAML and run `node scripts/review-actions.mjs workflow.yaml`. Fix missing parts and any implementer note that leaked into a description before handover.",
+        "Carry every action's five-part description into the YAML and run `node scripts/review-actions.mjs workflow.yaml`. Fix missing parts and any implementer note that leaked into a description before handover. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.",
         "Keep credentials out of files. Use supported placeholders and secret references with named dependencies. Keep forms, tags, files, page templates, memory documents and unsupported assignment strategies in the handover.",
         "Run `node scripts/validate-workflow.mjs workflow.yaml` from the plugin root (Node 20.11+, no npm install or network). Fix errors and run again. Return the exact validator output as `validation.json`. If execution is unavailable, say validation was not run and provide the command; never simulate a report.",
         "Update the manifest (`workflows[].file`, `status: validated` or `packaged`, `setupNotes`) and generate `setup.md` with `node scripts/build-project-map.mjs provia-project.json --setup setup.md`; regenerate `project.html`. In connected mode plan the apply with `node scripts/plan-workflow-access.mjs` (dry run first, one revision per distinct request), store the receipt with `ref.kind: access`, read `workflow_get.access` back into `access.applied[]`, and surface `access_disabled` or `unresolved` grants in `setup.md` instead of reporting success. Without a manifest, write `setup.md` by hand with the same sections.",
@@ -249,7 +249,7 @@
         "description": "Gerar, explicar ou corrigir YAML portátil de workflow Provia, executar o validador incluído e o controlo de instruções das acções, e gerar a entrega de configuração a partir do manifesto.",
         "inputs": "Desenho acordado ou exportação YAML, manifesto do projecto, versão do contrato, referências ou recibos de destino conhecidos e restrições de configuração.",
         "steps": [
-          "Emitir `provia.ao/v1` e `Workflow` a partir da entrada no manifesto, com identificadores de acção estáveis e sem chaves fora do contrato.",
+          "Emitir `provia.ao/v1` e `Workflow` a partir da entrada no manifesto, com identificadores de acção estáveis e sem chaves fora do contrato. Usar Markdown nas descrições das acções para parágrafos legíveis, passos numerados, listas de evidências, destaque pontual, chaves de campos e ligações a procedimentos fornecidas, conforme `references/action-writing.md`. Preservar os rótulos literais das secções e o Markdown em YAML/JSON; não gerar HTML nem JSON do editor.",
           "Resolver responsáveis a partir dos recibos; sem recibo, omitir `assignee` e deixar a pendência na entrega gerada, sem inventar UUIDs.",
           "Emitir a secção `access` a partir do manifesto (grupos pelo nome), nunca uma chave `permissions:`; sem motor com `access`, escrever `access.yaml` ao lado.",
           "Executar o controlo de instruções e o validador incluído; devolver a saída exacta ou dizer que a validação não correu.",
@@ -280,7 +280,7 @@
       ],
       "procedure": [
         "Trace each required outcome to an action and its completion evidence. Check that decisions include rejection/rework where the procedure requires them, and that every classified source step is either an action or folded into one.",
-        "Run `node scripts/review-actions.mjs workflow.yaml` when a shell is available and report, per action, the missing description parts, leaked implementer notes, over-long descriptions and unset `due`. Then review every name and description semantically: verb, object, agreement with type, source and evidence. Record editorial findings separately from contract errors.",
+        "Run `node scripts/review-actions.mjs workflow.yaml` when a shell is available and report, per action, the missing description parts, leaked implementer notes, over-long descriptions and unset `due`. Then review every name and description semantically: verb, object, agreement with type, source and evidence. Record editorial findings separately from contract errors. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.",
         "Check predecessor dependencies, parallel actions, owners by group key (every action has one; every group owns something; segregation flags raised), unavailable groups, due bases and cancellation behaviour.",
         "Review access with `node scripts/build-project-map.mjs provia-project.json --check`: publication readiness fails on rules 1, 3 and 5, the error branches of rules 4 and 8, an unresolved `field:` assignee without fallback, an unresolved allowlist key in connected mode, and any retained tenant grant that violates rule 5, holds `admin` outside the approved set or fails rule 4 on a restricted workflow. Report rules 6 and 7, the info and warning branches of 4 and 8, every other retained grant, and the \"starters see all cases\" limitation of a restricted workflow. A blocked retained grant clears only with a source-backed manifest entry (never for an organization grant on a restricted workflow) or a removal confirmed by a fresh `workflow_get.access` read.",
         "Review data collection, form mappings (every Form Fill action has a `formRef`), entity references and secret dependencies. Use `provia-workflow-package` for executable YAML checks; do not replace those checks with visual inspection.",
@@ -299,7 +299,7 @@
         "description": "Rever um workflow Provia quanto a responsabilidade, sequência, evidências, excepções, instruções executáveis por acção e prontidão para publicação.",
         "inputs": "Desenho ou exportação do workflow, manifesto do projecto, resultado pretendido, procedimento e dependências conhecidas.",
         "steps": [
-          "Ligar cada resultado exigido a uma acção e à sua evidência; confirmar rejeição e correcção onde o procedimento as exige.",
+          "Ligar cada resultado exigido a uma acção e à sua evidência; confirmar rejeição e correcção onde o procedimento as exige. Usar Markdown nas descrições das acções para parágrafos legíveis, passos numerados, listas de evidências, destaque pontual, chaves de campos e ligações a procedimentos fornecidas, conforme `references/action-writing.md`. Preservar os rótulos literais das secções e o Markdown em YAML/JSON; não gerar HTML nem JSON do editor.",
           "Executar o controlo de instruções e reportar, por acção, as partes em falta, notas do implementador e prazos por definir; rever nomes e instruções semanticamente.",
           "Verificar dependências, paralelismo, responsáveis por chave de grupo, segregação, formulários ligados e segredos.",
           "Rever o acesso com `--check`: as regras 1, 3 e 5, os erros das regras 4 e 8 e as concessões retidas que as violam bloqueiam a prontidão; o resto é reportado.",
@@ -382,7 +382,7 @@
         "For HTTP calls use the actual external API documentation or user-supplied contract. Never invent endpoints. Use organization secret references and identify destination allowlist requirements.",
         "Specify idempotency where the external API supports it, expected responses, response mappings and what happens after retries fail.",
         "For schedules use a numeric five-field cron and an explicit timezone. Workdays skip weekends; they do not implement statutory holiday calendars.",
-        "Name the actual operation (a status lookup is not payment execution) and describe it so a case reader understands what ran. Keep AI judgment separate from deterministic calls and human decisions.",
+        "Name the actual operation (a status lookup is not payment execution) and describe it so a case reader understands what ran. Keep AI judgment separate from deterministic calls and human decisions. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.",
         "Add the automated actions to the manifest workflow with `sourceRefs`, `subWorkflowRefs` for child workflows, and `setupNotes` for secret names and allowlists. Provide setup instructions instead of implying that the plugin has connected systems."
       ],
       "deliverable": "An integration specification with mappings, dependencies, retries, timeouts and exception paths, and the manifest actions and setup notes it needs.",
@@ -397,7 +397,7 @@
         "description": "Especificar notificações, esperas, gatilhos, chamadas HTTP e sub-workflows reutilizáveis a partir da documentação real da API.",
         "inputs": "Evento alvo, contrato da API, exemplos de payload, temporização, restrições de acesso e tratamento de falhas; o workflow do manifesto a que pertence.",
         "steps": [
-          "Escolher o tipo de gatilho ou acção automática adequado ao evento.",
+          "Escolher o tipo de gatilho ou acção automática adequado ao evento. Usar Markdown nas descrições das acções para parágrafos legíveis, passos numerados, listas de evidências, destaque pontual, chaves de campos e ligações a procedimentos fornecidas, conforme `references/action-writing.md`. Preservar os rótulos literais das secções e o Markdown em YAML/JSON; não gerar HTML nem JSON do editor.",
           "Usar a documentação real da API, referências a segredos e listas de destinos permitidos; nunca inventar endpoints.",
           "Definir idempotência, respostas esperadas, mapeamentos e comportamento após falha das repetições; cron numérico com fuso explícito.",
           "Registar as acções automáticas e as notas de configuração no manifesto."
@@ -429,7 +429,7 @@
         "Define objective, inputs, rules and output. Restrict readable/writable fields and skills to the work; avoid granting broad access for convenience.",
         "Use human review for new or judgment-heavy tasks and keep final approvals with authorized people. State behaviour for missing and contradictory evidence.",
         "Distinguish profile instructions from approved workflow Agent Memory. Memory documents are not carried by YAML.",
-        "Write the action's five-part description for the human reviewer of the AI output, and record the profile in `aiProfiles[]` with `assigneeRef: ai:<key>` on the action.",
+        "Write the action's five-part description for the human reviewer of the AI output, and record the profile in `aiProfiles[]` with `assigneeRef: ai:<key>` on the action. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.",
         "Test normal, incomplete and contradictory examples. Explain plan/settings prerequisites and never imply that this external plugin installs profiles in Provia."
       ],
       "deliverable": "Profile instructions, required skills, output contract, review behaviour, evaluation cases and the manifest `aiProfiles[]` entry.",
@@ -444,7 +444,7 @@
         "description": "Desenhar acções Standard atribuídas a IA, com resultado revisável, e perfis de agente com âmbito restrito.",
         "inputs": "Tarefa, evidência disponível, artefacto esperado, campos acessíveis, política de revisão e disponibilidade no plano; a acção do manifesto que a IA prepara.",
         "steps": [
-          "Confirmar que a tarefa tem um resultado revisável e atribuí-la a uma acção Standard.",
+          "Confirmar que a tarefa tem um resultado revisável e atribuí-la a uma acção Standard. Usar Markdown nas descrições das acções para parágrafos legíveis, passos numerados, listas de evidências, destaque pontual, chaves de campos e ligações a procedimentos fornecidas, conforme `references/action-writing.md`. Preservar os rótulos literais das secções e o Markdown em YAML/JSON; não gerar HTML nem JSON do editor.",
           "Definir objectivo, entradas, regras e saída; restringir campos e capacidades ao necessário.",
           "Manter aprovações finais com pessoas autorizadas e definir o comportamento com evidência em falta ou contraditória.",
           "Registar o perfil em `aiProfiles[]` e testar casos normais, incompletos e contraditórios."
@@ -601,7 +601,7 @@
       ],
       "procedure": [
         "Identify the source workflow version and distinguish published procedure from proposed changes.",
-        "Write each action instruction in the five-part form (task, method, evidence, done-when, exceptions) so it can be pasted into the action description. Preserve real approval authority and keep the brief name separate.",
+        "Write each action instruction in the five-part form (task, method, evidence, done-when, exceptions) so it can be pasted into the action description. Preserve real approval authority and keep the brief name separate. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.",
         "Reconcile conflicts between workflow and policy explicitly. Do not silently promote incident workarounds to organization-wide policy.",
         "Keep stable approved guidance in proposed Agent Memory; keep temporary case facts in the incident. Memory proposals need administrator review.",
         "Provide concise standalone artefacts with source references and an update owner. Pages and memory documents require separate setup after YAML import."
@@ -619,7 +619,7 @@
         "inputs": "Versão actual do workflow ou manifesto, políticas aprovadas, orientações existentes e lições dos casos.",
         "steps": [
           "Identificar a versão de origem e separar procedimento publicado de alteração proposta.",
-          "Escrever cada instrução de acção em cinco partes, pronta a colar na descrição da acção.",
+          "Escrever cada instrução de acção em cinco partes, pronta a colar na descrição da acção. Usar Markdown nas descrições das acções para parágrafos legíveis, passos numerados, listas de evidências, destaque pontual, chaves de campos e ligações a procedimentos fornecidas, conforme `references/action-writing.md`. Preservar os rótulos literais das secções e o Markdown em YAML/JSON; não gerar HTML nem JSON do editor.",
           "Reconciliar conflitos entre workflow e política de forma explícita; não promover desvios a política.",
           "Separar orientação estável (memória proposta) de factos temporários do caso; entregar artefactos com fontes e dono."
         ],
@@ -646,7 +646,7 @@
         { "path": "references/action-writing.md", "label": "action writing", "when": "for wording changes compared before and after" }
       ],
       "procedure": [
-        "Compare intended behaviour, owners, decisions, fields, forms and integrations. Explain business effects instead of only listing YAML line changes. Keep editorial corrections separate from changes to routing, assignments, forms, external operations or permissions.",
+        "Compare intended behaviour, owners, decisions, fields, forms and integrations. Explain business effects instead of only listing YAML line changes. Keep editorial corrections separate from changes to routing, assignments, forms, external operations or permissions. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.",
         "Identify active incidents that depend on changed fields. Runtime actions are instantiated, but some validation still consults workflow-level metadata.",
         "Plan a new draft and publication. Trigger forms publish independently; Form Fill definitions are frozen with workflow publication. In connected mode, start from `workflow_export_yaml` of the live version.",
         "There is no general one-click rollback control. Describe how to create a new draft that reapplies a previous design and separately address active cases.",
@@ -665,7 +665,7 @@
         "description": "Planear alterações a um workflow Provia com atenção aos casos activos, aos dados e às dependências, registando a alteração no manifesto.",
         "inputs": "Desenho actual e proposto, manifesto e recibos, evidência dos casos activos, campos e integrações afectados e motivo da alteração.",
         "steps": [
-          "Comparar comportamento, responsáveis, decisões, campos, formulários e integrações; explicar o efeito de negócio.",
+          "Comparar comportamento, responsáveis, decisões, campos, formulários e integrações; explicar o efeito de negócio. Usar Markdown nas descrições das acções para parágrafos legíveis, passos numerados, listas de evidências, destaque pontual, chaves de campos e ligações a procedimentos fornecidas, conforme `references/action-writing.md`. Preservar os rótulos literais das secções e o Markdown em YAML/JSON; não gerar HTML nem JSON do editor.",
           "Identificar casos activos dependentes dos campos alterados.",
           "Planear novo rascunho e publicação; não existe reversão automática, apenas um novo rascunho que reaplica o desenho anterior.",
           "Testar caminhos alterados e inalterados, religar dependências e registar o plano e as decisões no manifesto."

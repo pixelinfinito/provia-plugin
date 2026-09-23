@@ -1,6 +1,6 @@
 # Acção correctiva — exemplo: Entrega de configuração
 
-Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
+Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.2.1, 2026-09-23).
 
 ## Estado
 

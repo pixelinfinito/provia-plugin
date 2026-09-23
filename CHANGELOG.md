@@ -1,5 +1,9 @@
 # Changelog
 
+## 1.2.1
+
+- Action-building, packaging and review skills now explicitly use Markdown descriptions, with shared formatting guidance and a pt-AO YAML example covering emphasis, blockquotes, headings, nested lists, links, tables, visual checklists and code. Preserve the five literal labels for existing review tools and explain the current bundled 5000-character limit versus the newer editor's 20,000-character limit.
+
 ## 1.2.0
 
 - Installation remains marketplace-only. Documentation-hosted ZIP downloads stay withdrawn; the archive builder is retained for internal portability checks.

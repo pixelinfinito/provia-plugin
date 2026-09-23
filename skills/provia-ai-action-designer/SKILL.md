@@ -24,7 +24,7 @@ Task, supplied evidence, expected artefact, available fields, review policy and 
 2. Define objective, inputs, rules and output. Restrict readable/writable fields and skills to the work; avoid granting broad access for convenience.
 3. Use human review for new or judgment-heavy tasks and keep final approvals with authorized people. State behaviour for missing and contradictory evidence.
 4. Distinguish profile instructions from approved workflow Agent Memory. Memory documents are not carried by YAML.
-5. Write the action's five-part description for the human reviewer of the AI output, and record the profile in `aiProfiles[]` with `assigneeRef: ai:<key>` on the action.
+5. Write the action's five-part description for the human reviewer of the AI output, and record the profile in `aiProfiles[]` with `assigneeRef: ai:<key>` on the action. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.
 6. Test normal, incomplete and contradictory examples. Explain plan/settings prerequisites and never imply that this external plugin installs profiles in Provia.
 
 ## Deliverable

@@ -20,7 +20,7 @@ Current workflow version or manifest, approved policies, existing guidance and i
 ## Procedure
 
 1. Identify the source workflow version and distinguish published procedure from proposed changes.
-2. Write each action instruction in the five-part form (task, method, evidence, done-when, exceptions) so it can be pasted into the action description. Preserve real approval authority and keep the brief name separate.
+2. Write each action instruction in the five-part form (task, method, evidence, done-when, exceptions) so it can be pasted into the action description. Preserve real approval authority and keep the brief name separate. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.
 3. Reconcile conflicts between workflow and policy explicitly. Do not silently promote incident workarounds to organization-wide policy.
 4. Keep stable approved guidance in proposed Agent Memory; keep temporary case facts in the incident. Memory proposals need administrator review.
 5. Provide concise standalone artefacts with source references and an update owner. Pages and memory documents require separate setup after YAML import.

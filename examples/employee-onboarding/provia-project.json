@@ -7,9 +7,9 @@
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.2.0",
+    "generator": "provia-skills/1.2.1",
     "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
-    "updatedAt": "2026-09-21"
+    "updatedAt": "2026-09-23"
   },
   "organization": {
     "name": "Empresa de demonstração",

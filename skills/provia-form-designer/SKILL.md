@@ -24,7 +24,7 @@ Respondents, desired answers, process stage, access constraints, uploads and res
 2. Define internal/external respondents and the intended access path. Do not promise anonymous access or an external link without checking the configured form behaviour.
 3. Map only compatible fields needed by the incident. A single Form Fill response can map values and complete the action; multiple responses are a review collection and cannot map competing values.
 4. Specify file types/sizes and the reason each document is needed. Write a confirmation that states what happens next without promising an unconfigured deadline.
-5. When there is a Form Fill task, specify both the form title and the action: a verb-led name and a five-part description whose evidence part names the submitted response. Keep bindings, mappings and response policy when improving wording.
+5. When there is a Form Fill task, specify both the form title and the action: a verb-led name and a five-part description whose evidence part names the submitted response. Keep bindings, mappings and response policy when improving wording. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.
 6. Deliver the form specification separately from YAML and add it to `forms[]` of the manifest with `workflowRef` and `actionRef`; set `formRef` on the action. Forms are not packaged in the portable contract; creation, linking and preview happen in Provia or through connected mode.
 
 ## Deliverable

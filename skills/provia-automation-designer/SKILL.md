@@ -24,7 +24,7 @@ Target event, system API contract, payload examples, timing, access restrictions
 2. For HTTP calls use the actual external API documentation or user-supplied contract. Never invent endpoints. Use organization secret references and identify destination allowlist requirements.
 3. Specify idempotency where the external API supports it, expected responses, response mappings and what happens after retries fail.
 4. For schedules use a numeric five-field cron and an explicit timezone. Workdays skip weekends; they do not implement statutory holiday calendars.
-5. Name the actual operation (a status lookup is not payment execution) and describe it so a case reader understands what ran. Keep AI judgment separate from deterministic calls and human decisions.
+5. Name the actual operation (a status lookup is not payment execution) and describe it so a case reader understands what ran. Keep AI judgment separate from deterministic calls and human decisions. Use Markdown in action descriptions for readable paragraphs, numbered steps, evidence lists, selective emphasis, field keys and supplied procedure links, following `references/action-writing.md`. Preserve the literal section labels and Markdown source through YAML/JSON; do not emit HTML or editor JSON.
 6. Add the automated actions to the manifest workflow with `sourceRefs`, `subWorkflowRefs` for child workflows, and `setupNotes` for secret names and allowlists. Provide setup instructions instead of implying that the plugin has connected systems.
 
 ## Deliverable

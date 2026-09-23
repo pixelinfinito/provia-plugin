@@ -10,7 +10,7 @@ This file is a plugin artefact. It is not a Provia import format and it never ca
 {
   "schemaVersion": "provia-project/v1.1",
   "project": { "key": "compras", "title": "Pedido de compra", "language": "pt-AO", "country": "Angola",
-               "timezone": "Africa/Luanda", "currency": "AOA", "generator": "provia-skills/1.2.0",
+               "timezone": "Africa/Luanda", "currency": "AOA", "generator": "provia-skills/1.2.1",
                "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa", "updatedAt": "2026-09-21" },
   "organization": { "name": "Empresa exemplo", "sector": "Serviços", "mode": "disconnected",
                     "tenantId": null, "productRevision": null },
