@@ -1,97 +1,91 @@
-# Pilot selection: Purchasing vs IT support
+# Pilot selection: purchasing or IT support
 
-Date: 2026-09-21 · Skill: `provia-process-discovery` · Mode: disconnected (no Provia organization was read; the `org_get_context` tool was offered by the host but permission was not granted, so nothing was read or changed in Provia).
+Date: 23 September 2026 · Manifest: `provia-project.json` · Mode: disconnected (nothing was read from or written to a Provia organization)
 
-## Answer
+## What was supplied
 
-Start the pilot with **IT support, owned by Ana**. Purchasing has the shorter cycle (2 days vs 5), but nobody will own it, and a pilot without an owner produces no decisions, no exceptions handled and nothing to learn from. "Fastest" for a pilot means fastest to a reviewable result, not the shortest cycle time of the process itself; on that measure IT support wins.
+One verbal brief, three sentences (`brief-2026-09-23` in the manifest):
 
-Purchasing is not rejected. It becomes the second workflow the day someone accepts ownership (decision D6).
+- Purchasing takes 2 days; nobody will own it.
+- IT support takes 5 days; Ana owns it.
+- "Choose the fastest process for our pilot."
 
-## What was supplied (confirmed facts)
+No procedure, case export, volume figure, baseline record or organization name was supplied. Everything below marked *estimate* or *open* comes from the trade-off in those sentences, not from evidence.
 
-Two statements in chat, recorded in the manifest as sources `chat-purchasing` and `chat-it-support`:
+## Why "fastest" cannot decide this
 
-| Process | Stated duration | Owner | Source |
-| --- | --- | --- | --- |
-| Purchasing | 2 days | none — "nobody will own it" | `chat-purchasing` |
-| IT support | 5 days | Ana | `chat-it-support` |
+The brief asks for the fastest process, but the two candidates differ on a criterion that outranks duration for a first Provia workflow: **only one of them has an owner.**
 
-Not supplied, and not assumed: case volumes, request types, who else works on each process, how the durations were measured, the start and end events, organization name, sector and country. Country context defaults provisionally to Angola (en, AOA, Africa/Luanda) per the plugin conventions; decision D7 asks the sponsor to confirm.
+A Provia workflow assigns every action to someone — a group, the case creator, the previous assignee or an AI profile. An action with no owner cannot be designed, published or executed. "Nobody will own it" is therefore not a minor gap in the purchasing candidate; it blocks the design itself. A purchasing pilot would stall at the first action brief, and the usual substitute — assigning the implementer or a generic "everyone" group — produces a workflow the organization does not actually run.
 
-## Start and end of each process (to confirm)
+Duration works the other way round from how the brief reads. A 2-day process has little room to improve and little handoff delay to make visible; a 5-day process has more of both. Speed of the *process* is not speed *to a working pilot*.
 
-The skill requires a start event and an observable end condition for each candidate. Neither statement gives them, so these are proposed readings for Ana and the sponsor to correct (D2):
+Two further cautions on the numbers themselves: it is not stated whether 2 and 5 days are measured or estimated, nor whether they are calendar days or workdays (`D4`). Provia's workday offsets skip Saturday and Sunday but not public holidays, so the distinction changes how any deadline is configured.
 
-- **IT support**: starts when a colleague reports a problem or asks for something from IT (channel unknown); ends when the requester confirms the problem is solved or the request delivered, or when Ana closes it after no reply.
-- **Purchasing**: starts when someone requests goods or a service; ends when the order is placed with the supplier or the goods are received (which of the two counts as "done" is unknown).
+## Ranked shortlist
 
-Both are repeatable organizational work rather than one-off tasks, so both qualify as Provia workflow candidates.
+| Rank | Process | Owner | Stated duration | Implementation effort | Verdict |
+| --- | --- | --- | --- | --- | --- |
+| 1 | IT support | Ana (confirmed in the brief; surname and scope open, `D3`) | 5 days — source unverified (`D4`) | Designable now: a named owner exists for intake, resolution and closure | **Recommended pilot** |
+| 2 | Purchasing | None — "nobody will own it" | 2 days — source unverified (`D4`) | Blocked: no assignee for any action; an approval step almost certainly needs an authority that has not been named (`D2`) | Second workflow, once `D2` is answered |
 
-## Comparison
+Confirmed facts: Ana owns IT support; nobody owns purchasing; the two stated durations as spoken. Everything else in the table is a recommendation or an open question.
 
-| Criterion | Purchasing | IT support | Source / status |
-| --- | --- | --- | --- |
-| Named owner | No | Yes (Ana) | Confirmed in both statements |
-| Stated cycle time | 2 days | 5 days | Stated, not measured; measure and period unknown (D3) |
-| Room for visible improvement | Small: a 2-day cycle leaves little handoff delay to remove | Larger: 5 days suggests waiting between steps that Provia's action sequencing and due dates would expose | Recommendation, not evidence |
-| Frequency / volume | Unknown | Unknown | Not supplied (D4) |
-| Evidence gaps | Unknown | Unknown | Not supplied |
-| Implementation effort | Typically involves approvals and suppliers; who approves what is unknown and nobody is available to answer | One team, one owner who can answer design questions | Recommendation |
-| Who reviews results after the pilot | Nobody | Ana | Follows from ownership |
+## Recommended pilot: IT support request
 
-## Why ownership outranks speed here
+**Why.** It is the only candidate with a named owner, which is the binding constraint for a first workflow. Its longer cycle time gives the pilot something to measure and improve rather than a 2-day process that is already short. The work is repeatable and employee-initiated, so cases will arrive on their own during the pilot without anyone manufacturing them.
 
-1. **A pilot is a learning exercise.** Someone must define the actions, decide exceptions, answer the designer's questions and review the first completed cases. Purchasing has no one to do any of that, so its 2-day cycle cannot even be confirmed, let alone improved.
-2. **Provia assigns actions to groups and people.** A workflow whose actions have no assignee does not run; every case would sit unassigned from the first day. The workflow reviewer would fail it on ownership before publication.
-3. **The shorter process has less to show.** A pilot should make a visible difference within a few weeks. Taking a 5-day process to, say, 3 days is observable; shaving hours off a 2-day process without a baseline is not.
-4. **The speed argument is weaker than it looks.** "2 days" and "5 days" are stated, not measured (D3). Until Ana confirms how the 5 days were observed, the comparison is between two unverified numbers, and the one thing that is verified is who will show up.
+**Start event (proposed).** An employee reports a problem or asks for something from IT, by whatever channel is in use today (`D5`).
 
-If management names a Purchasing owner before the pilot starts, the comparison should be redone with that person present; until then the recommendation stands.
+**End condition (proposed).** The requester's problem is resolved or the request is refused with a reason recorded, and the case is closed by IT.
 
-## Pilot definition
+**In scope.** Everyday IT requests that Ana's team resolves itself.
 
-**Process**: IT support request, from report to confirmed resolution.
+**Out of scope for the pilot.** Requests that require buying equipment (they hand off to the unowned purchasing process and would import its blocker), and incidents affecting a whole site or system, which follow a different escalation path. Confirm in `D6`.
 
-**Owner**: Ana (process owner and reviewer of the first cases). Whether Ana also executes every action, or a team does, is open (D5); the designer should not assign actions to a single named user without that answer.
+**Owner.** Ana — process owner and pilot owner. Confirm surname, email and whether she owns intake, resolution and closure or only part of it (`D3`). If she is both the only approver and the only resolver, that is a single point of failure worth designing around before publication, not after.
 
-**Smallest useful scope**:
-- One intake path (the channel Ana names in D2).
-- The request types that make up most of the volume (D4); rare or specialised requests stay outside the pilot.
-- No integrations, no AI assignees, no sub-workflows in the first version. A manual trigger, a short sequence of standard actions with due dates, one decision (solved / not solved), and evidence of resolution on the closing action.
+**Smallest useful scope.** One linear workflow: register the request → triage and classify → resolve → confirm with the requester and close. No integrations, no AI actions, no sub-workflows in the first version.
 
-**Out of scope for the pilot**: purchasing of IT equipment (that is the Purchasing process), external supplier tickets, anything requiring an approval chain that has not been described.
+## Success measures
 
-**Success measures** (baseline is to be observed, not assumed):
-- Cycle time from report to confirmed resolution, measured in Provia workdays on the pilot cases, compared with the 5-day figure once D3 says what that figure means. No target is set until a baseline exists.
-- Share of cases with the closing evidence attached (target: every closed case).
-- Share of cases that stay unassigned or overdue at any point (the earliest signal that the design or the ownership is wrong).
+Baseline first, then compare. None of these can be reported today because no record was supplied.
 
-**Review point**: after several completed cases — proposed after the first 10 closed cases or 4 weeks, whichever comes first — Ana and the sponsor review the cases together and decide whether to widen scope, change the design (`provia-workflow-change`) or stop.
+| Measure | Baseline | How the pilot measures it |
+| --- | --- | --- |
+| Time from request to closure | 5 days, as stated — unverified, and unit unknown (`D4`) | Provia case duration, first to last action |
+| Requests with a recorded resolution | Unknown | Share of closed cases carrying resolution evidence |
+| Requests where the requester was told the outcome | Unknown | Share of cases with the confirmation action completed |
+| Requests arriving through the workflow rather than direct messages to Ana | 0 by definition at the start | Case count against the channel volume from `D5` |
 
-## Open questions (recorded as manifest decisions)
+Before publication, record the current position for the first three from the last 10–20 requests, however they are held today. Without that, an improvement claim after the pilot has nothing to stand on.
+
+## Review point
+
+Review after **15 completed cases or four weeks, whichever comes first** — not on a fixed date. If the volume from `D5` turns out to be lower than roughly 4 requests per week, the pilot will not produce enough cases to learn from in four weeks; in that case widen the scope of `D6` or reconsider purchasing once `D2` is answered.
+
+At the review: the four measures above, the actions where cases actually waited, and any request type that had to be handled outside the workflow.
+
+## Open decisions
+
+Recorded as `decisions[]` in `provia-project.json`, all open:
 
 | Id | Question | Owner |
 | --- | --- | --- |
-| D1 | Accept IT support over the shorter Purchasing process | Pilot sponsor |
-| D2 | Start event and end condition for an IT support request | Ana |
-| D3 | What "5 days" is (average/median/worst; calendar/workdays; period) | Ana |
-| D4 | Monthly volume and request-type mix | Ana |
-| D5 | Who works IT support besides Ana; who covers absences | Ana |
-| D6 | Will management name a Purchasing owner | Pilot sponsor |
-| D7 | Organization, country, language, currency, timezone | Pilot sponsor |
+| D1 | Accept IT support over the faster purchasing process, given that purchasing has no owner? | Pilot sponsor (unnamed) |
+| D2 | Who owns purchasing end to end, and who approves a purchase? | Pilot sponsor (unnamed) |
+| D3 | Ana's full name, email and the scope of her ownership | Ana |
+| D4 | Are 2 and 5 days measured or estimated, calendar days or workdays? | Pilot sponsor (unnamed) |
+| D5 | IT request volume per month and current intake channel | Ana |
+| D6 | Which IT request types are in and out of the pilot | Ana |
+| D7 | Country, jurisdiction, language and currency | Pilot sponsor (unnamed) |
 
-The sponsor is not named in the sources; decisions D1, D6 and D7 carry "Pilot sponsor (not named in the sources)" as owner until a person is identified.
+`D1` is the one that gates everything else: it is the requester's call, not the implementer's. The brief asked for the fastest process and this recommendation deliberately does not give that answer, so it needs to be accepted or overruled explicitly. If it is overruled and purchasing is chosen anyway, `D2` has to be answered before any design work can start — an owner is not optional.
 
-## Artefacts and checks
+**Provisional context, not confirmed.** No country was supplied. The plugin's provisional starting context is Angola (Africa/Luanda, AOA, pt-AO terminology); this deliverable is in English because the brief was. Nothing here depends on a legal provision, so the design can proceed while `D7` is open — but any deadline, threshold or retention rule added later must wait for it.
 
-- `provia-project.json` — manifest `provia-project/v1.1`, project key `it-support`, title "IT support request pilot", two `sources[]`, seven `decisions[]`, no workflows, groups, entity types or forms yet.
-- `project.html` — offline map rendered from the manifest.
-- Check run: `node scripts/build-project-map.mjs provia-project.json --check` → 0 workflows, 0 readiness blocks, 0 warnings, 7 pending items (the open decisions). The check validates the manifest shape and references; it does not validate this Markdown report and it says nothing about business correctness.
-- Not done: no Provia organization was read, no group, workflow or form was created, no volumes or baselines were measured.
+## What was and was not done
 
-References used: `references/skill-conventions.md`, `references/project-manifest.md`, `references/country-context.md`, `references/provia-capabilities.md` (ownership and assignment, workdays skip weekends only), `references/connected-mode.md`.
-
-## Hand-off to the designer
-
-Design brief for `provia-workflow-designer`: IT support request workflow, owner Ana, scope as above, sources `chat-it-support` (anchors `cycle-time`, `ownership`). The designer must resolve D2 and D5 before assigning actions and should cite them as open decisions rather than inventing a team.
+- Written: `provia-project.json` (`sources[]` with the brief and its three sections, `decisions[]` D1–D7, `project.title` set to the proposed pilot), `project.html`, `setup.md`, this report.
+- Run: `node scripts/build-project-map.mjs provia-project.json --check` — manifest shape and references valid, 7 pending items, 0 warnings. This checks the manifest only; it does not validate this Markdown report and it is not a business review.
+- Not done: nothing was created, read or published in a Provia organization. No volumes, costs, savings or durations were invented beyond the two figures as spoken.

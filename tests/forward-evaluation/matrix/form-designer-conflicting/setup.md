@@ -1,6 +1,6 @@
-# Purchase request with three supplier quotations: Setup handover
+# Supplier quotation collection: Setup handover
 
-Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
+Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.2.1, 2026-09-23).
 
 ## Status
 
@@ -10,11 +10,12 @@ Mode: manual configuration (no receipts recorded).
 
 | Where | Item | What to do |
 | --- | --- | --- |
-| compras | Purchase request | Import the YAML as a draft and review the preview (`workflow.yaml`) |
-| compras / register-quotation | Register the supplier quotations received | Assign the group to the action once the group exists (`compras`) |
-| compras / register-quotation | Register the supplier quotations received | Set the deadline; the design proposes no `due` |
-| compras / select-quotation | Select the winning quotation | Assign the group to the action once the group exists (`compras`) |
-| compras / select-quotation | Select the winning quotation | Set the deadline; the design proposes no `due` |
+| supplier-quotations | Supplier quotation collection | Import the YAML as a draft and review the preview (`workflow.yaml`) |
+| supplier-quotations | Supplier quotation collection | Apply the access grants (`workflow_access_apply`, dry run first) or confirm the `access` section in the import preview. group:procurement → create_incident |
+| supplier-quotations / collect-quotations | Collect supplier quotations | Assign the group to the action once the group exists (`procurement`) |
+| supplier-quotations / collect-quotations | Collect supplier quotations | Set the deadline; the design proposes no `due` |
+| supplier-quotations / record-selected-quotation | Record the selected quotation | Assign the group to the action once the group exists (`procurement`) |
+| supplier-quotations / record-selected-quotation | Record the selected quotation | Set the deadline; the design proposes no `due` |
 
 ## Workflow access
 
@@ -22,38 +23,38 @@ Who may see and open each workflow. `view` on a workflow shows every case; whoev
 
 | Workflow | Sensitivity | Grantee | Level | Reason | Status |
 | --- | --- | --- | --- | --- | --- |
-| `compras` | internal | creator and organization administrators only (`default: creator_only`) | — | No source states who may open a purchase request, so the workflow is declared creator-only until decision D3 is resolved. Purchasing sees the cases that carry its actions without a grant. | — |
-| `compras` | internal | `group:compras` | — | Sees its own cases only (no grant) | — |
+| `supplier-quotations` | internal | `group:procurement` (Procurement) | create_incident | Procurement opens the case that collects the three quotations; no other starter was named in the request (request-2026-09-23 §1) | to apply |
 
 ## Groups to create
 
-- `compras` Purchasing [team]: Requests and registers supplier quotations and selects the winning quotation. Proposed by provia-form-designer; the request names no team.. Proposed members: Purchasing officer
+- `procurement` Procurement [team]: Proposed owner of the quotation collection: asks suppliers for quotations, records each response and records the selected quotation. Not confirmed by a supplied source.. Proposed members: Procurement officer
 
 ## Group flags
 
-- `compras`: Owner unnamed in the sources. The request does not name who collects quotations; Purchasing is assumed.
+- `procurement`: Segregation of duties: confirm distinct owners. The same group is proposed for collecting the quotations and for recording the selection that writes the case amount. Confirm with the process owner whether these must be different people (decision D2).
 
 ## Forms to create and link
 
-- `cotacao-fornecedor` Supplier quotation: Create the form and link it to the Form Fill action (compras / cotacao-fornecedor)
+- `supplier-quotation` Supplier quotation: Create the form and link it to the Form Fill action (supplier-quotations / supplier-quotation)
+- `quotation-selection` Quotation selection: Create the form and link it to the Form Fill action (supplier-quotations / quotation-selection)
 
 ## Open decisions
 
-- **D1** Who submits each quotation response: Purchasing staff signed in to Provia (assumed), or the suppliers themselves through an external link? External access depends on the configured form behaviour and has not been checked. (Owner: Purchasing lead)
-- **D2** What is the deadline for collecting the three quotations and for selecting one? No service level was supplied, so both actions have no due offset. (Owner: Purchasing lead)
-- **D3** Who may open a purchase request (any employee, or only Purchasing)? The workflow is declared creator-only until this is answered. (Owner: Process owner)
-- **D4** The request asked for each response amount to be mapped to the same incident field purchase_amount. Multiple responses cannot map competing values, and even if they could, the last submission would silently overwrite the others. The design records the amount through the review action select-quotation instead. Confirm this, or choose the alternative of three single-response Form Fill actions mapping to quotation_1_amount, quotation_2_amount and quotation_3_amount plus the same review step. (Owner: Purchasing lead)
-- **D5** May the case continue with fewer than three quotations when suppliers do not answer, and who authorizes that exception? The action brief currently sends the question to the Purchasing lead by comment. (Owner: Purchasing lead)
+- **D1** Confirm that incident_amount must carry the selected quotation only. Three quotation amounts cannot share one case field; if the process instead needs all three amounts in case metadata, three separate single-response Form Fill actions writing quotation_1_amount, quotation_2_amount and quotation_3_amount are the alternative (see forms.md, Alternative B). (Owner: Process owner (not named))
+- **D2** Must the person who collects the quotations be different from the person who records the selection that writes the case amount? (Owner: Process owner (not named))
+- **D3** What deadline applies to collecting the quotations and to recording the selection? No service level was supplied, so due is unset on both actions. (Owner: Process owner (not named))
+- **D4** Do suppliers submit their own quotations, or does a member of Procurement transcribe them? Form Fill responses are collected inside an existing case; external or anonymous submission was not verified against the configured form behaviour. (Owner: Process owner (not named))
+- **D5** Should the supplier be a Provia entity type, so the quotation form references a registered supplier instead of free text in supplier_name? (Owner: Procurement lead (not named))
+- **D6** Who approves the selected amount once it reaches incident_amount, and above which value? No approval step or threshold was supplied, so none is designed. (Owner: Process owner (not named))
 
 ## Setup notes
 
-- `compras`: The form "Supplier quotation" (forms[].key cotacao-fornecedor) must be created in Provia and linked to action register-quotation after import; forms are not carried by the YAML.
-- `compras`: Configure the Form Fill link to accept multiple responses (one per quotation). Verify in the Provia form settings that multiple responses are allowed on this link and that the action can be completed after three responses; the plugin cannot read those settings offline.
-- `compras`: Do not map quotation_amount (or any form field) to incident metadata on this link: the response policy is multiple responses, and multiple responses cannot map competing values to the incident (references/provia-capabilities.md). purchase_amount is filled by action select-quotation.
-- `compras`: Assign register-quotation and select-quotation to the Purchasing group once the group exists; the YAML carries no assignee.
-- `compras`: Both actions have no due offset: no service level was supplied (decision D2).
-- `compras`: Respondents are assumed internal (Purchasing staff signed in to Provia). If suppliers are meant to submit the form themselves, confirm the external access model in the Provia form settings before promising a link (decision D1).
-- `compras`: File upload limits on the form field quotation_file must be confirmed in the Provia form settings; the 10 MB per file value in quotation-form.md is a recommendation, not a product limit.
+- `supplier-quotations`: Forms are not carried by the workflow YAML. Create both forms in Provia and link each one to its Form Fill action before publication.
+- `supplier-quotations`: Response policy is the design decision that makes this work: Collect supplier quotations accepts MULTIPLE responses and maps nothing; Record the selected quotation accepts ONE response and carries every mapping.
+- `supplier-quotations`: Confirm in the Provia form editor which of the mappings in forms.md are actually offered for the field types used. Mappings to currency (incident_amount) and rich text (selection_rationale) are designed, not verified.
+- `supplier-quotations`: Both actions are assigned to the group Procurement in this manifest. The YAML carries no assignee because no destination UUIDs are known; set the owner in Provia or supply receipts.
+- `supplier-quotations`: No deadline is configured on either action: none was supplied (decision D3).
+- `supplier-quotations`: Scope: this workflow covers the quotation collection only. The purchase request intake, the approval of the selected amount and the order to the supplier are not designed here.
 
 ## Validation
 

@@ -1,60 +1,54 @@
-# provia-skills 1.2.0
-# Esqueleto de desenho (provia-workflow-designer). Não validado: a validação
-# com scripts/validate-workflow.mjs pertence a provia-workflow-package.
-# Os responsáveis das acções decidir_chefia (grupo «Chefias») e
-# confirmar_cabimento (grupo «Finanças») ficam por atribuir no destino;
-# ver provia-project.json (assigneeRef) e as decisões D1–D10.
+# provia-skills 1.2.1 — esqueleto de desenho (não validado). Ver design-compras.md e provia-project.json antes de importar.
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
-  name: Pedido de compra
+  name: "Pedido de compra"
   prefix: COMP
-  description: >-
-    Pedido de compra com aprovação da chefia e confirmação da disponibilidade
-    orçamental pelas Finanças. Desenhado a partir da descrição verbal do
-    procedimento de compras (fonte pedido-compras-2026-09-21).
+  description: "Pedido de compra: registo pelo requerente, decisão da chefia e confirmação da disponibilidade orçamental pelas Finanças. O desenho termina na confirmação do cabimento; os passos seguintes (encomenda, recepção, pagamento) não foram fornecidos."
 triggers:
   - type: manual
     label: Iniciar pedido de compra
     enabled: true
     config: {}
 fields:
-  - name: purchase_description
-    label: Descrição da compra
+  - name: purchase_subject
+    label: Bem ou serviço pedido
     type: text
     required: true
     width: full
-  - name: purchase_amount
-    label: Montante estimado (Kz)
-    type: currency
-    required: true
-    width: half
-    config:
-      currency: AOA
-  - name: cost_centre
-    label: Centro de custo
-    type: text
-    required: true
-    width: half
   - name: purchase_justification
     label: Justificação da necessidade
     type: rich_text
     required: true
     width: full
-  - name: supplier_quotation
+  - name: purchase_amount
+    label: Montante estimado
+    type: currency
+    required: true
+    width: third
+    config:
+      currency: AOA
+      decimals: 2
+  - name: cost_centre
+    label: Centro de custo
+    type: text
+    required: true
+    width: third
+  - name: needed_by
+    label: Necessário até
+    type: date
+    required: false
+    width: third
+  - name: supplier_quote
     label: Proposta do fornecedor
     type: file
     required: false
-    width: full
+    width: half
   - name: budget_reference
-    label: Referência de cabimento
+    label: Referência do cabimento
     type: text
     required: false
     width: half
-entities:
-  mode: none
-# Secção access gerada a partir de provia-project.json (scripts/emit-workflow-access.mjs):
-# qualquer colaborador abre um pedido; Chefias e Finanças vêem os casos que lhes chegam.
 access:
   grants:
     - grantee: organization
@@ -65,27 +59,65 @@ actions:
     type: standard
     executionMode: sequential
     required: true
-    priority: normal
     assignee:
       type: creator
     description: |-
-      Tarefa: Registar o pedido de compra com a necessidade, o montante estimado e a justificação, para que a chefia possa decidir.
-      Como: 1. Descrever o bem ou serviço a adquirir em `purchase_description`. 2. Indicar o montante estimado em Kz em `purchase_amount` e o centro de custo em `cost_centre`. 3. Explicar a necessidade e a urgência em `purchase_justification`. 4. Se já tiver uma proposta de fornecedor, anexá-la em `supplier_quotation`. 5. Concluir a acção para enviar o pedido à chefia.
-      Evidência: Os campos `purchase_description`, `purchase_amount`, `cost_centre` e `purchase_justification` preenchidos; a proposta do fornecedor anexada quando existir.
-      Concluído quando: Os campos obrigatórios estão preenchidos e a acção está concluída.
-      Excepções: Se o pedido foi devolvido pela chefia ou pelas Finanças, ler o comentário da devolução, corrigir o que foi indicado e concluir de novo a acção. Se não souber o centro de custo, perguntar à sua chefia antes de concluir.
-  - id: decidir_chefia
+      Tarefa: Descrever o bem ou serviço de que precisa e reunir os dados que a chefia e as Finanças precisam para decidir.
+
+      Como:
+
+      1. Preencher `purchase_subject` com o bem ou serviço e a quantidade.
+      2. Escrever em `purchase_justification` para que serve a compra e o efeito de não a fazer.
+      3. Preencher `purchase_amount` com o montante estimado em Kz e `cost_centre` com o centro de custo que suporta a despesa.
+      4. Anexar em `supplier_quote` a proposta ou cotação do fornecedor, quando já exista.
+      5. Indicar em `needed_by` a data em que o bem ou serviço é necessário, quando houver uma data.
+
+      Evidência:
+
+      - `purchase_subject`, `purchase_justification`, `purchase_amount` e `cost_centre` preenchidos.
+      - Proposta anexada em `supplier_quote`, quando exista.
+
+      Concluído quando: O pedido tem objecto, justificação, montante e centro de custo, e pode ser decidido sem perguntas.
+
+      Excepções:
+
+      - Se ainda não souber o montante, não concluir: pedir uma estimativa ao fornecedor ou ao serviço requisitante e registá-la.
+      - Se o pedido voltar pela decisão «Devolver» ou pelo desfecho «Sem cabimento», corrigir exactamente o que o comentário indica antes de concluir de novo.
+  - id: decidir_pedido
     name: Decidir sobre o pedido de compra
     type: decision
     executionMode: sequential
     required: true
-    priority: normal
     description: |-
-      Tarefa: Decidir se o pedido de compra avança para a confirmação orçamental das Finanças.
-      Como: 1. Ler a descrição, a justificação e o montante em `purchase_amount`. 2. Confirmar que a necessidade é real e que a compra é adequada ao trabalho da equipa. 3. Escolher «Aprovar» para enviar às Finanças, «Devolver» para pedir correcções ao requerente ou «Rejeitar» para encerrar o pedido.
-      Evidência: Comentário com o motivo, obrigatório em «Devolver» e «Rejeitar».
-      Concluído quando: A decisão está registada com o comentário exigido.
-      Excepções: Se o pedido é seu ou de alguém que não chefia, não decidir: comentar e pedir ao gestor do processo que reatribua a acção à chefia competente. Se faltar informação para decidir, escolher «Devolver» e indicar o que falta.
+      Tarefa: **Decidir se o pedido de compra avança** para a confirmação orçamental das Finanças.
+
+      Como:
+
+      1. Ler a justificação e conferir o montante em `purchase_amount` e o centro de custo em `cost_centre`.
+      2. Confirmar que a proposta anexada, quando exista, corresponde ao bem ou serviço pedido.
+      3. Identificar o que falta antes de decidir; não aprovar para desbloquear o pedido.
+      4. Escolher o desfecho segundo o quadro seguinte.
+
+      ### Critérios de decisão
+
+      | Situação verificada | Desfecho | Registo exigido |
+      | --- | --- | --- |
+      | Necessidade justificada e pedido do seu âmbito | **Aprovar** | — |
+      | Falta informação para decidir | **Devolver** | Comentário com o que o requerente deve corrigir |
+      | Necessidade não justificada | **Rejeitar** | Comentário com o motivo |
+
+      Evidência:
+
+      - Comentário obrigatório em «Devolver» e «Rejeitar», com o motivo.
+      - Em «Aprovar», o pedido segue sem registo adicional; a evidência da decisão é o próprio desfecho no caso.
+
+      Concluído quando: O desfecho está escolhido e o comentário exigido está registado no caso.
+
+      Excepções:
+
+      - **Aprovar não afirma que existe orçamento.** A disponibilidade orçamental é confirmada pelas Finanças na acção seguinte.
+      - Se o pedido exceder a sua autoridade de aprovação, não decidir: comentar o limite e devolver para que o pedido siga para a autoridade competente.
+      - Se o pedido tiver sido registado por si, não decidir: comentar e encaminhar para a chefia competente.
     config:
       branches:
         - label: Aprovar
@@ -103,16 +135,39 @@ actions:
     type: decision
     executionMode: sequential
     required: true
-    priority: normal
     description: |-
-      Tarefa: Confirmar se existe cabimento orçamental para o montante do pedido aprovado pela chefia.
-      Como: 1. Ler o montante em `purchase_amount` e o centro de custo em `cost_centre`. 2. Verificar o saldo disponível da rubrica correspondente no sistema orçamental usado pelas Finanças. 3. Se o saldo cobre o montante, registar a referência de cabimento em `budget_reference`, anexar a captura ou o extracto do saldo com data e escolher «Cabimento confirmado». 4. Se não cobre, escolher «Sem cabimento» e comentar o valor disponível e a alternativa possível.
-      Evidência: `budget_reference` preenchido e captura ou extracto do saldo com data anexado em «Cabimento confirmado»; comentário obrigatório com o défice em «Sem cabimento».
-      Concluído quando: A decisão está registada com a referência de cabimento ou com o comentário do défice.
-      Excepções: Se a rubrica não existir para o centro de custo indicado, ou se o montante não corresponder ao que a chefia aprovou, não confirmar: comentar a diferença e escolher «Sem cabimento» para devolver ao requerente.
+      Tarefa: **Confirmar se existe disponibilidade orçamental** para o montante pedido no centro de custo indicado.
+
+      Como:
+
+      1. Abrir o mapa orçamental do centro de custo indicado em `cost_centre`, no sistema onde o orçamento é controlado.
+      2. Comparar o saldo disponível com o montante em `purchase_amount`.
+      3. Registar em `budget_reference` a rubrica ou a referência do cabimento consultado.
+      4. Escolher o desfecho segundo o quadro seguinte.
+
+      ### Critérios de confirmação
+
+      | Situação verificada | Desfecho | Registo exigido |
+      | --- | --- | --- |
+      | O saldo disponível cobre o montante pedido | **Com cabimento** | `budget_reference` preenchido |
+      | O saldo não cobre o montante, ou a rubrica indicada não é a que suporta a despesa | **Sem cabimento** | Comentário com o saldo disponível e o valor em falta |
+
+      Evidência:
+
+      - `budget_reference` preenchido com a rubrica consultada.
+      - Comprovativo do saldo consultado anexado ao caso, com data.
+      - Em «Sem cabimento», comentário com o défice apurado.
+
+      Concluído quando: O desfecho está registado e, havendo cabimento, `budget_reference` está preenchido com a rubrica consultada.
+
+      Excepções:
+
+      - **Não substituir a falta de saldo por uma confirmação.** Sem cabimento, escolher «Sem cabimento» e registar o défice.
+      - Se o centro de custo indicado não for o que suporta a despesa, escolher «Sem cabimento» e indicar no comentário o centro de custo correcto; o pedido volta ao requerente e a chefia decide de novo.
+      - Se não conseguir consultar o orçamento, não concluir: comentar o motivo e a data em que poderá confirmar.
     config:
       branches:
-        - label: Cabimento confirmado
+        - label: Com cabimento
           outcome: continue
           requiresComment: false
         - label: Sem cabimento

@@ -1,15 +1,17 @@
 {
-  "at": "2026-09-21T10:23:32.230Z",
+  "at": "2026-09-23T08:59:21.156Z",
   "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "Skill loaded and the relevant references (entity-design, metadata-fields, catalogue format, manifest, country context, next-step) were read before designing.",
-    "Missing context is handled as expected: a complete baseline is proposed (18-field Supplier entity with coverage dimensions each marked included/excluded with a reason, plus a purchase-request case-field dictionary) rather than a truncated model; excluded items like bank details and tax certificates are explicitly reasoned exclusions, not silently dropped dimensions.",
-    "Assumptions are labelled (Angola/AOA provisional, Purchasing maintains suppliers, Finance owns accounting code, typical lifecycle) and the response separates confirmed facts, assumptions and open decisions D1–D7 with owners, covering systems of record, supplier code source, country/currency, qualification cycle, cost centre, and approval thresholds.",
-    "No organization IDs, thresholds, legal provisions or validation results were invented: tenantId/productRevision are null, organization is 'not identified', thresholds are deferred to D7, Angola is disclosed as provisional and not used as a legal basis.",
-    "Claims of checks and file writes are backed by tool calls: build-entity-catalogue --check and --output ran, build-project-map --check/--output/--setup ran, and the response honestly notes the org_get_context call was not permitted and that HTML buttons were not exercised in a browser; nothing was claimed to be created in Provia.",
-    "Ends with a specific next-step recommendation (provia-workflow-designer) with a copyable invocation carrying the manifest, country context and open decisions forward."
+    "Mode-appropriate: the run explicitly states no context was supplied (no procedure, form, export, existing catalogue, workflow design or manifest) and that org_get_context was not authorized, then delivers a full reasoned baseline anyway rather than stopping or narrowing scope.",
+    "No dimension dropped: the supplier/request split covers identity, classification, contacts, commercial terms, lifecycle and the entity link on both sides, with the decision rule ('stays true between requests' vs 'true of this execution') stated and a tie-break test given.",
+    "Assumptions are labelled as such throughout: Angola disclosed as provisional country context (AOA, Africa/Luanda), sub-category options flagged as a mechanism demonstration to be replaced, ownership marked 'Not established by any supplied source. Proposed: ...'.",
+    "Unresolved items are enumerated with owners (D1–D9 in setup.md), and the four that could materially change the design are called out in the response.",
+    "No invented approval thresholds, legal provisions, org IDs or endpoints: D5 leaves thresholds open, and both catalogue.json and purchase-request-fields.md assert no legal or fiscal requirement; bank details are deliberately excluded rather than modelled.",
+    "Verification claims are honest and scoped: build-entity-catalogue.mjs --check is visible in the log (failed first on empty options, was fixed, then passed) and the response says structural validity is not business correctness, that nothing was created in Provia, and that the HTML was inspected as source but not opened in a browser because no browser tool exists.",
+    "Ends with a concrete next-step recommendation naming provia-workflow-designer, why it is needed now, and a copyable invocation carrying the manifest, the case-field file and the unresolved D5/D9 forward.",
+    "Minor caveat, not a violation: the build-project-map.mjs --check result quoted in the response ('1 entity type, 10 pending items, 0 warnings') does not appear in the supplied tool-call list, which ends mid-run at a schema read; provia-project.json, project.html and setup.md are nonetheless present in the files written and bear generator metadata consistent with that script, so the log appears truncated rather than the claim fabricated."
   ],
   "violations": []
 }

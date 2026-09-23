@@ -1,62 +1,82 @@
-# provia-skills 1.2.0
-# Skeleton produced by provia-workflow-designer. Not validated: provia-workflow-package runs the validator.
-# The decision action has no assignee on purpose: SOP section 2 (department manager) and section 7
-# (only the finance director) name different approvers. See decision D1 in provia-project.json.
+# provia-skills 1.2.1
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
   name: Request approval
-  prefix: APR
-  description: Approval of a request under the supplied SOP (sections 2 and 7). The approver is unresolved until the process owner settles the conflict between the two sections.
+  prefix: APRV
+  description: |-
+    Approval of a request under the supplied SOP. Sections 2 and 7 of the SOP name
+    different sole approvers for this approval; the approver of "Decide on the request"
+    is deliberately left unassigned until the process owner resolves decision D1.
 triggers:
   - type: manual
     label: Start request
     enabled: true
-    config: {}
-fields:
-  - name: request_summary
-    label: Request summary
-    type: text
-    required: true
-  - name: justification
-    label: Justification
-    type: rich_text
-    required: false
-entities:
-  mode: none
+access:
+  default: creator_only
 actions:
-  - id: prepare
-    name: Prepare the request for approval
+  - id: submit_request
     type: standard
-    description: |
-      Task: Describe the request so the approver can decide on it.
-      How: 1. Fill `request_summary` with what is requested and why. 2. Add the supporting detail in `justification`. 3. Attach any document that supports the request to the case. 4. Complete the action to send the request for decision.
-      Evidence: `request_summary` filled; supporting documents attached to the case.
-      Done when: The summary and the justification are complete and the action is completed.
-      Exceptions: If the request was returned for rework, read the approver's comment, correct the request and complete the action again. If the request is no longer needed, say so in a comment so the approver can reject it.
+    name: Submit the request for approval
     executionMode: sequential
     required: true
     assignee:
       type: creator
-  - id: decide
-    name: Decide on the request
+    description: |-
+      Task: Describe the request you need approved and attach the documents that support it.
+
+      How:
+
+      1. Write in a case comment what you are requesting and why it is needed.
+      2. Attach any document that supports the request.
+      3. Check that the request is complete before completing this action; an incomplete request is returned to you.
+
+      Evidence:
+
+      - A case comment describing the request and its justification.
+      - The supporting documents attached to the case.
+
+      Done when: The description and the supporting documents are on the case and this action is completed.
+
+      Exceptions: If a document you need is not yet available, do not complete the action: record in a comment which document is missing and when you expect it.
+  - id: decide_request
     type: decision
-    description: |
-      Task: Decide whether the request described in `request_summary` may proceed.
-      How: 1. Read `request_summary`, `justification` and the attached documents. 2. Check the request against the criteria of the procedure that applies to it. 3. Choose «Approve», «Return for rework» or «Reject».
-      Evidence: A comment with the reason is mandatory on «Return for rework» and «Reject».
-      Done when: The decision is recorded with the required comment.
-      Exceptions: If the information is insufficient to decide, choose «Return for rework» and list what is missing. If the procedure designates another person to approve this request, do not decide: comment who must decide and choose «Return for rework» so the request is routed to that person.
+    name: Decide on the request
     executionMode: sequential
     required: true
+    description: |-
+      Task: **Decide whether the request is approved**, based on the description and the documents on the case.
+
+      How:
+
+      1. Read the request description and open the documents attached by the requester.
+      2. Confirm that this request falls within your approval authority under the procedure in force. If it does not, do not decide it: return it.
+      3. Choose one of the outcomes below and record the comment it requires.
+
+      | Situation you verified | Outcome | Record required |
+      | --- | --- | --- |
+      | The request is justified and within your authority | **Approve** | Comment stating what you relied on |
+      | Information or a document is missing | **Return for correction** | Comment naming exactly what is missing |
+      | The request is not justified | **Reject** | Comment with the reason |
+
+      Evidence:
+
+      - On approval, a comment stating the basis of the decision.
+      - On return or rejection, a comment with the reason and, where applicable, what must be corrected.
+
+      Done when: The outcome is chosen and the comment it requires is saved on the case.
+
+      Exceptions:
+
+      If the request exceeds your approval authority, **do not approve it**: comment naming the authority you consider competent and choose «Return for correction». If you cannot decide because information is missing, return the request instead of approving it.
     config:
       branches:
         - label: Approve
           outcome: continue
-          requiresComment: false
-        - label: Return for rework
+          requiresComment: true
+        - label: Return for correction
           outcome: return_to_action
-          target: prepare
+          target: submit_request
           requiresComment: true
         - label: Reject
           outcome: cancel_incident

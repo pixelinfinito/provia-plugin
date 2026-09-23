@@ -1,26 +1,36 @@
-## Piloto recomendado: **Pedido de compra** — com condições
+Trabalho concluído. Ficheiros escritos em `process-discovery-normal/`: `selecao-piloto.md`, `provia-project.json`, `project.html`, `setup.md`.
 
-Com apenas a frase inicial (Luanda; compras, admissão e pedidos de TI por e-mail), a comparação é provisória. Não inventei volumes, responsáveis nem poupanças; cada lacuna está registada como decisão com dono.
+## Recomendação: comece pelos **Pedidos de TI**
 
-**Lista ordenada**
+**Ordenação:** 1.º Pedidos de TI · 2.º Compras · 3.º Admissão de trabalhadores.
 
-1. **Compras** — maior impacto (dinheiro, fornecedores, prova de quem aprovou), evidência que hoje se perde nas caixas de correio, e o padrão de decisão que depois se reutiliza nos outros dois processos. Esforço médio.
-2. **Pedidos de TI** — mais rápido e provavelmente com mais volume; é a alternativa se compras ficar sem responsável nomeado ou tiver menos de ~10 casos/mês. Ensina menos sobre aprovações, e parte dele (acessos, equipamento) reaparece dentro da admissão.
-3. **Admissão de trabalhadores** — segunda vaga: poucos casos para aprender em 4–6 semanas, três equipas a coordenar, e dados pessoais que exigem verificação de protecção de dados antes de desenhar.
+Porquê TI:
 
-**Âmbito mínimo do piloto:** pedido → proposta anexa → decisão (aprovar / rejeitar / devolver) → confirmação ao fornecedor → informar requerente, para um ou dois departamentos. Fora: pagamento, stock, contratos. Revisão após 10 casos concluídos ou 4 semanas. Linha de base a **observar** nos últimos 20 pedidos por e-mail (dias até decisão, propostas anexadas, seguimentos) antes de fixar metas.
+- **Volume.** Um piloto aprende-se com repetição. É o único dos três onde é plausível fechar dezenas de casos em semanas; a admissão fecharia dois ou três.
+- **Uma só equipa decide.** Não é preciso alinhar chefias e finanças antes de desenhar o primeiro workflow.
+- **Errar é barato.** Se o desenho estiver errado, volta-se ao correio electrónico. Um erro em compras trava um pagamento; na admissão afecta a entrada de uma pessoa.
+- **Não há política em falta.** Compras não se desenha sem os limites de aprovação em Kz e sem saber quem aprova em cada nível — e esses valores não podem ser assumidos.
 
-**Decisões em aberto:** D1 responsável do piloto (sem nome, não há piloto); D2 volumes dos 3 processos; D3 procedimento e regras de aprovação de compras; D4 departamentos; D5 linha de base; D6 responsável de TI / helpdesk existente; D7 admissão e APD; D8 nome, sector e tenant Provia.
+**O que se perde:** Compras é onde está o retorno financeiro e onde a falta de rasto de aprovações mais custa numa auditoria. A troca é deliberada — a equipa aprende o Provia num processo barato de errar e leva isso para compras já com a política escrita.
 
-**Ficheiros escritos no directório de trabalho**
-- `discovery-report.md` — inventário, comparação, lista ordenada, âmbito, medidas e decisões
-- `provia-project.json` — manifesto novo (título do piloto, fonte `pedido-inicial` com âncoras por candidato, D1–D8)
-- `project.html` e `setup.md` — gerados pelo script do plugin
+**Quando a escolha muda (D9):** se a Administração exigir que o piloto demonstre controlo financeiro, ou se os pedidos de TI forem menos de cerca de cinco por semana, o piloto passa a Compras.
 
-**Verificado:** `build-project-map.mjs --check` passou (0 avisos, 8 itens pendentes = as decisões). Isto valida a forma do manifesto, não o relatório nem a escolha de negócio. **Pendente:** o servidor Provia estava listado, mas a leitura do contexto da organização não foi autorizada nesta sessão — trabalhei em modo desligado; nada foi lido ou alterado no Provia.
+## O que tem de ficar claro
 
-Próximo passo recomendado: responder a D1–D3 e depois `provia-workflow-designer`, para transformar o âmbito acordado em acções com responsáveis. Se D1 ficar sem resposta, repita o mesmo pedido com pedidos de TI.
+Nada nesta comparação é uma medição. Não foram fornecidos procedimentos, volumes, responsáveis nem exportações, por isso a tabela de comparação são indicações de padrão, não dados. A primeira tarefa do piloto é criar a base: uma amostra das mensagens de correio das últimas semanas, para apurar quantos pedidos entram e quanto demoram hoje (D5). Não fixei metas numéricas de redução de tempo — fixá-las antes de existir base seria inventá-las.
+
+**O piloto ainda não está pronto para arrancar:** falta o nome do Responsável de TI que o assume (D1). D2 (categorias) e D3 (prazos) são igualmente necessárias antes do desenho; as restantes seis decisões podem correr em paralelo.
+
+Pressupostos que assumi para avançar: Angola como jurisdição (a empresa está em Luanda), os três processos como trabalho repetido, e existência de um responsável por cada área ainda que sem nome.
+
+## Verificação
+
+`node scripts/build-project-map.mjs provia-project.json --check` correu sobre o manifesto sem erros nem avisos: 9 itens pendentes, que são exactamente as decisões em aberto. O `--check` cobre o manifesto, não o relatório em Markdown. O conector `Provia` aparece listado nesta sessão mas a autorização não foi concedida, portanto `org_get_context` não correu — nenhum grupo, workflow ou utilizador real foi lido, e nada foi criado, importado ou publicado. Para o usar, autorize o conector nas definições da claude.ai e volte a pedir.
+
+---
+
+Próximo passo recomendado: `provia-workflow-designer`, para converter o âmbito acordado em acções, responsáveis e caminhos de excepção. Faz sentido assim que D1, D2 e D3 tiverem resposta; se a Administração ainda estiver a decidir entre TI e Compras (D9), resolva D9 primeiro.
 
 ```text
-Use provia-workflow-designer com provia-project.json e discovery-report.md nesta pasta. Desenhe o workflow «Pedido de compra» no âmbito da secção 5 do relatório (pedido, proposta, decisão, confirmação ao fornecedor, informar requerente). Responsável do piloto: [nome de D1]. Regras de aprovação: [resposta a D3 ou «não há procedimento escrito; prática actual é …»]. País: Angola; responda em pt-AO.
+Use provia-workflow-designer com o provia-project.json e o selecao-piloto.md desta pasta. Desenhe o workflow «Pedido de TI» dentro das fronteiras definidas: abertura, triagem com classificação, execução, confirmação do requerente, e recusa ou encaminhamento com motivo. Respeite as decisões D2, D3, D4 e D6 como questões em aberto — não as assuma resolvidas. Responsável do piloto ainda por nomear (D1). País: Angola; responda em pt-AO.
 ```

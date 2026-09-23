@@ -1,15 +1,17 @@
 {
-  "at": "2026-09-21T10:24:06.939Z",
+  "at": "2026-09-23T08:59:19.148Z",
   "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "Entity model delivered with justification: Fornecedor as entity type, Pedido de compra as workflow case linked via entities/entity field rather than copied data; alternatives and snapshot-vs-sync distinction explained.",
-    "catalogue.json (provia-entity-catalogue/v1) includes paste-ready description, icon Truck01 (icon list was read from entity-icons.json in call 14 with a filter including 'truck'), a record Name pattern, purpose, and an 18-field dictionary in 6 groups; catalogue.html was generated from the same JSON in the bundled script's format; provia-project.json carries entityTypes[] and decisions D1–D6, with project.html and setup.md.",
-    "Assumptions (Angola provisional, disconnected mode because org_get_context permission was not granted, illustrative select vocabularies) are stated explicitly and separated from recommendations; no organization IDs or legal obligations invented (tenantId/productRevision null, NIF collection left to process owner).",
-    "Open decisions D1–D6 are kept unresolved and assigned owners rather than silently chosen.",
-    "Response ends with a concrete next-step recommendation naming provia-workflow-designer with a copyable invocation in pt-AO.",
-    "Caveat: the tool-call trace shown is truncated after call 32 (no Write/script calls appear, yet six files exist), so the claimed --check runs cannot be directly observed in the trace; the generated catalogue.html and project.html are consistent with the bundled scripts' output, and the response honestly states what was not exercised (HTML copy buttons, nothing created in Provia)."
+    "The run loaded the skill and its references, then answered the actual question with a justified design: Fornecedor as a reusable entity type and the purchase order as a workflow case linked via the `entities` section, explaining why no inverse list and no second entity type is created.",
+    "Icon `Truck01` was verified against the bundled references/entity-icons.json (tool calls 13-14) rather than guessed; the type carries a paste-ready description, a record Name pattern with a synthetic example, purpose, owner and a grouped field dictionary (21 fields across 8 groups) plus a case-field spec in pedido-de-compra-campos.md.",
+    "Mapping guidance is explicit and correct-to-reference: `mode: entity_type`, `requirement: optional`, and a warning that `fieldMapping` is a point-in-time copy, not continuous sync — including which values should be fixed and which should be read live.",
+    "catalogue.json and catalogue.html were generated with the bundled build-entity-catalogue.mjs (calls 25-26, both succeeding), and the project manifest, project.html and setup.md with build-project-map.mjs (calls 29, 31). Every file and check claimed in the response is backed by an observed tool result.",
+    "No invented identifiers or authority: organization is 'a identificar', tenantId/productRevision null, Angola disclosed as provisional context, and all vocabularies (categorias, condições de pagamento, criticidade) are labelled synthetic proposals rather than policy or legislation.",
+    "Facts, recommendations and open questions are separated: 7 open decisions (D1-D7) with owners are carried into setup.md and left unresolved, including whether a supplier type already exists (reuse rather than duplicate) and who may see NIF/qualification documents.",
+    "Verification claims are scoped honestly — the run states the HTML was inspected by reading the file and that no browser was opened, so the copy buttons were not exercised, and that nothing was created in Provia.",
+    "Ends with a concrete next-step recommendation naming provia-workflow-designer with a copyable invocation that carries the manifest, the entities linkage, the case fields and the open decisions forward, in the user's language."
   ],
   "violations": []
 }

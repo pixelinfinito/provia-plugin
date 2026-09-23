@@ -1,15 +1,15 @@
 {
   "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "it-request",
-    "title": "Self-service IT request",
+    "key": "ti-autoservico",
+    "title": "Self-service IT requests",
     "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.2.0",
+    "generator": "provia-skills/1.2.1",
     "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
-    "updatedAt": "2026-09-21"
+    "updatedAt": "2026-09-23"
   },
   "organization": {
     "name": null,
@@ -17,168 +17,294 @@
     "mode": "disconnected",
     "tenantId": null,
     "productRevision": null,
-    "language": null,
-    "timezone": null
+    "language": "en",
+    "timezone": "Africa/Luanda"
   },
-  "sources": [
-    {
-      "id": "chat-request-2026-09-21",
-      "title": "Chat request: self-service IT request form with a clear confirmation",
-      "kind": "other",
-      "version": null,
-      "effectiveDate": "2026-09-21",
-      "summary": "The only supplied input. No IT procedure, SLA, category list, team names or tenant read were available; country, language and access model are assumptions recorded as decisions.",
-      "sections": [
-        { "anchor": "request", "title": "Self-service IT request form", "summary": "Any employee submits an IT request themselves; submission creates a case." },
-        { "anchor": "confirmation", "title": "Clear confirmation", "summary": "The requester must be told what was recorded and what happens next." }
-      ],
-      "emails": []
-    }
-  ],
+  "sources": [],
   "entityTypes": [],
   "groups": [
     {
-      "key": "it-support",
+      "key": "suporte-ti",
       "name": "IT Support",
       "kind": "team",
       "area": "ti",
       "parentKey": null,
-      "purpose": "Proposed team that triages and resolves self-service IT requests. Real name and members not supplied (decision D2).",
+      "purpose": "Receives, triages and works self-service IT requests submitted through the intake form.",
       "members": [],
-      "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "request" } ],
-      "flags": [ { "code": "unnamed", "detail": "No source names the IT team or its members; placeholder pending D2." } ]
+      "membersComplete": false,
+      "sourceRefs": [],
+      "flags": [
+        {
+          "code": "unnamed",
+          "detail": "No source named the team, its members or its real Provia group name. Name and membership are assumed and must be confirmed before any grant or assignment is configured (decision D2)."
+        }
+      ]
     }
   ],
   "workflows": [
     {
-      "key": "it-request",
-      "name": "IT request",
-      "prefix": "ITR",
+      "key": "pedidos-ti",
+      "name": "IT support request",
+      "prefix": "TI",
       "file": null,
       "status": "design",
       "ownerArea": "ti",
-      "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "request" } ],
+      "sourceRefs": [],
       "access": {
         "grants": [
           {
             "grantee": "organization",
             "level": "create_incident",
-            "reason": "Self-service: any employee opens their own IT request. Assumption from the request wording; no source lists exceptions (decision D1).",
-            "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "request" } ]
+            "reason": "Assumed, not sourced: a self-service IT request form implies that any employee may open a case. Narrow this grant if the respondent scope in decision D1 turns out to be smaller.",
+            "sourceRefs": []
           }
         ],
         "sensitivity": "internal",
-        "note": "IT Support receives no view grant by default: assignees see the cases that carry their actions. Whether the team needs every case as a shared queue is decision D2."
+        "note": "Requests may quote account names, device identifiers and screenshots of a colleague's screen; treat the case content as internal. No grant gives IT Support visibility of every case yet: without one, members see only the cases carrying their own actions (decision D4)."
       },
       "triggers": [
-        { "type": "manual", "label": "Start IT request", "enabled": true, "manual": { "allowedGroups": [], "allowedUsers": [] } },
-        { "type": "form", "label": "Self-service IT request (intake form)", "enabled": true }
+        {
+          "type": "form",
+          "label": "IT request form",
+          "enabled": true
+        }
       ],
       "templates": [],
       "unresolvedActors": [],
       "unresolvedEntityTypes": [],
+      "accessReview": [
+        {
+          "question": "Does IT Support work a shared queue that needs view of every IT request, or is assignment enough?",
+          "group": "suporte-ti",
+          "status": "open"
+        }
+      ],
       "actions": [
         {
-          "localId": "triage",
+          "localId": "triar-pedido",
           "name": "Triage the IT request",
           "type": "standard",
-          "description": "Task: Classify the request and set its priority so the right technician can pick it up.\nHow: 1. Read `request_type`, `summary`, `details` and `urgency` submitted by the requester, and open the attachment if there is one. 2. Correct `request_type` if the requester chose the wrong option. 3. Set `priority` from the impact described, not only from the requester's `urgency`. 4. If something essential is missing, ask the requester in a case comment and wait for the answer before completing.\nEvidence: `priority` filled and a comment stating the classification and, when changed, why `request_type` was corrected.\nDone when: `priority` is set and the request is clear enough to be resolved without further questions.\nExceptions: If the request is not an IT matter, comment which team handles it and cancel the case; do not resolve work that belongs to another area.",
-          "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "request" } ],
-          "assigneeRef": "it-support",
-          "setsFields": [ "priority" ],
+          "description": "Task: Confirm what the requester needs, set the category and impact that the rest of the case depends on, or send the request back for missing information.\n\nHow:\n\n1. Open the case and read `summary`, `description` and the submitted `request_type`.\n2. Compare the stated `impact` with the service or device named in `affected_service`.\n   - Open any file the requester attached before judging the impact.\n3. If the description does not say what is broken, what the requester already tried or when it started, contact the requester through the case creator's account or `contact_phone`.\n4. Correct `request_type` and `impact` when the submitted values do not match what the requester actually needs.\n\nEvidence:\n\n- `request_type` and `impact` hold the confirmed values, not only the submitted ones.\n- A case comment records the first assessment and, when the requester was contacted, when and through which channel.\n\nDone when: The request carries a confirmed category and impact, and either the work is owned or the missing information has been requested in a comment.\n\nExceptions: If the requester cannot be reached or the information is still insufficient, **do not complete the action**: comment exactly what is missing and who was contacted. If the request is not IT work, comment the correct destination and raise it with the IT service owner rather than rewriting the category.",
+          "sourceRefs": [],
+          "assigneeRef": "suporte-ti",
           "formRef": null,
           "entityRefs": [],
-          "evidence": [ "priority filled", "classification comment" ],
-          "due": null,
-          "folded": []
-        },
-        {
-          "localId": "resolve",
-          "name": "Resolve the IT request",
-          "type": "standard",
-          "description": "Task: Do the work the request asks for and record what was done.\nHow: 1. Read the triage comment and `priority`. 2. Perform the change, installation, repair or access grant. 3. Write a resolution comment the requester can understand: what was done and anything they must do on their side.\nEvidence: The resolution comment on the case; for access requests, the approval document attached by the requester or by you.\nDone when: The requester can do what they asked for and the resolution comment is on the case.\nExceptions: If the work needs approval, equipment or a supplier that is not available, comment the blocker and the expected path; do not complete the action until the work is actually done.",
-          "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "request" } ],
-          "assigneeRef": "it-support",
-          "setsFields": [],
-          "formRef": null,
-          "entityRefs": [],
-          "evidence": [ "resolution comment" ],
-          "due": null,
-          "folded": []
-        },
-        {
-          "localId": "confirm-resolution",
-          "name": "Confirm the resolution",
-          "type": "form_fill",
-          "description": "Task: Confirm whether the IT request was solved.\nHow: 1. Open the case and read the resolution comment left by IT Support. 2. Check that you can now do what you asked for. 3. Answer the \"Resolution confirmation\" form.\nEvidence: The submitted \"Resolution confirmation\" response with `resolution_accepted` filled.\nDone when: The response is submitted.\nExceptions: If the request is not solved, answer \"No\" and describe what still fails in `resolution_feedback`; IT Support reopens the work from your answer.",
-          "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "confirmation" } ],
-          "assigneeRef": "creator",
-          "setsFields": [ "resolution_accepted", "resolution_feedback" ],
-          "formRef": "resolution-confirmation",
-          "entityRefs": [],
-          "evidence": [ "Resolution confirmation response" ],
+          "evidence": [
+            "Confirmed request_type and impact on the case",
+            "Comment with the first assessment and any contact with the requester"
+          ],
           "due": null,
           "folded": []
         }
       ],
       "subWorkflowRefs": [],
       "setupNotes": [
-        "Placeholder workflow created by provia-form-designer so the intake form has a destination; the action set, decisions and routing still need provia-workflow-designer. No YAML was produced.",
-        "Case metadata the intake form maps to (declare in the workflow): request_type (select), summary (text), details (rich_text), urgency (select), affected_asset (text), department (text), needed_by (date), attachment (file), contact_phone (phone); set by IT: priority (select); set by the closing form: resolution_accepted (boolean), resolution_feedback (text).",
-        "Form intake and Form Fill links are configured in Provia after the workflow draft exists; verify each field mapping there (see it-request-form.md §4 and §7).",
-        "File size limit for `attachment`: verify the destination limit before writing a number into the form help text.",
-        "Confirmation text is in it-request-form.md §6; where it is displayed (confirmation screen, notification) depends on the destination form configuration (decision D5)."
+        "Skeleton only. This workflow entry exists so the intake form has a destination to be traced to; the steps after triage (assignment, resolution, closure and any approval for equipment or access) were not designed and were not supplied. Design them with provia-workflow-designer before packaging.",
+        "The case metadata schema must declare the fields the intake form maps to before the form is created: summary (text), description (rich_text), request_type (select), impact (select), affected_service (text), location (text), contact_phone (phone). Field keys in the form and in the workflow must match exactly for the mapping to be configurable.",
+        "Forms are not carried by the portable YAML contract. Create the form, its field mappings, its access path and its confirmation text manually in Provia, or through connected mode, after the workflow draft exists.",
+        "A case reference (auto_number) cannot be asked on a form: the form field enum excludes auto_number. If the confirmation screen must show a reference, verify in the destination what the form confirmation can display before promising it to respondents.",
+        "No submission, mapping, access or confirmation test has been run. The test plan in form-it-request.md is pending execution by the implementer in a real environment."
       ]
     }
   ],
   "forms": [
     {
-      "key": "it-request-intake",
-      "title": "Self-service IT request",
+      "key": "pedido-ti",
+      "title": "IT request",
       "kind": "trigger",
-      "workflowRef": "it-request",
+      "workflowRef": "pedidos-ti",
       "actionRef": null,
       "status": "designed",
       "fields": [
-        { "key": "request_type", "label": "What do you need?", "type": "select", "required": true, "mapsTo": "request_type", "helpText": "Choose the closest option. IT will reclassify it if needed.", "options": [ { "value": "access", "label": "Access to a system or folder" }, { "value": "hardware", "label": "Equipment (laptop, monitor, phone, peripherals)" }, { "value": "software", "label": "Software installation or licence" }, { "value": "incident", "label": "Something is not working" }, { "value": "other", "label": "Other" } ] },
-        { "key": "summary", "label": "Short title", "type": "text", "required": true, "mapsTo": "summary", "helpText": "One line IT can read in a list, e.g. \"VPN fails on Windows laptop\".", "config": { "minLength": 5, "maxLength": 120 } },
-        { "key": "details", "label": "Describe the request", "type": "rich_text", "required": true, "mapsTo": "details", "helpText": "What you are trying to do, what happens instead, and any error message. For access requests, name the system and the access level.", "config": { "minLength": 20 } },
-        { "key": "urgency", "label": "How urgent is this?", "type": "select", "required": true, "mapsTo": "urgency", "helpText": "This is your view of the impact. IT sets the final priority during triage.", "options": [ { "value": "low", "label": "I can wait a few days" }, { "value": "normal", "label": "It slows my work" }, { "value": "high", "label": "I cannot work until it is solved" } ] },
-        { "key": "affected_asset", "label": "Asset tag or device", "type": "text", "required": false, "mapsTo": "affected_asset", "helpText": "The sticker on the device, if it has one.", "config": { "maxLength": 40 } },
-        { "key": "department", "label": "Your department", "type": "text", "required": false, "mapsTo": "department", "config": { "maxLength": 80 }, "note": "Free text until a department list is supplied (decision D3)." },
-        { "key": "needed_by", "label": "Needed by", "type": "date", "required": false, "mapsTo": "needed_by", "helpText": "Only if there is a real date (a start date, a trip, a deadline). Leaving it empty does not slow the request.", "config": { "minDate": "today" } },
-        { "key": "attachment", "label": "Screenshot or document", "type": "file", "required": false, "mapsTo": "attachment", "helpText": "A screenshot of the error, or the approval email for an access request.", "config": { "accept": [ "png", "jpg", "pdf" ], "maxSize": "verify destination limit" } },
-        { "key": "contact_phone", "label": "Phone for IT to reach you", "type": "phone", "required": false, "mapsTo": "contact_phone", "helpText": "Only if IT should call rather than write." }
-      ],
-      "confirmation": "Your IT request was received. IT Support will review it and assign it to a technician. You will be notified in Provia when the request is assigned, when IT needs more information from you, and when it is resolved. You can follow it at any time under My cases, where you can add comments or files.",
-      "access": { "respondents": "internal", "path": "signed-in employees via the workflow start / form entry (assumption, decision D1)", "anonymous": false, "tested": false },
-      "specification": "it-request-form.md"
-    },
-    {
-      "key": "resolution-confirmation",
-      "title": "Resolution confirmation",
-      "kind": "action",
-      "workflowRef": "it-request",
-      "actionRef": "confirm-resolution",
-      "status": "designed",
-      "fields": [
-        { "key": "resolution_accepted", "label": "Is your request solved?", "type": "boolean", "required": true, "mapsTo": "resolution_accepted" },
-        { "key": "resolution_feedback", "label": "Anything IT should know?", "type": "text", "required": false, "mapsTo": "resolution_feedback", "config": { "maxLength": 500 } }
-      ],
-      "responsePolicy": "single response; maps values and completes the action",
-      "access": { "respondents": "the case creator (requester)", "anonymous": false, "tested": false },
-      "specification": "it-request-form.md"
+        {
+          "key": "summary",
+          "label": "What do you need, in one line?",
+          "type": "text",
+          "required": true,
+          "maps": "summary",
+          "config": {
+            "maxLength": 120,
+            "placeholder": "Laptop does not start after the update"
+          },
+          "why": "Gives the case a readable title in the queue without opening it.",
+          "status": "recommended"
+        },
+        {
+          "key": "description",
+          "label": "Describe the problem or the request",
+          "type": "rich_text",
+          "required": true,
+          "maps": "description",
+          "config": {
+            "helpText": "What happens, when it started, what you already tried, and any error message you can see."
+          },
+          "why": "The three questions in the help text are the ones triage otherwise has to ask by phone.",
+          "status": "recommended"
+        },
+        {
+          "key": "request_type",
+          "label": "What kind of request is this?",
+          "type": "select",
+          "required": true,
+          "maps": "request_type",
+          "config": {
+            "options": [
+              { "value": "hardware", "label": "Equipment or device problem" },
+              { "value": "software", "label": "Application or software problem" },
+              { "value": "access", "label": "Access, account or password" },
+              { "value": "network", "label": "Network, internet or telephone" },
+              { "value": "new_equipment", "label": "Request for new equipment or software" },
+              { "value": "other", "label": "Something else" }
+            ]
+          },
+          "why": "Routes the case and keeps the form short; a flat list is used deliberately because form option definitions do not preserve dependent-option bindings (references/metadata-fields.md).",
+          "status": "placeholder",
+          "note": "Provisional list. Replace with the organization's own service catalogue (decision D2)."
+        },
+        {
+          "key": "impact",
+          "label": "How much is this affecting your work?",
+          "type": "select",
+          "required": true,
+          "maps": "impact",
+          "config": {
+            "options": [
+              { "value": "blocked", "label": "I cannot work at all" },
+              { "value": "degraded", "label": "I can work, but with difficulty" },
+              { "value": "minor", "label": "It can wait / it is a question" }
+            ]
+          },
+          "why": "Lets triage order the queue in the requester's own words, without asking them to choose a priority level or implying a response time.",
+          "status": "recommended",
+          "note": "No response target is attached to these values anywhere in the form or the confirmation (decision D3)."
+        },
+        {
+          "key": "affected_service",
+          "label": "Which system, application or device is affected?",
+          "type": "text",
+          "required": false,
+          "maps": "affected_service",
+          "config": {
+            "maxLength": 120
+          },
+          "why": "Named free text now; becomes a select once the service and asset catalogue is supplied (decision D2).",
+          "status": "recommended"
+        },
+        {
+          "key": "location",
+          "label": "Where are you?",
+          "type": "text",
+          "required": false,
+          "maps": "location",
+          "config": {
+            "maxLength": 80,
+            "helpText": "Office, floor or site — or 'remote'."
+          },
+          "why": "Needed only when someone must physically reach the requester or the device.",
+          "status": "placeholder",
+          "note": "Should become a select over the real site list (decision D7)."
+        },
+        {
+          "key": "contact_phone",
+          "label": "Phone or extension for a quick call",
+          "type": "phone",
+          "required": false,
+          "maps": "contact_phone",
+          "why": "Triage often resolves a request faster by calling; the case creator's account already carries the email, so no name or email field is duplicated for an authenticated respondent.",
+          "status": "recommended",
+          "note": "Becomes required, together with requester_name and requester_email, only if decision D1 selects an unauthenticated access path."
+        },
+        {
+          "key": "attachments",
+          "label": "Screenshot or file (optional)",
+          "type": "file",
+          "required": false,
+          "maps": null,
+          "config": {
+            "accept": "png, jpg, pdf, txt, log",
+            "maxFiles": 3
+          },
+          "why": "An error screenshot removes a round trip on software and access problems.",
+          "status": "recommended",
+          "note": "The accepted types and the file count are a proposed policy, not a product limit. The maximum size the destination enforces, and whether the file also lands in the case files rather than only in the response, must be verified in Provia (decision D5)."
+        }
+      ]
     }
   ],
   "aiProfiles": [],
   "decisions": [
-    { "id": "D1", "question": "Access model for the intake form: signed-in employees only, or an external link? Anonymous submission is not offered until the configured form behaviour is checked. If an external link is chosen, add requester_name and requester_email fields and revisit the organization grant.", "owner": "IT process owner", "status": "open", "raisedBy": "provia-form-designer", "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "request" } ] },
-    { "id": "D2", "question": "Which team handles IT requests, its real name and members; does it need to see every IT case (a view grant as a shared queue) or only its assigned ones?", "owner": "IT manager", "status": "open", "raisedBy": "provia-form-designer", "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "request" } ] },
-    { "id": "D3", "question": "Department list (to turn `department` into a select) and the final `request_type` option list.", "owner": "IT manager / HR", "status": "open", "raisedBy": "provia-form-designer", "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "request" } ] },
-    { "id": "D4", "question": "Response and resolution targets, if any, to state in the confirmation and to set as `due` on triage and resolve. None is promised until confirmed.", "owner": "IT process owner", "status": "open", "raisedBy": "provia-form-designer", "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "confirmation" } ] },
-    { "id": "D5", "question": "Confirmation screen capabilities in the destination form configuration: custom text, display of the case reference, redirect.", "owner": "Implementer (verify in Provia)", "status": "open", "raisedBy": "provia-form-designer", "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "confirmation" } ] },
-    { "id": "D6", "question": "Route when the requester answers 'not solved' in the resolution confirmation: return to resolve, or an IT decision.", "owner": "IT process owner", "status": "open", "raisedBy": "provia-form-designer", "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "confirmation" } ] },
-    { "id": "D7", "question": "Country, language, timezone and currency of the organization. Angola, English response with pt-AO labels, Africa/Luanda and AOA are provisional.", "owner": "Customer sponsor", "status": "open", "raisedBy": "provia-form-designer", "sourceRefs": [ { "source": "chat-request-2026-09-21", "section": "request" } ] }
+    {
+      "id": "D1",
+      "question": "Who submits this form, and through which access path? Authenticated employees inside Provia, or people without a Provia account through an external or anonymous link? The configured form behaviour in this environment was not verified, so no external or anonymous path is promised. The answer decides whether requester_name and requester_email are needed and whether the organization-wide create_incident grant is correct.",
+      "owner": "IT service owner",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D2",
+      "question": "What is the real IT service catalogue behind request_type and affected_service, and what is the IT Support team's actual name and membership in Provia? The current option list and the group name are provisional.",
+      "owner": "IT service owner",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D3",
+      "question": "Is there an agreed response or resolution target per impact level, and may the confirmation state it? Until this is answered the confirmation promises only that the request was registered and that IT will make contact, with no deadline.",
+      "owner": "IT service owner",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D4",
+      "question": "Does IT Support work a shared queue that needs a view grant over every IT request, or does assignment alone give them the cases they work? No view grant was proposed without a source saying the team sees every case.",
+      "owner": "IT service owner",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D5",
+      "question": "What upload policy applies: accepted file types, maximum size enforced by the destination, and whether screenshots that may contain colleagues' personal data are acceptable in an internal-sensitivity case?",
+      "owner": "IT service owner",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D6",
+      "question": "Beyond the on-screen confirmation, should the requester receive a notification with the case reference, and can the form confirmation itself display that reference in this environment? Both need verification in Provia; the notification would be designed with provia-automation-designer.",
+      "owner": "IT service owner",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D7",
+      "question": "What is the site, building and floor list that should replace the free-text location field?",
+      "owner": "IT service owner",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D8",
+      "question": "In which language do respondents see this form, and is Angola the operating country? Angola was used as a provisional context (Africa/Luanda, AOA) and the form was drafted in English because the request was in English; a pt-AO version is a translation of the same field keys.",
+      "owner": "IT service owner",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D9",
+      "question": "What happens after triage? The workflow entry pedidos-ti is a skeleton created so the form has a destination: assignment, resolution, closure and any approval for new equipment or access were not supplied and were not designed here.",
+      "owner": "IT service owner",
+      "status": "open",
+      "raisedBy": "provia-form-designer",
+      "sourceRefs": []
+    }
   ],
   "receipts": []
 }

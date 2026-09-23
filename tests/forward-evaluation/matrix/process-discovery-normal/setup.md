@@ -1,6 +1,6 @@
-# Pedido de compra (piloto): Entrega de configuração
+# Pedido de TI: Entrega de configuração
 
-Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
+Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.2.1, 2026-09-23).
 
 ## Estado
 
@@ -12,13 +12,14 @@ Nada pendente.
 
 ## Decisões em aberto
 
-- **D1** Quem é o responsável nomeado pelo piloto de compras (pessoa que aprova o desenho, responde por atrasos e decide a revisão)? Sem este nome, o piloto passa para pedidos de TI se a TI tiver responsável. (Dono: Direcção da empresa)
-- **D2** Quantos pedidos de compra, admissões e pedidos de TI houve nos últimos 3 meses (contagem nas caixas de correio)? A escolha mantém-se se compras tiver pelo menos cerca de 10 casos por mês; abaixo disso, reavaliar. (Dono: Responsáveis de Compras, RH e TI)
-- **D3** Existe procedimento escrito, modelo de requisição ou regra de aprovação (limites por valor, quem aprova, número de propostas exigido) para compras? Enviar o documento ou descrever a prática actual. (Dono: Responsável de Compras / Director financeiro)
-- **D4** Que departamentos entram no piloto de compras (recomendação: um ou dois departamentos requisitantes, todos os tipos de bem ou serviço abaixo de um valor que a empresa fixe)? (Dono: Responsável do piloto (D1))
-- **D5** Linha de base observada: nos últimos 20 pedidos de compra por e-mail, quantos dias passaram do pedido à decisão, quantos tinham a proposta ou factura pró-forma anexada e quantas mensagens de seguimento («onde está?») existiram? Medir antes de desenhar. (Dono: Responsável de Compras)
-- **D6** Pedidos de TI: há responsável nomeado e existe outra ferramenta de registo (helpdesk)? Se sim, TI é a alternativa se D1 ficar sem resposta. (Dono: Responsável de TI)
-- **D7** Admissão de trabalhadores fica para uma segunda vaga. Antes de a desenhar, RH confirma a lista de passos actual, os dados pessoais recolhidos e a base de protecção de dados aplicável (verificar em https://apd.ao/ao/legislacao/); nada foi assumido aqui. (Dono: Responsável de RH)
-- **D8** Nome, sector e organização Provia da empresa. O servidor Provia estava disponível nesta sessão mas a leitura do contexto (org_get_context) não foi autorizada; confirmar o tenant antes de qualquer aplicação. (Dono: Implementador)
+- **D1** Quem e o dono nomeado do piloto de Pedidos de TI (nome e endereco de correio electronico do Responsavel de TI)? Sem este nome o piloto nao arranca. (Dono: Administracao / Direccao-Geral)
+- **D2** Que categorias de pedido de TI entram no piloto (por exemplo acessos, avarias, equipamento existente) e quais ficam de fora (projectos, compras novas, contas de novos trabalhadores)? (Dono: Responsavel de TI)
+- **D3** Que prazos de resposta e de resolucao a empresa assume por categoria? Nao foi fornecido nenhum acordo de nivel de servico escrito; os prazos do piloto serao politica interna, nao uma obrigacao externa. (Dono: Responsavel de TI)
+- **D4** Quem pode abrir um pedido de TI no piloto: toda a organizacao ou apenas os departamentos escolhidos para a primeira fase? A resposta define os acessos do workflow. (Dono: Responsavel de TI com a Administracao)
+- **D5** Quem extrai a amostra de mensagens de correio electronico das ultimas semanas para fixar a base de comparacao (volume por semana e tempo ate a resolucao)? Sem esta amostra, o piloto mede-se apenas contra si proprio. (Dono: Responsavel de TI)
+- **D6** Como termina um pedido de TI que implica despesa ou compra de equipamento novo? Encerra com encaminhamento registado para Compras ou espera pela compra dentro do mesmo caso? (Dono: Responsavel de TI com a Direccao Administrativa e Financeira)
+- **D7** Compras (2.a fase): quais sao os limites de aprovacao em Kz, quem aprova em cada nivel e quantas propostas sao exigidas? Nao foi fornecida politica escrita e estes valores nao podem ser assumidos. (Dono: Director Financeiro)
+- **D8** Admissao de trabalhadores (3.a fase): que registos e prazos legais se aplicam em Angola e que dados pessoais o processo pode recolher e conservar? Exige instrumentos primarios verificados antes do desenho. (Dono: Responsavel de Recursos Humanos)
+- **D9** Confirma-se o piloto em Pedidos de TI? Se a Administracao exigir que o piloto demonstre controlo financeiro, ou se os pedidos de TI forem menos de cerca de 5 por semana, a escolha muda para Compras e D7 passa a bloqueante. (Dono: Administracao / Direccao-Geral)
 
 Este ficheiro é gerado pelo mapa do projecto; volte a gerá-lo depois de cada alteração ao manifesto. Não substitui a revisão do dono do processo nem a pré-visualização de importação no Provia.

@@ -1,103 +1,115 @@
-# Workflow design: Request approval (SOP sections 2 and 7)
+# Request approval — workflow design
 
-Produced by `provia-workflow-designer` (provia-skills 1.2.0) on 2026-09-21, disconnected mode. No Provia organization was read or changed.
+Source: two sentences of an SOP supplied in chat (`sop`), sections 2 and 7. Nothing else was
+available: no process subject, no criteria, no deadline, no evidence rule, no roles beyond the two
+approvers, no intake data. Everything below separates what the source states, what this design
+recommends, and what the process owner must decide.
 
-**Input received.** Two sentences, and nothing else: *SOP section 2: department manager approves. SOP section 7: only the finance director approves.* No process name, no start or end condition, no service level, no evidence requirement, no exception path, no country.
+**Assumptions stated and carried forward** (all recorded as open decisions):
 
-**Context assumptions.** Country not supplied: Angola is the provisional context (AOA, Africa/Luanda), per plugin convention; the reply language follows the request (English). Both are recorded as decision D8.
-
-**The central finding.** The two sections name different approvers for what reads as the same approval, and section 7's «only» excludes the section 2 approver. Per the skill's rule for conflicting sections, the step is classified as `conflict`, the decision action is left **without an assignee**, and the choice is recorded as decision **D1** for the process owner. The designer did not pick either section. Every other element of the workflow below is scaffolding needed for a runnable approval and is marked as a recommendation.
-
----
+- No country was supplied. Angola is used as a provisional starting context (language `en` as the
+  user wrote in English, currency AOA, timezone Africa/Luanda) — D6.
+- The excerpt describes one approval. It is modelled as one process whose case is a request; the
+  requester's submission action and the rejection/return paths are recommendations, not source
+  requirements — D7.
+- The approver of the decision is left **unassigned**. Sections 2 and 7 conflict and this design
+  does not choose between them — D1.
 
 ## 1. Source step classification
 
-| Source id | Section | Source text | Classification | Reason | Target action |
+| Source | Section | Text | Classification | Reason | Target action |
 | --- | --- | --- | --- | --- | --- |
-| S2 | sop §2 | «department manager approves» | `conflict` | An approval by an authorized person is a `decision`; but §7 names a different, exclusive approver for the same step. Kept unresolved (D1). | `decide` (assignee unresolved) |
-| S7 | sop §7 | «only the finance director approves» | `conflict` | Same step, different and exclusive approver; contradicts §2. Kept unresolved (D1). | `decide` (assignee unresolved) |
+| `sop` | 2 | «department manager approves» | `conflict` | Section 7 gives the same approval to a different sole authority. Kept unresolved; no assignee derived from it. | `decide_request` |
+| `sop` | 7 | «only the finance director approves» | `conflict` | The word "only" excludes the section 2 authority for the same approval. Kept unresolved. | `decide_request` |
 
-Nothing else exists in the source, so nothing else was folded, automated or put out of scope.
+Nothing else appears in the supplied text, so there are no further rows. Sections 1 and 3–6 of the
+SOP were not supplied and are therefore neither classified nor assumed to be empty.
 
-**Design additions not present in the source (recommendations, not requirements):**
+### Added by this design, not by the source (recommendations)
 
-| Addition | Why | Decision |
+| Element | Why | Decision |
 | --- | --- | --- |
-| Action `prepare` by the requester (`creator`) | An approval needs something to approve; a first action also gives the «Return for rework» branch a return target. | D2 |
-| Fields `request_summary` (required) and `justification` | Minimum content the approver can decide on; the real intake is unknown. | D2 |
-| Branches «Return for rework» and «Reject» on `decide` | The source has no rejection or rework path; a decision with only «Approve» cannot record a refusal. | D7 |
-| Mandatory comment on «Return for rework» and «Reject» | The source names no evidence; an approval without evidence cannot prove it happened. | D7 |
+| `submit_request` action | A decision needs a case with content to decide on; the excerpt has no start. | D7 |
+| `Return for correction` and `Reject` branches | The excerpt gives no rejection or rework path; an approval-only decision cannot record a refusal. | D7 |
+| Generic decision criteria in the brief | The excerpt names the authority but no criterion. | D2 |
 
 ## 2. Action table
 
-| localId | Name | Type | assigneeRef | Task + evidence | due | sourceRefs |
+| localId | Name | Type | `assigneeRef` | Task + evidence | `due` | `sourceRefs` |
 | --- | --- | --- | --- | --- | --- | --- |
-| `prepare` | Prepare the request for approval | standard | `creator` | Describe the request in `request_summary` and `justification`, attach supporting documents, complete to send for decision. Evidence: summary filled, documents attached. | unset — open decision D6 | none (recommendation, D2) |
-| `decide` | Decide on the request | decision | **unresolved — conflict D1** (candidates: `department_managers` per §2, `finance_director` per §7) | Decide whether the request may proceed. Evidence: mandatory comment on «Return for rework» and «Reject». Branches: **Approve** → `continue`; **Return for rework** → `return_to_action: prepare` (comment required); **Reject** → `cancel_incident` (comment required). | unset — open decision D6 | sop §2, sop §7 |
+| `submit_request` | Submit the request for approval | standard | `creator` | Describe the request and attach supporting documents. Evidence: case comment with the request and its justification; documents attached. | unset — no service level in source (D4) | — (recommendation) |
+| `decide_request` | Decide on the request | decision | **unresolved — D1** | Decide whether the request is approved. Evidence: comment stating the basis on approval; comment with the reason on return or rejection. | unset — no service level in source (D4) | `sop#2`, `sop#7` |
 
-Proposed groups (data in `provia-project.json`, to be completed by `provia-organization-rollout`):
+`decide_request` branches:
 
-| key | name | kind | flag | Source |
+| Label | Outcome | Target | Comment required |
+| --- | --- | --- | --- |
+| Approve | `continue` | — | yes |
+| Return for correction | `return_to_action` | `submit_request` | yes |
+| Reject | `cancel_incident` | — | yes |
+
+The full five-part briefs are in `workflow.yaml` and in the manifest, not repeated here.
+
+### Proposed groups
+
+| key | name | kind | Flags | Source |
 | --- | --- | --- | --- | --- |
-| `department_managers` | Department managers | team | `unnamed` — which department manager (the requester's own, per case, or a fixed group)? See D4. | sop §2 |
-| `finance_director` | Finance director | team | `single_person` — a group so ownership survives absences; delegate is D5. | sop §7 |
+| `department_managers` | Department managers | team | `alias` — the excerpt gives no organizational name; confirm the one in use | `sop#2` |
+| `finance_director` | Finance director | team | `single_person` — one office; the delegate during absence is D8 | `sop#7` |
 
-Neither group is assigned yet; `--check` reports both as owning no action, which is the expected consequence of D1 being open.
+Both groups are proposed so the two candidate authorities are visible for the D1 conversation.
+Neither is assigned to an action, so `--check` reports each as owning nothing. That warning is the
+intended state until D1 is answered; it must not be cleared by picking an approver.
 
-**How D1's resolution changes the design**
-
-| Resolution | Change to this design |
-| --- | --- |
-| (a) §7 supersedes §2 | `decide.assigneeRef = finance_director`; nothing else changes. |
-| (b) §2 applies; §7 is an error or another process | `decide.assigneeRef = department_managers` (and answer D4 on how the manager is identified). |
-| (c) Both, in sequence | Split into two decisions: `decide_department` (department manager) then `decide_finance` (finance director), each with its own reject/return branches; re-run the designer. |
-| (d) Different scopes (e.g. an amount band or category) | Add the scoping field to the case; one human decision applies the rule stated in its description. Provia does not route on amounts automatically, and no threshold may be invented. |
-
-## 3. Flow diagram
+## 3. Flow
 
 ```mermaid
 flowchart TD
-    start([Start request — manual trigger]) --> prepare["prepare: Prepare the request for approval<br/>(creator)"]
-    prepare --> decide{"decide: Decide on the request<br/>(approver unresolved — D1)"}
-    decide -- Approve --> approved([Case completed])
-    decide -- "Return for rework (comment)" --> prepare
-    decide -- "Reject (comment)" --> cancelled([Case cancelled])
+  start([Start: manual trigger]) --> A1[submit_request: Submit the request for approval]
+  A1 --> A2{decide_request: Decide on the request}
+  A2 -- Approve --> done([Approved — end of the supplied excerpt])
+  A2 -- Return for correction --> A1
+  A2 -- Reject --> cancelled([Case cancelled])
 ```
+
+The approver of `decide_request` is not shown because the source does not determine it. What
+happens after an approval is also outside the supplied text: sections 3–6 and 8+ were not provided.
 
 ## 4. YAML skeleton
 
-Written to `workflow.yaml` (prefix `APR`, manual trigger, two fields, two actions, full five-part descriptions, decision branches). It is a skeleton for `provia-workflow-package`, which runs `validate-workflow.mjs`; **it has not been validated**. The `decide` action carries no `assignee` on purpose; the manifest's `assigneeRef` is empty until D1 is resolved.
+`workflow.yaml` in this directory: `provia.ao/v1` / `Workflow`, prefix `APRV`, a manual trigger,
+`access.default: creator_only`, and both actions with their full five-part descriptions.
+`decide_request` deliberately carries **no `assignee`**. This is a skeleton for
+`provia-workflow-package`; the bundled YAML validator and the action review gate were **not run**
+in this task.
 
-## 5. Manifest entry
+## 5. Manifest
 
-Written to `provia-project.json` (`provia-project/v1.1`): source `sop` with anchors `2` and `7`, the two proposed groups, workflow `request-approval` with its actions, `access` (`default: creator_only`, `sensitivity: internal`, note explaining both are placeholders pending D3), one manual trigger with an empty allowlist, `setupNotes`, and decisions D1–D8.
+`provia-project.json` in this directory (`provia-project/v1.1`), with the workflow, its `access`
+section, the two proposed groups and eight open decisions.
 
-### Checks actually run
+Check actually run, from the plugin root, against `provia-project.json`:
 
-| Check | Command | Result |
-| --- | --- | --- |
-| Manifest check | `node scripts/build-project-map.mjs provia-project.json --check` | **0 errors, 3 warnings, 0 infos**: `decide` has no owner; `department_managers` owns no action; `finance_director` owns no action. All three are the direct consequence of D1 being open. 16 pending setup items, 0 readiness blocks, access declared 1/1. |
-| Project map | `… --output project.html` | Written. |
-| Setup handover | `… --setup setup.md` | Written (16 pending items, all manual-configuration placeholders). |
-| Action review gate | `node scripts/review-actions.mjs workflow.yaml` | `valid: true`; 2/2 actions have all five parts, no implementer-note leaks; `due` missing on both (D6). Presence check only, not business correctness. |
+```
+node scripts/build-project-map.mjs provia-project.json --check
+```
 
-Not run: `validate-workflow.mjs` (belongs to `provia-workflow-package`). No customer sign-off, no Provia import, no publication.
-
----
+Result: **0 errors, 3 warnings, 16 pending items**, access declared on 1/1 workflows, 0 readiness
+blocks. The three warnings are `decide_request` has no owner, and each of the two candidate groups
+owns no action — all three are the conflict, reported as designed.
 
 ## Open decisions before packaging
 
 | id | Question | Owner |
 | --- | --- | --- |
-| **D1** | Who approves: §2 department manager, §7 finance director, both in sequence, or each in a different scope? **Blocks assignment of `decide`.** | Process owner / SOP author |
-| D2 | What is the request, what starts and ends a case; is the placeholder intake (`request_summary`, `justification`, `prepare`) right? | Process owner |
-| D3 | Who may open a request (`create_incident`) and who owns the design (`edit`)? `creator_only` is a placeholder. | Process owner |
-| D4 | If the department manager approves: the requester's own manager per case (`field:` assignee + fallback) or a fixed group? | Process owner |
-| D5 | Delegate for the finance director's absence — §7 says «only», so a delegate changes the rule. | Finance director |
-| D6 | Service level for `prepare` and `decide`; `due` unset until stated. | Process owner |
-| D7 | Are «Reject» and «Return for rework» allowed, with a mandatory comment? | Process owner |
-| D8 | Country, language, currency, timezone (Angola / en / AOA / Africa/Luanda are provisional). | Implementer |
+| D1 | **Who approves?** §2 says the department manager, §7 says only the finance director. Readings: (a) §7 replaces §2 for a subset the missing sections define, (b) §7 supersedes §2 entirely, (c) both approve in sequence. Does a threshold, category or risk level select between them? | Process owner |
+| D2 | What criteria must the approver apply? | Process owner |
+| D3 | Who may open a case, and which group owns the design? As designed, nobody but the creator and administrators can start one. | Process owner |
+| D4 | What is the service level for the decision? | Process owner |
+| D5 | What data must the requester supply? No fields and no intake form were designed. | Process owner |
+| D6 | Country, language, currency, timezone — provisional, not supplied. | Process owner |
+| D7 | Are the submission action and the return/rejection branches correct? They are this design's recommendations. | Process owner |
+| D8 | Who decides when the finance director is absent, under readings (b) or (c)? | Process owner |
 
-## Next step
-
-D1 is a question only the SOP's owner can answer; no further skill resolves it. Once answered, `provia-workflow-designer` re-run (for resolution c or d) or `provia-organization-rollout` (for a or b, to complete the two groups and the access matrix) is the next skill.
+D1 is blocking: the workflow cannot be assigned, and should not be published, until it is answered.
+D3 is blocking for import as-is.

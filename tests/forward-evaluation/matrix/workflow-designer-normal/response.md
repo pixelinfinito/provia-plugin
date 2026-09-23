@@ -1,39 +1,58 @@
-Desenho concluído. Ficheiros escritos no directório de trabalho:
+Desenho concluído. Ficheiros escritos em `workflow-designer-normal/`: `workflow.yaml`, `provia-project.json`, `design-compras.md`, `setup.md`, `project.html`.
 
-- `workflow-design.md`: classificação dos passos, tabela de acções, fluxo Mermaid, notas de acesso e as decisões abertas.
-- `workflow.yaml`: esqueleto `provia.ao/v1` com as descrições completas em cinco partes e a secção `access`.
-- `provia-project.json`: manifesto novo (não existia) com fonte, grupos propostos, workflow, acesso, gatilho e decisões D1–D10.
-- `project.html`: mapa do projecto gerado a partir do manifesto.
+**Antes de tudo:** o procedimento escrito de compras não foi fornecido — a pasta de trabalho estava vazia. A única fonte são as duas regras que enunciou, registadas no manifesto como fonte do tipo `interview`. O desenho cobre-as por inteiro; tudo o mais está marcado como recomendação ou decisão aberta. O servidor MCP da Provia aparece listado neste ambiente, mas a leitura `org_get_context` não foi autorizada nesta sessão (sessão não interactiva): o modo é `disconnected`, nada foi lido nem escrito na organização, e os grupos abaixo são propostas.
 
-## O que a fonte dá e o que o desenho acrescenta
+## 1. Classificação dos passos da fonte
 
-A única fonte é a sua frase. Não recebi o procedimento escrito, por isso tudo o que vai além de «a chefia aprova, as Finanças confirmam o cabimento» está marcado como pressuposto ou recomendação, com decisão aberta. País assumido: Angola (pt-AO, Kz), por falta de indicação.
+| Fonte | Texto | Classificação | Acção |
+| --- | --- | --- | --- |
+| `#1` | «o nosso procedimento de compras» | `out_of_scope` — define âmbito, não é passo; levanta D1 | — |
+| `#2` | «A chefia aprova o pedido» | `decision` | `decidir_pedido` |
+| `#2` | existência do pedido com dados para decidir | `action` · **recomendação** (nenhum controlo corre sem ele) | `registar_pedido` |
+| `#2` | o requerente sabe a decisão | `folded` no próprio caso | `decidir_pedido` |
+| `#3` | «as Finanças confirmam a disponibilidade orçamental» | `action`, desenhada como Decisão para dar saída a «sem cabimento» (D9) | `confirmar_cabimento` |
 
-Três acções, em sequência:
+## 2. Acções
 
-| localId | Nome | Tipo | Responsável | Ramos |
-| --- | --- | --- | --- | --- |
-| `registar_pedido` | Registar o pedido de compra | Standard | requerente (`creator`) | — |
-| `decidir_chefia` | Decidir sobre o pedido de compra | Decision | grupo `chefias` | Aprovar → continua; Devolver → volta a `registar_pedido` (comentário); Rejeitar → cancela (comentário) |
-| `confirmar_cabimento` | Confirmar a disponibilidade orçamental | Decision | grupo `financas` | Cabimento confirmado → continua; Sem cabimento → volta a `registar_pedido` (comentário) |
+| # | `localId` | Nome | Tipo | Responsável | Evidência | `due` |
+| --- | --- | --- | --- | --- | --- | --- |
+| 1 | `registar_pedido` | Registar o pedido de compra | `standard` | `creator` | objecto, justificação, montante e centro de custo preenchidos; proposta anexada | **aberto (D8)** |
+| 2 | `decidir_pedido` | Decidir sobre o pedido de compra | `decision` | `chefias` *(proposto)* | comentário obrigatório em «Devolver» e «Rejeitar» | **aberto (D8)** |
+| 3 | `confirmar_cabimento` | Confirmar a disponibilidade orçamental | `decision` | `financas` *(proposto)* | `budget_reference`, comprovativo do saldo com data, comentário do défice | **aberto (D8)** |
 
-Modelei a confirmação das Finanças como Decisão, e não como acção Standard, porque «não há cabimento» precisa de um destino. Os ramos de devolução e rejeição não estão na fonte; são a minha proposta para o caso não ficar sem saída (D3). Nenhum prazo foi definido e nenhum limite de montante foi codificado, porque a fonte não os indica.
+Ramos: Aprovar → `continue`; Devolver → `return_to_action: registar_pedido`; Rejeitar → `cancel_incident`; Com cabimento → `continue`; Sem cabimento → `return_to_action: registar_pedido`. Não inventei prazos — a fonte não fixa nenhum, por isso `due` fica vazio e vai a decisão.
 
-Acesso: `organization` abre pedidos (pressuposto, D6); Chefias e Finanças não recebem `view`, vêem os casos que lhes chegam pelas acções. O dono do procedimento (`edit`, `ownerArea`) fica por nomear (D8).
+## 3. Fluxo
 
-## Verificações
+```mermaid
+flowchart TD
+  A1["registar_pedido: Registar o pedido de compra"]
+  A2{"decidir_pedido: Decidir sobre o pedido de compra"}
+  A3{"confirmar_cabimento: Confirmar a disponibilidade orçamental"}
+  FIM(["Cabimento confirmado — continuação não fornecida (D10)"])
+  CANC(["Pedido rejeitado — caso encerrado"])
+  A1 --> A2
+  A2 -- "Aprovar" --> A3
+  A2 -- "Devolver (comentário)" --> A1
+  A2 -- "Rejeitar (comentário)" --> CANC
+  A3 -- "Com cabimento" --> FIM
+  A3 -- "Sem cabimento (comentário)" --> A1
+```
 
-- `node scripts/build-project-map.mjs provia-project.json --check`: 0 erros, 0 avisos, 2 informações (regra 4, comportamento pretendido); 0 bloqueios de prontidão; 21 itens pendentes (membros dos grupos, atribuições, decisões).
-- `emit-workflow-access.mjs` gerou a secção `access` do YAML a partir do manifesto.
-- Não corrido: `validate-workflow.mjs` e `review-actions.mjs` (pertencem ao package). O YAML é um esqueleto, não está validado.
-- Modo desligado: a leitura do tenant Provia (`org_get_context`) não foi autorizada nesta sessão; nada foi lido nem criado em Provia.
+## 4. YAML e 5. manifesto
 
-## Decisões a responder antes de empacotar
+`workflow.yaml` (`provia.ao/v1`, prefixo `COMP`) traz o gatilho manual, sete campos (`purchase_subject`, `purchase_justification`, `purchase_amount` em AOA, `cost_centre`, `needed_by`, `supplier_quote`, `budget_reference`), a secção `access` e o texto completo das cinco partes em cada acção. É um esqueleto para `provia-workflow-package`: **o validador e o portão de revisão das acções não foram executados**. Nenhum ID da organização foi inventado — as duas acções de grupo ficam sem `assignee`.
 
-As dez estão em `provia-project.json` e no relatório. As que mais mudam o desenho: D1 (a ordem chefia → Finanças é mesmo sequencial?), D2 (quem é «a chefia» e como se escolhe a certa em cada pedido), D5 (o que acontece depois do cabimento confirmado, quem executa a compra) e D8 (onde está o procedimento escrito, para refazer a classificação sobre o documento real).
+Acesso: `organization` → `create_incident` (proposta, D6); sensibilidade `internal`; Chefias e Finanças **sem** concessão, porque vêem os casos que transportam as suas acções; o nível `edit` fica sem dono até D7.
 
-Próximo passo recomendado: `provia-organization-rollout`, para completar os grupos `chefias` e `financas` (membros, nível hierárquico, substitutos, segregação quando o requerente é chefia) antes de gerar o YAML final. Se o procedimento escrito existir, entregue-o primeiro e repita o `provia-workflow-designer` sobre ele.
+Verificação que corri de facto — `node scripts/build-project-map.mjs provia-project.json --check`: **0 erros, 0 avisos, 2 informações** (as duas equipas sem concessão, que é o desenho pretendido pela regra 4), acesso declarado em 1/1, 0 bloqueios de prontidão, **23 itens pendentes de configuração**. Verifica a estrutura e as referências do manifesto — não o YAML nem a correcção do processo.
+
+## Decisões abertas (11, todas em `provia-project.json` e em `setup.md`)
+
+As que mais alteram o desenho: **D1** fornecer o procedimento escrito; **D2** a ordem chefia/Finanças (a fonte diz «e», não «depois»; propus sequencial para não gastar trabalho das Finanças em pedidos que serão rejeitados, a alternativa é paralelo); **D3** «a chefia» é um grupo ou um por departamento, e qual o limite de autoridade; **D8** prazos; **D10** o que acontece depois do cabimento (encomenda, recepção, factura, pagamento não constam da fonte, por isso o workflow termina na confirmação).
+
+Próximo passo recomendado: `provia-organization-rollout`, para fechar os grupos `chefias` e `financas` (nome oficial, membros, segregação) — sem eles as duas acções não têm responsável configurável e o pacote fica incompleto. Se preferir validar primeiro a estrutura, use `provia-workflow-package`.
 
 ```text
-Use provia-organization-rollout com o provia-project.json deste directório. Complete os grupos chefias e financas (membros, nível hierárquico da chefia que aprova, substitutos em ausência) e responda às decisões D2, D6, D7 e D8 sobre segregação e dono do procedimento. Preserve as acções e o acesso já desenhados. País: Angola; responda em pt-AO.
+Use provia-organization-rollout com o provia-project.json e o workflow.yaml desta pasta. Complete os grupos chefias e financas (nome oficial no Provia, membros, área, segregação requerente/decisor) e responda a D3, D4, D5 e D7. Preserve as responsabilidades desenhadas. País: Angola; responda em pt-AO.
 ```

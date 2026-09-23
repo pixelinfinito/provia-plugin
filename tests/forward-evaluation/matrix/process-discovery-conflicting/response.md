@@ -1,28 +1,34 @@
-## Pilot choice: IT support, owned by Ana
+I did not pick the fastest process. Here's why, and what I picked instead.
 
-You asked for the fastest process. Purchasing has the shorter cycle (2 days vs 5), but nobody will own it, so I ranked ownership above cycle time rather than by speed alone. A pilot without an owner produces no decisions, no handled exceptions and no reviewed cases — it cannot be fast to a result. IT support has Ana, who can answer design questions and review the first closed cases. Purchasing stays a candidate for the second workflow the moment someone accepts ownership.
+## The trade-off
 
-Two further reasons the speed argument is weaker than it looks: both durations are stated, not measured (how "5 days" was observed is unknown), and a 5-day process has more visible handoff delay for a pilot to expose than a 2-day one.
+Purchasing is faster (2 days vs 5) but **nobody owns it**. In Provia every action needs an assignee — a group, the creator, the previous assignee or an AI profile. An unowned process can't be designed, let alone published: the design stalls at the first action brief, and the usual workaround (assigning the implementer or a generic group) produces a workflow the organization doesn't actually run.
 
-**Confirmed facts**: Purchasing 2 days, no owner; IT support 5 days, Ana owns it. Nothing else was supplied — no volumes, request types, start/end events, organization or country — and none was invented.
+Speed also cuts the other way from how the request reads: a 2-day process has little room to improve and little handoff delay to expose. Speed *of the process* isn't speed *to a working pilot*.
 
-**Assumptions stated**: Angola / en / AOA / Africa-Luanda as the provisional country context (D7); proposed start and end events for both processes are readings to be confirmed, not facts.
+**Recommended pilot: IT support request, owner Ana.** Ranked second: purchasing, once someone owns it.
 
-**Pilot scope**: IT support request from report to confirmed resolution; one intake channel; the most frequent request types only; manual trigger, a few standard actions with due dates, one solved/not-solved decision, closing evidence required. No integrations, AI or sub-workflows. Review after 10 closed cases or 4 weeks. Success measures use an observed baseline; no target is set until one exists.
+## Assumptions I'm stating, not hiding
 
-**Open decisions** (in the manifest): D1 sponsor accepts IT support over Purchasing; D2 start/end events (Ana); D3 what "5 days" means (Ana); D4 monthly volume and mix (Ana); D5 who else works IT support and covers Ana (Ana); D6 will management name a Purchasing owner; D7 confirm country context. The sponsor is not named in the sources.
+- The 2 and 5 day figures are as spoken — I don't know if they're measured or estimated, calendar days or workdays. Neither is usable as a baseline yet (`D4`).
+- No country was supplied; Angola / Africa/Luanda / AOA is the plugin's provisional starting context, and the report is in English because your brief was (`D7`).
+- Scope proposed: everyday IT requests Ana's team resolves itself; equipment purchases excluded, since they hand off into the unowned purchasing process.
+- Review after 15 completed cases or four weeks, whichever comes first.
 
-**Files written** in the working directory:
-- `pilot-selection.md` — ranked comparison, reasoning, pilot definition, open questions, design brief
-- `provia-project.json` — manifest v1.1, key `it-support`, 2 sources, 7 decisions, no workflows yet
-- `project.html` — offline map
+`D1` is yours to accept or overrule: the brief asked for the fastest process and I deliberately didn't answer that. If you take purchasing anyway, `D2` — who owns it — has to be answered first; it isn't optional.
 
-**Verified**: `node scripts/build-project-map.mjs provia-project.json --check` → 0 workflows, 0 readiness blocks, 0 warnings, 7 pending items (the open decisions). This checks manifest shape and references only, not the Markdown report or business correctness.
+## Files written (working directory)
 
-**Not done**: the host offered the Provia `org_get_context` tool but permission was not granted, so no organization was read and nothing was created in Provia; the run stayed disconnected.
+- `pilot-selection.md` — shortlist, pilot choice, boundaries, owner, success measures, open decisions
+- `provia-project.json` — the brief as `sources[]` with three anchors, decisions D1–D7, `project.title`
+- `project.html`, `setup.md` — generated from the manifest
 
-Next step recommended: `provia-workflow-designer`, once D2 and D5 are answered (Ana's start/end events and who else works IT support), so actions can be assigned to a group rather than to one person.
+`node scripts/build-project-map.mjs provia-project.json --check` passed: valid shape and references, 7 pending items, 0 warnings. That validates the manifest only — not the report, and not the business choice. Nothing was created in a Provia organization.
+
+---
+
+Next step: `provia-workflow-designer`, to turn the IT support scope into actions with Ana as the owner — but answer `D3` (her ownership scope) and `D6` (which request types are in) first, or the design will guess.
 
 ```text
-Use provia-workflow-designer with provia-project.json in this directory. Design the IT support request workflow for the pilot defined in pilot-selection.md: owner Ana, scope report-to-confirmed-resolution, manual trigger, standard actions with due dates, one solved/not-solved decision, closing evidence required. Cite source chat-it-support. Treat decisions D2 and D5 as open unless answered; do not invent a team. Country: Angola (provisional, D7); reply in English.
+Use provia-workflow-designer with provia-project.json in this directory. Design the IT support request workflow: register → triage → resolve → confirm and close. Owner is Ana; decisions D3 and D6 in the manifest are answered as follows: [fill in]. Keep equipment purchases out of scope. Country: Angola (provisional, D7 open); reply in English.
 ```

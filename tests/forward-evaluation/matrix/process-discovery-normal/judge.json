@@ -1,18 +1,17 @@
 {
-  "at": "2026-09-21T10:13:15.316Z",
+  "at": "2026-09-23T08:55:10.465Z",
   "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "Ranked shortlist provided (compras > pedidos de TI > admissão) with reasoning for each position and an explained pilot choice with explicit conditions.",
-    "Boundaries stated (in-scope steps, out-of-scope: pagamento, stock, contratos; one or two departments; review after 10 cases or 4 weeks).",
-    "Owner handled honestly: no owner invented; D1 records that a named pilot owner is required and names who must decide (Direcção).",
-    "Success measures defined as an observed baseline (last 20 email requests: days to decision, attached proposals, follow-ups) before fixing targets, rather than invented numbers.",
-    "Open questions D1–D8 listed with owners; confirmed facts, declared assumptions and unresolved decisions are clearly separated in the report and manifest.",
-    "File and script claims are supported by the tool log: provia-project.json, discovery-report.md written via Write; project.html and setup.md generated and --check run via build-project-map.mjs with output shown.",
-    "Correctly disclosed that org_get_context was not authorized and worked in disconnected mode; tenantId, organization name and sector left null rather than invented.",
-    "No organization IDs, approval thresholds, legal provisions or endpoints invented; APD/data protection flagged as a check to perform, not asserted as a conclusion.",
-    "Ends with a next-step recommendation naming provia-workflow-designer with a copyable invocation in pt-AO."
+    "Delivers the expected artefact set: an explicit ranking (1.º Pedidos de TI · 2.º Compras · 3.º Admissão), a reasoned pilot choice with named trade-offs (volume, single deciding team, cheap to get wrong, missing procurement policy), what is given up by not choosing Compras, and a stated condition (D9) under which the choice flips.",
+    "Separates confirmed facts from assumptions from open decisions: selecao-piloto.md has a 'confirmado pelo cliente' section, four explicitly labelled 'pressupostos declarados', and nine numbered open decisions carried into provia-project.json and setup.md.",
+    "Does not invent thresholds, volumes, owners or legal provisions: explicitly states no baseline was observed, that the comparison table is pattern indication not data, that procurement approval limits in Kz cannot be assumed, and that no numeric reduction targets were set because no baseline exists.",
+    "Owner and success measures handled honestly rather than fabricated: the pilot owner is left as open decision D1 ('sem este nome o piloto não arranca'), and the success measure is defined as first establishing a baseline from an email sample (D5) — measures of what to count are given without invented targets.",
+    "Boundaries are stated: categories in/out of scope (D2), who may open a request (D4), and how a request implying new spend exits the workflow (D6).",
+    "Tool-execution claims are all supported by the trace: build-project-map.mjs --check ran with the reported output (9 pending, 0 warnings), and selecao-piloto.md, provia-project.json, project.html, setup.md were each actually written.",
+    "Correctly and unprompted discloses that the Provia connector authorization was not granted, that org_get_context did not run, and that nothing was read, created or published in a Provia organization — matching the failed call at step 13.",
+    "Ends with a concrete next-step recommendation naming provia-workflow-designer, why it is useful now, its dependency on D1/D2/D3 (and D9 first if leadership is still deciding), plus a copyable invocation referencing the actual files produced; response is in pt-AO with Angolan terminology (correio electrónico, ficheiro, equipa), consistent with the Luanda context."
   ],
   "violations": []
 }

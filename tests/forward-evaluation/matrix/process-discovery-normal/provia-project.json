@@ -1,15 +1,15 @@
 {
   "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "piloto-compras",
-    "title": "Pedido de compra (piloto)",
+    "key": "pedidos-ti",
+    "title": "Pedido de TI",
     "language": "pt-AO",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.2.0",
+    "generator": "provia-skills/1.2.1",
     "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
-    "updatedAt": "2026-09-21"
+    "updatedAt": "2026-09-23"
   },
   "organization": {
     "name": null,
@@ -22,17 +22,33 @@
   },
   "sources": [
     {
-      "id": "pedido-inicial",
-      "title": "Pedido inicial de selecção de piloto (conversa, 2026-09-21)",
+      "id": "briefing-inicial",
+      "title": "Briefing inicial do cliente (conversa, 23-09-2026)",
       "kind": "interview",
-      "version": null,
-      "effectiveDate": "2026-09-21",
-      "summary": "Empresa em Luanda. Três processos tratados por correio electrónico: compras, admissão de trabalhadores e pedidos de TI. Sem volumes, responsáveis, procedimentos escritos ou casos recentes fornecidos.",
+      "version": "1",
+      "effectiveDate": "2026-09-23",
+      "summary": "Empresa sediada em Luanda. Compras, admissao de trabalhadores e pedidos de TI sao actualmente tratados por correio electronico. Pedido: escolher um processo piloto. Nao foram fornecidos procedimentos escritos, volumes, responsaveis nem medidas de base.",
       "sections": [
-        { "anchor": "contexto", "title": "Contexto da empresa", "summary": "Sede em Luanda; os três processos correm por e-mail; nenhum documento anexado." },
-        { "anchor": "compras", "title": "Candidato A: compras", "summary": "Pedidos de compra tratados por e-mail. Volume, responsável, regras de aprovação e procedimento escrito por confirmar." },
-        { "anchor": "admissao", "title": "Candidato B: admissão de trabalhadores", "summary": "Admissões tratadas por e-mail. Volume, responsável e lista de passos por confirmar; envolve dados pessoais." },
-        { "anchor": "ti", "title": "Candidato C: pedidos de TI", "summary": "Pedidos de TI tratados por e-mail. Volume, responsável e existência de outra ferramenta de registo por confirmar." }
+        {
+          "anchor": "contexto",
+          "title": "Contexto da organizacao",
+          "summary": "Empresa em Luanda; os tres processos correm por correio electronico. Sector, dimensao e numero de colaboradores nao foram indicados."
+        },
+        {
+          "anchor": "compras",
+          "title": "Candidato 1 - Compras",
+          "summary": "Pedidos de compra tratados por correio electronico. Politica de aprovacao, limites em Kz, propostas exigidas e responsavel nao foram fornecidos."
+        },
+        {
+          "anchor": "admissao",
+          "title": "Candidato 2 - Admissao de trabalhadores",
+          "summary": "Admissao de trabalhadores tratada por correio electronico. Passos, registos obrigatorios, dados pessoais tratados e responsavel nao foram fornecidos."
+        },
+        {
+          "anchor": "ti",
+          "title": "Candidato 3 - Pedidos de TI",
+          "summary": "Pedidos de TI tratados por correio electronico. Categorias, prazos de resposta, equipa e volume nao foram fornecidos. Candidato escolhido para piloto."
+        }
       ],
       "emails": []
     }
@@ -45,67 +61,81 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "Quem é o responsável nomeado pelo piloto de compras (pessoa que aprova o desenho, responde por atrasos e decide a revisão)? Sem este nome, o piloto passa para pedidos de TI se a TI tiver responsável.",
-      "owner": "Direcção da empresa",
+      "question": "Quem e o dono nomeado do piloto de Pedidos de TI (nome e endereco de correio electronico do Responsavel de TI)? Sem este nome o piloto nao arranca.",
+      "owner": "Administracao / Direccao-Geral",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "pedido-inicial", "section": "compras" } ]
+      "sourceRefs": [{ "source": "briefing-inicial", "section": "ti" }]
     },
     {
       "id": "D2",
-      "question": "Quantos pedidos de compra, admissões e pedidos de TI houve nos últimos 3 meses (contagem nas caixas de correio)? A escolha mantém-se se compras tiver pelo menos cerca de 10 casos por mês; abaixo disso, reavaliar.",
-      "owner": "Responsáveis de Compras, RH e TI",
+      "question": "Que categorias de pedido de TI entram no piloto (por exemplo acessos, avarias, equipamento existente) e quais ficam de fora (projectos, compras novas, contas de novos trabalhadores)?",
+      "owner": "Responsavel de TI",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "pedido-inicial", "section": "contexto" } ]
+      "sourceRefs": [{ "source": "briefing-inicial", "section": "ti" }]
     },
     {
       "id": "D3",
-      "question": "Existe procedimento escrito, modelo de requisição ou regra de aprovação (limites por valor, quem aprova, número de propostas exigido) para compras? Enviar o documento ou descrever a prática actual.",
-      "owner": "Responsável de Compras / Director financeiro",
+      "question": "Que prazos de resposta e de resolucao a empresa assume por categoria? Nao foi fornecido nenhum acordo de nivel de servico escrito; os prazos do piloto serao politica interna, nao uma obrigacao externa.",
+      "owner": "Responsavel de TI",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "pedido-inicial", "section": "compras" } ]
+      "sourceRefs": [{ "source": "briefing-inicial", "section": "ti" }]
     },
     {
       "id": "D4",
-      "question": "Que departamentos entram no piloto de compras (recomendação: um ou dois departamentos requisitantes, todos os tipos de bem ou serviço abaixo de um valor que a empresa fixe)?",
-      "owner": "Responsável do piloto (D1)",
+      "question": "Quem pode abrir um pedido de TI no piloto: toda a organizacao ou apenas os departamentos escolhidos para a primeira fase? A resposta define os acessos do workflow.",
+      "owner": "Responsavel de TI com a Administracao",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "pedido-inicial", "section": "compras" } ]
+      "sourceRefs": [{ "source": "briefing-inicial", "section": "ti" }]
     },
     {
       "id": "D5",
-      "question": "Linha de base observada: nos últimos 20 pedidos de compra por e-mail, quantos dias passaram do pedido à decisão, quantos tinham a proposta ou factura pró-forma anexada e quantas mensagens de seguimento («onde está?») existiram? Medir antes de desenhar.",
-      "owner": "Responsável de Compras",
+      "question": "Quem extrai a amostra de mensagens de correio electronico das ultimas semanas para fixar a base de comparacao (volume por semana e tempo ate a resolucao)? Sem esta amostra, o piloto mede-se apenas contra si proprio.",
+      "owner": "Responsavel de TI",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "pedido-inicial", "section": "compras" } ]
+      "sourceRefs": [{ "source": "briefing-inicial", "section": "ti" }]
     },
     {
       "id": "D6",
-      "question": "Pedidos de TI: há responsável nomeado e existe outra ferramenta de registo (helpdesk)? Se sim, TI é a alternativa se D1 ficar sem resposta.",
-      "owner": "Responsável de TI",
+      "question": "Como termina um pedido de TI que implica despesa ou compra de equipamento novo? Encerra com encaminhamento registado para Compras ou espera pela compra dentro do mesmo caso?",
+      "owner": "Responsavel de TI com a Direccao Administrativa e Financeira",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "pedido-inicial", "section": "ti" } ]
+      "sourceRefs": [
+        { "source": "briefing-inicial", "section": "ti" },
+        { "source": "briefing-inicial", "section": "compras" }
+      ]
     },
     {
       "id": "D7",
-      "question": "Admissão de trabalhadores fica para uma segunda vaga. Antes de a desenhar, RH confirma a lista de passos actual, os dados pessoais recolhidos e a base de protecção de dados aplicável (verificar em https://apd.ao/ao/legislacao/); nada foi assumido aqui.",
-      "owner": "Responsável de RH",
+      "question": "Compras (2.a fase): quais sao os limites de aprovacao em Kz, quem aprova em cada nivel e quantas propostas sao exigidas? Nao foi fornecida politica escrita e estes valores nao podem ser assumidos.",
+      "owner": "Director Financeiro",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "pedido-inicial", "section": "admissao" } ]
+      "sourceRefs": [{ "source": "briefing-inicial", "section": "compras" }]
     },
     {
       "id": "D8",
-      "question": "Nome, sector e organização Provia da empresa. O servidor Provia estava disponível nesta sessão mas a leitura do contexto (org_get_context) não foi autorizada; confirmar o tenant antes de qualquer aplicação.",
-      "owner": "Implementador",
+      "question": "Admissao de trabalhadores (3.a fase): que registos e prazos legais se aplicam em Angola e que dados pessoais o processo pode recolher e conservar? Exige instrumentos primarios verificados antes do desenho.",
+      "owner": "Responsavel de Recursos Humanos",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "pedido-inicial", "section": "contexto" } ]
+      "sourceRefs": [{ "source": "briefing-inicial", "section": "admissao" }]
+    },
+    {
+      "id": "D9",
+      "question": "Confirma-se o piloto em Pedidos de TI? Se a Administracao exigir que o piloto demonstre controlo financeiro, ou se os pedidos de TI forem menos de cerca de 5 por semana, a escolha muda para Compras e D7 passa a bloqueante.",
+      "owner": "Administracao / Direccao-Geral",
+      "status": "open",
+      "raisedBy": "provia-process-discovery",
+      "sourceRefs": [
+        { "source": "briefing-inicial", "section": "ti" },
+        { "source": "briefing-inicial", "section": "compras" }
+      ]
     }
   ],
   "receipts": []

@@ -7,39 +7,39 @@
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.2.0",
-    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
-    "updatedAt": "2026-09-21"
+    "generator": "provia-skills/1.2.1",
+    "updatedAt": "2026-09-23"
   },
   "organization": {
     "name": null,
     "sector": null,
     "mode": "disconnected",
     "tenantId": null,
-    "productRevision": null,
-    "language": "en",
-    "timezone": "Africa/Luanda"
+    "productRevision": null
   },
   "sources": [
     {
-      "id": "sop-onboarding-assumed",
-      "title": "Onboarding SOP — assumed outline (the customer's SOP was not supplied)",
+      "id": "request-brief",
+      "title": "Design request of 2026-09-23, without the onboarding SOP",
       "kind": "other",
       "version": null,
-      "effectiveDate": null,
-      "summary": "PLACEHOLDER. No procedure text, roles, service levels or approval rules were supplied with the request and the working directory was empty. The sections below are a conventional onboarding sequence assumed by provia-workflow-designer so the design could proceed; every section is a recommendation to confirm or replace with the customer's SOP (decision D1). Country Angola and language en are provisional (decision D8).",
+      "effectiveDate": "2026-09-23",
+      "summary": "The request asked to turn an onboarding SOP into actions, approvals and exception paths and stated that some required context is unavailable. No SOP file, extract or quotation was supplied and the working directory was empty. The only requirements traceable to this source are: the process is employee onboarding, it must produce actions, it must contain approvals, and it must contain exception paths. Everything else in this design is a proposal from generic onboarding practice and carries no source authority.",
       "sections": [
-        { "anchor": "A1", "title": "HR opens the onboarding case once the hire is approved", "summary": "Assumed: a person in Human Resources starts the case with the new employee's name, job title, department, start date and hiring manager, once the hiring approval exists." },
-        { "anchor": "A2", "title": "Start details confirmed with the hiring manager", "summary": "Assumed: HR confirms the start date, job title and department with the hiring manager before preparing anything." },
-        { "anchor": "A3", "title": "Contract drafted and admission documents collected", "summary": "Assumed: HR prepares the draft contract and collects identification, tax, social-security and bank documents from the new hire." },
-        { "anchor": "A4", "title": "Contract approved before signature", "summary": "Assumed: HR Management approves the draft contract, returns it for correction, or cancels the onboarding." },
-        { "anchor": "A5", "title": "Contract signed", "summary": "Assumed: HR arranges the signing; the new hire may sign, postpone or withdraw." },
-        { "anchor": "A6", "title": "Accounts and equipment provisioned", "summary": "Assumed: IT Support creates accounts and prepares equipment before the start date." },
-        { "anchor": "A7", "title": "Payroll and statutory registrations", "summary": "Assumed: HR registers the employee in payroll and submits the social-security and tax registrations the organization is obliged to make. No statutory deadline is asserted." },
-        { "anchor": "A8", "title": "First-day welcome and induction", "summary": "Assumed: the hiring manager receives the employee, hands over equipment and completes a signed induction checklist." },
-        { "anchor": "A9", "title": "End-of-probation review", "summary": "Assumed: the hiring manager evaluates the employee at the end of the probation period and confirms, extends or ends the employment; HR closes the file. Probation length unknown." }
-      ],
-      "emails": []
+        { "anchor": "process", "title": "The process is employee onboarding" },
+        { "anchor": "actions", "title": "The design must produce actions" },
+        { "anchor": "approvals", "title": "The design must contain approvals" },
+        { "anchor": "exceptions", "title": "The design must contain exception paths" },
+        { "anchor": "assumed", "title": "Assumed baseline: not stated in any supplied source" }
+      ]
+    },
+    {
+      "id": "onboarding-sop",
+      "title": "Onboarding SOP (named in the request, not supplied)",
+      "kind": "sop",
+      "version": null,
+      "effectiveDate": null,
+      "summary": "The document the request refers to. It was not supplied and no part of it was read. No element of this design is derived from it, and nothing in this manifest cites it. It must be supplied and reconciled against this design before packaging (decision D1)."
     }
   ],
   "entityTypes": [],
@@ -50,53 +50,38 @@
       "kind": "team",
       "area": "people",
       "parentKey": null,
-      "purpose": "Opens onboarding cases, prepares the contract, collects documents, registers payroll and closes the file. Real name of the unit unknown.",
-      "members": [ { "role": "HR officer", "email": null } ],
-      "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A1" }, { "source": "sop-onboarding-assumed", "section": "A3" }, { "source": "sop-onboarding-assumed", "section": "A7" } ],
+      "purpose": "Opens the onboarding case, collects the employee's documents, prepares the contract and the payroll registration, decides on the start readiness and runs the day-one induction. Proposed actor: no supplied source names it.",
+      "members": [],
+      "sourceRefs": [{ "source": "request-brief", "section": "assumed" }],
       "flags": [
-        { "code": "unnamed", "detail": "The SOP was not supplied; the unit's actual name and members are unknown (decision D2)." },
-        { "code": "segregation", "detail": "Prepares the contract (prepare_contract) while hr_management approves it (approve_contract); keep the two groups separate (decision D5)." }
+        { "code": "unnamed", "detail": "No supplied source names the team that owns onboarding. The key, the name and the responsibilities are proposals; decision D3 names the real owner." }
       ]
     },
     {
-      "key": "hr_management",
-      "name": "HR Management",
+      "key": "it",
+      "name": "IT",
       "kind": "team",
-      "area": "people",
+      "area": "technology",
       "parentKey": null,
-      "purpose": "Approves the employment contract before signature and owns the workflow design. Assumed approver; the SOP may name a different authority.",
-      "members": [ { "role": "Head of Human Resources", "email": null } ],
-      "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A4" } ],
+      "purpose": "Creates the approved accounts and system access and prepares the workstation and equipment. Proposed actor: no supplied source names it.",
+      "members": [],
+      "sourceRefs": [{ "source": "request-brief", "section": "assumed" }],
       "flags": [
-        { "code": "unnamed", "detail": "Assumed approver; the actual approving authority is decision D5." },
-        { "code": "single_person", "detail": "Likely one person; a group is proposed so approvals survive absences. Delegate to be named (decision D5)." },
-        { "code": "segregation", "detail": "Approves what hr prepares; must not be the same people." }
+        { "code": "unnamed", "detail": "No supplied source names the team that provisions access and equipment. Decision D3 names the real owner." },
+        { "code": "segregation", "detail": "IT grants the access that the hiring manager approves in approve_plan. Keep the approval and the provisioning in different groups; decision D5 asks whether privileged access needs a second approver." }
       ]
     },
     {
       "key": "hiring_managers",
-      "name": "Hiring managers",
+      "name": "Hiring Managers",
       "kind": "role",
-      "area": null,
+      "area": "people",
       "parentKey": null,
-      "purpose": "Fallback owner for the actions the design assigns to the person in the `hiring_manager` case field (induction and probation review); the product cannot assign from a field yet, so the owner is set per case.",
+      "purpose": "Fallback owner for the actions the hiring manager of the case performs: approving the onboarding plan and the access list, introducing the employee to the team and deciding on the end of the onboarding period. Used only where the per-case owner in the hiring_manager field cannot be applied.",
       "members": [],
-      "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A2" }, { "source": "sop-onboarding-assumed", "section": "A8" }, { "source": "sop-onboarding-assumed", "section": "A9" } ],
+      "sourceRefs": [{ "source": "request-brief", "section": "assumed" }],
       "flags": [
-        { "code": "unnamed", "detail": "Membership unknown; whether hiring managers exist as a group in the organization is decision D2." }
-      ]
-    },
-    {
-      "key": "it_support",
-      "name": "IT Support",
-      "kind": "team",
-      "area": "technology",
-      "parentKey": null,
-      "purpose": "Creates accounts and prepares equipment before the start date.",
-      "members": [ { "role": "IT technician", "email": null } ],
-      "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A6" } ],
-      "flags": [
-        { "code": "unnamed", "detail": "Assumed actor; the SOP may split accounts (IT) from equipment and badges (general services) — decision D2." }
+        { "code": "unnamed", "detail": "The hiring manager is per case, not a standing team. This role group exists because Provia cannot assign from a case field; decision D6 confirms who holds it." }
       ]
     }
   ],
@@ -108,201 +93,321 @@
       "file": "workflow.yaml",
       "status": "design",
       "ownerArea": "people",
-      "sourceRefs": [ { "source": "sop-onboarding-assumed" } ],
+      "sourceRefs": [{ "source": "request-brief", "section": "process" }],
       "access": {
         "grants": [
           {
             "grantee": "group:hr",
-            "level": "create_incident",
-            "reason": "Human Resources opens every onboarding case once the hire is approved (assumed).",
-            "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A1" } ]
-          },
-          {
-            "grantee": "group:hr_management",
             "level": "edit",
-            "reason": "Owns the process and the workflow design; may publish new versions (assumed process owner).",
-            "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A4" } ]
+            "reason": "Proposed, not evidenced: Human Resources owns the onboarding design and opens every case. edit is cumulative, so it also carries create_incident. Confirm in decision D4 before applying.",
+            "sourceRefs": [{ "source": "request-brief", "section": "assumed" }]
           }
         ],
         "sensitivity": "internal",
-        "note": "Onboarding cases carry personal documents (identification, tax, social-security and bank data) and contract terms. `internal` is provisional: the source's own words are unavailable. If the organization treats these files as restricted (decision D6), change sensitivity to `restricted`; the create_incident grant to hr then means every HR starter sees every onboarding case. IT Support and hiring managers get no grant: they see the cases that carry their actions."
+        "note": "Sensitivity is a proposal, not a reading of the source: no supplied document uses the words that would set it. The case carries identity documents, a contract and a payroll registration, so decision D7 asks whether the workflow should be restricted. IT and the hiring managers receive no grant: they see the cases that carry their own actions. Nobody beyond Human Resources and the organization administrators can see every case under the proposal above."
       },
       "triggers": [
-        { "type": "manual", "label": "Start onboarding", "enabled": true, "manual": { "allowedGroups": [], "allowedUsers": [] } }
+        {
+          "type": "manual",
+          "label": "Start employee onboarding",
+          "enabled": true,
+          "manual": { "allowedGroups": [], "allowedUsers": [] }
+        },
+        {
+          "type": "form",
+          "label": "Intake from the recruiting handover (proposed, not designed)",
+          "enabled": false
+        }
       ],
       "templates": [],
       "unresolvedActors": [],
       "unresolvedEntityTypes": [
-        { "key": "employee", "name": "Employee", "detail": "The case concerns a person who will become an employee record. No entity registry was supplied and the tenant could not be read; whether an Employee entity type exists and should be linked is decision D7 (provia-information-model)." }
+        { "key": "employee", "name": "Employee", "detail": "The onboarding case is about a person who will also be a reusable record (payroll, equipment, later processes). No entity type registry was supplied, so no key is invented here; provia-information-model must decide whether an Employee entity type exists and bind it." }
       ],
       "actions": [
         {
           "localId": "register_hire",
-          "name": "Register the hire and confirm the start details",
+          "name": "Register the confirmed hire and open the onboarding case",
           "type": "standard",
-          "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A1" }, { "source": "sop-onboarding-assumed", "section": "A2" } ],
-          "assigneeRef": "creator",
-          "setsFields": [ "hiring_manager", "start_date", "job_title", "department" ],
-          "formRef": null,
+          "assigneeRef": "hr",
+          "sourceRefs": [{ "source": "request-brief", "section": "assumed" }],
           "entityRefs": [],
-          "evidence": [ "Hiring approval attached to the case", "Comment confirming start date, job title and department with the hiring manager" ],
+          "formRef": null,
+          "setsFields": ["employee_name", "role_title", "department", "start_date", "hiring_manager"],
+          "evidence": [
+            "Signed offer or hire confirmation attached to the case",
+            "employee_name, role_title, department, start_date and hiring_manager filled"
+          ],
           "due": null,
           "folded": [
-            { "section": "A2", "summary": "Confirming the start details with the hiring manager is step 2 of the HR starter's task, not a separate manager action." }
+            { "section": "assumed", "summary": "Confirm with the recruiting owner that the offer was accepted (hand-off, not a separate unit of work)" },
+            { "section": "assumed", "summary": "Tell the hiring manager that the case is open so the plan and access list can be prepared" }
           ]
+        },
+        {
+          "localId": "collect_documents",
+          "name": "Collect and check the new employee's documents",
+          "type": "standard",
+          "assigneeRef": "hr",
+          "sourceRefs": [{ "source": "request-brief", "section": "assumed" }],
+          "entityRefs": [],
+          "formRef": null,
+          "evidence": [
+            "Each collected document attached to the case",
+            "Comment mapping each attachment to the list item it satisfies and naming anything outstanding"
+          ],
+          "due": null,
+          "folded": [
+            { "section": "assumed", "summary": "Send the document list to the new employee (sub-step of the collection task)" }
+          ]
+        },
+        {
+          "localId": "approve_plan",
+          "name": "Decide on the onboarding plan and the access list",
+          "type": "decision",
+          "assigneeRef": "field:hiring_manager",
+          "assigneeFallback": "hiring_managers",
+          "sourceRefs": [
+            { "source": "request-brief", "section": "approvals" },
+            { "source": "request-brief", "section": "assumed" }
+          ],
+          "entityRefs": [],
+          "formRef": null,
+          "evidence": [
+            "Approved onboarding plan and access list attached to the case",
+            "Comment with the reason on a return or a cancellation"
+          ],
+          "due": null,
+          "folded": []
         },
         {
           "localId": "prepare_contract",
-          "name": "Prepare the employment contract and collect the new hire's documents",
+          "name": "Prepare the employment contract and the payroll registration",
           "type": "standard",
-          "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A3" } ],
           "assigneeRef": "hr",
-          "setsFields": [ "probation_end_date" ],
-          "formRef": null,
+          "sourceRefs": [{ "source": "request-brief", "section": "assumed" }],
           "entityRefs": [],
-          "evidence": [ "Draft contract attached", "Collected admission documents attached", "probation_end_date filled" ],
+          "formRef": null,
+          "evidence": [
+            "Signed employment contract attached to the case",
+            "Payroll registration confirmation attached to the case"
+          ],
           "due": null,
           "folded": [
-            { "section": "A3", "summary": "Requesting the documents from the new hire (an external party) is a step of the HR task; the new hire has no Provia group." }
+            { "section": "assumed", "summary": "Send the contract for signature by the signatories and the employee (sub-step)" },
+            { "section": "assumed", "summary": "Register the employee for the benefits the role carries; decision D8 asks whether payroll and benefits belong to this process at all" }
           ]
         },
         {
-          "localId": "approve_contract",
-          "name": "Decide on the employment contract",
-          "type": "decision",
-          "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A4" } ],
-          "assigneeRef": "hr_management",
-          "formRef": null,
+          "localId": "create_access",
+          "name": "Create the accounts and the system access",
+          "type": "standard",
+          "assigneeRef": "it",
+          "sourceRefs": [{ "source": "request-brief", "section": "assumed" }],
           "entityRefs": [],
-          "evidence": [ "Mandatory comment on «Return for correction» and «Cancel the onboarding»" ],
+          "formRef": null,
+          "evidence": [
+            "Comment listing each system, the account created and the permission level granted",
+            "Delivery method of the first-access credentials recorded"
+          ],
+          "due": null,
+          "folded": [
+            { "section": "assumed", "summary": "Prepare first-access credentials for in-person delivery on day one (sub-step)" }
+          ]
+        },
+        {
+          "localId": "prepare_equipment",
+          "name": "Prepare the workstation and the equipment",
+          "type": "standard",
+          "assigneeRef": "it",
+          "sourceRefs": [{ "source": "request-brief", "section": "assumed" }],
+          "entityRefs": [],
+          "formRef": null,
+          "evidence": [
+            "Comment listing the prepared equipment with asset identifiers",
+            "Unsigned handover record attached to the case"
+          ],
           "due": null,
           "folded": []
         },
         {
-          "localId": "record_signature",
-          "name": "Record the outcome of the contract signing",
+          "localId": "decide_start",
+          "name": "Decide whether the start proceeds on the planned date",
           "type": "decision",
-          "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A5" } ],
           "assigneeRef": "hr",
-          "formRef": null,
+          "sourceRefs": [
+            { "source": "request-brief", "section": "exceptions" },
+            { "source": "request-brief", "section": "assumed" }
+          ],
           "entityRefs": [],
-          "evidence": [ "Signed contract attached on «Signed»", "Mandatory comment on «Postponed» and «Withdrawn»" ],
+          "formRef": null,
+          "evidence": [
+            "Comment recording the four-item readiness check",
+            "Updated start_date when the start is postponed"
+          ],
           "due": null,
           "folded": [
-            { "section": "A5", "summary": "Arranging the signing appointment with the new hire is step 1 of the HR task." }
+            { "section": "assumed", "summary": "Verify documents, contract, access and equipment before day one (the readiness checklist is the method of this decision, not four separate actions)" }
           ]
         },
         {
-          "localId": "provision_access",
-          "name": "Provision the accounts and equipment",
+          "localId": "run_induction",
+          "name": "Run the day-one induction",
           "type": "standard",
-          "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A6" } ],
-          "assigneeRef": "it_support",
-          "formRef": null,
+          "assigneeRef": "hr",
+          "sourceRefs": [{ "source": "request-brief", "section": "assumed" }],
           "entityRefs": [],
-          "evidence": [ "Comment listing the accesses created and the equipment serial numbers" ],
+          "formRef": null,
+          "evidence": [
+            "Signed equipment handover record attached to the case",
+            "Comment confirming the induction was held and the employee signed in successfully"
+          ],
           "due": null,
           "folded": [
-            { "section": "A6", "summary": "Informing the hiring manager and HR of missing equipment is the exception path of the IT task, not a notification action (recommendation for provia-automation-designer)." }
+            { "section": "assumed", "summary": "Hand over the equipment and the first-access credentials, and introduce the employee to the hiring manager (hand-offs inside the induction)" }
           ]
         },
         {
-          "localId": "register_payroll",
-          "name": "Register the employee in payroll and social security",
+          "localId": "introduce_to_team",
+          "name": "Introduce the new employee and agree the role plan",
           "type": "standard",
-          "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A7" } ],
-          "assigneeRef": "hr",
-          "formRef": null,
-          "entityRefs": [],
-          "evidence": [ "Registration receipts attached", "Comment with each registration and its date" ],
-          "due": null,
-          "dueInSource": { "text": "Statutory registration deadlines are not asserted: the SOP and the jurisdiction confirmation are unavailable (decision D8).", "kind": "legal" },
-          "folded": []
-        },
-        {
-          "localId": "induct_employee",
-          "name": "Conduct the first-day welcome and induction",
-          "type": "standard",
-          "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A8" } ],
           "assigneeRef": "field:hiring_manager",
           "assigneeFallback": "hiring_managers",
-          "formRef": null,
+          "sourceRefs": [{ "source": "request-brief", "section": "assumed" }],
           "entityRefs": [],
-          "evidence": [ "Signed induction checklist attached" ],
+          "formRef": null,
+          "evidence": [
+            "Comment with the agreed objectives for the onboarding period and the first point of contact",
+            "Short record of each follow-up conversation held"
+          ],
           "due": null,
-          "dueInSource": { "text": "On the employee's first day (`start_date`); a due offset from activation cannot express a case-field date.", "kind": "event_relative" },
           "folded": [
-            { "section": "A8", "summary": "Handing over equipment and testing accesses is step 1 of the manager's induction, not a separate IT action." }
+            { "section": "assumed", "summary": "Name the colleague who is the employee's first point of contact (sub-step)" }
           ]
         },
         {
-          "localId": "prepare_probation_review",
-          "name": "Prepare the probation review",
-          "type": "standard",
-          "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A9" } ],
-          "assigneeRef": "hr",
-          "setsFields": [ "probation_end_date" ],
-          "formRef": null,
-          "entityRefs": [],
-          "evidence": [ "Comment with the date the evaluation template was sent to the hiring manager" ],
-          "due": null,
-          "dueInSource": { "text": "Before `probation_end_date`; the probation length is unknown (decision D4) and a due offset cannot express a case-field date.", "kind": "event_relative" },
-          "folded": [
-            { "section": "A9", "summary": "Sending the evaluation template to the manager is a step of the HR preparation, not a notification action (recommendation for provia-automation-designer)." }
-          ]
-        },
-        {
-          "localId": "review_probation",
-          "name": "Decide on the end of the probation period",
+          "localId": "decide_period_end",
+          "name": "Decide on the end of the onboarding period",
           "type": "decision",
-          "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A9" } ],
           "assigneeRef": "field:hiring_manager",
           "assigneeFallback": "hiring_managers",
-          "formRef": null,
+          "sourceRefs": [
+            { "source": "request-brief", "section": "approvals" },
+            { "source": "request-brief", "section": "exceptions" }
+          ],
           "entityRefs": [],
-          "evidence": [ "Completed evaluation attached", "Mandatory comment on «Extend» and «End during probation»" ],
-          "due": null,
-          "dueInSource": { "text": "By `probation_end_date` (decision D4).", "kind": "event_relative" },
-          "folded": []
-        },
-        {
-          "localId": "close_onboarding",
-          "name": "Close the onboarding record",
-          "type": "standard",
-          "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A9" } ],
-          "assigneeRef": "hr",
           "formRef": null,
-          "entityRefs": [],
-          "evidence": [ "Comment with the final status and the filing date" ],
+          "evidence": [
+            "Comment with the closing assessment against the agreed objectives"
+          ],
           "due": null,
           "folded": [
-            { "section": "A9", "summary": "Opening the separation process after «End during probation» is out of scope; the closing action records the hand-off (decision D9)." }
+            { "section": "assumed", "summary": "Hold the closing conversation with the employee (sub-step of the decision)" }
           ]
         }
       ],
       "subWorkflowRefs": [],
       "setupNotes": [
-        "Design built on an assumed outline: the customer's onboarding SOP was not supplied and the tenant could not be read (org_get_context not permitted). Replace source sop-onboarding-assumed with the real SOP and re-run the design before packaging (D1).",
-        "induct_employee and review_probation are owned by the person in the `hiring_manager` case field; the product cannot assign from a field, so the owner is set manually per case (fallback group: Hiring managers).",
-        "No due offsets are set: no service level was supplied (D3). Deadlines tied to start_date and probation_end_date are recorded in dueInSource and need manual configuration or a case calendar.",
-        "workflow.yaml carries access grants by group name (Human Resources, HR Management); regenerate with scripts/emit-workflow-access.mjs once the manifest group names are confirmed.",
-        "No document templates are cited because the source is unavailable; the admission checklist, contract template, induction checklist and evaluation template named in the descriptions must be identified and listed in templates[] once the SOP is supplied."
+        "No onboarding SOP was supplied. This workflow is a proposal built on a declared assumed baseline; do not publish it before the actual SOP is supplied and reconciled against it (decision D1).",
+        "No deadline is set on any action because no service level was supplied. Every due is unset by design, not by omission (decision D2).",
+        "approve_plan, introduce_to_team and decide_period_end are owned per case by the user in the hiring_manager field. Provia cannot assign from a case field: configure the Hiring Managers group as the assignee and set the owner manually per case, or accept the fallback (decision D6).",
+        "The intake form trigger is recorded as a proposal only. A form trigger cannot be authored in the portable YAML; it must be created in Provia and specified by provia-form-designer (decision D9).",
+        "Group ids do not exist yet. The YAML carries no assignee for any action and the access grant is written by group name; both need real destination references before import.",
+        "A provia-implementer MCP server was offered in the design session but the org_get_context call was not permitted, so the tenant was never read. The design is disconnected: no group, user, entity type or workflow was read from or written to Provia, and every group key here is a proposal rather than a tenant reference."
       ]
     }
   ],
   "forms": [],
   "aiProfiles": [],
   "decisions": [
-    { "id": "D1", "question": "Supply the actual onboarding SOP (or confirm each assumed section A1–A9). The whole design rests on an assumed outline; any section the SOP contradicts changes the actions and branches.", "owner": "Process owner (HR) — to be named", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "sop-onboarding-assumed" } ] },
-    { "id": "D2", "question": "Confirm the real names and members of the actors: the HR unit (hr), the approving HR authority (hr_management), IT Support (it_support), and whether hiring managers exist as a group or are set per case only.", "owner": "Process owner (HR) — to be named", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A1" } ] },
-    { "id": "D3", "question": "Which service levels apply to each action (days before start date for the contract, accounts and registrations; days for the approval; days for closing)? No due was set because none was supplied.", "owner": "Process owner (HR) — to be named", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "sop-onboarding-assumed" } ] },
-    { "id": "D4", "question": "What is the probation period, may it be extended, and who decides at its end (assumed: the hiring manager, with HR preparing the review)?", "owner": "Process owner (HR) — to be named", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A9" } ] },
-    { "id": "D5", "question": "Who approves the employment contract before signature (assumed: HR Management), what is their authority limit, and who is the delegate in their absence? The design keeps preparation (hr) and approval (hr_management) in separate groups.", "owner": "Head of Human Resources — to be named", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A4" } ] },
-    { "id": "D6", "question": "Are onboarding files (identification, bank and social-security data, contract terms) treated as restricted in the organization? If yes, sensitivity becomes `restricted` and every HR starter sees every onboarding case (access.note).", "owner": "Process owner (HR) — to be named", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A3" } ] },
-    { "id": "D7", "question": "Does an Employee entity type exist in Provia, and should the onboarding case create or link the employee record? Recorded in unresolvedEntityTypes as `employee`.", "owner": "Implementer with the process owner", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A7" } ] },
-    { "id": "D8", "question": "Confirm the country and jurisdiction (Angola is a provisional context) and which statutory registrations and deadlines apply to a new employee. None are asserted in the design.", "owner": "Process owner (HR) with legal counsel", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A7" } ] },
-    { "id": "D9", "question": "Which process handles the separation when the decision is «End during probation» or the hire withdraws after signature? The closing action records the hand-off only.", "owner": "Process owner (HR) — to be named", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A9" } ] },
-    { "id": "D10", "question": "Should the new hire, the hiring manager and IT be notified automatically (case opened, contract signed, first day, probation review due)? Recommended as notifications for provia-automation-designer; none are in the assumed outline.", "owner": "Process owner (HR) — to be named", "status": "open", "raisedBy": "provia-workflow-designer", "sourceRefs": [ { "source": "sop-onboarding-assumed", "section": "A6" } ] }
+    {
+      "id": "D1",
+      "question": "Which document is the actual onboarding SOP, and where does this proposed design differ from it? Nothing here was derived from a customer document.",
+      "owner": "Process owner (onboarding)",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [{ "source": "request-brief", "section": "process" }]
+    },
+    {
+      "id": "D2",
+      "question": "What service level applies to each action: document collection, contract and payroll, access provisioning, equipment, the readiness decision and the length of the onboarding period? No due was invented.",
+      "owner": "Process owner (onboarding)",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [{ "source": "request-brief", "section": "assumed" }]
+    },
+    {
+      "id": "D3",
+      "question": "Which real teams own the work proposed here as Human Resources and IT, and what are their names in the tenant? The group keys and names are placeholders.",
+      "owner": "Process owner (onboarding)",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [{ "source": "request-brief", "section": "assumed" }]
+    },
+    {
+      "id": "D4",
+      "question": "Who opens an onboarding case: Human Resources only, as proposed, or may a hiring manager open one directly? The answer decides whether a second create_incident grant or a manual-start allowlist is needed.",
+      "owner": "Process owner (onboarding)",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [{ "source": "request-brief", "section": "assumed" }]
+    },
+    {
+      "id": "D5",
+      "question": "Does the hiring manager alone approve the access list, or does privileged or system-administrator access need a second approver? No threshold or approval rule was supplied and none was invented.",
+      "owner": "Process owner (onboarding)",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [{ "source": "request-brief", "section": "approvals" }]
+    },
+    {
+      "id": "D6",
+      "question": "Provia cannot assign an action from a case field. For approve_plan, introduce_to_team and decide_period_end, should the assignee be set manually per case from hiring_manager, or should the Hiring Managers group hold them?",
+      "owner": "Process owner (onboarding)",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [{ "source": "request-brief", "section": "assumed" }]
+    },
+    {
+      "id": "D7",
+      "question": "Should this workflow be restricted rather than internal? The case carries identity documents, an employment contract and a payroll registration. No supplied document uses the words that would settle it.",
+      "owner": "Process owner (onboarding)",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [{ "source": "request-brief", "section": "assumed" }]
+    },
+    {
+      "id": "D8",
+      "question": "Are payroll and benefits registration part of onboarding, as folded into prepare_contract here, or a separate process with its own owner?",
+      "owner": "Process owner (onboarding)",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [{ "source": "request-brief", "section": "assumed" }]
+    },
+    {
+      "id": "D9",
+      "question": "Is the case opened manually by Human Resources, as designed, or from an intake form handed over by recruiting? A form trigger is not authorable in the portable YAML and must be configured in Provia.",
+      "owner": "Process owner (onboarding)",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [{ "source": "request-brief", "section": "assumed" }]
+    },
+    {
+      "id": "D10",
+      "question": "Does ending the onboarding period without completing it belong in this workflow at all? decide_period_end closes the case and leaves any employment consequence outside; confirm that a separate process handles it.",
+      "owner": "Process owner (onboarding)",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [{ "source": "request-brief", "section": "exceptions" }]
+    },
+    {
+      "id": "D11",
+      "question": "Country, jurisdiction and response language were not supplied. Angola, Africa/Luanda and AOA are recorded as a provisional starting context and the design is written in English; confirm or correct before publication.",
+      "owner": "Process owner (onboarding)",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [{ "source": "request-brief", "section": "process" }]
+    }
   ],
   "receipts": []
 }

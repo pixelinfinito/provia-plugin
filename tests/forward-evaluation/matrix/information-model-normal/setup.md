@@ -1,6 +1,6 @@
 # Fornecedores e pedidos de compra: Entrega de configuração
 
-Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
+Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/provia-information-model, 2026-09-23).
 
 ## Estado
 
@@ -16,11 +16,12 @@ Nada pendente.
 
 ## Decisões em aberto
 
-- **D1** O sistema de contabilidade/ERP atribui um código de fornecedor? Se sim, supplier_code copia-o (text); se não e for necessária uma referência, substituir por auto_number. (Dono: Responsável de Compras)
-- **D2** O NIF e os dados bancários do fornecedor são consultados no Provia durante o pedido, ou ficam exclusivamente no sistema de contabilidade? Determina se tax_number se preenche e confirma que os dados bancários ficam fora do Provia. (Dono: Direcção Financeira)
-- **D3** Confirmar os vocabulários propostos: categorias de fornecimento, condições de pagamento (prazos), moedas e estados da situação do fornecedor. (Dono: Responsável de Compras com Finanças)
-- **D4** O fornecedor é conhecido quando o pedido de compra é aberto, ou só depois das cotações? Determina se a ligação ao Fornecedor no workflow é optional na criação (recomendado) ou required. (Dono: Responsável de Compras)
-- **D5** Quem pode criar e editar registos de Fornecedor e quem apenas os consulta? Proposta: criação/edição pela equipa de Compras, consulta pela organização. (Dono: Responsável de Compras e administrador Provia)
-- **D6** Existe uma lista estável de centros de custo ou departamentos requerentes? Se for curta e estável, um select no caso chega; se for gerida por Finanças e reutilizada noutros processos, ponderar um tipo de entidade Centro de custo. (Dono: Direcção Financeira)
+- **D1** O código do fornecedor deve ser gerado pelo Provia (auto_number FOR-0001) ou é o código que o sistema de contabilidade já atribui? Manter apenas um. (Dono: Finanças)
+- **D2** Qual é a lista real de categorias de compra da organização, para substituir o vocabulário proposto em categorias_fornecimento? (Dono: Compras)
+- **D3** Quais são as condições de pagamento efectivamente praticadas, para substituir as opções propostas? (Dono: Finanças)
+- **D4** Quem pode ver e criar registos de Fornecedor? NIF, documentos de qualificação e condições comerciais ficam visíveis a toda a organização ou apenas a Compras e Finanças? (Dono: Administrador Provia, com Compras)
+- **D5** Existe um processo definido de avaliação de fornecedores? Sem ele, data_proxima_avaliacao fica sem quem a preencha e não se acrescenta classificação de desempenho. (Dono: Compras)
+- **D6** Já existe um tipo de entidade de fornecedor nesta organização Provia? Em caso afirmativo, reutilizar e conferir o esquema em vez de criar um segundo tipo. (Dono: Implementador)
+- **D7** Que valores do fornecedor devem ser fixados no caso por fieldMapping na data da decisão (por exemplo condições de pagamento) e quais devem ser sempre consultados no registo actual? (Dono: Compras, com Finanças)
 
 Este ficheiro é gerado pelo mapa do projecto; volte a gerá-lo depois de cada alteração ao manifesto. Não substitui a revisão do dono do processo nem a pré-visualização de importação no Provia.

@@ -1,356 +1,599 @@
 {
   "schemaVersion": "provia-entity-catalogue/v1",
-  "title": "Supplier register for purchase orders",
+  "title": "Supplier contact model for ordering",
   "language": "en",
   "country": "Angola",
   "notes": [
-    "Source: chat request of 2026-09-21 (\"We need supplier contact details for orders. Add passport numbers and family details of every supplier employee, although we have no stated use for those fields.\"). No SOP, sample records, export or existing catalogue was supplied; every field below is a reasoned baseline to confirm with the purchasing team.",
-    "Country: Angola is a provisional starting context because none was stated. Currency, timezone and any legal conclusion remain unconfirmed. Response language: English, as requested.",
-    "Requested and NOT modelled: passport numbers and family details of supplier employees. The request itself states there is no use for them. They are identity and private-life data about third-party individuals with no consuming process, no maintainer and no access model; collecting them would expose the organization to data-protection risk (Angola: Agência de Protecção de Dados, https://apd.ao/ao/legislacao/ — applicability and articles unverified) with no operational benefit. See decision D1 in provia-project.json: if a concrete use appears later (for example site-access clearance), it is collected in that process, for the individuals it concerns, with restricted access and a retention rule, not in the supplier register.",
-    "Also not modelled: a per-person register of every supplier employee. Orders need a reachable order desk and one backup, which are role-based business contacts held on the Supplier record. A separate 'Supplier contact' entity type is justified only when several processes must select a specific individual (decision D3).",
-    "Contact fields hold business contact data of supplier staff (name, role, work email, work phone). Prefer functional mailboxes (orders@…) over personal addresses; keep the register visible only to the people who raise or follow orders.",
-    "Icons from snapshot 36772f7ce0831f0ea6f85a0e3e7849d32e576655 (references/entity-icons.json). Metadata types verified in Provia revision 2641364d9c1aa0aa2b76aa788ef521bcb6218118. Destination verification pending: the Provia tenant was not read (the provia-implementer connection was not authorized in this session), so existing types were not checked for reuse.",
-    "This catalogue is an editorial specification for manual configuration in Provia. It is not an import payload. Sensitivity labels describe intent; they are not field-level permission enforcement."
+    "Scope as requested: the supplier data needed to place, chase and settle an order. No procedure, export, existing catalogue or sample record was supplied; every field below is a reasoned proposal to confirm with the procurement owner, not a recorded organizational requirement.",
+    "No country was stated. Angola is disclosed as a provisional context: examples use AOA and +244 numbers. Nothing here asserts an Angolan legal requirement, tax identifier format or retention period, and none was verified.",
+    "Passport numbers and family details of supplier employees were requested and are deliberately NOT in this catalogue. The request itself states there is no use for them. They are personal data about people who do not work for us, and an entity field is visible to everyone who can see the type. The disposition, and the design that would apply if a purpose is later named, are in the supplier_contact setup notes and in decision D2.",
+    "A purchase order is one execution and belongs in a workflow case with its own metadata and evidence, not in a second entity type that duplicates the supplier. These two types are what an order case selects; the order itself is not modelled here.",
+    "Icons taken from the entity-icons snapshot at product source revision 36772f7ce0831f0ea6f85a0e3e7849d32e576655. Availability in the destination organization is not verified.",
+    "Field types and configuration rules follow Provia revision 2641364d9c1aa0aa2b76aa788ef521bcb6218118. Confirm the destination version before configuring.",
+    "This is an editorial specification for manual configuration. It is not a Provia import payload and it creates nothing. No synchronization with any accounting or ERP system is configured or implied; copied values are maintained by the named maintainer."
   ],
   "types": [
     {
       "key": "supplier",
       "name": "Supplier",
-      "description": "Suppliers to whom purchase orders are sent. Provides the identity of the counterparty and the contacts used to place, confirm and follow up an order.",
+      "description": "Suppliers selected when an order is placed. Holds the identity, ordering contacts and agreed terms needed to issue, chase and settle an order.",
       "icon": "Truck01",
-      "namePattern": "Trading name as it appears on quotations and invoices (e.g. \"Demo Supplies, Lda.\"). Add the vendor code only when two suppliers share a name.",
-      "purpose": "Selecting the counterparty on a purchase order, sending the order to the right desk, following up on confirmation, delivery and invoice queries.",
-      "owner": "Purchasing team (buyer who onboarded the supplier); accounting confirms fiscal identity when it appears on the order.",
+      "namePattern": "Trading name as it is used in correspondence; add the existing accounting supplier code only when two records would otherwise be indistinguishable. Example: Demonstration Supplies.",
+      "purpose": "Selecting the counterparty on an order case and reaching the right people to issue, confirm, chase and invoice that order.",
+      "owner": "Procurement; a named administrator still has to be designated.",
       "fields": [
         {
-          "key": "vendor_code",
-          "label": "Vendor code",
+          "key": "supplier_code",
+          "label": "Accounting supplier code",
           "type": "text",
-          "required": false,
           "group": "Identification",
-          "helpText": "Code of this supplier in the accounting or ERP system, if one exists. Copy it exactly; it is used to match orders and invoices.",
-          "purpose": "Match the Provia record and its orders to the supplier account in the accounting system.",
+          "helpText": "Copy the code the accounting system already uses for this supplier. Leave empty until the supplier exists there.",
+          "purpose": "Reconcile the Provia record with the supplier ledger when an order is invoiced and paid.",
+          "example": "FOR-0413",
           "priority": "conditional",
-          "source": "Accounting / ERP vendor master (assumed to exist; confirm).",
-          "maintainer": "Purchasing, copied from accounting at onboarding.",
-          "sensitivity": "Internal.",
-          "example": "V-00123"
+          "required": false,
+          "source": "Existing accounting or ERP supplier ledger; the system of record is unidentified and has to be confirmed.",
+          "maintainer": "Procurement administrator, on registration and when accounting reassigns a code.",
+          "sensitivity": "Internal business reference; no personal data.",
+          "config": {}
         },
         {
           "key": "legal_name",
           "label": "Legal name",
           "type": "text",
-          "required": false,
           "group": "Identification",
-          "helpText": "Fill only when the registered company name differs from the trading name used as the record Name.",
-          "purpose": "Print the correct counterparty on the purchase order.",
+          "helpText": "Fill only when the contracting and invoicing name differs from the trading name used as the record Name.",
+          "purpose": "Name the counterparty correctly on the order document and check it against the invoice received.",
+          "example": "Demonstration Supplies, Lda.",
           "priority": "conditional",
-          "source": "Supplier registration documents.",
-          "maintainer": "Purchasing.",
-          "sensitivity": "Internal.",
-          "example": "Demo Supplies Comércio Geral, Lda."
+          "required": false,
+          "source": "Supplier registration document supplied by the supplier.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Internal business identity; no personal data."
         },
         {
           "key": "tax_number",
-          "label": "Tax number (NIF)",
+          "label": "Tax number",
           "type": "text",
-          "required": false,
           "group": "Identification",
-          "helpText": "Supplier tax identification as shown on its invoices. Confirm with accounting before relying on it.",
-          "purpose": "Identify the supplier on the purchase order and match incoming invoices; needed only if the order template carries it (decision D2).",
+          "helpText": "Copy the tax number from the supplier's registration document. The format is not validated by this field.",
+          "purpose": "Check that the invoice received for an order comes from the counterparty the order was placed with.",
+          "example": "NIF-DEMO-0001",
           "priority": "conditional",
-          "source": "Supplier invoice or registration document.",
-          "maintainer": "Purchasing, verified by accounting.",
-          "sensitivity": "Internal; company identifier, not personal data for companies. For sole traders it identifies a person: limit access.",
-          "example": "NIF-DEMO-0001"
+          "required": false,
+          "source": "Supplier registration document; no statutory requirement for this field has been verified.",
+          "maintainer": "Procurement administrator, confirmed by Finance at first invoice.",
+          "sensitivity": "Internal business identifier of an organization; no personal data. For a sole trader it identifies a person, so confirm access before use."
         },
         {
-          "key": "supplier_category",
-          "label": "Supplier category",
+          "key": "supply_category",
+          "label": "Supply category",
           "type": "select",
-          "required": false,
           "group": "Classification",
-          "helpText": "What the supplier mainly provides. Used to filter the list when raising an order.",
-          "purpose": "Filter suppliers when selecting the counterparty for an order and report orders by category.",
-          "priority": "optional",
-          "source": "Purchasing knowledge at onboarding.",
-          "maintainer": "Purchasing.",
-          "sensitivity": "Internal.",
+          "helpText": "Choose what this supplier is ordered from. This drives the subcategory list and lets orders be routed and reported by category.",
+          "purpose": "Route an order to the buyer responsible for that category and report spend by category.",
           "example": "goods",
+          "priority": "core",
+          "required": true,
+          "source": "Proposed vocabulary; confirm the real category list with Procurement before configuring.",
+          "maintainer": "Procurement administrator; the option list is governed by Procurement.",
+          "sensitivity": "Internal; no personal data.",
           "options": [
             { "value": "goods", "label": "Goods" },
             { "value": "services", "label": "Services" },
-            { "value": "goods_and_services", "label": "Goods and services" }
+            { "value": "works", "label": "Works" },
+            { "value": "transport_logistics", "label": "Transport and logistics" }
           ]
         },
         {
-          "key": "order_contact_name",
-          "label": "Order contact",
-          "type": "text",
-          "required": true,
-          "group": "Order contacts",
-          "helpText": "Person or desk that receives and confirms purchase orders (e.g. \"Sales desk\" or the account manager's name).",
-          "purpose": "Address the purchase order and know who to call when confirmation is late.",
-          "priority": "core",
-          "source": "Supplier quotation or onboarding exchange.",
-          "maintainer": "Buyer who owns the relationship; update when the supplier announces a change.",
-          "sensitivity": "Business contact data of a supplier employee. Record work role and name only.",
-          "example": "Sales desk (demo contact)"
-        },
-        {
-          "key": "order_contact_role",
-          "label": "Order contact role",
-          "type": "text",
+          "key": "supply_subcategory",
+          "label": "Supply subcategory",
+          "type": "select",
+          "group": "Classification",
+          "helpText": "Only the subcategories of the chosen supply category are offered. Changing the category clears this value.",
+          "purpose": "Narrow the search for a supplier when an order is raised, and separate spend within a category.",
+          "example": "it_equipment",
+          "priority": "conditional",
           "required": false,
-          "group": "Order contacts",
-          "helpText": "Job role of the order contact at the supplier, when known.",
-          "purpose": "Judge whether the contact can confirm prices and lead times or must escalate.",
-          "priority": "optional",
-          "source": "Supplier onboarding exchange.",
-          "maintainer": "Buyer who owns the relationship.",
-          "sensitivity": "Business contact data.",
-          "example": "Account manager"
+          "source": "Proposed vocabulary derived from the parent list; confirm with Procurement.",
+          "maintainer": "Procurement administrator; the option list is governed by Procurement.",
+          "sensitivity": "Internal; no personal data.",
+          "options": [
+            { "value": "office_supplies", "label": "Office supplies", "parentValue": "goods" },
+            { "value": "it_equipment", "label": "IT equipment", "parentValue": "goods" },
+            { "value": "raw_materials", "label": "Raw materials", "parentValue": "goods" },
+            { "value": "maintenance", "label": "Maintenance", "parentValue": "services" },
+            { "value": "consulting", "label": "Consulting", "parentValue": "services" },
+            { "value": "cleaning_security", "label": "Cleaning and security", "parentValue": "services" },
+            { "value": "civil_works", "label": "Civil works", "parentValue": "works" },
+            { "value": "electrical_works", "label": "Electrical works", "parentValue": "works" },
+            { "value": "freight", "label": "Freight", "parentValue": "transport_logistics" },
+            { "value": "customs_clearance", "label": "Customs clearance", "parentValue": "transport_logistics" }
+          ],
+          "config": {
+            "parentField": "supply_category"
+          }
         },
         {
           "key": "order_email",
-          "label": "Order email",
+          "label": "Orders email",
           "type": "email",
-          "required": true,
           "group": "Order contacts",
-          "helpText": "Address where purchase orders are sent. Prefer a functional mailbox over a personal one.",
-          "purpose": "Send the purchase order and receive the confirmation.",
+          "helpText": "The address the purchase order is sent to. Prefer a shared ordering address over a personal one so an order does not stall when someone is away.",
+          "purpose": "Send the purchase order and receive the supplier's confirmation.",
+          "example": "orders@example.com",
           "priority": "core",
-          "source": "Supplier quotation or onboarding exchange.",
-          "maintainer": "Buyer who owns the relationship.",
-          "sensitivity": "Business contact data; may identify a person when no functional mailbox exists.",
-          "example": "orders@example.com"
+          "required": false,
+          "source": "Supplied by the supplier at registration.",
+          "maintainer": "Procurement administrator, corrected whenever a message bounces.",
+          "sensitivity": "Business contact. A named individual's address is personal data; the shared address is preferred for that reason."
         },
         {
           "key": "order_phone",
-          "label": "Order phone",
+          "label": "Orders phone",
           "type": "phone",
-          "required": false,
           "group": "Order contacts",
-          "helpText": "Work phone of the order desk or contact, with country code.",
-          "purpose": "Chase confirmation or delivery when email is not answered.",
+          "helpText": "Number used to chase an order that has not been confirmed or delivered.",
+          "purpose": "Chase an unconfirmed or late order.",
+          "example": "+244 900 000 000",
           "priority": "core",
-          "source": "Supplier quotation or onboarding exchange.",
-          "maintainer": "Buyer who owns the relationship.",
-          "sensitivity": "Business contact data; use work numbers only.",
-          "example": "+244 900 000 000"
-        },
-        {
-          "key": "backup_contact_name",
-          "label": "Backup contact",
-          "type": "text",
           "required": false,
-          "group": "Order contacts",
-          "helpText": "Second person or desk to use when the order contact is unavailable.",
-          "purpose": "Keep orders moving during absences at the supplier.",
-          "priority": "optional",
-          "source": "Supplier onboarding exchange.",
-          "maintainer": "Buyer who owns the relationship.",
-          "sensitivity": "Business contact data of a supplier employee.",
-          "example": "Demo backup contact"
+          "source": "Supplied by the supplier at registration.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Business contact; a personal mobile number is personal data."
         },
         {
-          "key": "backup_email",
-          "label": "Backup email",
+          "key": "primary_order_contact",
+          "label": "Primary order contact",
+          "type": "entity",
+          "targetType": "supplier_contact",
+          "group": "Order contacts",
+          "helpText": "The person to address by name on an order. Select a contact record of this supplier whose status is active.",
+          "purpose": "Address the order to a named person and know who to call about it.",
+          "example": { "lookupName": "Demonstration Contact, Demonstration Supplies" },
+          "priority": "core",
+          "required": false,
+          "source": "Chosen from the supplier contact records; no automatic link exists between the two types beyond this reference.",
+          "maintainer": "Procurement administrator; has to be changed manually when that person leaves the supplier.",
+          "sensitivity": "Points at a record about a named person."
+        },
+        {
+          "key": "billing_email",
+          "label": "Invoicing email",
           "type": "email",
-          "required": false,
           "group": "Order contacts",
-          "helpText": "Work email of the backup contact.",
-          "purpose": "Reach the supplier when the order mailbox is unattended.",
-          "priority": "optional",
-          "source": "Supplier onboarding exchange.",
-          "maintainer": "Buyer who owns the relationship.",
-          "sensitivity": "Business contact data.",
-          "example": "backup@example.com"
-        },
-        {
-          "key": "backup_phone",
-          "label": "Backup phone",
-          "type": "phone",
-          "required": false,
-          "group": "Order contacts",
-          "helpText": "Work phone of the backup contact, with country code.",
-          "purpose": "Reach the supplier when the order contact is unavailable.",
-          "priority": "optional",
-          "source": "Supplier onboarding exchange.",
-          "maintainer": "Buyer who owns the relationship.",
-          "sensitivity": "Business contact data.",
-          "example": "+244 900 000 001"
-        },
-        {
-          "key": "invoice_query_email",
-          "label": "Invoice query email",
-          "type": "email",
-          "required": false,
-          "group": "Order contacts",
-          "helpText": "Fill only when invoice and payment questions go to a different address than orders.",
-          "purpose": "Route invoice disputes and payment confirmations without going through the sales desk.",
+          "helpText": "Fill only when invoices and remittance advice go somewhere other than the orders email.",
+          "purpose": "Send remittance advice and query an invoice against an order.",
+          "example": "invoices@example.com",
           "priority": "conditional",
-          "source": "Supplier invoice footer or onboarding exchange.",
-          "maintainer": "Accounting, informed by the buyer.",
-          "sensitivity": "Business contact data.",
-          "example": "billing@example.com"
+          "required": false,
+          "source": "Supplied by the supplier; confirmed by Finance at first payment.",
+          "maintainer": "Finance, through the procurement administrator.",
+          "sensitivity": "Business contact."
         },
         {
-          "key": "delivery_address",
-          "label": "Supplier address",
+          "key": "address",
+          "label": "Address",
           "type": "text",
-          "required": false,
           "group": "Location",
-          "helpText": "Address for collections, returns and the order header. One line is enough.",
-          "purpose": "Arrange collections and returns; print the supplier address on the order.",
+          "helpText": "Address used to collect goods, receive a delivery or visit the supplier. One line is enough; separate address components are not proposed until a process needs them.",
+          "purpose": "Arrange collection, delivery or a visit for an order.",
+          "example": "Rua de Demonstração 00, Luanda",
           "priority": "conditional",
-          "source": "Supplier quotation or invoice.",
-          "maintainer": "Purchasing.",
-          "sensitivity": "Internal.",
-          "example": "Rua de demonstração 1, Luanda"
+          "required": false,
+          "source": "Supplied by the supplier at registration.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Business address; for a sole trader this can be a home address."
+        },
+        {
+          "key": "country",
+          "label": "Country",
+          "type": "text",
+          "group": "Location",
+          "helpText": "Country the supplier invoices from. Kept separate from the order currency and the correspondence language, which are their own fields.",
+          "purpose": "Identify orders that need import formalities and a longer lead time.",
+          "example": "Angola",
+          "priority": "conditional",
+          "required": false,
+          "source": "Supplier registration document.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Internal; no personal data."
         },
         {
           "key": "relationship_owner",
-          "label": "Relationship owner",
+          "label": "Internal owner",
           "type": "user",
-          "required": false,
-          "group": "Ownership",
-          "helpText": "Internal buyer who onboarded the supplier and keeps these contacts current.",
-          "purpose": "Know who to ask when a contact bounces or the supplier's situation changes; identifies the maintainer of this record.",
+          "group": "Responsibility",
+          "helpText": "The buyer accountable for this supplier. Selecting a user here does not assign any workflow action.",
+          "purpose": "Know who to escalate to when an order is late, short-delivered or disputed.",
+          "example": { "lookupName": "Demonstration Buyer" },
           "priority": "core",
-          "source": "Purchasing team assignment.",
-          "maintainer": "Purchasing lead.",
-          "sensitivity": "Internal.",
-          "example": { "lookupName": "Demonstration buyer" }
+          "required": false,
+          "source": "Designated by Procurement; the allocation of suppliers to buyers has not been supplied.",
+          "maintainer": "Procurement lead, reviewed when buyers change portfolio.",
+          "sensitivity": "Internal staff reference."
         },
         {
-          "key": "relationship_status",
-          "label": "Relationship status",
+          "key": "supplier_status",
+          "label": "Supplier status",
           "type": "select",
-          "required": false,
-          "group": "Status",
-          "helpText": "Current state of the relationship. Check it before placing an order; the field does not block selection by itself.",
-          "purpose": "Avoid sending orders to suspended or inactive suppliers; report the active supplier base.",
-          "priority": "core",
-          "source": "Purchasing decision.",
-          "maintainer": "Purchasing lead.",
-          "sensitivity": "Internal.",
+          "group": "Lifecycle",
+          "helpText": "Check this before ordering. The field records a decision; it does not itself prevent anyone from selecting the supplier on an order.",
+          "purpose": "Stop buyers from ordering from a supplier that has been put on hold or dropped.",
           "example": "active",
-          "defaultValue": "active",
+          "priority": "core",
+          "required": true,
+          "source": "Procurement decision; no approval or suspension procedure was supplied.",
+          "maintainer": "Procurement lead.",
+          "sensitivity": "Internal; no personal data.",
           "options": [
             { "value": "active", "label": "Active" },
-            { "value": "suspended", "label": "Suspended" },
+            { "value": "on_hold", "label": "On hold" },
             { "value": "inactive", "label": "Inactive" }
           ]
         },
         {
-          "key": "status_note",
-          "label": "Status note",
-          "type": "text",
-          "required": false,
-          "group": "Status",
-          "helpText": "Short reason when the supplier is suspended or inactive (e.g. \"quality issue, under review\").",
-          "purpose": "Explain to buyers why a supplier should not receive orders.",
-          "priority": "conditional",
-          "source": "Purchasing decision.",
-          "maintainer": "Purchasing lead.",
-          "sensitivity": "Internal; keep factual, no personal remarks about supplier staff.",
-          "example": "Suspended after two late deliveries; review in October"
-        },
-        {
-          "key": "order_currency",
-          "label": "Usual order currency",
-          "type": "select",
-          "required": false,
-          "group": "Commercial terms",
-          "helpText": "Currency the supplier normally quotes in. The order itself carries its own amount and currency.",
-          "purpose": "Pre-fill the order currency and avoid mixed-currency mistakes.",
+          "key": "active_since",
+          "label": "Active since",
+          "type": "date",
+          "group": "Lifecycle",
+          "helpText": "Date the supplier was first cleared for ordering.",
+          "purpose": "Situate the relationship when reviewing a supplier or a price.",
+          "example": "2026-03-02",
           "priority": "optional",
-          "source": "Supplier quotations.",
-          "maintainer": "Purchasing.",
-          "sensitivity": "Internal.",
-          "example": "aoa",
-          "options": [
-            { "value": "aoa", "label": "AOA (Kz)" },
-            { "value": "usd", "label": "USD" },
-            { "value": "eur", "label": "EUR" }
-          ]
+          "required": false,
+          "source": "Procurement record.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Internal; no personal data."
         },
         {
           "key": "payment_terms",
-          "label": "Agreed payment terms",
-          "type": "text",
+          "label": "Payment terms",
+          "type": "select",
+          "group": "Order terms",
+          "helpText": "Copy the terms from the agreement or the supplier's standing quotation. This is a reference for the person raising the order; it enforces nothing.",
+          "purpose": "Tell the buyer and Finance what was agreed before the order is placed.",
+          "example": "days_30",
+          "priority": "conditional",
           "required": false,
-          "group": "Commercial terms",
-          "helpText": "Terms agreed with the supplier as written in the contract or quotation (e.g. \"30 days from invoice\"). The accounting system remains the authority.",
-          "purpose": "Let the buyer state the right terms on the order without opening the accounting system.",
+          "source": "Proposed vocabulary; the real terms in use have not been supplied and must be confirmed with Finance.",
+          "maintainer": "Finance, through the procurement administrator, when an agreement changes.",
+          "sensitivity": "Commercially sensitive; confirm who may see supplier terms.",
+          "options": [
+            { "value": "prepayment", "label": "Payment in advance" },
+            { "value": "on_delivery", "label": "Payment on delivery" },
+            { "value": "days_30", "label": "30 days" },
+            { "value": "days_60", "label": "60 days" }
+          ]
+        },
+        {
+          "key": "order_currency",
+          "label": "Order currency",
+          "type": "select",
+          "group": "Order terms",
+          "helpText": "Currency the supplier invoices in. Independent of the supplier's country and of the correspondence language.",
+          "purpose": "Raise the order in the currency that will be invoiced.",
+          "example": "aoa",
+          "priority": "conditional",
+          "required": false,
+          "source": "Agreement or standing quotation.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Internal; no personal data.",
+          "options": [
+            { "value": "aoa", "label": "Kwanza (AOA)" },
+            { "value": "usd", "label": "US dollar (USD)" },
+            { "value": "eur", "label": "Euro (EUR)" }
+          ]
+        },
+        {
+          "key": "delivery_lead_time_days",
+          "label": "Usual lead time (days)",
+          "type": "number",
+          "group": "Order terms",
+          "helpText": "Calendar days normally observed between order and delivery. An estimate kept by the buyer, not a contractual commitment.",
+          "purpose": "Set a realistic expected delivery date when raising the order.",
+          "example": 7,
           "priority": "optional",
-          "source": "Contract or quotation; accounting system.",
-          "maintainer": "Purchasing, aligned with accounting when terms change.",
-          "sensitivity": "Internal.",
-          "example": "30 days from invoice date"
+          "required": false,
+          "source": "Buyer's observation; no delivery performance data was supplied.",
+          "maintainer": "Internal owner, revised after repeated late deliveries.",
+          "sensitivity": "Internal; no personal data."
+        },
+        {
+          "key": "registration_document",
+          "label": "Registration document",
+          "type": "file",
+          "group": "Evidence",
+          "helpText": "The supplier's registration or tax document as provided. Attach the document itself; do not retype its contents into other fields.",
+          "purpose": "Support the identity and tax number used on the order and the invoice check.",
+          "example": { "lookupName": "Demonstration registration certificate" },
+          "priority": "optional",
+          "required": false,
+          "source": "Supplied by the supplier at registration.",
+          "maintainer": "Procurement administrator; no review or expiry process is defined, so no verification date field is proposed.",
+          "sensitivity": "Business document. Remove it if it contains identity documents of individuals."
         }
       ],
       "coverage": [
         {
           "dimension": "Identity and classification",
           "decision": "included",
-          "reason": "Native Name carries the trading name; vendor code, legal name and NIF are conditional on the accounting system and the order template (D2); category is an optional filter."
+          "reason": "Trading name as the native Name, legal name and tax number for the contract and invoice check, accounting code for reconciliation, and a two-level category used to route an order to the right buyer."
         },
         {
-          "dimension": "Contacts",
+          "dimension": "Contacts and location",
           "decision": "included",
-          "reason": "The requested scope. Order desk, backup and invoice-query contacts as role-based business contact data; no per-person employee register."
-        },
-        {
-          "dimension": "Location",
-          "decision": "included",
-          "reason": "One address line for collections, returns and the order header. Multiple sites would need a separate Site type; none was described."
+          "reason": "Orders email and phone, a named primary contact, a separate invoicing address when it differs, and the physical address needed for collection or delivery. This is the core of the request."
         },
         {
           "dimension": "Ownership and structure",
           "decision": "included",
-          "reason": "Internal relationship owner identifies who maintains the contacts. Supplier group structures were not described."
+          "reason": "An internal owner for escalation. The supplier's own internal structure is not modelled: no ordering process consumes it."
         },
         {
           "dimension": "Status and lifecycle",
           "decision": "included",
-          "reason": "Relationship status and note so buyers see suspensions before ordering. Start/end dates deferred: no review or renewal process was described."
+          "reason": "Status and active-since date, so a buyer can see before ordering that a supplier is on hold. No approval or suspension procedure was supplied, so the transitions are unconfirmed."
         },
         {
-          "dimension": "Commercial terms",
+          "dimension": "Operational and commercial attributes",
           "decision": "included",
-          "reason": "Usual currency and agreed payment terms as optional convenience; prices, credit limits and balances stay in the accounting system."
+          "reason": "Payment terms, currency and usual lead time, because the person raising the order needs them. Prices, quantities and the agreed value of one order are case data, not supplier attributes."
         },
         {
           "dimension": "Relationships",
-          "decision": "case",
-          "reason": "Each order is a case that references the Supplier; no inverse list of orders is kept on the supplier record."
+          "decision": "included",
+          "reason": "One reference to the primary order contact. The reverse direction is maintained on the contact type; no duplicate inverse list is proposed."
         },
         {
           "dimension": "Evidence and source",
-          "decision": "external",
-          "reason": "Contracts, registration documents and quotations stay in their document location or attached to the order case. No verification date without a defined review process."
+          "decision": "included",
+          "reason": "The registration document is attached. No verification or review date is proposed because no verification process was described; an edit timestamp would not be one."
         },
         {
-          "dimension": "Identity documents and family details of supplier employees",
-          "decision": "not_applicable",
-          "reason": "Requested without a stated use. No consuming process, maintainer or access model exists; the data concerns third-party individuals and part of it is private-life information. Not modelled; see decision D1."
+          "dimension": "Order execution data",
+          "decision": "case",
+          "reason": "Items, quantities, values, approvals, delivery notes and invoices belong to the order case and its action evidence. A second entity type for the order would duplicate the supplier and go stale."
         }
       ],
       "setup": [
-        "Create the type manually in Provia: display name Supplier, icon Truck01, description as above. Native Name = trading name; do not add a display-name field.",
-        "Field disposition of the request: order contact details → included as role-based contact fields (order_contact_name, order_email, order_phone, backup_*, invoice_query_email). Passport numbers of supplier employees → removed, not modelled. Family details of supplier employees → removed, not modelled. Per-employee register of every supplier employee → removed; a Supplier contact type is deferred (D3).",
-        "Only order_contact_name and order_email are required at creation: a buyer always knows where to send the first order. Everything else is completed later by the relationship owner.",
-        "relationship_status defaults to active because a supplier is registered when the first order is about to be placed. The field does not block selection: the order workflow must instruct the buyer to check it, or a later action must verify it.",
-        "Access: restrict view/create/edit of this type to the purchasing group and accounting; other staff select a supplier through the order case, not by browsing the register. Grants are not proposed as data here because no source names the groups (decision D4).",
-        "Manual-entry walkthrough (synthetic): buyer creates \"Demo Supplies, Lda.\" with Order contact = \"Sales desk\", Order email = orders@example.com, Order phone, category goods, currency aoa, and sets themself as relationship owner. Vendor code and NIF are added once accounting opens the vendor account. Backup contact and payment terms are added after the first order. Nothing is entered twice: the order case references the supplier instead of copying its contacts.",
-        "Do not create a Supplier record per employee of the supplier, and do not paste employee lists into status_note or any text field.",
-        "Destination verification pending: existing entity types in the tenant were not read. If a Supplier or Vendor type already exists, reuse it and reconcile these fields instead of creating a duplicate."
+        "No procedure, export or existing catalogue was supplied. Every field, option list and maintainer here is a proposal to confirm with Procurement and Finance before configuring.",
+        "Native Name, UUID, creator and system timestamps already exist on every record. None of these fields duplicates them, and no generic source-system, source-id or record-version field is proposed.",
+        "Configure Supply category before Supply subcategory: the child declares config.parentField = supply_category, and every subcategory option carries the parentValue shown. Do not set a default value on the dependent field.",
+        "supplier_code stays a text field holding the accounting system's own code. If the organization has no supplier code today and wants Provia to allocate one, replace it with an auto_number field (required false, no default, for example prefix FOR-, padding 4, startAt 1) and do not keep both. Adding an auto_number field later backfills existing records in creation order and the sequence can have gaps.",
+        "Nothing here synchronizes with accounting or an ERP. Values copied from those systems are maintained by the named maintainer and go stale unless someone updates them.",
+        "supplier_status records a decision. It does not block selection, stop an order being raised or revoke anything. Any real block has to be a step in the order workflow.",
+        "Manual walkthrough: registering Demonstration Supplies, a buyer knows the trading name, supply category, status, orders email, phone and address from the supplier's own quotation, and fills them in one pass. Legal name and tax number are copied from the registration document when it arrives. Payment terms and currency are known once a quotation or agreement exists. The primary order contact cannot be selected until at least one supplier contact record exists, so create the supplier first, then the contact, then come back and select it: that return visit is the one piece of repeated work in this model and is unavoidable with a two-type design.",
+        "If Procurement never deals with more than one person per supplier, drop the supplier_contact type and keep a contact name field here instead. That decision is D1 and belongs to Procurement."
       ],
       "readiness": [
-        "Before an order is sent: relationship_status is active, order_email is current (last order confirmed or contact re-verified), and, when the order template requires it, tax_number and legal_name are filled and confirmed by accounting.",
-        "Review contacts when an order email bounces or a confirmation is more than five working days late (illustrative company rule, not a statutory deadline)."
+        "Before an order is sent: order_email or order_phone must be filled, and supplier_status must be active. Neither condition is enforced by these fields; both have to be checked by the person raising the order or by a step in the order workflow.",
+        "Before the first invoice is paid: legal_name, tax_number and the invoicing address or email should be confirmed by Finance against the registration document."
+      ]
+    },
+    {
+      "key": "supplier_contact",
+      "name": "Supplier contact",
+      "description": "Named people at a supplier who are contacted about orders. Records how to reach each one and what they handle, so an order goes to the right person.",
+      "icon": "UserCircle",
+      "namePattern": "The person's name as they use it professionally; add the supplier trading name when two suppliers have contacts with the same name. Example: Demonstration Contact, Demonstration Supplies.",
+      "purpose": "Reaching the right person at a supplier to place, confirm, chase or invoice an order.",
+      "owner": "Procurement; a named administrator still has to be designated.",
+      "fields": [
+        {
+          "key": "supplier",
+          "label": "Supplier",
+          "type": "entity",
+          "targetType": "supplier",
+          "group": "Identification",
+          "helpText": "The supplier this person works for. A contact record only makes sense against a supplier, so select it when creating the record.",
+          "purpose": "Find this person from the supplier when raising an order, and keep the two types connected.",
+          "example": { "lookupName": "Demonstration Supplies" },
+          "priority": "core",
+          "required": true,
+          "source": "Known to the buyer at the moment the contact is created.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Internal business reference."
+        },
+        {
+          "key": "contact_role",
+          "label": "What they handle",
+          "type": "select",
+          "group": "Identification",
+          "helpText": "What this person deals with on our orders. Use the supplier's actual division of work, not their job title.",
+          "purpose": "Send each message to the person who can act on it instead of to whoever is known.",
+          "example": "orders",
+          "priority": "core",
+          "required": true,
+          "source": "Proposed vocabulary; confirm the roles Procurement actually distinguishes.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Internal; describes a working relationship, not the person.",
+          "options": [
+            { "value": "orders", "label": "Orders and confirmations" },
+            { "value": "logistics", "label": "Delivery and logistics" },
+            { "value": "invoicing", "label": "Invoicing and payment" },
+            { "value": "technical", "label": "Technical or after-sales" },
+            { "value": "management", "label": "Management and escalation" }
+          ]
+        },
+        {
+          "key": "job_title",
+          "label": "Job title",
+          "type": "text",
+          "group": "Identification",
+          "helpText": "The title the person gives themselves in correspondence. Free text; no list is proposed because the titles belong to the supplier.",
+          "purpose": "Address the person correctly and judge whether they can commit the supplier.",
+          "example": "Sales coordinator",
+          "priority": "optional",
+          "required": false,
+          "source": "The person's own signature or business card.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Personal data about an identifiable person; kept because it is needed to address them correctly."
+        },
+        {
+          "key": "email",
+          "label": "Email",
+          "type": "email",
+          "group": "Contact details",
+          "helpText": "Work address only. Do not record a personal address.",
+          "purpose": "Send the order, the confirmation request and the chase to this person.",
+          "example": "contact@example.com",
+          "priority": "core",
+          "required": false,
+          "source": "Supplied by the person in the course of business.",
+          "maintainer": "Procurement administrator, corrected whenever a message bounces.",
+          "sensitivity": "Personal data about an identifiable person, collected for the ordering purpose only."
+        },
+        {
+          "key": "phone",
+          "label": "Phone",
+          "type": "phone",
+          "group": "Contact details",
+          "helpText": "Work number only. Record a personal mobile only when the supplier gives it as their working contact.",
+          "purpose": "Chase an order that has not been confirmed or delivered.",
+          "example": "+244 900 000 001",
+          "priority": "core",
+          "required": false,
+          "source": "Supplied by the person in the course of business.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Personal data about an identifiable person, collected for the ordering purpose only."
+        },
+        {
+          "key": "alternate_phone",
+          "label": "Alternative phone",
+          "type": "phone",
+          "group": "Contact details",
+          "helpText": "A second number, for example a switchboard, when the first is often unreachable.",
+          "purpose": "Reach the supplier about an urgent order when the main number fails.",
+          "example": "+244 900 000 002",
+          "priority": "optional",
+          "required": false,
+          "source": "Supplied by the person or the supplier's switchboard.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Personal data when it is a personal number; prefer a switchboard."
+        },
+        {
+          "key": "correspondence_language",
+          "label": "Correspondence language",
+          "type": "select",
+          "group": "Contact details",
+          "helpText": "Language to write to this person in. Separate from the supplier's country and order currency.",
+          "purpose": "Write the order and the chase in a language the recipient works in.",
+          "example": "pt",
+          "priority": "conditional",
+          "required": false,
+          "source": "Observed correspondence; only worth configuring if the supplier base is mixed.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Internal; no sensitive attribute is inferred from it.",
+          "options": [
+            { "value": "pt", "label": "Portuguese" },
+            { "value": "en", "label": "English" }
+          ]
+        },
+        {
+          "key": "contact_status",
+          "label": "Contact status",
+          "type": "select",
+          "group": "Lifecycle",
+          "helpText": "Check before writing. The field records what is known; it does not stop anyone selecting or emailing this contact.",
+          "purpose": "Stop orders being sent to someone who has left the supplier or asked not to be contacted.",
+          "example": "active",
+          "priority": "core",
+          "required": true,
+          "source": "Told to us by the supplier, or inferred from a bounced message and then confirmed.",
+          "maintainer": "Procurement administrator, on the first failed contact.",
+          "sensitivity": "Internal; do_not_contact records a request made by the person and must be honoured.",
+          "options": [
+            { "value": "active", "label": "Active" },
+            { "value": "left_supplier", "label": "Left the supplier" },
+            { "value": "do_not_contact", "label": "Do not contact" }
+          ]
+        },
+        {
+          "key": "last_confirmed_on",
+          "label": "Details last confirmed",
+          "type": "date",
+          "group": "Lifecycle",
+          "helpText": "Date someone actually confirmed these details with the supplier. Configure this field only if that confirmation is a real routine; the record's own edit date is not a confirmation.",
+          "purpose": "Show whether the contact details can still be trusted before sending an order to a supplier not used recently.",
+          "example": "2026-09-01",
+          "priority": "conditional",
+          "required": false,
+          "source": "A periodic contact confirmation routine. No such routine was described, so this field is conditional on one existing.",
+          "maintainer": "Whoever performs the confirmation.",
+          "sensitivity": "Internal; no personal data beyond the fact of the confirmation."
+        },
+        {
+          "key": "availability_notes",
+          "label": "Availability notes",
+          "type": "rich_text",
+          "group": "Lifecycle",
+          "helpText": "Working hours, cover arrangements or ordering cut-off times. Keep it about the work. Do not record health, family or other private circumstances here.",
+          "purpose": "Set the right expectation for when an order will be confirmed.",
+          "example": "Available 08:00–16:00. Orders received after 15:00 are confirmed the next working day.",
+          "priority": "optional",
+          "required": false,
+          "source": "Told to us by the contact.",
+          "maintainer": "Procurement administrator.",
+          "sensitivity": "Free text about a named person; the help text constrains it to working arrangements for that reason."
+        }
+      ],
+      "coverage": [
+        {
+          "dimension": "Identity and classification",
+          "decision": "included",
+          "reason": "Name as the native Name, the supplier they work for, what they handle and their job title. Enough to know who is being written to and whether they can act."
+        },
+        {
+          "dimension": "Contacts and location",
+          "decision": "included",
+          "reason": "Work email, phone, an alternative number and the correspondence language. The physical address belongs to the supplier and is not duplicated here."
+        },
+        {
+          "dimension": "Ownership and structure",
+          "decision": "included",
+          "reason": "The supplier reference and the role give the structure that matters. The internal accountable buyer is on the supplier type and is not repeated on every contact."
+        },
+        {
+          "dimension": "Status and lifecycle",
+          "decision": "included",
+          "reason": "Status covers the case that actually costs money: an order sent to someone who left. The confirmation date is conditional on a confirmation routine existing."
+        },
+        {
+          "dimension": "Operational and commercial attributes",
+          "decision": "not_applicable",
+          "reason": "Terms, currency and lead time are agreed with the supplier, not with the individual, and are held once on the supplier type."
+        },
+        {
+          "dimension": "Relationships",
+          "decision": "included",
+          "reason": "One reference to the supplier. The supplier's primary contact reference points back; no further inverse list is proposed."
+        },
+        {
+          "dimension": "Evidence and source",
+          "decision": "pending",
+          "reason": "No verification process for contact details was described. Until one exists, last_confirmed_on stays conditional and nothing claims the details are verified."
+        },
+        {
+          "dimension": "Identity documents and family data of supplier staff",
+          "decision": "pending",
+          "reason": "Passport numbers and family details were requested with no stated use, and are excluded for that reason. They are pending a named purpose, not refused outright: see the setup notes for what would have to be established and how such data would be held if a purpose exists."
+        }
+      ],
+      "setup": [
+        "Passport numbers and family details of supplier employees are NOT in this catalogue. The request states there is no use for them, and an entity field with no consuming process collects data that nobody maintains, nobody checks and nobody can justify if asked. These are also not our employees: they are third parties whose data would be held by us for reasons none of them were told.",
+        "Where the data would be visible: a Provia entity record is readable by everyone who can see the type. A sensitivity label on a field is documentation, not enforcement; the type would have to be restricted with access grants, and even then every buyer who raises an order needs to see supplier contacts. Ordering and identity verification have different audiences, which is the practical reason they should not share a record.",
+        "What would have to be established before adding anything of the kind: the specific process that consumes the value, who inside the organization needs to read it, the lawful basis and the information given to the individuals concerned, who keeps it current, and how long it is kept and who deletes it. None of these has been supplied. This is open decision D2 and it belongs to Procurement with legal advice; the answer may still be yes.",
+        "If a purpose is named, the minimal design is not a passport_number text field on this type. For site access or an identity check at delivery, hold the check in the access or delivery case: the person performing it sees the document, records only document_type, an expiry date and the outcome of the check, and the number itself is never copied into Provia. If the number genuinely has to be held, put it on a separate, access-restricted type with a retention owner, not on the record every buyer opens to find an email address.",
+        "Family details have no candidate purpose in ordering at all, even conditionally. Next of kin for a supplier's own employee is the supplier's responsibility, under their own employment relationship. Do not add it here under any of the above.",
+        "The availability_notes free-text field is the practical leak for this kind of data. Its help text restricts it to working arrangements; brief the administrators accordingly, because the field itself cannot enforce it.",
+        "Everything else: no procedure or export was supplied, so the role list, the status list and the maintainers are proposals to confirm with Procurement.",
+        "Create the supplier record first, then its contacts, then return to the supplier to select the primary order contact. The two references are configured after both types exist.",
+        "Manual walkthrough: creating Demonstration Contact, the buyer knows the name, the supplier, what the person handles, the email and the phone from the quotation email signature, and sets status to active. Job title and language come from the same signature. The confirmation date stays empty until a confirmation routine exists. Nothing in the record requires asking the person for information we do not already hold for the order."
+      ],
+      "readiness": [
+        "Before selecting a contact on an order: contact_status must be active, and email or phone must be filled. Neither is enforced by these fields.",
+        "A contact marked do_not_contact must not be selected or emailed, and should be replaced by another contact at the same supplier. The field records the request; honouring it is the buyer's responsibility."
       ]
     }
   ]

@@ -1,28 +1,40 @@
-## Short answer
+## Answer
 
-**Supplier** is the only entity type. **Purchase request is a case** (one run of the purchasing workflow), not a second entity. The test for each field: if it's true of the supplier regardless of which request is open, it goes on the supplier record; if it's a fact of one purchase, it goes on the case or in the action's evidence. The request links to the supplier through one `entity` field — that link is what stops supplier data being retyped per request.
+**Supplier is an entity type. A purchase request is not** — it's a workflow case. The rule that decides every ambiguous field:
 
-**Supplier entity** (`supplier`, icon `Truck01`, 18 fields): legal name, NIF, accounting code · category · commercial contact/email/phone, address, country · relationship owner · status (the only creation-time required field) and approval date · currency, payment terms, lead time, framework agreement + end date · notes. Bank details and tax certificates stay in accounting; the contract stays in the repository.
+> The supplier holds what stays true **between** requests. The request holds what is true of **this one execution**.
 
-**Purchase-request case fields**: request number (auto_number `PR-`), items, justification, category, cost centre, estimated amount, currency, needed-by, supplier link, quotations (file), approved amount, budget confirmed, order number. Approval reason, requester and dates are action evidence or native.
+Test when unsure: if the next request to the same supplier repeats the value unchanged, it's a supplier field; if the next request gives it a different value, it's a case field. Usual invoicing currency → supplier. Amount → request.
 
-## Context that was unavailable
+| | Supplier (entity `supplier`) | Purchase request (workflow case) |
+| --- | --- | --- |
+| Identity | Registered name, NIF, accounting code | — (the workflow prefix already gives each case a reference) |
+| Classification | Supply category → sub-category (dependent), criticality | Procurement route, cost centre, requesting department |
+| Contacts | Commercial contact, email, phone, collection address, country | — |
+| Commercial | Usual currency, agreed payment term, agreement valid until | Estimated amount, request currency, needed by, approved amount |
+| Lifecycle | Status, registration valid until, last evaluation + rating | Approval decision, decision reason, PO number, received on, invoice ref |
+| Link | — | `selected_supplier`: one `entity` reference, set at award — not a copy of the supplier's fields |
 
-No procedure, sample records or system inventory were in the working directory, and the tenant read (`org_get_context`) was not permitted, so this is disconnected mode. I proceeded on stated assumptions (Angola/AOA provisional, Purchasing maintains suppliers, Finance owns the accounting code) and logged the seven things that need confirming as decisions D1–D7 with owners — notably: existing systems of record, whether the ERP assigns a supplier code, country/currency, whether supplier qualification exists, whether cost centre becomes a shared entity, and approval thresholds.
+Three calls worth flagging: **quotations stay on a Form Fill submission**, not as case fields (three quotations are three sets of values; promote only the winner and the awarded amount). **Bank details stay out of Provia** — the finance system has its own confirmation procedure, and a second unowned copy is a fraud surface; the ERP link covers lookup. **Qualification status was merged into one `relationship_status`** rather than kept as a second overlapping status field.
 
-## Files written (working directory)
+## Missing context — what I assumed
 
-- `catalogue.json` / `catalogue.html` — source of truth and offline copy-ready catalogue
-- `provia-project.json` — new manifest with `entityTypes[]` and decisions (no workflows exist yet, so no `entityRefs`)
-- `project.html`, `setup.md` — map and handover
-- `information-model.md` — the split rule, both field dictionaries, walkthrough, checks
+Nothing was supplied: no procedure, form, export, existing catalogue, workflow design, or manifest. A Provia MCP server is exposed here, but `org_get_context` wasn't authorized in this non-interactive session, so no tenant was read — existing types, icons and permission levels are unverified. To use the connected reads you'd need to grant that tool (via `/mcp` or connector settings in an interactive session).
 
-## Checks
+So this is a reasoned baseline, labelled as such throughout. Country is provisionally **Angola** (AOA, Africa/Luanda) since none was stated. No legal or fiscal requirement is asserted anywhere. The sub-category options are a demonstration of the dependent-selection mechanism, not a recommendation — they must be replaced before setup. Nine open decisions carry owners (D1–D9 in `setup.md`), of which four could change the design materially: real categories (D1), whether a supplier evaluation process exists at all (D2 — if not, drop both evaluation fields rather than ship a register that goes stale), who assigns the supplier code (D4), and whether one supplier needs several contacts (D6 — entity fields can't hold repeating sub-records, so "yes" means a second type).
 
-Catalogue `--check` passed (1 type); project map `--check` reports 0 errors, 0 warnings, 8 pending items. HTML was generated and has copy controls and no external scripts, but I did not exercise the buttons in a browser. Nothing was created in Provia.
+## Files written
 
-**Recommended next step:** `provia-workflow-designer`, because the purchase-request fields above only become real once a workflow carries them, and D7 (approval steps and thresholds) is what that skill needs to settle first.
+- `catalogue.json` / `catalogue.html` — the Supplier type: description, `Truck01`, Name pattern, 19 grouped fields with keys, types, options, help text, maintainers and sensitivity, coverage across 8 dimensions, setup notes with the manual-entry walkthrough and deferred-candidate dispositions
+- `purchase-request-fields.md` — the case side (the catalogue schema only carries entity types), plus the ambiguous-field table and the open decisions
+- `provia-project.json`, `project.html`, `setup.md` — new manifest carrying the type and the decisions forward
+
+Checks actually run: `build-entity-catalogue.mjs --check` passed (1 type; editorial shape, icon, field types, dependent parent chain and parent/child example agreement); HTML generated. `build-project-map.mjs --check` passed (1 entity type, 10 pending items, 0 warnings), map and handover written. I inspected both HTML sources — no external references, copy controls and clipboard fallback present — but no browser tool exists here, so I did not open them or click a copy button. Structural validity isn't business correctness, and none of this was created in Provia.
+
+---
+
+Next: **`provia-workflow-designer`** — the split above is only provable once the purchase request has actions and owners, and D5 (thresholds) blocks both the approval branches and `procurement_route`.
 
 ```text
-Use provia-workflow-designer with provia-project.json in this directory. Design the purchase request workflow (request → approval → budget confirmation → order) using the supplier entity type already in entityTypes[], add the case fields listed in information-model.md, set entityRefs on the actions that select the supplier, and resolve decisions D6 and D7 from the purchasing procedure. Country: Angola (provisional); reply in English.
+Use provia-workflow-designer with provia-project.json in this directory. Design the purchase request workflow — intake, sourcing, approval, order, receipt — using the case fields in purchase-request-fields.md and the supplier entity type in the manifest. Approval thresholds are unresolved (D5): propose a structure and leave the amounts as an open decision. Country: Angola (provisional, D9); reply in English.
 ```

@@ -1,48 +1,26 @@
-# provia-skills 1.2.0
-# Skeleton produced by provia-form-designer to carry the quotation collection segment.
-# Assignees are group keys in provia-project.json (assigneeRef); the YAML leaves them
-# unset until destination ids exist. Forms are not packaged here: see quotation-form.md.
+# provia-skills 1.2.1 — draft. Forms, form links and owners are configured in Provia; see setup.md and provia-project.json.
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
-  name: Purchase request
-  prefix: COMP
-  description: >-
-    Purchase request with collection of three supplier quotations. Each quotation is
-    one Form Fill response; the winning quotation is chosen in a separate review
-    action that fills the incident amount.
+  name: "Supplier quotation collection"
+  prefix: QUO
+  description: "Collects three supplier quotations inside a case and records one selected quotation as the case amount. Draft for review; owners, deadlines and the approval of the selected amount are not configured."
 triggers:
   - type: manual
-    label: Start purchase request
+    label: Start quotation collection
     enabled: true
     config: {}
-entities:
-  mode: none
 fields:
-  - name: item_description
-    label: Item or service requested
+  - name: requested_item
+    label: Requested item or service
     type: text
-    required: true
+    required: false
     width: full
-  - name: quantity
-    label: Quantity
+  - name: quotations_collected
+    label: Quotations collected
     type: number
-    required: true
-    width: third
-  - name: estimated_amount
-    label: Estimated amount (Kz)
-    type: currency
     required: false
     width: third
-    config:
-      currency: AOA
-  - name: purchase_amount
-    label: Purchase amount (Kz)
-    type: currency
-    required: false
-    width: third
-    config:
-      currency: AOA
   - name: selected_supplier
     label: Selected supplier
     type: text
@@ -53,42 +31,77 @@ fields:
     type: text
     required: false
     width: half
-  - name: quotations_received
-    label: Number of quotations received
-    type: number
+  - name: incident_amount
+    label: Case amount (selected quotation)
+    type: currency
     required: false
     width: third
+    config:
+      currency: AOA
+      decimals: 2
   - name: selection_rationale
-    label: Reason for the selection
+    label: Why this quotation was selected
     type: rich_text
     required: false
     width: full
+  - name: single_source_justification
+    label: Justification for fewer than three quotations
+    type: text
+    required: false
+    width: full
 access:
-  default: creator_only
+  grants:
+    - grantee: "group:Procurement"
+      level: create_incident
 actions:
-  - id: register-quotation
+  - id: collect-quotations
+    name: Collect supplier quotations
     type: form_fill
-    name: Register the supplier quotations received
     description: |-
-      Task: Register each supplier quotation received for this purchase request as one response to the form "Supplier quotation", until three quotations are on the case.
-      How: 1. Request written quotations from at least three suppliers for the item in `item_description` and the quantity in `quantity`. 2. When a quotation arrives, open this action and submit one response of the form "Supplier quotation" with the supplier name, the quotation reference and date, the amount in Kz, the validity date and the quotation document. 3. Repeat one response per quotation; do not combine two suppliers in one response and do not edit a response to replace a supplier.
-      Evidence: Three submitted responses of the form "Supplier quotation", each with its quotation document attached.
-      Done when: Three responses are recorded on the case, each with an amount and a document, and no response duplicates a supplier.
-      Exceptions: If fewer than three suppliers answer within the period set by the purchasing procedure, do not complete: add a comment naming the suppliers contacted and the dates, and ask the purchasing lead whether the case may continue with fewer quotations.
+      Task: Collect **three supplier quotations** for the requested item, one Form Fill response per supplier.
+
+      How:
+
+      1. Open the form **Supplier quotation** on this action and submit one response per supplier.
+      2. In each response record the supplier, the quotation reference and date, the quoted amount in `quotation_amount`, the validity and the delivery time, and attach the supplier's quotation document.
+      3. Repeat until three responses exist. *Do not edit or reuse an earlier response to record the next supplier: each supplier needs its own response.*
+      4. Leave the case amount empty here. **The responses on this action are a review collection and do not write any case field.** The amount reaches the case at the next action.
+
+      Evidence:
+
+      - Three responses to **Supplier quotation**, each with the quotation file attached (PDF, JPG or PNG, up to 10 MB).
+      - A case comment naming any supplier that declined or did not answer, with the date it was asked.
+
+      Done when: Three responses are visible on this action with their quotation files attached, or the exception below is recorded in a comment.
+
+      Exceptions: If fewer than three suppliers quote, do not complete with an empty record: submit the responses obtained, comment which suppliers were approached and when, and record the reason in `single_source_justification` at the next action. If a single supplier is the only possible source, ask the process owner before continuing.
     executionMode: sequential
     required: true
-    priority: normal
-    config: {}
-  - id: select-quotation
-    type: standard
-    name: Select the winning quotation
+  - id: record-selected-quotation
+    name: Record the selected quotation
+    type: form_fill
     description: |-
-      Task: Choose one of the submitted quotations and record its amount and supplier on the case.
-      How: 1. Open the responses of the form "Supplier quotation" on this case and compare amount, validity date, delivery time and whether the amount includes tax. 2. Check that the chosen quotation is still within its validity date. 3. Fill `purchase_amount` with the amount of the chosen quotation, `selected_supplier` with its supplier name, `selected_quotation_reference` with its reference and `quotations_received` with the number of responses. 4. Write in `selection_rationale` why this quotation was chosen, especially when it is not the lowest amount.
-      Evidence: The four fields filled from one existing response and the rationale written on the case.
-      Done when: `purchase_amount` equals the amount of one submitted response and the selected supplier and reference identify that same response.
-      Exceptions: If every quotation has expired or none meets the request, do not complete: comment the reason and return the case to the previous action so new quotations are collected.
+      Task: Record which of the collected quotations was selected and write its amount into the case.
+
+      How:
+
+      1. Read the responses to **Collect supplier quotations** side by side: amount, delivery time, validity and whether the scope matches the request.
+      2. Open the form **Quotation selection** and submit **one** response. This action is configured for a single response, which is what allows it to write the case fields.
+      3. Copy the selected quotation's amount into `selected_amount` exactly as it appears on the supplier's document, in Kz and on the same tax basis for every quotation compared.
+      4. Name the supplier and the quotation reference, and write why that quotation was selected — including the reason when it is not the lowest amount.
+      5. After submitting, check the case fields the response wrote: `incident_amount`, `selected_supplier`, `selected_quotation_reference` and `quotations_collected`.
+
+      Evidence:
+
+      - One response to **Quotation selection** with `selection_rationale` filled.
+      - `incident_amount` on the case equal to the amount on the attached quotation of the selected supplier.
+      - `single_source_justification` filled whenever fewer than three quotations were collected.
+
+      Done when: The case carries one selected supplier and one amount, and those values match the selected supplier's quotation document.
+
+      Exceptions:
+
+      - If two quotations are equivalent, or the choice needs an authority you do not hold, do not submit: comment the comparison and ask the process owner to decide.
+      - If the selected quotation is revised after you submit, do not expect a second response to correct the case: **this action accepts one response**. Comment the revision and ask the process owner to correct `incident_amount` in the case metadata.
     executionMode: sequential
     required: true
-    priority: normal
-    config: {}

@@ -1,13 +1,16 @@
-# provia-skills 1.2.0 — design skeleton built on an ASSUMED onboarding outline (the customer's SOP was not supplied). Confirm every section in provia-project.json (source sop-onboarding-assumed) before packaging. Not yet validated.
+# provia-skills 1.2.1
+# Skeleton produced by provia-workflow-designer from an ASSUMED onboarding baseline.
+# No onboarding SOP was supplied; every action, branch and owner below is a proposal
+# to be reconciled against the customer's document before packaging.
 apiVersion: provia.ao/v1
 kind: Workflow
 metadata:
-  name: "Employee onboarding"
+  name: Employee onboarding
   prefix: ONB
-  description: "Onboarding of a new employee from confirmed hire to the end of the probation period. Design skeleton on an assumed outline; deadlines, approvers and actor names are open decisions."
+  description: "Onboarding of a confirmed new employee, from the hire record to the end of the onboarding period."
 triggers:
   - type: manual
-    label: Start onboarding
+    label: Start employee onboarding
     enabled: true
     config: {}
 fields:
@@ -15,178 +18,348 @@ fields:
     label: New employee
     type: text
     required: true
-  - name: job_title
-    label: Job title
+    width: half
+  - name: role_title
+    label: Role
     type: text
     required: true
+    width: half
   - name: department
-    label: Department
+    label: Department or team
     type: text
-    required: true
+    required: false
+    width: half
   - name: start_date
-    label: Start date
+    label: Planned start date
     type: date
     required: true
+    width: half
   - name: hiring_manager
     label: Hiring manager
     type: user
     required: true
-  - name: probation_end_date
-    label: Probation end date
-    type: date
-    required: false
+    width: half
 access:
   grants:
-    - grantee: "group:Human Resources"
-      level: create_incident
-    - grantee: "group:HR Management"
+    - grantee: group:Human Resources
       level: edit
 actions:
   - id: register_hire
-    name: Register the hire and confirm the start details
+    name: Register the confirmed hire and open the onboarding case
     type: standard
-    description: |
-      Task: Confirm that the hire is approved and that the details needed to prepare the first day are complete.
-      How: 1. Attach the hiring approval (accepted offer or approved hiring request) to the case, or reference it in the opening comment. 2. Confirm `Start date`, `Job title` and `Department` with the person named in `Hiring manager`. 3. Correct any field that the hiring manager changes and note the change in a comment.
-      Evidence: The hiring approval attached to the case and a comment confirming the three fields with the hiring manager.
-      Done when: The approval is in the case and the start details are confirmed.
-      Exceptions: If there is no hiring approval, do not complete: comment what is missing and ask the hiring manager to obtain it. If the start date is less than the time needed to prepare the contract and accesses, comment the risk and agree a new date with the hiring manager before completing.
     executionMode: sequential
     required: true
-    assignee:
-      type: creator
-  - id: prepare_contract
-    name: Prepare the employment contract and collect the new hire's documents
+    description: |-
+      Task: Record the confirmed hire so that everyone working on this onboarding has the same data.
+
+      How:
+
+      1. Confirm with the recruiting owner that the offer was **accepted** and that the hire is authorized to start.
+      2. Fill `employee_name`, `role_title`, `department`, `start_date` and `hiring_manager` in the case.
+      3. Attach the signed offer or hire confirmation to the case.
+      4. Tell the hiring manager named in `hiring_manager` that the onboarding case is open, so they can prepare the onboarding plan and the access list.
+
+      Evidence:
+
+      - The signed offer or hire confirmation attached to the case.
+      - The five case fields above filled.
+
+      Done when: The case carries the employee, the role, the planned start date and the hiring manager, with the hire confirmation attached.
+
+      Exceptions:
+
+      - If the start date is not yet fixed, do not complete this action: record the reason in a comment and complete it once a date exists.
+      - If the hire is withdrawn before anything else starts, comment the reason and ask the process owner to close the case.
+  - id: collect_documents
+    name: Collect and check the new employee's documents
     type: standard
-    description: |
-      Task: Produce the draft employment contract and collect the personal documents the organization requires for admission.
-      How: 1. Request from the new hire the identification, tax, social-security and bank documents listed in the organization's admission checklist. 2. Prepare the draft contract from the organization's contract template with the job title, department, start date and probation period. 3. Fill `Probation end date` from the probation period written in the draft. 4. Attach the draft contract and the collected documents to the case.
-      Evidence: The draft contract and the collected documents attached to the case; `Probation end date` filled.
-      Done when: The draft and the documents are in the case and the probation end date is filled.
-      Exceptions: If a required document is missing, do not complete: comment which document is missing and the date agreed with the new hire to provide it. If the terms differ from the hiring approval, comment the difference and ask the hiring manager to confirm before preparing the draft.
     executionMode: sequential
     required: true
-  - id: approve_contract
-    name: Decide on the employment contract
+    description: |-
+      Task: Collect the personal and legal documents needed to employ and register the new employee.
+
+      How:
+
+      1. Send the new employee the document list in use for their contract type.
+      2. Receive each document and check that it is legible, complete and within its validity period.
+      3. Attach every document to the case and record in a comment which item on the list each attachment satisfies.
+      4. Record any item that is still missing, with the date it was requested.
+
+      Evidence:
+
+      - Every collected document attached to the case.
+      - A comment mapping each attachment to the item it satisfies, and naming anything still outstanding.
+
+      Done when: Every document on the list in use is attached to the case, or the outstanding items are named in a comment with the date they were requested.
+
+      Exceptions:
+
+      - If a document is missing or expired, **do not complete this action**: comment what is missing and who was asked for it, and keep the action open.
+      - If a missing document prevents the contract or the registration from being prepared, raise it to the hiring manager before the start date is committed.
+  - id: approve_plan
+    name: Decide on the onboarding plan and the access list
     type: decision
-    description: |
-      Task: Decide whether the draft employment contract may be signed.
-      How: 1. Read the draft contract and compare it with the hiring approval attached in the case. 2. Confirm that the collected documents are complete. 3. Choose «Approve», «Return for correction» or «Cancel the onboarding».
-      Evidence: A comment with the reason is mandatory on «Return for correction» and «Cancel the onboarding».
-      Done when: The decision is recorded with the required comment.
-      Exceptions: If the contract terms exceed what you are authorized to approve, do not decide: comment who must approve and return the draft for correction so that the authorization is attached.
     executionMode: sequential
     required: true
+    description: |-
+      Task: Decide whether the onboarding plan and the requested system access for this new employee can go ahead.
+
+      How:
+
+      1. Read the role in `role_title` and the team in `department`.
+      2. Review the onboarding plan proposed for the first weeks: who welcomes the employee, what training is needed and who acts as their first point of contact.
+      3. Review the requested access list item by item and confirm that each system and permission level is needed for the role.
+      4. Attach the approved onboarding plan and access list to the case, then choose one outcome below.
+
+      ### What each outcome means
+
+      | Situation | Outcome | Record required |
+      | --- | --- | --- |
+      | The plan and every requested access are appropriate for the role | **Approve** | The approved plan and access list attached |
+      | Something is wrong or missing and can be corrected | **Return for correction** | A comment naming exactly what to correct |
+      | The hire will not proceed | **Cancel the onboarding** | A comment with the reason |
+
+      Evidence:
+
+      - The approved onboarding plan and access list attached to the case.
+      - On a return or a cancellation, a comment with the reason.
+
+      Done when: The outcome is recorded and, on approval, the approved plan and access list are attached to the case.
+
+      Exceptions:
+
+      - **Do not approve access you cannot justify for the role.** Remove the item from the list and approve the rest, or return the request for correction.
+      - If an access level is outside your authority to approve, comment who must approve it and return the request rather than approving it yourself.
     config:
       branches:
-        - label: Approve
+        - label: Approve the plan and the access list
           outcome: continue
           requiresComment: false
         - label: Return for correction
+          outcome: return_to_action
+          target: register_hire
+          requiresComment: true
+        - label: Cancel the onboarding
+          outcome: cancel_incident
+          requiresComment: true
+  - id: prepare_contract
+    name: Prepare the employment contract and the payroll registration
+    type: standard
+    executionMode: parallel
+    required: true
+    description: |-
+      Task: Produce the employment contract for signature and register the new employee for payroll and benefits.
+
+      How:
+
+      1. Prepare the contract from the documents collected and the role in `role_title`.
+      2. Send the contract for signature by the employer's signatories and by the new employee.
+      3. Register the employee in the payroll system and in the benefits the role carries.
+      4. Attach the signed contract and the payroll registration confirmation to the case.
+
+      Evidence:
+
+      - The signed employment contract attached to the case.
+      - The payroll registration confirmation attached to the case.
+
+      Done when: The signed contract and the payroll registration confirmation are both attached to the case.
+
+      Exceptions:
+
+      - If a signature is still missing on the working day before `start_date`, comment the delay and tell the hiring manager before the employee starts.
+      - If the contract terms differ from the approved plan, do not send it for signature: comment the difference and return to the person who approved the plan.
+  - id: create_access
+    name: Create the accounts and the system access
+    type: standard
+    executionMode: parallel
+    required: true
+    description: |-
+      Task: Create the accounts and grant the system access approved for this new employee.
+
+      How:
+
+      1. Open the access list approved on the case. **Grant only what that list contains.**
+      2. Create the employee's account in each system on the list, at the approved permission level.
+      3. Prepare the first-access credentials so they can be delivered to the employee in person on their first day, not by an open channel.
+      4. Record in a comment each system, the account created and the permission level granted.
+
+      Evidence:
+
+      - A comment listing each system, the account created and the permission level granted.
+      - The delivery method for the first-access credentials recorded in the same comment.
+
+      Done when: Every system on the approved list has an account at the approved level, and the comment records them.
+
+      Exceptions:
+
+      - If a system on the list cannot be provisioned in time, comment which one and why, and say whether the employee can start work without it.
+      - If a request arrives for access **not** on the approved list, do not grant it: send it back for approval.
+  - id: prepare_equipment
+    name: Prepare the workstation and the equipment
+    type: standard
+    executionMode: parallel
+    required: true
+    description: |-
+      Task: Have the workstation and the equipment the role needs ready before the employee's first day.
+
+      How:
+
+      1. Confirm the equipment the role in `role_title` requires and where the employee will work.
+      2. Prepare and configure the equipment, and test that it starts and connects.
+      3. Prepare the handover record the employee will sign when receiving the equipment.
+      4. Record in a comment what is prepared, including serial numbers or asset identifiers.
+
+      Evidence:
+
+      - A comment listing the prepared equipment with its asset identifiers.
+      - The unsigned handover record attached to the case.
+
+      Done when: The equipment is prepared and tested, and the case records what will be handed over.
+
+      Exceptions:
+
+      - If equipment will not arrive before `start_date`, comment what is missing and what temporary arrangement is proposed, and tell the hiring manager.
+  - id: decide_start
+    name: Decide whether the start proceeds on the planned date
+    type: decision
+    executionMode: sequential
+    required: true
+    description: |-
+      Task: Decide, before `start_date`, whether the new employee can start as planned.
+
+      How:
+
+      1. Check the case against the four readiness items:
+         - Documents collected, or the outstanding ones named and accepted.
+         - Contract signed and payroll registration confirmed.
+         - Accounts and access created at the approved level.
+         - Equipment prepared and ready to hand over.
+      2. Check that the day-one induction and the hiring manager's availability are arranged for `start_date`.
+      3. Choose one outcome below and record what is missing when anything is.
+
+      ### What each outcome means
+
+      | Situation | Outcome | Record required |
+      | --- | --- | --- |
+      | The four readiness items are met and day one is arranged | **Proceed on the planned date** | None beyond the checks above |
+      | Something is missing and can still be prepared | **Postpone the start** | A comment naming the gap and the new date |
+      | The employee will not start | **Cancel the onboarding** | A comment with the reason |
+
+      Evidence:
+
+      - A comment recording the readiness check and, on a postponement, the new date agreed with the hiring manager.
+
+      Done when: The outcome is recorded and, when the start is postponed, `start_date` is updated to the new date.
+
+      Exceptions:
+
+      - **Do not confirm a start you have not verified.** If a readiness item cannot be checked, treat it as not met.
+      - If the employee does not appear on the agreed date, comment the fact and choose **Cancel the onboarding** only after the hiring manager confirms it.
+    config:
+      branches:
+        - label: Proceed on the planned date
+          outcome: continue
+          requiresComment: false
+        - label: Postpone the start
           outcome: return_to_action
           target: prepare_contract
           requiresComment: true
         - label: Cancel the onboarding
           outcome: cancel_incident
           requiresComment: true
-  - id: record_signature
-    name: Record the outcome of the contract signing
-    type: decision
-    description: |
-      Task: Record whether the new hire signed the approved contract.
-      How: 1. Arrange the signing with the new hire before `Start date`. 2. Attach the signed contract to the case. 3. Choose «Signed», «Postponed» or «Withdrawn».
-      Evidence: The signed contract attached on «Signed»; a comment with the reason and, when known, the new date on «Postponed»; a comment with the reason on «Withdrawn».
-      Done when: The outcome is recorded with its evidence.
-      Exceptions: If the new hire asks for changes to the approved contract, do not record «Signed»: choose «Postponed», comment the requested changes and the case returns to the start details for a new date and a corrected draft.
+  - id: run_induction
+    name: Run the day-one induction
+    type: standard
     executionMode: sequential
     required: true
+    description: |-
+      Task: Receive the new employee on their first day and hand over everything prepared for them.
+
+      How:
+
+      1. Receive the employee, present the organization, and go through the rules and policies that apply to their role.
+      2. Hand over the equipment against the prepared handover record and have the employee sign it.
+      3. Deliver the first-access credentials in person and have the employee sign in to confirm they work.
+      4. Introduce the employee to the hiring manager named in `hiring_manager` and hand the onboarding over to them.
+
+      Evidence:
+
+      - The **signed** equipment handover record attached to the case.
+      - A comment confirming that the induction was held and that the employee signed in successfully.
+
+      Done when: The induction was held, the equipment handover record is signed and attached, and the employee has signed in.
+
+      Exceptions:
+
+      - If an account does not work on day one, comment which one and ask the team that created it to correct it the same day.
+      - If the employee does not appear, do not complete this action: comment the fact and tell the hiring manager the same day.
+  - id: introduce_to_team
+    name: Introduce the new employee and agree the role plan
+    type: standard
+    executionMode: sequential
+    required: true
+    description: |-
+      Task: Bring the new employee into the team and agree with them what they are expected to achieve in the onboarding period.
+
+      How:
+
+      1. Introduce the employee to the team and name the colleague who is their first point of contact.
+      2. Go through the approved onboarding plan with the employee: the work, the tools and the training in it.
+      3. Agree the objectives for the onboarding period and write them down in a comment on the case.
+      4. Hold the follow-up conversations the plan foresees and record each one briefly.
+
+      Evidence:
+
+      - A comment with the agreed objectives for the onboarding period and the name of the first point of contact.
+      - A short record of each follow-up conversation held.
+
+      Done when: The objectives are agreed and recorded, and the follow-up conversations foreseen in the plan have been held and recorded.
+
+      Exceptions:
+
+      - If a tool or training in the plan is not available, comment what is missing and what was done instead.
+      - If a serious difficulty appears during the period, do not wait for the final decision: raise it to the process owner when you notice it.
+  - id: decide_period_end
+    name: Decide on the end of the onboarding period
+    type: decision
+    executionMode: sequential
+    required: true
+    description: |-
+      Task: Decide whether the new employee's onboarding period is complete.
+
+      How:
+
+      1. Read the objectives agreed at the start of the period and the records of the follow-up conversations.
+      2. Hold the closing conversation with the employee and hear their own account of the period.
+      3. Choose one outcome below and record the reason.
+
+      ### What each outcome means
+
+      | Situation | Outcome | Record required |
+      | --- | --- | --- |
+      | The agreed objectives were met | **Confirm the onboarding is complete** | A comment summarizing the period |
+      | More time or support is needed and the plan continues | **Extend the follow-up** | A comment with what is still needed and until when |
+      | The onboarding will not continue | **Close without completing** | A comment with the reason |
+
+      Evidence:
+
+      - A comment with the closing assessment against the agreed objectives.
+
+      Done when: The outcome and its reason are recorded on the case.
+
+      Exceptions:
+
+      - **Close without completing** ends this case only. Any consequence for the employment relationship is decided outside this workflow, by the process owner.
+      - If the decision depends on something outside your authority, comment it and raise it to the process owner before choosing an outcome.
     config:
       branches:
-        - label: Signed
+        - label: Confirm the onboarding is complete
           outcome: continue
-          requiresComment: false
-        - label: Postponed
-          outcome: return_to_action
-          target: register_hire
           requiresComment: true
-        - label: Withdrawn
+        - label: Extend the follow-up
+          outcome: return_to_action
+          target: introduce_to_team
+          requiresComment: true
+        - label: Close without completing
           outcome: cancel_incident
           requiresComment: true
-  - id: provision_access
-    name: Provision the accounts and equipment
-    type: standard
-    description: |
-      Task: Have the accounts and the equipment ready before the first day.
-      How: 1. Create the e-mail account and the accesses to the applications used by the `Department`, according to the `Job title`. 2. Prepare the computer, phone and any other equipment assigned to the position. 3. Record in a comment the list of accesses created and the serial numbers of the equipment.
-      Evidence: A comment with the list of accesses and the equipment assigned.
-      Done when: The accesses and the equipment are ready and listed in the case before `Start date`.
-      Exceptions: If equipment is missing, do not complete: comment what is missing and the expected date, and inform the hiring manager and Human Resources.
-    executionMode: parallel
-    required: true
-  - id: register_payroll
-    name: Register the employee in payroll and social security
-    type: standard
-    description: |
-      Task: Register the new employee in the payroll system and with the social-security and tax registrations the organization is obliged to make.
-      How: 1. Open the signed contract and the collected documents in the case. 2. Create the employee in the payroll system with the contract terms. 3. Submit the registrations the organization's obligations require and keep the submission receipts. 4. Record in a comment each registration made and its date.
-      Evidence: The registration receipts attached and a comment with each registration and its date.
-      Done when: The employee exists in payroll and each required registration has its receipt in the case.
-      Exceptions: If a registration cannot be submitted, do not complete: comment the reason, the missing item and who is resolving it, and keep the action open until the receipt is in the case.
-    executionMode: parallel
-    required: true
-  - id: induct_employee
-    name: Conduct the first-day welcome and induction
-    type: standard
-    description: |
-      Task: Receive the new employee on the first day and complete the induction.
-      How: 1. Hand over the equipment and confirm that the accesses listed in the case work. 2. Introduce the team, the working hours, the safety rules and the contact person for questions. 3. Go through the organization's induction checklist with the employee and collect their signature on it.
-      Evidence: The signed induction checklist attached to the case.
-      Done when: The signed checklist is in the case.
-      Exceptions: If the employee does not show up, do not complete: comment it and inform Human Resources on the same day. If an access does not work, comment it and inform IT Support; complete only when the checklist is signed.
-    executionMode: sequential
-    required: true
-  - id: prepare_probation_review
-    name: Prepare the probation review
-    type: standard
-    description: |
-      Task: Prepare the end-of-probation review so the hiring manager can decide before `Probation end date`.
-      How: 1. Confirm `Probation end date` against the signed contract; update the field if a previous decision extended the probation. 2. Send the organization's evaluation template to the hiring manager with the date by which the decision is needed. 3. Record in a comment the date the template was sent.
-      Evidence: A comment with the date the evaluation template was sent to the hiring manager.
-      Done when: The template is with the hiring manager and `Probation end date` is correct.
-      Exceptions: If the probation end date has already passed, do not complete: comment it and inform HR Management the same day.
-    executionMode: sequential
-    required: true
-  - id: review_probation
-    name: Decide on the end of the probation period
-    type: decision
-    description: |
-      Task: Decide whether the employee's probation period is confirmed, extended or ended.
-      How: 1. Complete the evaluation template received from Human Resources. 2. Attach the completed evaluation to the case. 3. Choose «Confirm», «Extend» or «End during probation».
-      Evidence: The completed evaluation attached; a comment with the reason is mandatory on «Extend» and «End during probation».
-      Done when: The decision is recorded with the evaluation attached and the required comment.
-      Exceptions: If you cannot evaluate because you have not managed the employee for most of the period, do not decide: comment who did and ask Human Resources to reassign the review.
-    executionMode: sequential
-    required: true
-    config:
-      branches:
-        - label: Confirm
-          outcome: continue
-          requiresComment: false
-        - label: Extend
-          outcome: return_to_action
-          target: prepare_probation_review
-          requiresComment: true
-        - label: End during probation
-          outcome: continue
-          requiresComment: true
-  - id: close_onboarding
-    name: Close the onboarding record
-    type: standard
-    description: |
-      Task: Confirm that the onboarding file is complete and record its final status.
-      How: 1. Verify that the signed contract, the collected documents, the registration receipts, the induction checklist and the completed evaluation are in the case. 2. Record in a comment the outcome of the probation decision and the date. 3. File the case documents in the employee's personnel file according to the organization's rules.
-      Evidence: A comment with the final status and the date of the filing.
-      Done when: All the documents are in the case and the final status is recorded.
-      Exceptions: If a document is missing, do not complete: comment which one and who provides it. If the probation decision was «End during probation», record it and open the organization's separation process; that process is outside this workflow.
-    executionMode: sequential
-    required: true

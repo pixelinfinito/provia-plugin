@@ -1,20 +1,17 @@
 {
   "id": "operations-triage-normal",
   "skill": "provia-operations-triage",
-  "pluginVersion": "1.2.0",
-  "at": "2026-09-21T10:38:37.831Z",
-  "model": "claude-opus-5[1m]",
-  "exitCode": 0,
-  "durationMs": 91888,
-  "costUsd": 0.9345345,
-  "numTurns": 15,
-  "sessionId": "dfc2ec5d-4ba6-436b-b861-83f7d32aea38",
-  "stopReason": "end_turn",
-  "toolCalls": 13,
-  "skillLoaded": true,
-  "files": [
-    "modelo-exportacao-triagem.csv",
-    "triagem-2026-09-21.md"
-  ],
+  "pluginVersion": "1.2.1",
+  "at": "2026-09-23T09:00:37.324Z",
+  "model": null,
+  "exitCode": 1,
+  "durationMs": 4393,
+  "costUsd": 0,
+  "numTurns": 1,
+  "sessionId": "ce18b18b-1643-4135-a294-8688e51c6889",
+  "stopReason": "stop_sequence",
+  "toolCalls": 0,
+  "skillLoaded": false,
+  "files": [],
   "output": "tests/forward-evaluation/matrix/operations-triage-normal/"
 }

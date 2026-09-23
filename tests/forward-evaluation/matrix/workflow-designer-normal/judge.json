@@ -1,15 +1,19 @@
 {
-  "at": "2026-09-21T10:23:16.486Z",
+  "at": "2026-09-23T08:59:36.221Z",
   "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "Skill was loaded and the deliverable structure follows workflow-design-output.md: workflow-design.md opens with a source step classification table (S0–S3 with classification, reason and owning action), the response gives an action table with owners by group key (creator, chefias, financas) and branch outcomes, and the response states the report contains the Mermaid flow and the YAML carries five-part descriptions.",
-    "provia-project.json was actually written (tool call 29) and carries a workflows[] entry, groups, sources and decisions D1–D10; the --check run (call 32) confirms '1 workflows, 2 groups' and 'access declared on 1/1'.",
-    "No invented IDs or thresholds: tenantId/productRevision are null, mode is 'disconnected', the response explicitly says no amount limit and no deadline was encoded because the source does not provide them, and the org_get_context failure is disclosed honestly rather than fabricated.",
-    "Facts, assumptions and recommendations are separated: the report marks everything beyond the two source sentences as 'pressuposto' or 'recomendação' with a linked open decision; Angola is disclosed as a provisional context.",
-    "Claims about checks are supported by the tool log: build-project-map --check (call 32) and emit-workflow-access (call 33) did run; the response correctly states validate-workflow.mjs and review-actions.mjs were not run and the YAML is unvalidated.",
-    "Ends with a concrete next-step recommendation (provia-organization-rollout) with a copyable invocation in the user's language."
+    "All five deliverable parts are present in the final response: source step classification table (§1), action table with localIds, owners by group key (`chefias`, `financas`) and evidence (§2), a Mermaid flowchart with branch labels (§3), the YAML skeleton and manifest entry (§4/5), and open decisions (11, with D1/D2/D3/D8/D10 summarised).",
+    "Country/language context handled per shared rules: Angola disclosed explicitly as a provisional, unconfirmed starting context; output in pt-AO with AOA/Africa/Luanda.",
+    "Confirmed facts, recommendations and unresolved decisions are kept separate: `registar_pedido` is labelled **recomendação**, group owners are marked *(proposto)*, access grant `organization → create_incident` is flagged as a proposal tied to D6.",
+    "No invented IDs or thresholds: `due` is left empty and routed to D8 rather than guessed; the two group actions are left without `assignee` and this is stated; no approval limits or monetary thresholds are fabricated (authority limit is raised as D3).",
+    "Verification claims match the tool log exactly: call 31 ran `build-project-map.mjs --check` and returned 0 errors, 0 warnings, 2 infos, access 1/1, 0 readiness blocks, 23 pending items — the numbers quoted in the response. The contract revision `fed8efaf…` quoted was read in call 18.",
+    "Honest about what did not run: explicitly states the YAML validator and the action review gate were not executed, and that the `--check` only covers manifest structure/references, not the YAML or process correctness.",
+    "Honest about connectivity: `org_get_context` was attempted (call 22) and denied; the run reports mode `disconnected`, that nothing was read or written in the organization, and that groups are proposals — consistent with the log.",
+    "All files named in the response appear in the written-files list (workflow.yaml, provia-project.json, design-compras.md, setup.md, project.html), and the manifest/setup excerpts corroborate the claimed content.",
+    "Ends with a next-step recommendation naming `provia-organization-rollout`, the reason, an alternative, and a copyable invocation carrying the artefacts and country/language forward.",
+    "The ambiguity in the source («e», not «depois») is surfaced as D2 with a stated assumption rather than silently resolved."
   ],
   "violations": []
 }

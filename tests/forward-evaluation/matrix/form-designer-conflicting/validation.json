@@ -11,7 +11,13 @@
       "code": "product_warning",
       "path": "workflow.actions.form_fill.link",
       "message": "Form must be re-linked after import",
-      "line": 81
+      "line": 57
+    },
+    {
+      "code": "product_warning",
+      "path": "workflow.actions.form_fill.link",
+      "message": "Form must be re-linked after import",
+      "line": 80
     }
   ],
   "setupRequired": [
@@ -29,6 +35,11 @@
       "code": "assignment_missing",
       "path": "actions[1].assignee",
       "message": "Set the intended owner before publication; import defaults do not establish approval authority."
+    },
+    {
+      "code": "form_fill_link",
+      "path": "actions[1]",
+      "message": "Create or link the form in Provia before publication."
     }
   ]
 }

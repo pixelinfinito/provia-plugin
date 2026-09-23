@@ -38,21 +38,13 @@
      7	Use Portuguese appropriate to Angola unless another language is requested. Examples may use Luanda, AOA/Kz, Africa/Luanda, procurement teams and Recursos Humanos. A NIF may be relevant to a supplier process; collect it only if the process requires it. Do not substitute Brazilian identifiers or institutions.
      8	
      9	Organization approval thresholds, c …
-7. Read: /Users/marcoslisboa/Development/provia-plugin/references/provia-capabilities.md
-   → 1	# Provia capability baseline
-     2	
-     3	Baseline: workflow contract revision recorded in contracts/workflow-v1/contract-lock.json. This is implementation evidence, not proof of the version deployed in a customer environment.
-     4	
-     5	A Workflow defines a repeatable process. An Incident is one execution of a workflow. An Action is one step. Entities hold reusable business records, metadata holds structured case values, tags classify records, and pages/files/comments provide explanation and evidence. Explain “incident” as a process case when the business context is not emergency response.
-     6	
-     7	Entity an …
-8. Bash (error): ls -la /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Da9ZdX/process-discovery-normal; ls /Users/marcoslisboa/Development/provia-plugin/scripts /Users/marcoslisboa/Development/provia-plugin/references; cat /Users/marcoslisboa/Development/provia-plugin/package.json 2>/dev/null | head -20; cat /Users/marcoslisboa/Development/provia-plugin/.claude-plugin/plugin.json 2>/dev/null; cat /Users/marcoslisboa/Development/provia-plugin/contracts/workflow-v1/contract-lock.json 2>/dev/null | head -20; node --version
-   → This Bash command contains multiple operations. The following parts require approval: ls -la /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Da9ZdX/process-discovery-normal; ls /Users/marcoslisboa/Development/provia-plugin/scripts /Users/marcoslisboa/Development/provia-plugin/references; cat /Users/marcoslisboa/Development/provia-plugin/package.json, head -20; cat /Users/marcoslisboa/Development/provia-plugin/.claude-plugin/plugin.json ; cat /Users/marcoslisboa/Development/provia-plugin/contracts/workflow-v1/contract-lock.json
-9. Bash: ls -la /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Da9ZdX/process-discovery-normal
+7. Bash (error): ls -la /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Fzap9r/process-discovery-normal; ls /Users/marcoslisboa/Development/provia-plugin; ls /Users/marcoslisboa/Development/provia-plugin/scripts
+   → This Bash command contains multiple operations. The following parts require approval: ls /Users/marcoslisboa/Development/provia-plugin, ls /Users/marcoslisboa/Development/provia-plugin/scripts
+8. Bash: ls -la '/private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Fzap9r/process-discovery-normal'
    → total 0
-     drwxr-xr-x@ 2 marcoslisboa  staff  64 Sep 21 11:08 .
-     drwx------@ 3 marcoslisboa  staff  96 Sep 21 11:08 ..
-10. Glob: scripts/*.mjs
+     drwxr-xr-x@ 2 marcoslisboa  staff  64 Sep 23 09:50 .
+     drwx------@ 3 marcoslisboa  staff  96 Sep 23 09:50 ..
+9. Glob: scripts/*.mjs
    → /Users/marcoslisboa/Development/provia-plugin/scripts/check-contract.mjs
      /Users/marcoslisboa/Development/provia-plugin/scripts/build-contract.mjs
      /Users/marcoslisboa/Development/provia-plugin/scripts/validate-workflow.mjs
@@ -61,68 +53,180 @@
      /Users/marcoslisboa/Development/provia-plugin/scripts/run-skill-evaluations.mjs
      /Users/marcoslisboa/Development/provia-plugin/scripts/emit-workflow-access.mjs
      /Users/marcoslisboa/Development/provia-plugin/scripts/plan-workflow …
-11. Read: /Users/marcoslisboa/Development/provia-plugin/.claude-plugin/plugin.json
-   → 1	{
-     2	  "name": "provia-skills",
-     3	  "version": "1.2.0",
-     4	  "description": "Design, structure, validate and improve Provia workflows with country-aware business guidance.",
-     5	  "author": {
-     6	    "name": "Pixel Infinito",
-     7	    "url": "https://github.com/pixelinfinito"
-     8	  },
-     9	  "homepage": "https://docs.provia.ao/guides/provia-skills",
-     10	  "repository": "https://github.com/pixelinfinito/provia-plugin",
-     11	  "license": "MIT",
-     12	  "skills": "./skills/"
-     13	}
-     14	
-12. Read: /Users/marcoslisboa/Development/provia-plugin/contracts/workflow-v1/contract-lock.json
-   → 1	{
-     2	  "apiVersion": "provia.ao/v1",
-     3	  "sourceRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
-     4	  "generatedBy": "scripts/build-contract.mjs",
-     5	  "engineSha256": "18254457a69fff8103d6ea833a5764a89314f373e4436739520e7a45f1fcab01",
-     6	  "sourceFiles": {
-     7	    "backend/src/lib/cron.ts": "4fb64e136b66a74eef3f03048f72243b050a7b7cafed30adc9141240da6ad399",
-     8	    "backend/src/lib/dependent-options.ts": "6277ac8ad16c9b9fb5639e7a9c14f77dcdc945588cd6077bb5d403e37b26dae5",
-     9	    "backend/src/lib/errors.ts": "ea6848230bd7565bc4877c1010ee74042cd5ffa79a643cef0f0c26e8eb756038",
-     10	    "backend/src/ …
-13. Read: /Users/marcoslisboa/Development/provia-plugin/references/connected-mode.md
+10. Bash: node -e "const s=require('/Users/marcoslisboa/Development/provia-plugin/references/project-manifest.schema.json'); console.log(JSON.stringify(s.required)); console.log(JSON.stringify(s.properties.sources,null,1)); console.log(JSON.stringify(s.properties.project,null,1)); console.log(JSON.stringify(s.properties.organization,null,1)); console.log(JSON.stringify(s.properties.decisions,null,1));"
+   → ["schemaVersion","project","organization"]
+     {
+      "type": "array",
+      "items": {
+       "$ref": "#/$defs/source"
+      }
+     }
+     {
+      "type": "object",
+      "required": [
+       "key",
+       "title",
+       "language",
+       "country"
+      ],
+      "properties": {
+       "key": {
+        "$ref": "#/$defs/key"
+       },
+       "title": {
+        "type": "string",
+        "minLength": 1
+       },
+       "language": {
+        "type": "string"
+       },
+       "country": {
+        "type": "string"
+       },
+       "timezone": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "currency": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "generator": {
+        "type": "string"
+       },
+       "contractRevision": {
+        "type": [
+          …
+11. Read: /Users/marcoslisboa/Development/provia-plugin/references/connected-mode.md
    → 1	# Connected mode (`provia-implementer` MCP)
      2	
      3	Provia's API Gateway exposes an MCP server, `provia-implementer`, specified in Provia feature 026 and extended by feature 027 (workflow permissions), pinned to the same product revision as this plugin's contract engine. When an implementer signs in through it, the skills can read the destination organization and create **draft** configuration on the implementer's behalf. This reference is the plugin side of that contract. Until the server is released in the implementer's environment, every skill behaves exactly as in disconnected mode; do not  …
-14. Bash (error): node --version && head -c 3000 /Users/marcoslisboa/Development/provia-plugin/references/project-manifest.schema.json
-   → head in '/Users/marcoslisboa/Development/provia-plugin/references/project-manifest.schema.json' was blocked. For security, Claude Code may only read the beginning of files from the allowed working directories for this session: '/private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Da9ZdX/process-discovery-normal'.
-15. ToolSearch: {"query":"select:mcp__claude_ai_Provia__org_get_context,mcp__claude_ai_Provia__groups_list,mcp__claude_ai_Provia__workflows_list","max_results":3}
+12. ToolSearch: {"query":"select:mcp__claude_ai_Provia__org_get_context,mcp__claude_ai_Provia__groups_list,mcp__claude_ai_Provia__workflows_list","max_results":3}
    → 
      
      
-16. mcp__claude_ai_Provia__org_get_context (error): {}
+13. mcp__claude_ai_Provia__org_get_context (error): {}
    → Claude requested permissions to use mcp__claude_ai_Provia__org_get_context, but you haven't granted it yet.
-17. Read: /Users/marcoslisboa/Development/provia-plugin/references/project-manifest.schema.json
-   → 1	{
-     2	  "$schema": "https://json-schema.org/draft/2020-12/schema",
-     3	  "$id": "https://docs.provia.ao/schemas/provia-project-v1.1.json",
-     4	  "title": "Provia project manifest (provia-project/v1.1)",
-     5	  "description": "One implementation project: sources, entity types, groups, workflows with access, forms, AI profiles, decisions and connected-mode receipts. Plugin artefact; never a Provia import format. scripts/build-project-map.mjs --check is authoritative for cross-references and the access rules; this schema describes the shape. The alternate shapes it lists (section strings, source#anchor  …
-18. Grep: "decision": \{
-   → 162:    "decision": {
-     163-      "type": "object",
-     164-      "required": ["id", "question", "status"],
-     165-      "properties": { "id": { "$ref": "#/$defs/key" }, "question": { "type": "string" }, "owner": { "type": ["string", "null"] }, "status": { "enum": ["open", "resolved"] }, "resolution": { "type": "string" }, "raisedBy": { "type": "string" }, "sourceRefs": { "$ref": "#/$defs/sourceRefs" } }
-     166-    },
-     167-    "receipt": {
-     168-      "type": "object",
-19. Write: /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Da9ZdX/process-discovery-normal/provia-project.json
-   → File created successfully at: /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Da9ZdX/process-discovery-normal/provia-project.json (file state is current in your context — no need to Read it back)
-20. Bash (error): cd /Users/marcoslisboa/Development/provia-plugin && node scripts/build-project-map.mjs /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Da9ZdX/process-discovery-normal/provia-project.json --check
-   → cd in '/Users/marcoslisboa/Development/provia-plugin' was blocked. For security, Claude Code may only change directories to the allowed working directories for this session: '/private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Da9ZdX/process-discovery-normal'.
-21. Bash: node /Users/marcoslisboa/Development/provia-plugin/scripts/build-project-map.mjs provia-project.json --check
-   → Manifest piloto-compras: 0 workflows, 0 groups, 0 entity types, 0 forms; access declared on 0/0, 0 readiness block(s), 0 unresolved actor/entity key(s); 8 pending item(s), 0 warning(s), 0 info(s). Plugin artefact only; nothing was created in Provia.
-22. Bash: node /Users/marcoslisboa/Development/provia-plugin/scripts/build-project-map.mjs provia-project.json --output project.html && node /Users/marcoslisboa/Development/provia-plugin/scripts/build-project-map.mjs provia-project.json --setup setup.md && ls -la
-   → Manifest piloto-compras: 0 workflows, 0 groups, 0 entity types, 0 forms; access declared on 0/0, 0 readiness block(s), 0 unresolved actor/entity key(s); 8 pending item(s), 0 warning(s), 0 info(s). Plugin artefact only; nothing was created in Provia. Map written to project.html.
-     Manifest piloto-compras: 0 workflows, 0 groups, 0 entity types, 0 forms; access declared on 0/0, 0 readiness block(s), 0 unresolved actor/entity key(s); 8 pending item(s), 0 warning(s), 0 info(s). Plugin artefact only; nothing was created in Provia. Handover written to setup.md.
+14. Read: /Users/marcoslisboa/Development/provia-plugin/references/provia-capabilities.md
+   → 1	# Provia capability baseline
+     2	
+     3	Baseline: workflow contract revision recorded in contracts/workflow-v1/contract-lock.json. This is implementation evidence, not proof of the version deployed in a customer environment.
+     4	
+     5	A Workflow defines a repeatable process. An Incident is one execution of a workflow. An Action is one step. Entities hold reusable business records, metadata holds structured case values, tags classify records, and pages/files/comments provide explanation and evidence. Explain “incident” as a process case when the business context is not emergency response.
+     6	
+     7	Entity an …
+15. Bash: node -e "
+const fs=require('fs');
+const p='/Users/marcoslisboa/Development/provia-plugin/';
+try{const c=JSON.parse(fs.readFileSync(p+'contracts/workflow-v1/contract-lock.json','utf8'));console.log('contractRevision:',c.revision||c.contractRevision||Object.keys(c));}catch(e){console.log('lock err',e.message)}
+try{const k=JSON.parse(fs.readFileSync(p+'catalog.json','utf8'));console.log('catalog version:',k.version, k.name);}catch(e){console.log('cat err',e.message)}
+try{const m=JSON.parse(fs.readFileSync(p+'.claude-plugin/plugin.json','utf8'));console.log('plugin:',m.name,m.version);}catch(e){console.log('plugin err',e.message)}
+"
+   → contractRevision: [
+       'apiVersion',
+       'sourceRevision',
+       'generatedBy',
+       'engineSha256',
+       'sourceFiles',
+       'libraries'
+     ]
+     catalog version: undefined undefined
+     plugin: provia-skills 1.2.1
+16. Bash: node -e "
+const c=require('/Users/marcoslisboa/Development/provia-plugin/contracts/workflow-v1/contract-lock.json');
+console.log(c.apiVersion, c.sourceRevision, c.generatedBy);
+"
+   → provia.ao/v1 fed8efaf019abc901cb2b229f3676dc4031126fa scripts/build-contract.mjs
+17. Bash: node -e "
+const s=require('/Users/marcoslisboa/Development/provia-plugin/references/project-manifest.schema.json');
+console.log(JSON.stringify(s.\$defs.decision,null,1));
+console.log(JSON.stringify(s.\$defs.source,null,1));
+"
+   → {
+      "type": "object",
+      "required": [
+       "id",
+       "question",
+       "status"
+      ],
+      "properties": {
+       "id": {
+        "$ref": "#/$defs/key"
+       },
+       "question": {
+        "type": "string"
+       },
+       "owner": {
+        "type": [
+         "string",
+         "null"
+        ]
+       },
+       "status": {
+        "enum": [
+         "open",
+         "resolved"
+        ]
+       },
+       "resolution": {
+        "type": "string"
+       },
+       "raisedBy": {
+        "type": "string"
+       },
+       "sourceRefs": {
+        "$ref": "#/$defs/sourceRefs"
+       }
+      }
+     }
+     {
+      "type": "object",
+      "required": [
+       "id",
+       "title",
+       "kind"
+      ],
+      "properties": {
+       "id": {
+        "$ref": "#/$defs/key"
+       },
+       "title": {
+        "type": "string"
+       } …
+18. Write: /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Fzap9r/process-discovery-normal/provia-project.json
+   → File created successfully at: /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Fzap9r/process-discovery-normal/provia-project.json (file state is current in your context — no need to Read it back)
+19. Bash (error): cd /Users/marcoslisboa/Development/provia-plugin && node scripts/build-project-map.mjs '/private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Fzap9r/process-discovery-normal/provia-project.json' --check
+   → cd in '/Users/marcoslisboa/Development/provia-plugin' was blocked. For security, Claude Code may only change directories to the allowed working directories for this session: '/private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Fzap9r/process-discovery-normal'.
+20. Bash: node /Users/marcoslisboa/Development/provia-plugin/scripts/build-project-map.mjs provia-project.json --check
+   → Manifest pedidos-ti: 0 workflows, 0 groups, 0 entity types, 0 forms; access declared on 0/0, 0 readiness block(s), 0 unresolved actor/entity key(s); 9 pending item(s), 0 warning(s), 0 info(s). Plugin artefact only; nothing was created in Provia.
+21. Bash (error): node /Users/marcoslisboa/Development/provia-plugin/scripts/build-project-map.mjs provia-project.json --output project.html --setup setup.md && ls -la
+   → Exit code 1
+     Usage: node scripts/build-project-map.mjs provia-project.json --check | --output project.html | --setup setup.md
+22. Bash: node /Users/marcoslisboa/Development/provia-plugin/scripts/build-project-map.mjs provia-project.json --output project.html; node /Users/marcoslisboa/Development/provia-plugin/scripts/build-project-map.mjs provia-project.json --setup setup.md; ls -la
+   → Manifest pedidos-ti: 0 workflows, 0 groups, 0 entity types, 0 forms; access declared on 0/0, 0 readiness block(s), 0 unresolved actor/entity key(s); 9 pending item(s), 0 warning(s), 0 info(s). Plugin artefact only; nothing was created in Provia. Map written to project.html.
+     Manifest pedidos-ti: 0 workflows, 0 groups, 0 entity types, 0 forms; access declared on 0/0, 0 readiness block(s), 0 unresolved actor/entity key(s); 9 pending item(s), 0 warning(s), 0 info(s). Plugin artefact only; nothing was created in Provia. Handover written to setup.md.
      total 272
-     drwxr-xr-x@ 5 marcoslisboa  sta …
-23. Write: /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Da9ZdX/process-discovery-normal/discovery-report.md
-   → File created successfully at: /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Da9ZdX/process-discovery-normal/discovery-report.md (file state is current in your context — no need to Read it back)
+     drwxr-xr-x@ 5 marcoslisboa  staff     1 …
+23. Write: /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Fzap9r/process-discovery-normal/selecao-piloto.md
+   → File created successfully at: /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Fzap9r/process-discovery-normal/selecao-piloto.md (file state is current in your context — no need to Read it back)
+24. Read: /private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-Fzap9r/process-discovery-normal/setup.md
+   → 1	# Pedido de TI: Entrega de configuração
+     2	
+     3	Angola · pt-AO · Africa/Luanda. Gerado a partir de `provia-project.json` (provia-skills/1.2.1, 2026-09-23).
+     4	
+     5	## Estado
+     6	
+     7	Modo: configuração manual (sem recibos registados).
+     8	
+     9	## Configuração pendente
+     10	
+     11	Nada pendente.
+     12	
+     13	## Decisões em aberto
+     14	
+     15	- **D1** Quem e o dono nomeado do piloto de Pedidos de TI (nome e endereco de correio electronico do Responsavel de TI)? Sem este nome o piloto nao arranca. (Dono: Administracao / Direccao-Geral)
+     16	- **D2** Que categorias de pedido de TI entram no piloto (por exemplo acessos, avarias …

@@ -1,14 +1,16 @@
 {
-  "at": "2026-09-21T10:27:29.392Z",
+  "at": "2026-09-23T08:59:11.419Z",
   "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "The run explicitly identified the missing context (no procedure, SLA, categories, team names, tenant read not granted, country/language unstated) and separated confirmed facts from recommendations/assumptions and open decisions (D1–D7).",
-    "The respondent access model was left unresolved as decision D1 (signed-in vs external link), the available design decision (intake/trigger form vs Form Fill) was presented, and access testing was explicitly marked pending rather than claimed.",
-    "Claims of checks and files are supported by the tool log: it-request-form.md, provia-project.json, project.html and setup.md were written (calls 27–30), and the reported --check output (0 errors, 0 warnings, 1 info, 18 pending) matches call 29.",
-    "No organization IDs, thresholds, legal provisions or endpoints were invented: tenantId/organization fields are null, no deadlines or file-size limits were asserted, Angola was disclosed as provisional context.",
-    "The response ends with a concrete next-step recommendation naming provia-workflow-designer with a copyable invocation."
+    "Expected behaviour observed: the unknown respondent access model is surfaced as the blocking open decision (D1) with the three options presented side by side rather than silently chosen; the design proceeds on one option that is explicitly labelled a recommendation, and no external/anonymous link is promised.",
+    "Access testing is explicitly marked pending and the response states plainly 'I ran no test against any environment' — no fabricated validation result.",
+    "Claims of executed checks and written files are all supported by the tool log: build-project-map --check (calls 16–17) and the four artefacts (calls 15, 17, 18); the reported counts (0 warnings, 1 info about suporte-ti holding no grant, 16 pending items) match the actual script output verbatim.",
+    "No invented identifiers: organization name, tenantId and productRevision are null; the contract revision fed8efaf019abc901cb2b229f3676dc4031126fa was read from contract-lock.json (call 14), not asserted from memory.",
+    "Facts are separated into explicit categories — Confirmed (from bundled references), Recommended, Open decision (D1–D9 with owners) — and the missing context is stated up front rather than papered over.",
+    "Country/language handled per shared conventions: Angola disclosed as a provisional context, English chosen because the request was in English, with a pt-AO variant recorded as D8.",
+    "Ends with a concrete next-step recommendation naming provia-workflow-designer plus a copyable invocation that carries the manifest, the open decisions and the country context forward."
   ],
   "violations": []
 }

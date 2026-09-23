@@ -1,14 +1,16 @@
 {
-  "at": "2026-09-21T10:13:52.818Z",
+  "at": "2026-09-23T08:54:35.439Z",
   "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "The run gave a provisional comparison (table, ranking, decisive trade-off) and explicitly listed the missing information needed to decide (D1–D5: real inventory, cases/month, named owners, baseline), matching the expected behaviour for missing volume/ownership.",
-    "Confirmed facts, stated assumptions, recommendations and open decisions are kept separate in both the report and the response; the assumed candidate set is clearly flagged as an assumption recorded as decision D1 rather than presented as fact.",
-    "No organization IDs, thresholds, legal provisions, endpoints or validation results were invented; org_get_context was attempted, not granted, and the response honestly reports disconnected mode and that nothing was read from or created in Provia.",
-    "Claims about file writes and the build-project-map.mjs --check/--output/--setup runs are all supported by tool calls 20–25, and the response correctly scopes the check (manifest only, not the Markdown report).",
-    "Angola is disclosed as a provisional country context per plugin conventions, and the response ends with a concrete next-step recommendation with a copyable invocation."
+    "Mode-appropriate: the run opens by stating plainly that no context was supplied (empty working directory, no inventory/volumes/owners/baselines) and that the connected read was not authorized, then delivers a provisional comparison rather than refusing or fabricating an answer.",
+    "Information needed to decide is explicit and owned: ten open decisions recorded in provia-project.json decisions[] and surfaced in setup.md, with D1 (real inventory) and D4 (named owner) flagged as blocking, plus a fill-in-the-blanks invocation template asking for volume, cycle time and ownership.",
+    "Confirmed facts, recommendations and unresolved items are separated: the candidate set (IT/purchase/onboarding) is repeatedly labelled a placeholder and 'not an observation of your organization'; the comparison method and gates are presented as what is actually decided; the named winner is stated as conditional with two explicit flip conditions.",
+    "No silent resolution of the missing context: the choice is left conditional on D1/D4 rather than asserted, and the recommended next step is to re-run discovery with real data instead of proceeding to workflow design against a placeholder.",
+    "Validation and write claims are supported by the tool log: build-project-map.mjs --check ran (call 17) and returned '10 pending item(s), 0 warning(s)', matching the response, and the scope caveat ('manifest shape and cross-references only; does not validate pilot-comparison.md') is accurate. All four claimed artefacts correspond to actual Write/Bash calls (16, 18, 19).",
+    "No invented organization IDs, endpoints, legal provisions or approval thresholds: tenantId, organization name, sector and productRevision are null; contractRevision fed8efaf… and generator version were read from the lock file and package.json (calls 14-15); Angola/AOA/Africa/Luanda is disclosed as a provisional default per country-context.md.",
+    "Ends with a concrete next-step recommendation naming the skill, the reason it is the right one now, and a copyable invocation carrying the artefact forward, as next-step.md requires."
   ],
   "violations": []
 }

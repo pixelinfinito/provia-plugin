@@ -2,44 +2,50 @@
   "schemaVersion": "provia-project/v1.1",
   "project": {
     "key": "it-support",
-    "title": "IT support request pilot",
+    "title": "IT support request (pilot candidate, pending confirmation)",
     "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.2.0",
+    "generator": "provia-skills/1.2.1",
     "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
-    "updatedAt": "2026-09-21"
+    "updatedAt": "2026-09-23"
   },
   "organization": {
     "name": null,
     "sector": null,
     "mode": "disconnected",
     "tenantId": null,
-    "productRevision": null
+    "productRevision": null,
+    "language": "en",
+    "timezone": "Africa/Luanda"
   },
   "sources": [
     {
-      "id": "chat-purchasing",
-      "title": "Chat statement (2026-09-21): Purchasing takes 2 days; nobody will own it",
+      "id": "brief-2026-09-23",
+      "title": "Verbal pilot brief (chat request, 23 September 2026)",
       "kind": "interview",
       "version": "1",
-      "effectiveDate": "2026-09-21",
+      "effectiveDate": "2026-09-23",
+      "summary": "The only input supplied for this discovery. Two candidate processes described in one sentence each; no procedure, export, volume or baseline record was supplied.",
       "sections": [
-        { "anchor": "cycle-time", "title": "Stated cycle time: 2 days (measure and period not stated)" },
-        { "anchor": "ownership", "title": "Ownership: no one will own the process" }
-      ]
-    },
-    {
-      "id": "chat-it-support",
-      "title": "Chat statement (2026-09-21): IT support takes 5 days; Ana owns it",
-      "kind": "interview",
-      "version": "1",
-      "effectiveDate": "2026-09-21",
-      "sections": [
-        { "anchor": "cycle-time", "title": "Stated cycle time: 5 days (measure and period not stated)" },
-        { "anchor": "ownership", "title": "Ownership: Ana owns the process" }
-      ]
+        {
+          "anchor": "purchasing",
+          "title": "Purchasing",
+          "summary": "Stated verbatim: takes 2 days; nobody will own it."
+        },
+        {
+          "anchor": "it-support",
+          "title": "IT support",
+          "summary": "Stated verbatim: takes 5 days; Ana owns it."
+        },
+        {
+          "anchor": "ask",
+          "title": "Selection criterion offered by the requester",
+          "summary": "Stated verbatim: choose the fastest process for our pilot."
+        }
+      ],
+      "emails": []
     }
   ],
   "entityTypes": [],
@@ -50,62 +56,74 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "Confirm the pilot choice: IT support (owned by Ana) rather than Purchasing (shorter cycle, no owner). The request asked for the fastest process; the recommendation ranks ownership above cycle time. Does the sponsor accept?",
-      "owner": "Pilot sponsor (not named in the sources)",
+      "question": "Confirm IT support as the pilot rather than purchasing. Purchasing is the shorter process (2 days against 5) but has no owner; a Provia workflow needs a named assignee on every action, so purchasing cannot be designed until someone owns it. Is the trade-off accepted?",
+      "owner": "Pilot sponsor (not named in the brief)",
       "status": "open",
       "raisedBy": "provia-process-discovery",
       "sourceRefs": [
-        { "source": "chat-purchasing", "section": "ownership" },
-        { "source": "chat-it-support", "section": "ownership" }
+        { "source": "brief-2026-09-23", "section": "ask" }
       ]
     },
     {
       "id": "D2",
-      "question": "What event opens an IT support request (email, phone, walk-up, ticket) and what observable condition closes it (requester confirms, Ana closes, no reply after N days)?",
-      "owner": "Ana",
+      "question": "Who owns purchasing end to end, and who approves a purchase? Until this is answered purchasing stays out of scope; if an owner appears, purchasing becomes the stronger second workflow.",
+      "owner": "Pilot sponsor (not named in the brief)",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "chat-it-support", "section": "cycle-time" } ]
+      "sourceRefs": [
+        { "source": "brief-2026-09-23", "section": "purchasing" }
+      ]
     },
     {
       "id": "D3",
-      "question": "Is the stated 5-day IT support duration an observed average, a median, a typical case or a worst case, over which period, and measured in calendar days or workdays? It is recorded as a stated value, not a measured baseline, until answered.",
-      "owner": "Ana",
+      "question": "Ana's full name, email and the scope of her ownership: does she own intake and triage, resolution, closure, or all of them? A single owner for every action is a design risk if she is also the only resolver.",
+      "owner": "Ana (surname not supplied)",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "chat-it-support", "section": "cycle-time" } ]
+      "sourceRefs": [
+        { "source": "brief-2026-09-23", "section": "it-support" }
+      ]
     },
     {
       "id": "D4",
-      "question": "How many IT support requests arrive per month, and which request types (access, hardware, software, other) are most frequent? The pilot needs enough real cases to review after several completions; no volume was supplied and none was assumed.",
-      "owner": "Ana",
+      "question": "Are '2 days' and '5 days' measured cycle times or estimates, and do they mean calendar days or workdays? No record was supplied, so neither figure can serve as a baseline yet.",
+      "owner": "Pilot sponsor (not named in the brief)",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "chat-it-support" } ]
+      "sourceRefs": [
+        { "source": "brief-2026-09-23", "section": "purchasing" },
+        { "source": "brief-2026-09-23", "section": "it-support" }
+      ]
     },
     {
       "id": "D5",
-      "question": "Who handles IT support requests besides Ana (technicians, an external provider), and who covers when Ana is absent? Needed before the designer can assign actions to a group rather than to one person.",
-      "owner": "Ana",
+      "question": "How many IT support requests arrive per month, and through which channel today (email, telephone, in person)? The pilot needs enough real cases to learn from within the review window.",
+      "owner": "Ana (surname not supplied)",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "chat-it-support", "section": "ownership" } ]
+      "sourceRefs": [
+        { "source": "brief-2026-09-23", "section": "it-support" }
+      ]
     },
     {
       "id": "D6",
-      "question": "Will management name a Purchasing owner? Purchasing stays a candidate for the second workflow only once someone accepts ownership of approvals, exceptions and the review of results.",
-      "owner": "Pilot sponsor (not named in the sources)",
+      "question": "Which IT request types are in the pilot and which are excluded (for example: purchases of equipment, access requests, incidents affecting a whole site)? The proposed boundary is everyday requests that Ana's team resolves without a purchase.",
+      "owner": "Ana (surname not supplied)",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": [ { "source": "chat-purchasing", "section": "ownership" } ]
+      "sourceRefs": [
+        { "source": "brief-2026-09-23", "section": "it-support" }
+      ]
     },
     {
       "id": "D7",
-      "question": "Organization name, sector, country, language, currency and timezone were not supplied. Angola / en / AOA / Africa-Luanda were recorded as a provisional default. Confirm or correct before any country-dependent design.",
-      "owner": "Pilot sponsor (not named in the sources)",
+      "question": "Confirm country, jurisdiction, working language and currency for this project. Angola, pt-AO terminology, Africa/Luanda and AOA are the plugin's provisional starting context and were not stated by the requester; the manifest currently records language 'en' because the brief was written in English.",
+      "owner": "Pilot sponsor (not named in the brief)",
       "status": "open",
       "raisedBy": "provia-process-discovery",
-      "sourceRefs": []
+      "sourceRefs": [
+        { "source": "brief-2026-09-23", "section": "ask" }
+      ]
     }
   ],
   "receipts": []

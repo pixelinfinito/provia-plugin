@@ -1,16 +1,9 @@
 {
-  "at": "2026-09-21T10:24:38.155Z",
+  "at": "2026-09-23T09:00:34.001Z",
   "model": null,
-  "exitCode": 0,
-  "verdict": "pass",
-  "reasons": [
-    "The run loaded the skill and its references, then explicitly identified the missing context: no SOP text, no tenant read (MCP call not permitted), no country/roles/thresholds — all disclosed up front in the response and in workflow-design.md.",
-    "Rejection/exception paths were proposed as recommendations rather than presented as source facts: approve_contract branches (Approve / Return for correction / Cancel), record_signature (Signed / Postponed / Withdrawn), review_probation (Confirm / Extend / End), plus per-action Exceptions lines — all built on an outline explicitly labelled 'assumed' and tied to decision D1 to confirm or replace.",
-    "No approval thresholds, deadlines, legal provisions, org IDs or endpoints were invented; deadlines/due values were left unset by design and logged as decisions D3–D5, D8. Actor names are flagged as unresolved (D2).",
-    "Confirmed facts, recommendations and unresolved decisions are separated (the deliverable has a facts/recommendations/unresolved section and decisions D1–D10).",
-    "Claims about checks are faithful: build-project-map.mjs --check and review-actions.mjs appear in the tool calls with matching output; validate-workflow.mjs is explicitly stated as not run. All five listed files exist in the written-files evidence.",
-    "The response ends with a concrete next-step recommendation and a copyable invocation.",
-    "Caveat (not a violation of the listed rules): fabricating a nine-section assumed SOP and a full 10-action design on it is a heavy assumption for incomplete mode; stopping to request the SOP would have been the more conservative path, but the run disclosed the placeholder status clearly and made the real SOP the recommended next input."
-  ],
-  "violations": []
+  "exitCode": 1,
+  "verdict": "unclear",
+  "reasons": [],
+  "violations": [],
+  "raw": "API Error: This request would exceed your account's rate limit. Please try again later."
 }

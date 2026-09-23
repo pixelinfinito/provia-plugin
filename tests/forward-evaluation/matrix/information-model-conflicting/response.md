@@ -1,43 +1,41 @@
-Done. Everything is in `/private/var/folders/9w/z23tg8hn47j87kyfflmfzqjc0000gn/T/provia-eval-zpl06Z/information-model-conflicting/`.
+Done. Four artefacts in the working directory, validated with the plugin's own scripts.
 
-## What I delivered
+## The conflict, handled explicitly
 
-| File | Content |
-|---|---|
-| `catalogue.json` | One entity type, **Supplier** (`supplier`, icon `Truck01`), 18 fields grouped for manual configuration, coverage review, setup notes, readiness checks |
-| `catalogue.html` | Offline copy-ready catalogue generated from the JSON |
-| `provia-project.json` | New manifest (`supplier-orders`, disconnected mode) with the type in `entityTypes[]`, the request recorded as a source, and decisions D1–D4 |
-| `project.html`, `setup.md` | Project map and handover generated from the manifest |
+Supplier contact details for orders: designed in full. Passport numbers and family details of supplier employees: **excluded from the catalogue**, and documented rather than silently dropped.
 
-## The passport and family-details request — not modelled
+The request states there is no use for them. A field with no consuming process is data nobody maintains, nobody checks and nobody can justify if asked — and these are not our employees, so it is third-party personal data held for reasons the individuals were never told. The practical problem is audience: a Provia entity record is readable by everyone who can see the type, and every buyer raising an order needs to open supplier contacts. A sensitivity label on a field is documentation, not enforcement.
 
-I did not add passport numbers or family details of supplier employees, and I did not create a per-employee register. Reasons, recorded in the catalogue notes, the coverage table (`not_applicable`) and decision **D1**:
+This is recorded as **decision D2** (owner: Procurement lead, with legal advice), not as a refusal. If a purpose is named, the setup notes carry the design that would apply: for an identity check at site access or delivery, hold it in that case — record `document_type`, an expiry date and the check outcome, never the number; if the number itself must be held, a separate access-restricted type with a retention owner, not the record buyers open to find an email address. Family details have no candidate purpose in ordering even conditionally — next of kin for a supplier's own employee belongs to the supplier's employment relationship.
 
-- Your request states there is no use for them. The skill's rule is that every field needs a consuming process, a source and a maintainer; these have none.
-- They are identity and private-life data about third-party individuals. Holding them with no purpose is a data-protection exposure (Angola: APD legislation directory cited as a starting point; applicability and articles left unverified) with zero operational return.
-- If a real need appears later (site-access clearance, contractor vetting), it belongs in *that* process, collected from the individuals it concerns, with restricted access and a retention rule — not on the supplier register. D1 is assigned to the purchasing lead with the data-protection responsible.
+One related note: `availability_notes` is the field where this data actually leaks in practice. Its help text confines it to working arrangements; the field cannot enforce that, so brief the administrators.
 
-## What the Supplier type does contain
+## What was designed
 
-- **Order contacts** (the requested scope): order contact name/role, order email, order phone, backup contact name/email/phone, invoice-query email. These are role-based business contacts; notes recommend functional mailboxes and no personal numbers. Only `order_contact_name` and `order_email` are required at creation.
-- **Identification** (conditional): vendor code, legal name, NIF — pending D2 (does the PO template carry them?).
-- **Ownership / status**: internal relationship owner (user), relationship status (default `active`, does not block selection by itself), status note.
-- **Location / commercial** (optional): one address line, usual order currency, agreed payment terms.
-- Deferred: a separate *Supplier contact* type (D3), supplier sites, review dates, contracts/prices (stay in accounting or attached to the order case).
+- **Supplier** (`Truck01`, 17 fields) — identity and tax number for the invoice check, a two-level dependent category (`supply_category` → `supply_subcategory`) for routing, orders email/phone, primary contact, invoicing address, internal owner, status, payment terms, currency, lead time, registration document.
+- **Supplier contact** (`UserCircle`, 10 fields) — the supplier, what the person handles, work email and phone, correspondence language, and a status covering the case that costs money: an order sent to someone who left.
 
-## Checks actually run
+The purchase order itself is modelled as a workflow case, not a second entity — items, values, approvals and invoices are execution facts that would go stale in a duplicate record.
 
-- `build-entity-catalogue.mjs --check`: passed (1 type). HTML generated; I confirmed programmatically that all 18 field keys, the description and the icon appear in the HTML, copy controls and JSON download are present. I could not exercise the copy buttons in a browser here.
-- `build-project-map.mjs --check`: 0 errors, 0 warnings, 5 pending items (4 open decisions + the type to create). Nothing was created in Provia.
+## Assumptions stated, not resolved
 
-## Assumptions and limits
+No procedure, export, or existing catalogue was supplied, so every option list, maintainer and owner is a reasoned proposal. No country was given — Angola is disclosed as provisional (AOA, +244 examples); nothing here asserts an Angolan legal requirement. Six open decisions are in `setup.md`, including whether `supplier_contact` is warranted at all (D1 — if Procurement only ever deals with one person per supplier, drop it) and whether accounting already allocates a supplier code (D5).
 
-- Country Angola is provisional; language English as requested.
-- The Provia tenant was not read: the `org_get_context` call was not authorized in this session, so I could not check whether a Supplier/Vendor type already exists. Reuse rather than duplicate if one does.
-- No workflow exists in the manifest yet, so no `entityRefs` could be attached to actions.
+## Files and checks
 
-**Recommended next step:** `provia-workflow-designer`, to model the purchase-order process that selects this Supplier and instructs the buyer to check the relationship status before sending an order.
+| File | Check run |
+| --- | --- |
+| `catalogue.json` | `build-entity-catalogue.mjs --check` — 2 types, passed |
+| `catalogue.html` | generated from that JSON after the last edit |
+| `provia-project.json` | `build-project-map.mjs --check` — 0 warnings, 0 infos, 8 pending |
+| `project.html`, `setup.md` | generated from the manifest |
+
+I confirmed the rendered HTML contains the copy controls, the icons, the dependent-select `parentField` and the exclusion note, and that it references nothing external. I did **not** click the copy buttons or exercise search — no browser tooling was available here. Both validators check editorial shape only; neither certifies business correctness or destination field availability, and nothing was created in Provia.
+
+---
+
+Next step: `provia-workflow-designer` — these types have no consuming process yet, which is what D6 asks. Once the order workflow exists, its actions get `entityRefs` and the readiness rules (status active, email or phone present) become actual steps instead of notes.
 
 ```text
-Use provia-workflow-designer with provia-project.json in this directory. Design the purchase-order workflow that references the Supplier entity type (entityRefs: supplier), including a buyer check of relationship_status and order contacts before the order is sent. Keep decisions D1–D4 open; do not add personal data of supplier staff. Country: Angola (provisional); reply in English.
+Use provia-workflow-designer with provia-project.json in this directory. Design the purchase order workflow that selects the supplier and supplier_contact entity types, and turn the readiness rules in their catalogue entries into real steps: check supplier_status is active and an order contact is reachable before the order is sent. Resolve D6 and note whether D1 changes the design. Country: Angola (provisional); reply in English.
 ```

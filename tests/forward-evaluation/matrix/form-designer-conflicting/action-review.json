@@ -1,6 +1,6 @@
 {
   "valid": true,
-  "workflow": "Purchase request",
+  "workflow": "Supplier quotation collection",
   "reviewedActions": 2,
   "summary": {
     "applicable": 2,
@@ -14,8 +14,8 @@
   "warnings": [],
   "actions": [
     {
-      "id": "register-quotation",
-      "name": "Register the supplier quotations received",
+      "id": "collect-quotations",
+      "name": "Collect supplier quotations",
       "type": "form_fill",
       "applicable": true,
       "complete": true,
@@ -28,16 +28,16 @@
       },
       "missing": [],
       "leaks": [],
-      "length": 1152,
+      "length": 1427,
       "tooLong": false,
       "nearLimit": false,
       "empty": false,
       "due": "missing"
     },
     {
-      "id": "select-quotation",
-      "name": "Select the winning quotation",
-      "type": "standard",
+      "id": "record-selected-quotation",
+      "name": "Record the selected quotation",
+      "type": "form_fill",
       "applicable": true,
       "complete": true,
       "parts": {
@@ -49,7 +49,7 @@
       },
       "missing": [],
       "leaks": [],
-      "length": 1071,
+      "length": 1743,
       "tooLong": false,
       "nearLimit": false,
       "empty": false,

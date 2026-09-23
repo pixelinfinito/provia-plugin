@@ -1,6 +1,6 @@
-# Pilot candidate (provisional): Purchase request: Setup handover
+# PROVISIONAL — IT request handling (pilot candidate, not confirmed): Setup handover
 
-Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.2.0, 2026-09-21).
+Angola · en · Africa/Luanda. Generated from `provia-project.json` (provia-skills/1.2.1, 2026-09-23).
 
 ## Status
 
@@ -12,13 +12,15 @@ Nothing pending.
 
 ## Open decisions
 
-- **D1** Which processes are actually candidates? Supply the process inventory (name, start event, end condition, owner) so the assumed set (purchase request, employee onboarding, IT request) can be replaced or confirmed. (Owner: Project sponsor (to be named))
-- **D2** How many cases per month does each candidate process have? An observed count from the last three months (email folder, register, spreadsheet) is needed; no volume was assumed in the ranking. (Owner: Process owner of each candidate (to be named))
-- **D3** Who owns the purchase request process end to end (a named person or group who can approve the workflow design and act on stalled cases)? The provisional choice depends on this ownership being confirmed. (Owner: Project sponsor (to be named))
-- **D4** Does the IT request process have a single named owner? If it does and its monthly volume is higher than purchasing, IT requests become the stronger pilot and the ranking flips. (Owner: IT lead (to be named))
-- **D5** What is the current baseline for the chosen pilot: median days from request to decision, and share of cases with the approval recorded in writing? Needed before the pilot starts so improvement is measured, not estimated. (Owner: Process owner of the chosen pilot (to be named))
-- **D6** Which documents govern the chosen pilot (procedure, approval limits, templates)? Supply them so the designer can cite sections; no approval threshold or amount limit was assumed. (Owner: Process owner of the chosen pilot (to be named))
-- **D7** Country of operation and response language. Angola (AOA, Africa/Luanda) was used as a provisional context because none was supplied; confirm or correct before any jurisdiction-dependent design. (Owner: Project sponsor (to be named))
-- **D8** Should the plugin read the Provia organization (existing workflows, groups, entity types) before design? The org_get_context tool is offered by the host but the read was not granted in this session; granting it lets the manifest record existing configuration as sources. (Owner: Implementer (lisboa@pixel.ao))
+- **D1** What is the actual process inventory? No inventory, procedure, export or case record was supplied, and the connected read of the Provia organization was not authorized in this session. The comparison in pilot-comparison.md uses a standard back-office candidate set as a placeholder; it is not an observation of this organization. List the repeated processes you want compared, with the event that starts each one and the observable condition that ends it. (Owner: Pilot sponsor — to be named)
+- **D2** How many cases does each candidate process handle per month? A four-week pilot needs enough completed cases to learn from. No volume figure was supplied and none was estimated. (Owner: Pilot sponsor — to be named)
+- **D3** What is the observed elapsed time from start event to end condition for each candidate, today? This decides whether cases can complete inside the four-week window at all. No baseline was supplied; nothing in the deliverable is a measured value. (Owner: Pilot sponsor — to be named)
+- **D4** Who is the named owner of each candidate process — a person with authority to change how the work is done, not a shared mailbox or an alias? The pilot recommendation flips on this: if the fastest candidate has no named owner and a slower one does, the slower one becomes the pilot. (Owner: Pilot sponsor — to be named)
+- **D5** Which candidate processes depend on a system outside Provia (ERP, payroll, ticketing, bank) to complete a case? An integration dependency that must work on day one removes a candidate from a four-week pilot. (Owner: Pilot sponsor — to be named)
+- **D6** Does a written procedure, SOP or checklist exist for each candidate, and can it be supplied? Without one, discovery time comes out of the four weeks. Supplied documents become sources[] with section anchors the workflow designer will cite. (Owner: Pilot sponsor — to be named)
+- **D7** Which approval thresholds, statutory deadlines or retention periods apply to each candidate? None were supplied and none were invented. A candidate carrying a statutory deadline is a poor first pilot because a design error has consequences outside the pilot. (Owner: Pilot sponsor — to be named)
+- **D8** Confirm country, jurisdiction, response language, currency and timezone. Angola / pt-AO terms / AOA / Africa/Luanda is recorded as a provisional starting context only, because no country was supplied. The reply language was taken from the request being written in English. (Owner: Pilot sponsor — to be named)
+- **D9** What does the pilot have to demonstrate to be judged a success — cycle time, traceability of approvals, fewer lost requests, or audit evidence? The success measures in pilot-comparison.md are proposed, not agreed, and none of them has a baseline to compare against until D3 is answered. (Owner: Pilot sponsor — to be named)
+- **D10** Should the plugin read the Provia organization directly? A provia-implementer MCP server is offered by this host, but the org_get_context call was not granted permission in this non-interactive session, so existing workflows, groups and entity types were not read and are not reflected anywhere in this manifest. (Owner: Implementer)
 
 This file is generated by the project map; regenerate it after every manifest change. It does not replace the process owner review or the Provia import preview.

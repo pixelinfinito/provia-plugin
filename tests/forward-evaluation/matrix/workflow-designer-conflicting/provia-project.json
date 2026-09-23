@@ -1,15 +1,15 @@
 {
   "schemaVersion": "provia-project/v1.1",
   "project": {
-    "key": "request-approval",
-    "title": "Request approval (SOP sections 2 and 7)",
+    "key": "approval",
+    "title": "Request approval",
     "language": "en",
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.2.0",
-    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
-    "updatedAt": "2026-09-21"
+    "generator": "provia-skills/1.2.1",
+    "contractRevision": null,
+    "updatedAt": "2026-09-23"
   },
   "organization": {
     "name": null,
@@ -21,14 +21,14 @@
   "sources": [
     {
       "id": "sop",
-      "title": "SOP (two fragments supplied: sections 2 and 7)",
+      "title": "SOP excerpt supplied in chat (sections 2 and 7 only)",
       "kind": "sop",
       "version": null,
       "effectiveDate": null,
-      "summary": "Only two sentences were supplied. Section 2: the department manager approves. Section 7: only the finance director approves. Process name, start and end conditions, service levels, evidence and exceptions were not supplied.",
+      "summary": "Two sentences quoted by the user. Section 2: the department manager approves. Section 7: only the finance director approves. No other section, role, criterion, deadline or evidence was supplied.",
       "sections": [
-        { "anchor": "2", "title": "Section 2", "summary": "Department manager approves." },
-        { "anchor": "7", "title": "Section 7", "summary": "Only the finance director approves." }
+        { "anchor": "2", "title": "Approval by the department manager", "summary": "«department manager approves»" },
+        { "anchor": "7", "title": "Approval by the finance director", "summary": "«only the finance director approves»" }
       ]
     }
   ],
@@ -40,11 +40,12 @@
       "kind": "team",
       "area": null,
       "parentKey": null,
-      "purpose": "Approver named in SOP section 2. Candidate assignee of the decision «Decide on the request» if decision D1 resolves in favour of section 2 or a two-step approval.",
-      "members": [ { "role": "Department manager", "email": null, "verified": false } ],
-      "sourceRefs": [ { "source": "sop", "section": "2" } ],
+      "purpose": "Candidate approving authority under SOP section 2. Not yet assigned to any action: decision D1 must first resolve the conflict with section 7.",
+      "members": [{ "role": "Department manager" }],
+      "membersComplete": false,
+      "sourceRefs": [{ "source": "sop", "section": "2" }],
       "flags": [
-        { "code": "unnamed", "detail": "The source does not say which department manager: the requester's own manager (a per-case owner) or a fixed group. See decision D4." }
+        { "code": "alias", "detail": "The supplied excerpt gives no organizational name for this group; confirm the name the organization uses before creating it in Provia." }
       ]
     },
     {
@@ -53,70 +54,81 @@
       "kind": "team",
       "area": null,
       "parentKey": null,
-      "purpose": "Approver named in SOP section 7 («only the finance director approves»). Candidate assignee of the decision «Decide on the request» if decision D1 resolves in favour of section 7 or a two-step approval.",
-      "members": [ { "role": "Finance director", "email": null, "verified": false } ],
-      "sourceRefs": [ { "source": "sop", "section": "7" } ],
+      "purpose": "Candidate approving authority under SOP section 7. Not yet assigned to any action: decision D1 must first resolve the conflict with section 2.",
+      "members": [{ "role": "Finance director" }],
+      "membersComplete": false,
+      "sourceRefs": [{ "source": "sop", "section": "7" }],
       "flags": [
-        { "code": "single_person", "detail": "One named position. A group is proposed so ownership survives absences; the delegate is decision D5." }
+        { "code": "single_person", "detail": "Section 7 names one office («only the finance director»). Proposed as a group anyway so the approval survives absences; the delegate during absence is an open question for the process owner." }
       ]
     }
   ],
   "workflows": [
     {
-      "key": "request-approval",
+      "key": "approval",
       "name": "Request approval",
-      "prefix": "APR",
+      "prefix": "APRV",
       "file": "workflow.yaml",
       "status": "design",
       "ownerArea": null,
-      "sourceRefs": [ { "source": "sop", "section": "2" }, { "source": "sop", "section": "7" } ],
+      "sourceRefs": [{ "source": "sop", "section": "2" }, { "source": "sop", "section": "7" }],
       "access": {
         "default": "creator_only",
-        "grants": [],
-        "sensitivity": "internal",
-        "note": "The source does not say who opens a request, who owns the design or how sensitive the cases are. No grant is proposed until decision D3 names the starters; `creator_only` is a placeholder, not a design choice. Sensitivity `internal` is an assumption."
+        "note": "The supplied excerpt does not say who opens a case or who owns the design, so no grant is proposed: least privilege until decision D3 is answered. With creator_only, only the creator and the organization administrators reach a case; nobody else can start one. Do not import as-is without answering D3.",
+        "grants": []
       },
       "triggers": [
-        { "type": "manual", "label": "Start request", "enabled": true, "manual": { "allowedGroups": [], "allowedUsers": [] } }
+        { "type": "manual", "label": "Start request", "enabled": true }
       ],
       "templates": [],
       "unresolvedActors": [],
       "unresolvedEntityTypes": [],
+      "accessReview": [
+        { "question": "Who may open a request case, and which group owns this workflow design?", "group": null, "status": "open" }
+      ],
       "actions": [
         {
-          "localId": "prepare",
-          "name": "Prepare the request for approval",
+          "localId": "submit_request",
+          "name": "Submit the request for approval",
           "type": "standard",
-          "sourceRefs": [],
           "assigneeRef": "creator",
+          "sourceRefs": [],
           "formRef": null,
           "entityRefs": [],
-          "evidence": [ "`request_summary` filled", "Supporting documents attached to the case" ],
+          "evidence": [
+            "Case comment describing the request and its justification",
+            "Supporting documents attached to the case"
+          ],
           "due": null,
           "dueInSource": null,
           "folded": [],
-          "description": "Task: Describe the request so the approver can decide on it.\nHow: 1. Fill `request_summary` with what is requested and why. 2. Add the supporting detail in `justification`. 3. Attach any document that supports the request to the case. 4. Complete the action to send the request for decision.\nEvidence: `request_summary` filled; supporting documents attached to the case.\nDone when: The summary and the justification are complete and the action is completed.\nExceptions: If the request was returned for rework, read the approver's comment, correct the request and complete the action again. If the request is no longer needed, say so in a comment so the approver can reject it."
+          "description": "Task: Describe the request you need approved and attach the documents that support it.\n\nHow:\n\n1. Write in a case comment what you are requesting and why it is needed.\n2. Attach any document that supports the request.\n3. Check that the request is complete before completing this action; an incomplete request is returned to you.\n\nEvidence:\n\n- A case comment describing the request and its justification.\n- The supporting documents attached to the case.\n\nDone when: The description and the supporting documents are on the case and this action is completed.\n\nExceptions: If a document you need is not yet available, do not complete the action: record in a comment which document is missing and when you expect it."
         },
         {
-          "localId": "decide",
+          "localId": "decide_request",
           "name": "Decide on the request",
           "type": "decision",
-          "sourceRefs": [ { "source": "sop", "section": "2" }, { "source": "sop", "section": "7" } ],
+          "assigneeRef": null,
+          "sourceRefs": [{ "source": "sop", "section": "2" }, { "source": "sop", "section": "7" }],
           "formRef": null,
           "entityRefs": [],
-          "evidence": [ "Mandatory comment on «Return for rework» and «Reject»" ],
+          "evidence": [
+            "Comment stating the basis of an approval",
+            "Comment with the reason on a rejection or a return"
+          ],
           "due": null,
           "dueInSource": null,
           "folded": [],
-          "description": "Task: Decide whether the request described in `request_summary` may proceed.\nHow: 1. Read `request_summary`, `justification` and the attached documents. 2. Check the request against the criteria of the procedure that applies to it. 3. Choose «Approve», «Return for rework» or «Reject».\nEvidence: A comment with the reason is mandatory on «Return for rework» and «Reject».\nDone when: The decision is recorded with the required comment.\nExceptions: If the information is insufficient to decide, choose «Return for rework» and list what is missing. If the procedure designates another person to approve this request, do not decide: comment who must decide and choose «Return for rework» so the request is routed to that person."
+          "description": "Task: **Decide whether the request is approved**, based on the description and the documents on the case.\n\nHow:\n\n1. Read the request description and open the documents attached by the requester.\n2. Confirm that this request falls within your approval authority under the procedure in force. If it does not, do not decide it: return it.\n3. Choose one of the outcomes below and record the comment it requires.\n\n| Situation you verified | Outcome | Record required |\n| --- | --- | --- |\n| The request is justified and within your authority | **Approve** | Comment stating what you relied on |\n| Information or a document is missing | **Return for correction** | Comment naming exactly what is missing |\n| The request is not justified | **Reject** | Comment with the reason |\n\nEvidence:\n\n- On approval, a comment stating the basis of the decision.\n- On return or rejection, a comment with the reason and, where applicable, what must be corrected.\n\nDone when: The outcome is chosen and the comment it requires is saved on the case.\n\nExceptions:\n\nIf the request exceeds your approval authority, **do not approve it**: comment naming the authority you consider competent and choose «Return for correction». If you cannot decide because information is missing, return the request instead of approving it."
         }
       ],
       "subWorkflowRefs": [],
       "setupNotes": [
-        "Action `decide` has no assignee: SOP section 2 names the department manager and section 7 names only the finance director. Assign it only after decision D1 is resolved; if the resolution is a two-step approval, the design gains a second decision action and must be re-run through provia-workflow-designer.",
-        "Groups `department_managers` and `finance_director` are proposals derived from the two sentences supplied; neither has members or an area yet.",
-        "No service level was supplied: `due` is unset on both actions (decision D6).",
-        "The `prepare` action, the fields `request_summary` and `justification`, and the «Return for rework» and «Reject» branches are recommendations: the source contains no intake, rejection or rework step (decisions D2 and D7)."
+        "BLOCKING: the approver of «Decide on the request» is deliberately unassigned. SOP section 2 gives the approval to the department manager and section 7 gives it to the finance director alone (decision D1). Do not assign either group, and do not substitute the creator, before the process owner answers.",
+        "Country, language, currency and timezone are provisional (Angola, en, AOA, Africa/Luanda) because no country was supplied; confirm before setup (decision D6).",
+        "No service level was supplied, so no action carries a due offset (decision D4).",
+        "The return and rejection outcomes of «Decide on the request» are a recommendation, not a requirement of the supplied excerpt (decision D7).",
+        "access.default is creator_only because the excerpt names nobody who opens a case; with it, nobody but the creator and the administrators can start one (decision D3)."
       ]
     }
   ],
@@ -125,67 +137,67 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "Who approves the request? SOP section 2 says the department manager approves; section 7 says only the finance director approves. Possible resolutions: (a) section 7 supersedes section 2 (one decision by the finance director); (b) section 2 applies and section 7 is an error or a different process (one decision by the department manager); (c) both apply in sequence (department manager, then finance director: two decision actions); (d) each applies to a different scope, for example an amount band or a request category the fragments do not mention. The designer did not choose.",
-      "owner": "Process owner / author of the SOP",
+      "question": "Who approves the request? SOP section 2 gives the approval to the department manager; section 7 says only the finance director approves. Three readings are possible and the excerpt does not settle them: (a) section 7 replaces section 2 for a subset of requests the missing sections define, (b) section 7 supersedes section 2 entirely, (c) both approve in sequence. Which applies, and does a threshold, category or risk level select between them?",
+      "owner": "Process owner of the SOP",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
-      "sourceRefs": [ { "source": "sop", "section": "2" }, { "source": "sop", "section": "7" } ]
+      "sourceRefs": [{ "source": "sop", "section": "2" }, { "source": "sop", "section": "7" }]
     },
     {
       "id": "D2",
-      "question": "What is the request being approved, what starts a case and what ends it? Only the two approval sentences were supplied; the workflow name «Request approval», the fields `request_summary` and `justification` and the `prepare` action are placeholders.",
-      "owner": "Process owner",
+      "question": "What are the approval criteria the approver must apply? The excerpt names the authority but no criterion, so the decision brief carries generic outcomes (justified / missing information / not justified) that the owner must confirm or replace.",
+      "owner": "Process owner of the SOP",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
-      "sourceRefs": [ { "source": "sop" } ]
+      "sourceRefs": [{ "source": "sop", "section": "2" }, { "source": "sop", "section": "7" }]
     },
     {
       "id": "D3",
-      "question": "Who may open a request (create_incident: every employee, a team, or a named group) and which group owns the workflow design (edit)? The manifest declares `creator_only` until this is answered.",
-      "owner": "Process owner",
-      "status": "open",
-      "raisedBy": "provia-workflow-designer",
-      "sourceRefs": [ { "source": "sop" } ]
-    },
-    {
-      "id": "D4",
-      "question": "If the department manager approves (D1 a/c/d): is it the requester's own department manager, chosen per case, or a fixed group of managers? A per-case owner needs a `user` field on the case with `assigneeRef: field:<key>` and a fallback group, which the product cannot assign automatically yet.",
-      "owner": "Process owner",
-      "status": "open",
-      "raisedBy": "provia-workflow-designer",
-      "sourceRefs": [ { "source": "sop", "section": "2" } ]
-    },
-    {
-      "id": "D5",
-      "question": "Who decides in the finance director's absence? Section 7 says «only the finance director», so a delegate would change the rule and must be confirmed by the process owner.",
-      "owner": "Finance director",
-      "status": "open",
-      "raisedBy": "provia-workflow-designer",
-      "sourceRefs": [ { "source": "sop", "section": "7" } ]
-    },
-    {
-      "id": "D6",
-      "question": "What is the service level for the decision and for preparing the request? No deadline was supplied; `due` stays unset until one is stated.",
-      "owner": "Process owner",
-      "status": "open",
-      "raisedBy": "provia-workflow-designer",
-      "sourceRefs": [ { "source": "sop" } ]
-    },
-    {
-      "id": "D7",
-      "question": "Does the procedure allow «Reject» (case cancelled) and «Return for rework» (back to the requester)? Both branches are recommendations; the source gives only the approval.",
-      "owner": "Process owner",
-      "status": "open",
-      "raisedBy": "provia-workflow-designer",
-      "sourceRefs": [ { "source": "sop" } ]
-    },
-    {
-      "id": "D8",
-      "question": "Country, language, currency and timezone of the organization. Angola, English, AOA and Africa/Luanda are provisional; no country was supplied.",
-      "owner": "Implementer",
+      "question": "Who may open a request case, and which group owns this workflow design? No grant is proposed, so as designed only the creator and the organization administrators reach a case and nobody else can start one.",
+      "owner": "Process owner of the SOP",
       "status": "open",
       "raisedBy": "provia-workflow-designer",
       "sourceRefs": []
+    },
+    {
+      "id": "D4",
+      "question": "What is the service level for the approval decision? No deadline was supplied, so no due offset was set on any action.",
+      "owner": "Process owner of the SOP",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D5",
+      "question": "What must the requester supply for the request to be decidable (amount, category, cost centre, supporting documents)? No workflow fields and no intake form were designed, because the excerpt describes none.",
+      "owner": "Process owner of the SOP",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D6",
+      "question": "Which country, language, currency and timezone apply? Angola, en, AOA and Africa/Luanda are a provisional starting context, not a supplied fact.",
+      "owner": "Process owner of the SOP",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D7",
+      "question": "Are the return-for-correction and rejection outcomes correct? The excerpt gives no rejection or rework path; both branches are a recommendation of this design, as is the requester's «Submit the request for approval» action.",
+      "owner": "Process owner of the SOP",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": []
+    },
+    {
+      "id": "D8",
+      "question": "Who decides in the absence of the finance director, if reading (b) or (c) of D1 prevails? Section 7 names a single office.",
+      "owner": "Process owner of the SOP",
+      "status": "open",
+      "raisedBy": "provia-workflow-designer",
+      "sourceRefs": [{ "source": "sop", "section": "7" }]
     }
   ],
   "receipts": []

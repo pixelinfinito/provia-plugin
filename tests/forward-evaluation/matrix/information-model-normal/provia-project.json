@@ -7,274 +7,376 @@
     "country": "Angola",
     "timezone": "Africa/Luanda",
     "currency": "AOA",
-    "generator": "provia-skills/1.2.0",
-    "contractRevision": "fed8efaf019abc901cb2b229f3676dc4031126fa",
-    "updatedAt": "2026-09-21"
+    "generator": "provia-skills/provia-information-model",
+    "updatedAt": "2026-09-23"
   },
   "organization": {
-    "name": "Organização a confirmar",
+    "name": "Organização a identificar",
     "sector": null,
     "mode": "disconnected",
     "tenantId": null,
     "productRevision": null
   },
-  "sources": [
-    {
-      "id": "pergunta-2026-09-21",
-      "title": "Pergunta do utilizador: organizar fornecedores e pedidos de compra sem repetir os dados do fornecedor",
-      "kind": "interview",
-      "version": "1",
-      "effectiveDate": "2026-09-21",
-      "sections": []
-    }
-  ],
+  "sources": [],
   "entityTypes": [
     {
       "key": "fornecedor",
       "name": "Fornecedor",
-      "description": "Fornecedores utilizados nos pedidos de compra e na relação comercial. Permite seleccionar a contraparte no pedido e consultar os seus dados de identificação, contacto e condições sem os voltar a introduzir.",
+      "description": "Fornecedores seleccionados nos pedidos de compra e nos processos de qualificação e avaliação. Reúne a identificação, os contactos e as condições comerciais necessárias para tratar uma compra sem voltar a recolher os dados.",
       "icon": "Truck01",
-      "namePattern": "Nome comercial pelo qual a equipa conhece o fornecedor (por exemplo «Papelaria Demonstração»); acrescentar a localidade ou o código existente apenas quando dois fornecedores tenham o mesmo nome.",
-      "purpose": "Pedido de compra (selecção da contraparte, cotações, adjudicação e recepção), consulta de condições comerciais e, futuramente, avaliação de fornecedores.",
-      "owner": "Equipa de Compras (responsável a designar pela organização)",
+      "namePattern": "Nome comercial pelo qual a equipa reconhece o fornecedor; acrescentar o código existente apenas quando dois registos tenham nomes semelhantes. Exemplo sintético: «Fornecedor Demonstração».",
+      "purpose": "Selecção do fornecedor no pedido de compra, consulta de condições comerciais na decisão, conciliação do pagamento na contabilidade e qualificação/reavaliação do fornecedor.",
+      "owner": "Responsável a designar pela organização; proposta: a equipa de Compras mantém identificação, classificação e situação, e as Finanças confirmam NIF, condições de pagamento e referência contabilística.",
       "fields": [
         {
-          "key": "supplier_code",
-          "label": "Código no sistema de contabilidade",
-          "type": "text",
-          "required": false,
+          "key": "codigo_fornecedor",
+          "label": "Código do fornecedor",
+          "type": "auto_number",
           "group": "Identificação",
-          "helpText": "Copiar o código de fornecedor atribuído pelo sistema de contabilidade ou ERP, quando existe. Deixar vazio se a organização não usa códigos.",
-          "purpose": "Conciliar o registo Provia com o sistema onde se lançam facturas e pagamentos; evita confusões entre fornecedores com nomes semelhantes.",
-          "priority": "conditional",
-          "source": "Sistema de contabilidade/ERP da organização (pressuposto; ver decisão D1).",
-          "maintainer": "Equipa de Compras, ao criar ou actualizar o registo",
-          "sensitivity": "Interna",
-          "example": "FOR-DEMO-001"
-        },
-        {
-          "key": "legal_name",
-          "label": "Razão social",
-          "type": "text",
-          "required": false,
-          "group": "Identificação",
-          "helpText": "Preencher apenas quando a denominação legal difere do Nome comercial do registo.",
-          "purpose": "Identificar a contraparte correcta na nota de encomenda e na factura quando o nome comercial não coincide com a denominação legal.",
-          "priority": "conditional",
-          "source": "Documentos do fornecedor (proposta, factura ou contrato).",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Interna",
-          "example": "Papelaria Demonstração, Lda."
-        },
-        {
-          "key": "tax_number",
-          "label": "NIF",
-          "type": "text",
-          "required": false,
-          "group": "Identificação",
-          "helpText": "Introduzir tal como consta dos documentos do fornecedor. Preencher apenas se o processo de encomenda ou pagamento precisar de o consultar no Provia (ver decisão D2).",
-          "purpose": "Conferir a contraparte na adjudicação e na recepção da factura sem pedir o número ao fornecedor em cada pedido.",
-          "priority": "conditional",
-          "source": "Documentos do fornecedor; confirmação pela área financeira.",
-          "maintainer": "Equipa de Compras; validação pela área financeira",
-          "sensitivity": "Identificação fiscal; restringir a edição às equipas de Compras e Finanças. A etiqueta não impõe permissões por si só.",
-          "example": "NIF-DEMO-000000"
-        },
-        {
-          "key": "category",
-          "label": "Categoria de fornecimento",
-          "type": "select",
-          "required": true,
-          "group": "Classificação",
-          "helpText": "Escolher o tipo principal do que o fornecedor fornece. Vocabulário ilustrativo a confirmar com Compras.",
-          "purpose": "Filtrar fornecedores ao preparar cotações e agrupar pedidos por tipo de compra nos relatórios.",
+          "helpText": "Referência gerada pelo Provia ao guardar o registo. Não preencher manualmente; usar para citar o fornecedor em pedidos e comunicações.",
+          "purpose": "Dar uma referência curta e estável ao fornecedor, para o pedido de compra e a correspondência interna citarem o registo em vez de repetirem os seus dados.",
+          "example": "FOR-0001",
           "priority": "core",
-          "source": "Proposta deste catálogo; vocabulário a confirmar (decisão D3).",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Interna",
-          "example": "goods",
-          "options": [
-            {
-              "value": "goods",
-              "label": "Bens e materiais"
-            },
-            {
-              "value": "services",
-              "label": "Serviços"
-            },
-            {
-              "value": "works",
-              "label": "Obras e manutenção"
-            },
-            {
-              "value": "mixed",
-              "label": "Bens e serviços"
-            }
-          ]
-        },
-        {
-          "key": "supply_scope",
-          "label": "O que fornece",
-          "type": "text",
-          "required": true,
-          "group": "Classificação",
-          "helpText": "Uma frase curta com os produtos ou serviços habitualmente fornecidos.",
-          "purpose": "Permitir ao requerente e ao comprador encontrar o fornecedor adequado ao pedido através da pesquisa.",
-          "priority": "core",
-          "source": "Conhecimento da equipa de Compras.",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Interna",
-          "example": "Material de escritório e consumíveis de impressão"
-        },
-        {
-          "key": "criticality",
-          "label": "Criticidade",
-          "type": "select",
           "required": false,
-          "group": "Classificação",
-          "helpText": "Alta quando a paragem do fornecimento afecta a operação e não há alternativa imediata.",
-          "purpose": "Priorizar a avaliação e a procura de alternativas; informação de apoio à decisão de adjudicação.",
-          "priority": "optional",
-          "source": "Avaliação da equipa de Compras.",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Interna",
-          "example": "medium",
-          "options": [
-            {
-              "value": "low",
-              "label": "Baixa"
-            },
-            {
-              "value": "medium",
-              "label": "Média"
-            },
-            {
-              "value": "high",
-              "label": "Alta"
-            }
-          ]
-        },
-        {
-          "key": "contact_name",
-          "label": "Contacto comercial",
-          "type": "text",
-          "required": false,
-          "group": "Contactos e localização",
-          "helpText": "Pessoa a quem se pedem cotações e se envia a nota de encomenda.",
-          "purpose": "Contactar o fornecedor durante o pedido sem procurar o contacto em pedidos anteriores.",
-          "priority": "core",
-          "source": "Fornecedor.",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Dado pessoal de contacto profissional; usar apenas para a relação comercial.",
-          "example": "Pessoa de demonstração"
-        },
-        {
-          "key": "contact_email",
-          "label": "Email comercial",
-          "type": "email",
-          "required": false,
-          "group": "Contactos e localização",
-          "helpText": "Endereço usado para pedidos de cotação e envio da nota de encomenda.",
-          "purpose": "Enviar pedidos de cotação e notas de encomenda; base para uma futura notificação automática.",
-          "priority": "core",
-          "source": "Fornecedor.",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Dado pessoal de contacto profissional; usar apenas para a relação comercial.",
-          "example": "comercial@example.com"
-        },
-        {
-          "key": "contact_phone",
-          "label": "Telefone comercial",
-          "type": "phone",
-          "required": false,
-          "group": "Contactos e localização",
-          "helpText": "Contacto alternativo para confirmação de prazos e entregas.",
-          "purpose": "Resolver dúvidas urgentes sobre entregas e cotações.",
-          "priority": "optional",
-          "source": "Fornecedor.",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Dado pessoal de contacto profissional; usar apenas para a relação comercial.",
-          "example": "+244 900 000 000"
-        },
-        {
-          "key": "address",
-          "label": "Morada",
-          "type": "text",
-          "required": false,
-          "group": "Contactos e localização",
-          "helpText": "Morada das instalações relevantes para levantamentos ou visitas; deixar vazio se tudo é entregue.",
-          "purpose": "Preparar levantamentos de mercadoria e identificar o fornecedor na nota de encomenda.",
-          "priority": "conditional",
-          "source": "Fornecedor.",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Interna",
-          "example": "Luanda · instalações de demonstração"
-        },
-        {
-          "key": "relationship_owner",
-          "label": "Responsável pela relação",
-          "type": "user",
-          "required": false,
-          "group": "Responsabilidade",
-          "helpText": "Membro da equipa de Compras que mantém este registo e conhece o fornecedor.",
-          "purpose": "Saber quem actualiza o registo e a quem perguntar sobre o fornecedor; não atribui acções automaticamente.",
-          "priority": "core",
-          "source": "Organização interna da equipa de Compras.",
-          "maintainer": "Responsável de Compras",
-          "sensitivity": "Interna",
-          "example": {
-            "lookupName": "Comprador de demonstração"
+          "source": "Gerado pelo Provia.",
+          "maintainer": "Provia atribui o valor; Compras define a configuração de numeração.",
+          "sensitivity": "Interna.",
+          "config": {
+            "prefix": "FOR-",
+            "padding": 4,
+            "startAt": 1
           }
         },
         {
-          "key": "payment_terms",
-          "label": "Condições de pagamento habituais",
-          "type": "select",
+          "key": "nome_legal",
+          "label": "Razão social",
+          "type": "text",
+          "group": "Identificação",
+          "helpText": "Preencher quando a designação do contrato e da factura difere do Nome comercial usado no registo.",
+          "purpose": "Identificar a contraparte em contratos e facturas quando difere do Nome pelo qual a equipa procura o fornecedor.",
+          "example": "Fornecedor Demonstração, Lda.",
+          "priority": "conditional",
           "required": false,
-          "group": "Condições comerciais",
-          "helpText": "Condição normalmente praticada por este fornecedor. A condição acordada num pedido concreto regista-se no próprio pedido.",
-          "purpose": "Informar a aprovação e a programação do pagamento sem consultar pedidos anteriores.",
+          "source": "Documento de constituição ou factura do fornecedor, a confirmar com Finanças.",
+          "maintainer": "Compras registam; Finanças confirmam.",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "nif",
+          "label": "NIF",
+          "type": "text",
+          "group": "Identificação",
+          "helpText": "Número de identificação fiscal tal como consta nos documentos do fornecedor. Conferir com Finanças antes de usar em facturação.",
+          "purpose": "Conferir a contraparte na facturação e conciliar o fornecedor com o registo contabilístico, sem repetir o número em cada pedido.",
+          "example": "NIF-DEMONSTRACAO",
+          "priority": "conditional",
+          "required": false,
+          "source": "Documentos do fornecedor; formato e obrigatoriedade a confirmar com Finanças. Este catálogo não estabelece requisitos fiscais.",
+          "maintainer": "Finanças",
+          "sensitivity": "Interna; dado identificativo da empresa fornecedora. Confirmar quem deve ver o tipo antes de o disponibilizar a toda a organização."
+        },
+        {
+          "key": "categorias_fornecimento",
+          "label": "Categorias de fornecimento",
+          "type": "multi_select",
+          "group": "Classificação",
+          "helpText": "Escolher tudo o que este fornecedor fornece. Serve para procurar fornecedores por categoria ao abrir um pedido de compra.",
+          "purpose": "Encontrar fornecedores possíveis para uma necessidade e agrupar a despesa por categoria no relatório.",
+          "example": [
+            "equipamento_informatico",
+            "servicos_tecnicos"
+          ],
           "priority": "core",
-          "source": "Proposta deste catálogo; prazos ilustrativos a confirmar com Finanças (decisão D3).",
-          "maintainer": "Equipa de Compras; alterações confirmadas por Finanças",
-          "sensitivity": "Interna",
-          "example": "net_30",
+          "required": true,
+          "source": "Vocabulário proposto neste catálogo; substituir pela lista real de categorias de compra da organização antes da configuração.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna.",
           "options": [
             {
-              "value": "prepayment",
-              "label": "Pré-pagamento"
+              "value": "equipamento_informatico",
+              "label": "Equipamento informático"
             },
             {
-              "value": "on_delivery",
-              "label": "Contra entrega"
+              "value": "consumiveis_escritorio",
+              "label": "Consumíveis de escritório"
             },
             {
-              "value": "net_30",
-              "label": "30 dias após factura"
+              "value": "servicos_tecnicos",
+              "label": "Serviços técnicos"
             },
             {
-              "value": "net_60",
-              "label": "60 dias após factura"
+              "value": "servicos_profissionais",
+              "label": "Serviços profissionais"
             },
             {
-              "value": "other",
-              "label": "Outra (ver observações)"
+              "value": "obras_e_manutencao",
+              "label": "Obras e manutenção"
+            },
+            {
+              "value": "transporte_e_logistica",
+              "label": "Transporte e logística"
+            },
+            {
+              "value": "outros",
+              "label": "Outros"
             }
           ]
         },
         {
-          "key": "currency",
-          "label": "Moeda de facturação",
+          "key": "criticidade",
+          "label": "Criticidade do fornecimento",
           "type": "select",
-          "required": false,
-          "group": "Condições comerciais",
-          "helpText": "Moeda em que o fornecedor factura habitualmente. Preencher quando difere de Kz.",
-          "purpose": "Antecipar a necessidade de câmbio na aprovação e no pagamento.",
+          "group": "Classificação",
+          "helpText": "Indicar o impacto de uma falha deste fornecedor na operação. Preencher quando a organização usar este critério para exigir alternativas.",
+          "purpose": "Apoiar a decisão de pedir propostas alternativas ou de acompanhar o fornecedor com mais atenção.",
+          "example": "media",
           "priority": "conditional",
-          "source": "Proposta deste catálogo; lista a confirmar com Finanças.",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Interna",
+          "required": false,
+          "source": "Critério proposto; não existe política de criticidade fornecida.",
+          "maintainer": "Compras, com a área requerente",
+          "sensitivity": "Interna.",
+          "options": [
+            {
+              "value": "alta",
+              "label": "Alta"
+            },
+            {
+              "value": "media",
+              "label": "Média"
+            },
+            {
+              "value": "baixa",
+              "label": "Baixa"
+            }
+          ]
+        },
+        {
+          "key": "gestor_relacao",
+          "label": "Gestor da relação",
+          "type": "user",
+          "group": "Responsabilidade",
+          "helpText": "Utilizador Provia que trata deste fornecedor e a quem se pede esclarecimento sobre condições ou desempenho.",
+          "purpose": "Saber a quem recorrer durante um pedido de compra e quem mantém o registo actualizado.",
+          "example": {
+            "lookupName": "Gestor de demonstração"
+          },
+          "priority": "core",
+          "required": false,
+          "source": "Atribuição interna, a definir com Compras.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna. Este campo identifica um responsável; não atribui acções do workflow automaticamente."
+        },
+        {
+          "key": "contacto_comercial",
+          "label": "Contacto comercial",
+          "type": "text",
+          "group": "Contactos",
+          "helpText": "Nome da pessoa do fornecedor que recebe pedidos de proposta e encomendas.",
+          "purpose": "Contactar o fornecedor durante o pedido de compra sem procurar o contacto noutro sítio.",
+          "example": "Pessoa de demonstração",
+          "priority": "core",
+          "required": false,
+          "source": "Comunicação do fornecedor.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna; dado pessoal de contacto profissional. Recolher apenas o necessário ao contacto comercial."
+        },
+        {
+          "key": "email_comercial",
+          "label": "Email comercial",
+          "type": "email",
+          "group": "Contactos",
+          "helpText": "Endereço para enviar pedidos de proposta e encomendas.",
+          "purpose": "Enviar o pedido de proposta e a encomenda a partir do caso, com o endereço mantido num só lugar.",
+          "example": "comercial@example.com",
+          "priority": "core",
+          "required": false,
+          "source": "Comunicação do fornecedor.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna; dado de contacto profissional."
+        },
+        {
+          "key": "telefone_comercial",
+          "label": "Telefone comercial",
+          "type": "phone",
+          "group": "Contactos",
+          "helpText": "Contacto telefónico para coordenação urgente de uma entrega.",
+          "purpose": "Resolver por telefone questões de prazo ou entrega durante o pedido.",
+          "example": "+244 900 000 000",
+          "priority": "optional",
+          "required": false,
+          "source": "Comunicação do fornecedor.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna; dado de contacto profissional."
+        },
+        {
+          "key": "email_facturacao",
+          "label": "Email de facturação",
+          "type": "email",
+          "group": "Contactos",
+          "helpText": "Preencher quando o fornecedor indica um endereço diferente para assuntos de factura e pagamento.",
+          "purpose": "Tratar a factura e o pagamento com o contacto correcto, sem repetir a informação em cada processo.",
+          "example": "facturacao@example.com",
+          "priority": "conditional",
+          "required": false,
+          "source": "Comunicação do fornecedor; confirmar com Finanças.",
+          "maintainer": "Finanças",
+          "sensitivity": "Interna; dado de contacto profissional."
+        },
+        {
+          "key": "morada",
+          "label": "Morada",
+          "type": "text",
+          "group": "Localização",
+          "helpText": "Preencher quando houver recolha no fornecedor, visita ou necessidade de indicar a morada num documento.",
+          "purpose": "Preparar recolhas, visitas e documentos de entrega.",
+          "example": "Rua de Demonstração, nº 1, Luanda",
+          "priority": "conditional",
+          "required": false,
+          "source": "Comunicação do fornecedor.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "localidade",
+          "label": "Localidade",
+          "type": "text",
+          "group": "Localização",
+          "helpText": "Cidade ou província do fornecedor, em texto livre. Útil para filtrar fornecedores próximos do local de entrega.",
+          "purpose": "Filtrar fornecedores por proximidade quando o prazo de entrega é determinante.",
+          "example": "Luanda",
+          "priority": "optional",
+          "required": false,
+          "source": "Comunicação do fornecedor. Não se propõe aqui uma lista administrativa oficial de províncias.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "situacao",
+          "label": "Situação do fornecedor",
+          "type": "select",
+          "group": "Situação e ciclo de vida",
+          "helpText": "Situação actual da relação. Quem abre um pedido deve consultar este valor antes de escolher o fornecedor; o campo informa, não bloqueia a selecção.",
+          "purpose": "Distinguir fornecedores utilizáveis, em qualificação, condicionados, suspensos e inactivos no momento da escolha.",
+          "example": "aprovado",
+          "priority": "core",
+          "required": true,
+          "source": "Estados propostos neste catálogo; confirmar com o procedimento real de qualificação, que não foi fornecido.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna.",
+          "options": [
+            {
+              "value": "em_qualificacao",
+              "label": "Em qualificação"
+            },
+            {
+              "value": "aprovado",
+              "label": "Aprovado"
+            },
+            {
+              "value": "aprovado_condicionado",
+              "label": "Aprovado com condições"
+            },
+            {
+              "value": "suspenso",
+              "label": "Suspenso"
+            },
+            {
+              "value": "inactivo",
+              "label": "Inactivo"
+            }
+          ]
+        },
+        {
+          "key": "observacao_situacao",
+          "label": "Nota sobre a situação",
+          "type": "text",
+          "group": "Situação e ciclo de vida",
+          "helpText": "Preencher quando a situação for «Aprovado com condições», «Suspenso» ou «Inactivo», explicando em uma frase o motivo e desde quando.",
+          "purpose": "Explicar a quem escolhe o fornecedor por que razão está condicionado ou suspenso.",
+          "example": "Suspenso desde Julho de 2026 por atrasos repetidos de entrega (exemplo sintético).",
+          "priority": "conditional",
+          "required": false,
+          "source": "Decisão interna registada no processo que alterou a situação.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna; evitar juízos sobre pessoas identificáveis."
+        },
+        {
+          "key": "data_inicio_relacao",
+          "label": "Início da relação",
+          "type": "date",
+          "group": "Situação e ciclo de vida",
+          "helpText": "Data da primeira compra ou da qualificação inicial, quando conhecida.",
+          "purpose": "Situar a antiguidade da relação em revisões de fornecedores.",
+          "example": "2026-02-02",
+          "priority": "optional",
+          "required": false,
+          "source": "Histórico interno.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "data_proxima_avaliacao",
+          "label": "Próxima avaliação",
+          "type": "date",
+          "group": "Situação e ciclo de vida",
+          "helpText": "Preencher apenas se existir um processo definido de avaliação de fornecedores que produza esta data.",
+          "purpose": "Programar a reavaliação do fornecedor quando esse processo existir.",
+          "example": "2027-02-02",
+          "priority": "conditional",
+          "required": false,
+          "source": "Depende de um processo de avaliação que não foi fornecido; manter vazio até existir.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "condicoes_pagamento",
+          "label": "Condições de pagamento acordadas",
+          "type": "select",
+          "group": "Condições comerciais",
+          "helpText": "Prazo de pagamento acordado com este fornecedor. É o valor que o pedido de compra consulta em vez de voltar a perguntar.",
+          "purpose": "Informar a decisão de compra e o planeamento do pagamento sem repetir as condições em cada pedido.",
+          "example": "dias_30",
+          "priority": "core",
+          "required": false,
+          "source": "Acordo comercial ou contrato com o fornecedor; valores propostos a confirmar com Finanças.",
+          "maintainer": "Finanças, com Compras",
+          "sensitivity": "Interna.",
+          "options": [
+            {
+              "value": "pronto_pagamento",
+              "label": "Pronto pagamento"
+            },
+            {
+              "value": "dias_15",
+              "label": "15 dias"
+            },
+            {
+              "value": "dias_30",
+              "label": "30 dias"
+            },
+            {
+              "value": "dias_60",
+              "label": "60 dias"
+            },
+            {
+              "value": "outro",
+              "label": "Outro (explicar no âmbito do fornecimento)"
+            }
+          ]
+        },
+        {
+          "key": "moeda_habitual",
+          "label": "Moeda habitual",
+          "type": "select",
+          "group": "Condições comerciais",
+          "helpText": "Moeda em que este fornecedor normalmente factura. O valor do pedido continua a ser registado no caso.",
+          "purpose": "Antecipar a moeda do pedido e a necessidade de câmbio ou pagamento ao exterior.",
           "example": "aoa",
+          "priority": "core",
+          "required": false,
+          "source": "Propostas e facturas do fornecedor.",
+          "maintainer": "Finanças",
+          "sensitivity": "Interna.",
           "options": [
             {
               "value": "aoa",
@@ -287,179 +389,139 @@
             {
               "value": "eur",
               "label": "Euro (EUR)"
+            },
+            {
+              "value": "outra",
+              "label": "Outra"
             }
           ]
         },
         {
-          "key": "lead_time_days",
+          "key": "prazo_entrega_dias",
           "label": "Prazo de entrega habitual (dias)",
           "type": "number",
-          "required": false,
           "group": "Condições comerciais",
-          "helpText": "Número de dias corridos entre a encomenda e a entrega, segundo a experiência recente.",
-          "purpose": "Ajudar o requerente a planear a data de necessidade e o comprador a escolher entre fornecedores.",
+          "helpText": "Número de dias que este fornecedor costuma levar entre a encomenda e a entrega. Valor indicativo, não um compromisso contratual.",
+          "purpose": "Ajudar o requerente a escolher um fornecedor compatível com a data em que precisa do bem ou serviço.",
+          "example": 7,
           "priority": "optional",
-          "source": "Experiência da equipa de Compras.",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Interna",
-          "example": 7
-        },
-        {
-          "key": "agreement_url",
-          "label": "Contrato ou acordo em vigor",
-          "type": "url",
           "required": false,
-          "group": "Condições comerciais",
-          "helpText": "Ligação para o contrato-quadro ou tabela de preços no repositório de documentos, quando existe.",
-          "purpose": "Consultar preços e condições acordadas sem os copiar para cada pedido.",
-          "priority": "conditional",
-          "source": "Repositório de documentos da organização.",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Interna",
-          "example": "https://example.com/documentos/contrato-demo"
+          "source": "Experiência das compras anteriores.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna."
         },
         {
-          "key": "agreement_end",
-          "label": "Fim do contrato ou acordo",
-          "type": "date",
-          "required": false,
-          "group": "Condições comerciais",
-          "helpText": "Data de termo do contrato indicado acima. Deixar vazio quando não há contrato.",
-          "purpose": "Verificar na aprovação se as condições contratuais ainda estão em vigor e planear renovações.",
-          "priority": "conditional",
-          "source": "Contrato ou acordo.",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Interna",
-          "example": "2027-06-30"
-        },
-        {
-          "key": "relationship_status",
-          "label": "Situação do fornecedor",
-          "type": "select",
-          "required": true,
-          "group": "Ciclo de vida",
-          "helpText": "Activo: pode ser seleccionado em pedidos. Suspenso: usar só com autorização. Inactivo: relação terminada. O estado é informativo; não impede a selecção.",
-          "purpose": "Permitir ao aprovador confirmar que o fornecedor está aprovado antes de adjudicar; base para filtrar a lista de fornecedores.",
-          "priority": "core",
-          "source": "Proposta deste catálogo; regras de aprovação de fornecedores a confirmar (decisão D3).",
-          "maintainer": "Responsável de Compras",
-          "sensitivity": "Interna",
-          "example": "active",
-          "options": [
-            {
-              "value": "pending_approval",
-              "label": "Em aprovação"
-            },
-            {
-              "value": "active",
-              "label": "Activo"
-            },
-            {
-              "value": "suspended",
-              "label": "Suspenso"
-            },
-            {
-              "value": "inactive",
-              "label": "Inactivo"
-            }
-          ]
-        },
-        {
-          "key": "approved_on",
-          "label": "Data de aprovação",
-          "type": "date",
-          "required": false,
-          "group": "Ciclo de vida",
-          "helpText": "Data em que o fornecedor passou a Activo. Preencher apenas se a organização tem um passo de aprovação de fornecedores.",
-          "purpose": "Evidenciar quando o fornecedor foi aceite; apoia revisões periódicas da lista.",
-          "priority": "conditional",
-          "source": "Decisão de aprovação do fornecedor (processo a confirmar).",
-          "maintainer": "Responsável de Compras",
-          "sensitivity": "Interna",
-          "example": "2026-09-01"
-        },
-        {
-          "key": "notes",
-          "label": "Observações",
+          "key": "ambito_fornecimento",
+          "label": "Âmbito do fornecimento e condições específicas",
           "type": "rich_text",
+          "group": "Condições comerciais",
+          "helpText": "Descrever o que este fornecedor fornece, descontos, mínimos de encomenda ou condições fora das opções acima.",
+          "purpose": "Dar ao requerente e a quem aprova o contexto comercial que não cabe num campo estruturado.",
+          "example": "Fornece portáteis e acessórios; desconto acordado em encomendas acima de 10 unidades (exemplo sintético).",
+          "priority": "conditional",
           "required": false,
-          "group": "Ciclo de vida",
-          "helpText": "Informação útil para quem compra: horários, condições especiais, incidentes anteriores. Não registar dados bancários aqui.",
-          "purpose": "Guardar conhecimento operacional sobre o fornecedor que não cabe nos campos estruturados.",
-          "priority": "optional",
-          "source": "Equipa de Compras.",
-          "maintainer": "Equipa de Compras",
-          "sensitivity": "Interna; evitar juízos pessoais sobre pessoas.",
-          "example": "Entrega em Luanda sem custo acima de 100.000 Kz; fecha ao sábado."
+          "source": "Acordo comercial com o fornecedor.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna."
+        },
+        {
+          "key": "documentos_qualificacao",
+          "label": "Documentos de qualificação",
+          "type": "file",
+          "group": "Evidência e referência",
+          "helpText": "Documentos que a organização exige para qualificar o fornecedor. A lista exacta é decidida pela organização; este catálogo não a estabelece.",
+          "purpose": "Ter num só lugar a evidência que sustenta a situação «Aprovado», em vez de a anexar a cada pedido.",
+          "example": {
+            "lookupName": "documento-de-demonstracao.pdf"
+          },
+          "priority": "conditional",
+          "required": false,
+          "source": "Enviado pelo fornecedor; requisitos a definir pela organização.",
+          "maintainer": "Compras",
+          "sensitivity": "Interna; confirmar quem pode abrir os documentos antes de dar acesso amplo ao tipo."
+        },
+        {
+          "key": "referencia_contabilidade",
+          "label": "Referência no sistema de contabilidade",
+          "type": "text",
+          "group": "Evidência e referência",
+          "helpText": "Código deste fornecedor no sistema onde o pagamento é executado. Preencher quando esse sistema for usado para pagar.",
+          "purpose": "Conciliar o fornecedor do pedido com o registo usado no pagamento, sem copiar dados bancários para o Provia.",
+          "example": "CONT-DEMO-001",
+          "priority": "conditional",
+          "required": false,
+          "source": "Sistema de contabilidade, a identificar com Finanças. Não foi indicado nenhum sistema.",
+          "maintainer": "Finanças",
+          "sensitivity": "Interna. É uma referência para consulta manual; não cria integração nem sincronização."
         }
       ],
       "coverage": [
         {
           "dimension": "Identidade e classificação",
           "decision": "included",
-          "reason": "Nome nativo como designação comercial; razão social, NIF e código contabilístico apenas quando o processo os usa; categoria e âmbito de fornecimento para pesquisa e relatórios."
+          "reason": "Nome nativo, código gerado, razão social e NIF condicionais, categorias de fornecimento e criticidade. O Nome nativo não é duplicado por um campo de designação."
         },
         {
           "dimension": "Contactos e localização",
           "decision": "included",
-          "reason": "Contacto comercial, email, telefone e morada servem as cotações, a nota de encomenda e as entregas."
+          "reason": "Contacto, email e telefone comerciais, email de facturação quando difere, morada e localidade para entregas e visitas."
         },
         {
-          "dimension": "Responsabilidade",
+          "dimension": "Responsabilidade e estrutura",
           "decision": "included",
-          "reason": "Um responsável pela relação para manutenção do registo; não atribui acções automaticamente."
+          "reason": "Gestor da relação como referência de utilizador. Não se modela a estrutura interna do fornecedor nem uma lista de contactos secundários; ver os candidatos adiados nas notas de configuração."
         },
         {
-          "dimension": "Condições comerciais",
+          "dimension": "Situação e ciclo de vida",
           "decision": "included",
-          "reason": "Condições de pagamento habituais, moeda, prazo de entrega e ligação ao contrato evitam repetir estes dados em cada pedido; a condição acordada num pedido específico fica no caso."
+          "reason": "Situação, nota explicativa, início da relação e, condicionalmente, próxima avaliação."
         },
         {
-          "dimension": "Estado e ciclo de vida",
+          "dimension": "Atributos comerciais",
           "decision": "included",
-          "reason": "Situação e data de aprovação suportam a verificação humana antes de adjudicar; o estado não bloqueia a selecção automaticamente."
+          "reason": "Condições de pagamento, moeda habitual, prazo de entrega indicativo e âmbito do fornecimento. São exactamente os dados que hoje se repetiriam em cada pedido."
         },
         {
-          "dimension": "Dados bancários",
+          "dimension": "Relações",
+          "decision": "case",
+          "reason": "A ligação entre fornecedor e pedido de compra fica no caso, através da secção entities do workflow. Não se cria no fornecedor uma lista inversa de pedidos: seria manutenção duplicada e o relatório de pedidos já filtra por fornecedor."
+        },
+        {
+          "dimension": "Evidência e fonte",
+          "decision": "included",
+          "reason": "Documentos de qualificação e uma única referência ao sistema de contabilidade. Não se acrescentam campos genéricos de proveniência, versão ou data de verificação."
+        },
+        {
+          "dimension": "Dados bancários e execução do pagamento",
           "decision": "external",
-          "reason": "IBAN e dados de pagamento ficam no sistema de contabilidade, onde há controlo de acesso e conferência; o Provia não os precisa para aprovar o pedido (decisão D2)."
-        },
-        {
-          "dimension": "Histórico de pedidos",
-          "decision": "case",
-          "reason": "Cada pedido de compra é um caso do workflow ligado ao fornecedor; o histórico resulta dos casos, não de campos na entidade."
-        },
-        {
-          "dimension": "Pedido de compra (valor, justificação, cotações, aprovação, recepção)",
-          "decision": "case",
-          "reason": "São factos de uma execução: vivem nos metadados do caso, nas respostas de formulário e nas evidências das acções (ver relatório modelo-informacao.md)."
+          "reason": "IBAN, conta e dados de pagamento ficam no sistema onde o pagamento é executado, identificado por referencia_contabilidade. Sem um processo de actualização e um modelo de acesso definidos, um registo paralelo no Provia ficaria desactualizado e exposto."
         },
         {
           "dimension": "Avaliação de desempenho",
           "decision": "pending",
-          "reason": "Só faz sentido com um processo de avaliação definido; até lá, incidentes registam-se em Observações. Reavaliar quando existir um workflow de avaliação de fornecedores."
-        },
-        {
-          "dimension": "Documentos de habilitação (certidões, alvarás)",
-          "decision": "pending",
-          "reason": "Depende de a organização exigir documentos na aprovação de fornecedores; se sim, acrescentar um campo file ou uma ligação ao repositório com data de validade."
+          "reason": "Não foi fornecido processo de avaliação. Enquanto não existir, só data_proxima_avaliacao está previsto, sem classificação nem pontuação inventadas."
         }
       ],
       "setup": [
-        "Fonte: pergunta do utilizador de 2026-09-21; sem procedimento, catálogo ou exportação fornecidos. Todos os vocabulários e responsáveis são propostas a confirmar.",
-        "Name é nativo e representa o nome comercial. UUID, criador e datas de criação/actualização são geridos pelo Provia; nenhum campo os duplica.",
-        "Ordem de configuração: criar o tipo Fornecedor com os campos por grupo antes de configurar o workflow de compras, porque o workflow referencia o tipo (secção entities, modo entity_type, ou campo de caso do tipo entity).",
-        "Obrigatórios na criação: apenas Categoria, O que fornece e Situação do fornecedor, que o comprador conhece no momento do registo. Contactos, condições comerciais e NIF completam-se antes da primeira adjudicação (ver prontidão).",
-        "Se a organização não tem código de fornecedor no sistema de contabilidade e mesmo assim precisa de uma referência distinta do Nome, substituir supplier_code por um campo auto_number (prefixo por exemplo FOR-, padding 4, required false, sem valor predefinido). Não manter os dois.",
-        "Se o tipo Fornecedor já existir na organização, reutilizá-lo e verificar o esquema existente em vez de criar um segundo; comparar campo a campo antes de acrescentar.",
-        "Acesso ao tipo (quem cria e edita fornecedores) não foi indicado nas fontes; proposta a confirmar: criação e edição pela equipa de Compras, consulta pela organização (decisão D5). Nenhum grant foi declarado neste catálogo.",
-        "Não existe sincronização com o sistema de contabilidade. Valores copiados para um caso através de fieldMapping são um instantâneo da data do pedido, não uma ligação contínua.",
-        "Percurso manual (sintético): criar «Papelaria Demonstração» com Categoria = Bens e materiais, O que fornece = material de escritório, Situação = Em aprovação. Mais tarde, o comprador completa contacto, email, condições de pagamento e responsável; quando Finanças confirma o NIF, passa a Activo com data de aprovação. Nenhum dado do fornecedor é reintroduzido nos pedidos que o seleccionam."
+        "Porque é entidade: o mesmo fornecedor é escolhido em muitos pedidos, tem ciclo de vida próprio (qualificação, suspensão, reavaliação) e os seus dados são mantidos por Compras e Finanças, não pelo requerente de um pedido.",
+        "Porque o Pedido de compra não é entidade: cada pedido é uma execução única, com requerente, data de necessidade, valor, aprovação e entrega. Isso é um caso (incidente) do workflow de compras. Criar também um tipo de entidade «Pedido de compra» duplicaria o caso e obrigaria a manter dois registos do mesmo pedido.",
+        "Ligação a configurar no workflow de compras: secção entities com mode entity_type, entityType «Fornecedor» e requirement optional, porque no início do pedido o fornecedor pode ainda não estar escolhido. O caso passa a mostrar o fornecedor ligado e quem trata do pedido abre o registo para ver contactos e condições.",
+        "fieldMapping copia valores da entidade para metadados do caso quando a ligação é feita. Mapear apenas o que o pedido precisa de fixar por escrito na data da decisão (por exemplo, condições de pagamento acordadas). Tudo o que deva refletir sempre o estado actual do fornecedor consulta-se no registo, não se mapeia. Uma cópia não é sincronização: se as condições mudarem, os casos antigos mantêm o valor copiado.",
+        "Ordem de configuração manual: criar o tipo Fornecedor e os seus campos; carregar os fornecedores existentes; só depois configurar a secção entities do workflow, que precisa do tipo já resolvido no destino.",
+        "Se já existir um tipo de fornecedor nesta organização Provia, reutilizá-lo e conferir o esquema actual campo a campo, em vez de criar um segundo tipo. Este catálogo passa então a ser uma proposta de campos a acrescentar.",
+        "Decisão em aberto sobre o código: este catálogo propõe codigo_fornecedor como auto_number gerado pelo Provia. Se o sistema de contabilidade já atribui o código oficial que as equipas usam, trocar por um campo text com esse valor e não manter dois códigos. Configurar auto_number com required false e sem valor predefinido; a sequência pode ter intervalos, não é exportada no YAML e, ao ser acrescentada a registos existentes, é preenchida por ordem de criação.",
+        "Vocabulários a substituir antes da configuração: categorias de fornecimento, criticidade, situações e condições de pagamento. São propostas; não reproduzem política verificada da organização.",
+        "Candidatos adiados, com a condição que os justificaria: «Contacto do fornecedor» como entidade própria, apenas se um fornecedor tiver vários interlocutores que a equipa precise de escolher caso a caso; «Artigo ou serviço catalogado», apenas se houver uma lista estável de itens recorrentes que valha a pena escolher em vez de descrever; «Contrato de fornecimento», apenas se houver contratos com vigência e renovação a acompanhar por processo próprio. Nenhum destes é necessário para responder à pergunta.",
+        "Classificação flexível: usar tags do Provia para marcações que mudam com frequência ou que uma equipa quer experimentar. Manter select/multi_select apenas para vocabulários governados que entram em relatórios.",
+        "Acesso: não se propõe nenhuma restrição, porque as fontes não indicam nenhuma. Se NIF, documentos de qualificação e condições comerciais não devem ser visíveis a toda a organização, definir as concessões de acesso ao tipo antes de carregar registos reais. A etiqueta de sensibilidade de cada campo é documentação, não controlo por campo.",
+        "Name é nativo e obrigatório. UUID, criador e datas de criação/alteração também são nativos; nenhum campo acima os duplica. A data de alteração prova uma edição, não uma verificação do fornecedor.",
+        "Os campos propostos para o caso «Pedido de compra», a ligação entities e os valores a copiar por fieldMapping estão especificados em pedido-de-compra-campos.md, ao lado deste catálogo."
       ],
       "readiness": [
-        "Antes de adjudicar um pedido a este fornecedor, o aprovador confirma no registo: Situação = Activo, contacto comercial e email preenchidos, condições de pagamento definidas e, quando exigido pelo pagamento, NIF confirmado. Esta verificação é humana; o Provia não a impõe a partir dos campos.",
-        "Antes de emitir a nota de encomenda, confirmar Razão social (se difere do Nome) e Morada quando o documento os exige.",
-        "Se o contrato indicado tem data de fim anterior à data do pedido, tratar as condições como não contratadas e registar a condição acordada no caso."
+        "Percurso manual de criação: quem registou um fornecedor novo conhece o Nome comercial, as categorias de fornecimento e a situação (normalmente «Em qualificação»); é por isso que só esses dois campos são obrigatórios na criação. Contacto, email, condições de pagamento e moeda chegam com a primeira proposta. Razão social, NIF e documentos chegam na qualificação. Prazo de entrega habitual só depois de algumas compras.",
+        "Antes de escolher o fornecedor num pedido de compra, confirmar: situação utilizável, contacto e email comerciais preenchidos, condições de pagamento e moeda conhecidas. Esta verificação é feita por quem trata o pedido; o campo Situação não bloqueia a selecção automaticamente.",
+        "Antes de enviar a factura para pagamento, confirmar NIF, email de facturação e referência no sistema de contabilidade. Nenhum destes campos impede o pagamento por si; a verificação pertence à acção do workflow.",
+        "Repetição de introdução que resta: um fornecedor novo é registado uma vez e, a partir daí, o pedido não repete nada. O que continua a ser introduzido em cada pedido é apenas o que é próprio desse pedido: o que se precisa, quando, quanto e quem aprovou."
       ]
     }
   ],
@@ -470,75 +532,52 @@
   "decisions": [
     {
       "id": "D1",
-      "question": "O sistema de contabilidade/ERP atribui um código de fornecedor? Se sim, supplier_code copia-o (text); se não e for necessária uma referência, substituir por auto_number.",
-      "owner": "Responsável de Compras",
+      "question": "O código do fornecedor deve ser gerado pelo Provia (auto_number FOR-0001) ou é o código que o sistema de contabilidade já atribui? Manter apenas um.",
+      "owner": "Finanças",
       "status": "open",
-      "raisedBy": "provia-information-model",
-      "sourceRefs": [
-        {
-          "source": "pergunta-2026-09-21"
-        }
-      ]
+      "raisedBy": "provia-information-model"
     },
     {
       "id": "D2",
-      "question": "O NIF e os dados bancários do fornecedor são consultados no Provia durante o pedido, ou ficam exclusivamente no sistema de contabilidade? Determina se tax_number se preenche e confirma que os dados bancários ficam fora do Provia.",
-      "owner": "Direcção Financeira",
+      "question": "Qual é a lista real de categorias de compra da organização, para substituir o vocabulário proposto em categorias_fornecimento?",
+      "owner": "Compras",
       "status": "open",
-      "raisedBy": "provia-information-model",
-      "sourceRefs": [
-        {
-          "source": "pergunta-2026-09-21"
-        }
-      ]
+      "raisedBy": "provia-information-model"
     },
     {
       "id": "D3",
-      "question": "Confirmar os vocabulários propostos: categorias de fornecimento, condições de pagamento (prazos), moedas e estados da situação do fornecedor.",
-      "owner": "Responsável de Compras com Finanças",
+      "question": "Quais são as condições de pagamento efectivamente praticadas, para substituir as opções propostas?",
+      "owner": "Finanças",
       "status": "open",
-      "raisedBy": "provia-information-model",
-      "sourceRefs": [
-        {
-          "source": "pergunta-2026-09-21"
-        }
-      ]
+      "raisedBy": "provia-information-model"
     },
     {
       "id": "D4",
-      "question": "O fornecedor é conhecido quando o pedido de compra é aberto, ou só depois das cotações? Determina se a ligação ao Fornecedor no workflow é optional na criação (recomendado) ou required.",
-      "owner": "Responsável de Compras",
+      "question": "Quem pode ver e criar registos de Fornecedor? NIF, documentos de qualificação e condições comerciais ficam visíveis a toda a organização ou apenas a Compras e Finanças?",
+      "owner": "Administrador Provia, com Compras",
       "status": "open",
-      "raisedBy": "provia-information-model",
-      "sourceRefs": [
-        {
-          "source": "pergunta-2026-09-21"
-        }
-      ]
+      "raisedBy": "provia-information-model"
     },
     {
       "id": "D5",
-      "question": "Quem pode criar e editar registos de Fornecedor e quem apenas os consulta? Proposta: criação/edição pela equipa de Compras, consulta pela organização.",
-      "owner": "Responsável de Compras e administrador Provia",
+      "question": "Existe um processo definido de avaliação de fornecedores? Sem ele, data_proxima_avaliacao fica sem quem a preencha e não se acrescenta classificação de desempenho.",
+      "owner": "Compras",
       "status": "open",
-      "raisedBy": "provia-information-model",
-      "sourceRefs": [
-        {
-          "source": "pergunta-2026-09-21"
-        }
-      ]
+      "raisedBy": "provia-information-model"
     },
     {
       "id": "D6",
-      "question": "Existe uma lista estável de centros de custo ou departamentos requerentes? Se for curta e estável, um select no caso chega; se for gerida por Finanças e reutilizada noutros processos, ponderar um tipo de entidade Centro de custo.",
-      "owner": "Direcção Financeira",
+      "question": "Já existe um tipo de entidade de fornecedor nesta organização Provia? Em caso afirmativo, reutilizar e conferir o esquema em vez de criar um segundo tipo.",
+      "owner": "Implementador",
       "status": "open",
-      "raisedBy": "provia-information-model",
-      "sourceRefs": [
-        {
-          "source": "pergunta-2026-09-21"
-        }
-      ]
+      "raisedBy": "provia-information-model"
+    },
+    {
+      "id": "D7",
+      "question": "Que valores do fornecedor devem ser fixados no caso por fieldMapping na data da decisão (por exemplo condições de pagamento) e quais devem ser sempre consultados no registo actual?",
+      "owner": "Compras, com Finanças",
+      "status": "open",
+      "raisedBy": "provia-information-model"
     }
   ],
   "receipts": []

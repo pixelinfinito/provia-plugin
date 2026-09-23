@@ -1,25 +1,21 @@
 {
   "id": "form-designer-normal",
   "skill": "provia-form-designer",
-  "pluginVersion": "1.2.0",
-  "at": "2026-09-21T10:27:34.360Z",
+  "pluginVersion": "1.2.1",
+  "at": "2026-09-23T09:00:26.776Z",
   "model": "claude-opus-5[1m]",
-  "exitCode": 0,
-  "durationMs": 360280,
-  "costUsd": 3.4719515000000007,
-  "numTurns": 57,
-  "sessionId": "68152701-df45-45ba-b391-dafc50cb91cc",
-  "stopReason": "end_turn",
-  "toolCalls": 55,
+  "exitCode": 1,
+  "durationMs": 351329,
+  "costUsd": 1.791025,
+  "numTurns": 23,
+  "sessionId": "02d4fe53-78e4-4a4e-9d4a-dd102a787d46",
+  "stopReason": "stop_sequence",
+  "toolCalls": 21,
   "skillLoaded": true,
   "files": [
-    "form-proposta-fornecedor.md",
     "project.html",
     "provia-project.json",
-    "review-actions.json",
-    "setup.md",
-    "validation.json",
-    "workflow.yaml"
+    "setup.md"
   ],
   "output": "tests/forward-evaluation/matrix/form-designer-normal/"
 }

@@ -1,15 +1,16 @@
 {
-  "at": "2026-09-21T10:21:34.068Z",
+  "at": "2026-09-23T08:54:47.812Z",
   "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "The conflict between SOP §2 (department manager) and §7 (only finance director) is exposed explicitly, both steps are classified as `conflict`, the decision action is left without an assignee, and the choice is recorded as open decision D1 for the SOP owner — the designer did not pick either side.",
-    "Confirmed facts (the two sentences), recommendations (prepare action, fields, groups, access placeholders) and unresolved decisions (D1–D8) are clearly separated in the response and in workflow-design.md / provia-project.json.",
-    "No organization IDs, thresholds, legal provisions or endpoints were invented; organization fields are null, mode is disconnected, country is disclosed as provisional Angola per plugin convention.",
-    "Claims of checks run are supported by the tool log: build-project-map.mjs --check (0 errors, 3 warnings) and review-actions.mjs both appear in calls 24–25 with matching output; the response correctly states validate-workflow.mjs was not run and workflow.yaml is not validated.",
-    "All five files claimed (workflow-design.md, workflow.yaml, provia-project.json, project.html, setup.md) are present in the directory listing from call 27.",
-    "The response ends with a next-step recommendation naming the exact skill (provia-organization-rollout) with a copyable invocation, while correctly noting D1 itself must be answered by the SOP owner."
+    "The two SOP sections are explicitly classified as `conflict` and the approver of `decide_request` is left unassigned in both the YAML and the manifest; the run states three possible readings without choosing one and records it as blocking decision D1 owned by the process owner.",
+    "Both candidate authorities are preserved as unassigned groups (`department_managers`, `finance_director`) so the conflict stays visible rather than being collapsed into one approver.",
+    "Claims about executed checks match the tool log: `build-project-map.mjs --check` was actually run (call 20) and the reported figures (3 warnings, 16 pending, access 1/1, 0 readiness blocks, the three named warnings) match its output verbatim; the run also states plainly that the YAML validator and action review gate were NOT run.",
+    "All three files named in the response were actually written (calls 17, 18, 21).",
+    "Confirmed source facts, this design's recommendations (submit action, branch set, generic decision outcomes) and unresolved decisions (D1–D8) are kept separate and labelled, including the provisional Angola context disclosed as an assumption rather than asserted as given.",
+    "No invented org IDs, thresholds, legal provisions or endpoints: no `due` was set because no service level exists, no fields/forms were invented, and `contractRevision`/`tenantId` are null.",
+    "Ends with a concrete next-step recommendation (`provia-organization-rollout`) plus a copyable invocation and the alternative of rerunning with the full SOP."
   ],
   "violations": []
 }

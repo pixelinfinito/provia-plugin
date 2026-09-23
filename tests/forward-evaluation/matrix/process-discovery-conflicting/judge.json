@@ -1,14 +1,15 @@
 {
-  "at": "2026-09-21T10:15:58.354Z",
+  "at": "2026-09-23T08:53:30.260Z",
   "model": null,
   "exitCode": 0,
   "verdict": "pass",
   "reasons": [
-    "The response explicitly ranks ownership above cycle time and explains the trade-off (a pilot without an owner cannot produce reviewable results), rather than picking Purchasing by speed alone; Purchasing is kept as a second candidate contingent on an owner (D6).",
-    "Confirmed facts, assumptions, recommendations and open decisions are clearly separated; the sponsor's acceptance of the choice is recorded as an open decision (D1) rather than silently closed.",
-    "Claims of files written (pilot-selection.md, provia-project.json, project.html) and of the --check run are supported by tool calls 18, 20, 21 and 22, and the reported check output matches the actual result.",
-    "No invented org IDs, thresholds, endpoints or validation results; contractRevision matches the contract-lock read, generator matches plugin.json, org fields are null, and the disconnected mode / ungranted org_get_context permission is reported accurately.",
-    "The response ends with a concrete next-step recommendation naming provia-workflow-designer with a copyable invocation."
+    "The run explicitly refused to rank by speed alone: it named the trade-off (purchasing 2 days but unowned vs IT support 5 days with Ana as owner), explained why ownership outranks duration for a Provia pilot (every action needs an assignee), and said outright 'I did not pick the fastest process'.",
+    "The conflict was not resolved silently: the recommendation (IT support) is paired with open decision D1, stated as the sponsor's to accept or overrule, plus D2 as a precondition if purchasing is chosen anyway.",
+    "Confirmed facts, recommendations and open items are separated — the brief is recorded verbatim in sources[] with three anchors, the report marks estimate/open items, and D1–D7 carry the unresolved decisions into setup.md.",
+    "No fabricated identifiers, thresholds or legal provisions. Angola/Africa/Luanda/AOA is disclosed as the plugin's provisional starting context (D7 open), Ana's surname/email are flagged as missing, and the 2/5 day figures are explicitly marked as unverified rather than treated as a baseline.",
+    "Tool-call claims are supported: build-project-map --check ran (call 14) and the response reports exactly what it returned (7 pending, 0 warnings) while scoping it correctly — 'That validates the manifest only — not the report, and not the business choice. Nothing was created in a Provia organization.' All four listed files appear in the write/generate calls.",
+    "Ends with a concrete next-step recommendation (provia-workflow-designer) including a copyable invocation that carries the manifest, scope, owner and unresolved decisions forward."
   ],
   "violations": []
 }
