@@ -289,7 +289,7 @@ That command belongs to Claude Code, not to this repository. It validates the pl
 
 ## Entity catalogue JSON and manual setup HTML
 
-Entity and workflow metadata now support 19 types, including `auto_number`. Dependent choices use `select` or `multi_select` with `config.parentField` and option `parentValue`. Read [metadata field rules](references/metadata-fields.md) for constraints, counter lifecycle, forms and migrations. The [workflow example](examples/metadata-fields.yaml) and entity catalogue demonstrate both features.
+Entity and workflow metadata support 19 shared types, including `auto_number`; entity types also accept `computed` fields, read-only rollups (sum, average, minimum, maximum, count) of a numeric incident field over the incidents linked to a record. Dependent choices use `select` or `multi_select` with `config.parentField` and option `parentValue`. Read [metadata field rules](references/metadata-fields.md) for constraints, counter lifecycle, forms and migrations. The [workflow example](examples/metadata-fields.yaml) and entity catalogue demonstrate both features.
 
 For catalogue creation or revision, `provia-information-model` delivers both `catalogue.json` and `catalogue.html`. Core fields can remain optional at creation when collected later. External sources do not replace operational attributes needed inside Provia.
 

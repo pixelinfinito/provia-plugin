@@ -3,9 +3,12 @@ import { readFileSync, writeFileSync } from 'node:fs';
 import { resolve, extname } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { metadataFieldSchema, validateAutoNumberConfig, collectDependentSchemaErrors, collectDependentValueErrors } from '../contracts/workflow-v1/engine.mjs';
+import { COMPUTED_TYPE, computedFieldErrors } from './lib/computed-field.mjs';
 
 const icons = new Set(JSON.parse(readFileSync(new URL('../references/entity-icons.json', import.meta.url), 'utf8')).icons);
-const fieldTypes = new Set(metadataFieldSchema.shape.type.options);
+const engineFieldTypes = new Set(metadataFieldSchema.shape.type.options);
+// Computed fields are entity-only and newer than the bundled workflow engine; lib/computed-field.mjs checks them.
+const fieldTypes = new Set([...engineFieldTypes, COMPUTED_TYPE]);
 const text = value => typeof value === 'string' && value.trim().length > 0;
 const key = value => text(value) && /^[a-z][a-z0-9_]*$/.test(value);
 const object = value => value !== null && typeof value === 'object' && !Array.isArray(value);
@@ -72,7 +75,7 @@ export function validateTypes(types) {
       }
       for (const property of ['example', 'defaultValue']) if (Object.hasOwn(field, property)) {
         const value = field[property];
-        if (['number', 'currency', 'rating', 'percentage'].includes(field.type)) ensure(typeof value === 'number' && Number.isFinite(value), `${loc}.${property}`);
+        if (['number', 'currency', 'rating', 'percentage', COMPUTED_TYPE].includes(field.type)) ensure(typeof value === 'number' && Number.isFinite(value), `${loc}.${property}`);
         if (field.type === 'boolean') ensure(typeof value === 'boolean', `${loc}.${property}`);
         if (['text', 'date', 'datetime', 'url', 'email', 'phone', 'rich_text', 'color', 'auto_number'].includes(field.type)) ensure(typeof value === 'string', `${loc}.${property}`);
       }
@@ -83,7 +86,11 @@ export function validateTypes(types) {
       config: { ...field.config, ...(field.options ? { options: field.options } : {}) },
     }));
     for (const field of schema) {
-      ensure(metadataFieldSchema.safeParse(field).success, `${at}.${field.name}.config`);
+      if (field.type === COMPUTED_TYPE) {
+        const errors = computedFieldErrors(field, schema);
+        ensure(errors.length === 0, `${at}.${field.name}: ${errors.join('; ')}`);
+      }
+      if (engineFieldTypes.has(field.type)) ensure(metadataFieldSchema.safeParse(field).success, `${at}.${field.name}.config`);
       ensure(validateAutoNumberConfig(field).length === 0, `${at}.${field.name}: invalid auto-number configuration`);
     }
     ensure(collectDependentSchemaErrors(schema).length === 0, `${at}: invalid dependent select definition`);

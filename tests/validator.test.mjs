@@ -148,3 +148,8 @@ for (const [name, index, value] of [['auto-number', 0, 'REQ-00010'], ['dependent
     assert.equal(check(data).valid, false);
   });
 }
+test('rejects a computed field in workflow metadata: computed fields belong to entity types only', () => {
+  const data = workflow();
+  data.fields.push({ name: 'spent', label: 'Gasto', type: 'computed', required: false, config: { operation: 'sum', source: { fieldName: 'amount' }, scope: { statuses: ['completed'] } } });
+  assert.equal(check(data).valid, false);
+});

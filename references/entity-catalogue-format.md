@@ -21,7 +21,7 @@ Keys and option values use lowercase ASCII snake_case. Display names, help text,
 
 If an entity target already exists, include its type in the catalogue with a setup note stating that it must be reused and its existing schema verified, not recreated. Create or resolve types first, then configure relations and record entry. This also handles cyclic references without inventing an impossible creation order.
 
-Use optional field `config` for Provia settings, including automatic-number `prefix`, `suffix`, `padding`, `startAt`, or a dependent select's `parentField`. Keep editorial `options` and `defaultValue` at field level, never duplicate them inside `config`. Read [metadata fields](metadata-fields.md) for all 19 types and the new rules. The renderer exposes every config entry and option `parentValue` as copyable values, and preserves the full JSON for download. Explain configuration choices in `helpText` or type `setup`.
+Use optional field `config` for Provia settings, including automatic-number `prefix`, `suffix`, `padding`, `startAt`, a dependent select's `parentField`, or a computed field's `operation`, `source`, `scope`, `currency`, `precision`, `limit` and `display` (required for `computed`). Keep editorial `options` and `defaultValue` at field level, never duplicate them inside `config`. Read [metadata fields](metadata-fields.md) for all types and their rules. The renderer exposes every config entry and option `parentValue` as copyable values, and preserves the full JSON for download. Explain configuration choices in `helpText` or type `setup`.
 
 ## Commands
 
@@ -32,7 +32,7 @@ node scripts/build-entity-catalogue.mjs catalogue.json --check
 node scripts/build-entity-catalogue.mjs catalogue.json --output catalogue.html
 ```
 
-The output directory must already exist. Validation checks the editorial shape, unique type/field keys, supported icon and field identifiers, related catalogue types, select examples/defaults, basic number/boolean/string shapes, config schema, automatic-number restrictions, dependent parent chains and matching parent/child examples. It does not certify business completeness, every Provia field configuration, date/URL syntax, permissions, destination IDs or legal compliance. Run the workflow validator separately if producing workflow YAML.
+The output directory must already exist. Validation checks the editorial shape, unique type/field keys, supported icon and field identifiers, related catalogue types, select examples/defaults, basic number/boolean/string shapes, config schema, automatic-number restrictions, computed-field configuration, dependent parent chains and matching parent/child examples. It does not certify business completeness, every Provia field configuration, date/URL syntax, permissions, destination IDs or legal compliance. Run the workflow validator separately if producing workflow YAML.
 
 The generated HTML runs offline with no external libraries. It includes navigation, search, complete field cards, copy controls for names/descriptions/icons/keys/labels/help/options, coverage and setup notes, type JSON and a full JSON download. Copy first uses the clipboard API; when unavailable, it selects the text and attempts the browser copy fallback. A visible message says when keyboard copying is required. It never connects to or creates data in Provia.
 
