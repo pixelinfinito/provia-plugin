@@ -182,3 +182,46 @@ test('rejects an invalid dependent binding without auto-number fields', () => {
   const data = modernCatalogue(); data.types[0].fields.splice(2, 1); data.types[0].fields[2].options[0].parentValue = 'missing';
   assert.notEqual(run(data).status, 0);
 });
+
+// Feature 028: computed fields roll up a numeric incident field over the incidents linked to a record.
+function computedCatalogue() {
+  const data = sample(), fields = data.types[0].fields;
+  fields.push({ ...fields[0], key: 'annual_budget', label: 'Orçamento anual', type: 'currency', example: 5000000, config: { currency: 'AOA' } });
+  fields.push({ ...fields[0], key: 'spent_this_year', label: 'Gasto este ano', type: 'computed', required: false, example: 1361350,
+    config: { operation: 'sum', source: { fieldName: 'valor_total' }, scope: { statuses: ['in_progress', 'completed'], period: { dateSource: 'created_at', preset: 'this_year' } },
+      currency: 'AOA', precision: 2, limit: { kind: 'field', fieldName: 'annual_budget', warnAtPercent: 80 }, display: { placement: 'details_and_panel' } } });
+  fields.push({ ...fields[0], key: 'purchase_count', label: 'Compras', type: 'computed', required: false, example: 12,
+    config: { operation: 'count', scope: { statuses: ['completed'] } } });
+  return data;
+}
+test('accepts and renders computed fields with their rollup configuration', () => {
+  const data = computedCatalogue(), result = run(data);
+  assert.equal(result.status, 0, result.stderr);
+  const cards = result.html.split('<script type="application/json"')[0].split('<details>')[0];
+  for (const label of ['operation', 'source', 'scope', 'limit', 'valor_total']) assert.ok(cards.includes(label), label);
+  assert.deepEqual(JSON.parse(result.html.match(/id="catalogue-data">([\s\S]*?)<\/script>/)[1]), data);
+});
+for (const [name, mutate] of [
+  ['required computed field', f => f[3].required = true],
+  ['computed default', f => f[3].defaultValue = 0],
+  ['computed without config', f => delete f[3].config],
+  ['unknown operation', f => f[3].config.operation = 'median'],
+  ['missing source for sum', f => delete f[3].config.source],
+  ['missing statuses', f => f[3].config.scope.statuses = []],
+  ['unknown status', f => f[3].config.scope.statuses = ['done']],
+  ['missing scope', f => delete f[4].config.scope],
+  ['preset and range together', f => f[3].config.scope.period.range = { from: '2026-01-01', to: '2026-12-31' }],
+  ['reversed range', f => { delete f[3].config.scope.period.preset; f[3].config.scope.period.range = { from: '2026-12-31', to: '2026-01-01' }; }],
+  ['unknown preset', f => f[3].config.scope.period.preset = 'next_year'],
+  ['lowercase currency', f => f[3].config.currency = 'aoa'],
+  ['precision above 6', f => f[3].config.precision = 7],
+  ['limit field that is not numeric', f => f[3].config.limit.fieldName = 'contact_email'],
+  ['limit field that does not exist', f => f[3].config.limit.fieldName = 'missing'],
+  ['non-positive fixed limit', f => f[3].config.limit = { kind: 'fixed', value: 0 }],
+  ['unknown placement', f => f[3].config.display.placement = 'panel'],
+  ['non-numeric example', f => f[3].example = 'muito'],
+]) test(`rejects ${name} in an entity catalogue`, () => {
+  const data = computedCatalogue(); mutate(data.types[0].fields);
+  const result = run(data);
+  assert.notEqual(result.status, 0); assert.equal(result.html, null);
+});

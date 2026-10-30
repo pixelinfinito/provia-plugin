@@ -21,6 +21,8 @@ Provia's API Gateway exposes an MCP server, `provia-implementer`, specified in P
 | Tags | `tag_upsert` | `implement:tags` |
 | Workflow access from `workflows[].access` | `workflow_access_apply`; `workflow_import_draft` with a non-empty `plan.access.grants`; `access.grants[]` on `entity_type_upsert` / `entity_types_apply_catalogue` | `implement:permissions` (direct effect; consent bucket "takes effect immediately") |
 
+`entity_type_upsert` and `entity_types_apply_catalogue` accept `computed` fields from the catalogue unchanged; the server validates their configuration (source, statuses, period, limit) and answers a precise `VALIDATION_ERROR` path, and a `required` or default on a computed field comes back as a receipt warning. `entity_type_get` returns the computed configuration as stored; `entities_list` shows what the destination calculates: each record carries `computedValues` (keyed by field name; `value`, `status`, `partial`, `hiddenCount`, `limit`, `computedAt`) and `computedAccess`, computed for the signed-in implementer. Values sent for computed fields through `entities_create` or `entities_update` are ignored. Read them, never copy them into `metadataValues`.
+
 Nothing is published, deleted, completed, paid or notified through these tools. Publication, deletion and execution stay in the Provia UI.
 
 ## Apply, in dependency order

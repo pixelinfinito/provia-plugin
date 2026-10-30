@@ -1,5 +1,14 @@
 # Changelog
 
+## 1.3.0
+
+Computed entity fields, from Provia feature 028.
+
+- **`computed` field type (entity types only).** A read-only rollup (`sum`, `avg`, `min`, `max`, `count`) of a numeric incident field over the incidents linked to a record, with a status scope, an optional period (preset or date range), currency, precision, limit (fixed or another number/currency field of the type, with a warning threshold) and panel placement. `references/metadata-fields.md` documents the configuration, what counts as a link (an `entity` field value alone does not), per-reader partial values and what a rollup does not do (block cases, convert currencies, keep history).
+- **Catalogue checker.** `scripts/build-entity-catalogue.mjs` (and `build-project-map.mjs --check` through it) accepts `computed` fields and checks their configuration with `scripts/lib/computed-field.mjs`, which mirrors the product rules: source required unless counting, at least one known status, preset or range but not both, ordered range, ISO currency, precision 0–6, a limit field that exists and is numeric, no `required` and no default. The bundled workflow engine is unchanged and still rejects `computed` in workflow YAML, as the product does; a test pins that.
+- **Skills and references.** `provia-information-model` proposes a computed field when a reporting need is a total or count over the cases linked to a record and names the workflows that must link the record and carry the source field. `provia-capabilities.md`, `entity-design.md` and `entity-catalogue-format.md` mention the type; `connected-mode.md` describes how `entity_type_upsert` / `entity_types_apply_catalogue` accept it and how `entities_list` returns `computedValues` and `computedAccess`.
+- Skill evaluations were not rerun for this release.
+
 ## 1.2.1
 
 - Action-building, packaging and review skills now explicitly use Markdown descriptions, with shared formatting guidance and a pt-AO YAML example covering emphasis, blockquotes, headings, nested lists, links, tables, visual checklists and code. Preserve the five literal labels for existing review tools and explain the current bundled 5000-character limit versus the newer editor's 20,000-character limit.
